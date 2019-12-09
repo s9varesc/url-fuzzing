@@ -27,11 +27,11 @@ urldata+="];\n"
 prefix="\"use strict\";\
 \n var gIoService = Cc[\"@mozilla.org/network/io-service;1\"].getService(Ci.nsIIOService);\n"
 
-f=open("C:/mozilla-source/mozilla-central/netwerk/test/unit/uri/test_URIs_suffix.txt","r")
+f=open("./test_URIs_suffix.txt","r")
 suffix=f.read()
 js_file=prefix+"\n"+urldata+"\n"+suffix
 
-f=open("C:/mozilla-source/mozilla-central/netwerk/test/unit/test_URIs3.js","w")
+f=open("./test_URIs3.js","w")
 f.write(js_file)
 f.close()
 
