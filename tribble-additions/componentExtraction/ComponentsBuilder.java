@@ -6,27 +6,32 @@ public abstract class ComponentsBuilder {
   Map<String, String> dict = new HashMap<String, String>();
   List<String> componentNames=new ArrayList<String>();
   public ComponentsBuilder(){
-    //this.componentNames.add("url"); there is never a node named url
-    //TODO scheme is complicated
-    this.componentNames.add("httpaddress");
-    this.componentNames.add("ftpaddress");
-    this.componentNames.add("newsaddress");
-    this.componentNames.add("nntpaddress");
-    this.componentNames.add("prosperoaddress");
-    this.componentNames.add("telnetaddress");
-    this.componentNames.add("gopheraddress");
-    this.componentNames.add("waisaddress");
-    this.componentNames.add("mailtoaddress");
-
-    this.componentNames.add("login");
-    this.componentNames.add("user");
-    this.componentNames.add("password");
-    this.componentNames.add("hostport");
+    this.componentNames.add("uri");
+    this.componentNames.add("relativeref");
+    this.componentNames.add("scheme");
+    this.componentNames.add("hierpart");
+    this.componentNames.add("query");
+    this.componentNames.add("fragment");
+    this.componentNames.add("authority");
     this.componentNames.add("host");
     this.componentNames.add("port");
-    this.componentNames.add("path");
-    this.componentNames.add("search");
-    //TODO nothing about references
+    this.componentNames.add("userinfo");
+    this.componentNames.add("pathabempty");
+    this.componentNames.add("pathabsolute");
+    this.componentNames.add("pathempty");
+    this.componentNames.add("pathrootless");
+    this.componentNames.add("pathnoscheme");
+    this.componentNames.add("query");
+    this.componentNames.add("fragment");
+
+    this.componentNames.add("relativepart");
+    this.componentNames.add("ipliteral");
+    this.componentNames.add("zoneID");
+    this.componentNames.add("ipv6addrz");
+    this.componentNames.add("ipv6address");
+    this.componentNames.add("ipvFuture");
+    this.componentNames.add("ipv4address");
+
 
   }
   /***

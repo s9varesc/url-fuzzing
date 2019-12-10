@@ -22,20 +22,14 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
     this.InternalComponentNames.add("hasRef");
     this.InternalComponentNames.add("ref");
 
-    //translation.put("spec", "url");//there is never a node named url -> build from xxaddress node
-    //translation.put("specIgnoringRef", "TODO");//doesn't exist in grammar
-    //translation.put("scheme", "");//doesn't exist in grammar ->build from full specification
-    translation.put("hostPort", "hostport");
+
+
+    translation.put("scheme", "scheme");
     translation.put("host", "host");
     translation.put("port", "port");
-    //translation.put("userPass","" );//doesn't exist in grammar ->build afterwards if username + password exist
-    translation.put("username", "user");
-    translation.put("password", "password");
-    //translation.put("pathQueryRef", "");//doesn't exist in grammar -> build afterwards
-    //translation.put("prePath", "TODO");//doesn'T exist in grammar
-    //translation.put("hasRef", "TODO");//doesn't exist in grammar
-    //translation.put("ref", "TODO");//doesn't exist in grammar
-    //TODO what about ;AB parts
+    translation.put("userPass","userinfo" );
+    translation.put("ref", "fragment");
+
   }
 
   @Override
@@ -43,10 +37,15 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
     Map<String, String> components=buildMapping();
     String result="{";
     for(String key:components.keySet()){
-      result+=key+":\""+components.get(key)+"\",";
+      if(key != "hasRef") {
+        result += key + ":\"" + components.get(key) + "\",\n";
+      }
+      else{
+        result += key + ":" + components.get(key) + ",\n";
+      }
     }
-    result=result.subSequence(0, result.length()-1).toString();
-    result+="}";
+    result=result.subSequence(0, result.length()-2).toString();
+    result+="}\n";
     return result;
   }
 
@@ -58,49 +57,68 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         components.put(name, content);
       }
     }
-    //building the scheme
-    String fullurl=dict.get("url");
-    for(String s:Arrays.asList("http","ftp", "news", "nntp", "mailto", "wais", "prospero", "telnet", "gopher")){
-      String content=dict.get(s+"address");
-      if (content!=null){
-        fullurl=content;
-        components.put("spec", content);
+    //build spec
+    String uri=dict.get("uri");
+    if (uri != null){
+      components.put("spec", uri);
+    }
+    else {
+      String uriref=dict.get("relativeref");
+      if(uriref != null){
+        components.put("spec", uriref);
       }
     }
-    ArrayList<String> schemes = new ArrayList<String>(Arrays.asList("http://","ftp://", "news:", "nntp:", "mailto:", "wais://", "prospero://", "telnet://", "gopher://"));
-    for(String scheme:schemes){
-      if(fullurl.startsWith(scheme)){
-        components.put("scheme", scheme);
+    //build path
+
+    String pr=dict.get("pathrootless");
+    String pn=dict.get("pathnoscheme");
+    String pae=dict.get("pathabempty");
+    String pa=dict.get("pathabsolute");
+    String pe=dict.get("pathempty");
+    for (String content: Arrays.asList(pae, pa, pe, pr, pn)){
+      if(content !=null){
+        components.put("path", content);
       }
     }
-    //building userPass
-    String user=components.get("username");
-    if(user != null){
-      String password=components.get("password");
-      if(password!=null){
-        components.put("userPass", user+":"+password);
-      }
-      else{
-        components.put("userPass", user);
-      }
+    //build hostport
+    String host=components.get("host");
+    String port=components.get("port");
+    String hostport=host;
+    if(port !=null){
+      hostport+=":"+port;
     }
-    //building PathQueryRef
-    String path=dict.get("path");
-    String query=dict.get("search");
-    String pathquery="";
-    if(query != null){
-      if(path != null){
-        components.put("pathQueryRef", "/"+path+"?"+query);
-      }
-      else{
-        components.put("pathQueryRef", "?"+query);
-      }
+    components.put("hostPort", hostport);
+
+    //build pathQueryRef
+    String path=components.get("path");
+    String query=dict.get("query");
+    String ref=components.get("ref");
+    String pqr=path;
+    if (query !=null){
+      pqr+="?"+query;
+    }
+    if(ref !=null){
+      pqr+="#"+ref;
+      //build hasRef
+      components.put("hasRef", "true");
     }
     else{
-      if(path != null){
-        components.put("pathQueryRef", "/"+path);
-      }
+      components.put("hasRef", "false");
     }
+    components.put("pathQueryRef", pqr);
+
+    //build prePath
+    String scheme=components.get("scheme");
+    String authority=dict.get("authority");
+    if(scheme != null){
+      components.put("prePath", scheme +"://"+authority);
+    }
+    else{
+      components.put("prePath", "//"+authority);
+    }
+
+
+
 
     return components;
   }
