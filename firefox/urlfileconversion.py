@@ -16,6 +16,8 @@ dir = args.dir
 f=open("./test_URIs_suffix.txt","r")
 suffix=f.read()
 i=2
+
+testnames=[]
 for filename in os.listdir(dir):
 	i+=1
 	urldata="var gTests = ["
@@ -27,10 +29,18 @@ for filename in os.listdir(dir):
 	\n var gIoService = Cc[\"@mozilla.org/network/io-service;1\"].getService(Ci.nsIIOService);\n"
 	js_file=prefix+"\n"+urldata+"\n"+suffix
 	
-	f=open("generatedTestFiles/test_URIs_"+str(i)+".js","w")
+	f=open("URLTestFiles/test_URIs_"+str(i)+".js","w")
+	testnames+=["test_URIs_"+str(i)+".js"]
 	f.write(js_file)
 	f.close()
+	
+xpcshellinicontent="[DEFAULT]\n"
+for test in testnames:
+	xpcshellinicontent+="["+test+"]\n"
 
+f=open("URLTestFiles/xpcshell.ini","w")
+f.write(xpcshellinicontent)
+f.close()
 
 	
 
