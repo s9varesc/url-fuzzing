@@ -34,7 +34,7 @@ for filename in os.listdir(dir):
 	f.write(js_file)
 	f.close()
 	
-xpcshellinicontent="[DEFAULT]\n head = head_channels.js head_cache.js head_cache2.js head_cookies.js"
+xpcshellinicontent="[DEFAULT]\nhead = head_channels.js head_cache.js head_cache2.js head_cookies.js"
 for test in testnames:
 	xpcshellinicontent+="["+test+"]\n"
 
