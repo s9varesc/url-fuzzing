@@ -38,7 +38,7 @@ Grammar(
                       | (( ( 'h16 ~ ":" ).rep(0,5) ~ 'h16 ).? ~ "::" ~  'h16)
                       | (( ( 'h16 ~ ":" ).rep(0,6) ~ 'h16 ).? ~ "::"),
 
-   'h16             := 'hexdig.rep(4,4) ,//TODO was 4
+   'h16             := 'hexdig.rep(4,4) ,
    'ls32            := ( 'h16 ~ ":" ~ 'h16 ) | 'ipv4address,
    'ipv4address     := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
 
