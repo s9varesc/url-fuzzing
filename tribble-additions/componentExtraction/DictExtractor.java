@@ -9,7 +9,7 @@ package saarland.cispa.se.tribble.execution.componentExtraction;
   import java.util.List;
 
 public class DictExtractor {
-  ComponentsBuilder componentsBuilder = new FirefoxURLComponentsBuilder();
+  ComponentsBuilder componentsBuilder = new FirefoxURLComponentsBuilderLS();
   public String extract(DTree root) {
     List<String> componentNames=componentsBuilder.getComponentNames();
     List<DTree> workList = new ArrayList<>();
@@ -29,11 +29,11 @@ public class DictExtractor {
       if (decl instanceof Reference) {
         String name = ((Reference) decl).name();
 
-        if (componentNames.contains(name)){
+        //if (componentNames.contains(name)){
           //System.out.println(name);
           String content=current.leaves().mkString();
           componentsBuilder.addComponent(name, content);
-        }
+        //}
 
       }
     }

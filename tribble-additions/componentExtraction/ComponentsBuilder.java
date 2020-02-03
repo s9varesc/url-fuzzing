@@ -6,6 +6,7 @@ public abstract class ComponentsBuilder {
   Map<String, String> dict = new HashMap<String, String>();
   List<String> componentNames=new ArrayList<String>();
   public ComponentsBuilder(){
+    /* rfc-grammar version
     this.componentNames.add("uri");
     this.componentNames.add("relativeref");
     this.componentNames.add("scheme");
@@ -30,7 +31,9 @@ public abstract class ComponentsBuilder {
     this.componentNames.add("ipv6addrz");
     this.componentNames.add("ipv6address");
     this.componentNames.add("ipvFuture");
-    this.componentNames.add("ipv4address");
+    this.componentNames.add("ipv4address");*/
+
+    this.componentNames.add("");
 
 
   }
