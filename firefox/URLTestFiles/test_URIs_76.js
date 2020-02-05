@@ -1,14 +1,11 @@
 "use strict";	
  var gIoService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
 
-var gTests = [{path:"%be/%c8-%91/%4f:$%70@:':%3a/@-%7c%c8%c8%fa/%b3%f0-:/::%ae%cc%fc/%7d(;=@':!+@/@J@__/%15&%da@/!@%cf7%a09_6@%cc/9%72-_)%fb",
-scheme:"R",
-pathQueryRef:"%be/%c8-%91/%4f:$%70@:':%3a/@-%7c%c8%c8%fa/%b3%f0-:/::%ae%cc%fc/%7d(;=@':!+@/@J@__/%15&%da@/!@%cf7%a09_6@%cc/9%72-_)%fb",
-host:"'",
-hostPort:"'",
-hasRef:false,
-spec:"R://'%be/%c8-%91/%4f:$%70@:':%3a/@-%7c%c8%c8%fa/%b3%f0-:/::%ae%cc%fc/%7d(;=@':!+@/@J@__/%15&%da@/!@%cf7%a09_6@%cc/9%72-_)%fb",
-prePath:"R://'"}
+var gTests = [{scheme:"https",
+host:"[::ddca:aeda:fcae:adbb:bfbb:faeb:fbfe]",
+hostPort:"[::ddca:aeda:fcae:adbb:bfbb:faeb:fbfe]",
+spec:"https://[::ddca:aeda:fcae:adbb:bfbb:faeb:fbfe]",
+prePath:"https://[::ddca:aeda:fcae:adbb:bfbb:faeb:fbfe]"}
 ]
 
 var gHashSuffixes = ["#", "#myRef", "#myRef?a=b", "#myRef#", "#myRef#x:yz"];

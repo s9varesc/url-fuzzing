@@ -1,15 +1,11 @@
 "use strict";	
  var gIoService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
 
-var gTests = [{path:"L//+/:%ce/L&@)@.%a2%4f*/$@-/%c2~@/+@%10)%aa%3b*/_::@=:/_:!%c2",
-scheme:"S",
-pathQueryRef:"L//+/:%ce/L&@)@.%a2%4f*/$@-/%c2~@/+@%10)%aa%3b*/_::@=:/_:!%c2",
-userPass:"-",
-host:"~%df*%f3*%0a",
-hostPort:"~%df*%f3*%0a",
-hasRef:false,
-spec:"S://-@~%df*%f3*%0aL//+/:%ce/L&@)@.%a2%4f*/$@-/%c2~@/+@%10)%aa%3b*/_::@=:/_:!%c2",
-prePath:"S://-@~%df*%f3*%0a"}
+var gTests = [{scheme:"ws",
+host:"3.8.252.6",
+hostPort:"3.8.252.6",
+spec:"ws://3.8.252.6",
+prePath:"ws://3.8.252.6"}
 ]
 
 var gHashSuffixes = ["#", "#myRef", "#myRef?a=b", "#myRef#", "#myRef#x:yz"];

@@ -2,13 +2,9 @@
  var gIoService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
 
 var gTests = [{path:"/",
-scheme:"L",
-pathQueryRef:"/",
-host:"[::cb1a:bbab:576d:c73d:8393]",
-hostPort:"[::cb1a:bbab:576d:c73d:8393]",
+pathQueryRef:"/?U+00AA",
 hasRef:false,
-spec:"L://[::cb1a:bbab:576d:c73d:8393]/",
-prePath:"L://[::cb1a:bbab:576d:c73d:8393]"}
+spec:"/?U+00AA"}
 ]
 
 var gHashSuffixes = ["#", "#myRef", "#myRef?a=b", "#myRef#", "#myRef#x:yz"];

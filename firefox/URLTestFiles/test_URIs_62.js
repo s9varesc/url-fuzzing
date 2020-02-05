@@ -1,15 +1,11 @@
 "use strict";	
  var gIoService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
 
-var gTests = [{path:"%e7/~+=9@:%ff@%4e:/@_:_%a1'@:%be./%d5@-;/-/':W_/:@:@:)%9c%f6/:6@L:%9f$::X/./@%ad%cf,@$/::@:",
-scheme:"P",
-pathQueryRef:"%e7/~+=9@:%ff@%4e:/@_:_%a1'@:%be./%d5@-;/-/':W_/:@:@:)%9c%f6/:6@L:%9f$::X/./@%ad%cf,@$/::@:",
-userPass:"+",
-host:"=%91%ab!%43!",
-hostPort:"=%91%ab!%43!",
-hasRef:false,
-spec:"P://+@=%91%ab!%43!%e7/~+=9@:%ff@%4e:/@_:_%a1'@:%be./%d5@-;/-/':W_/:@:@:)%9c%f6/:6@L:%9f$::X/./@%ad%cf,@$/::@:",
-prePath:"P://+@=%91%ab!%43!"}
+var gTests = [{scheme:"ws",
+host:"[fbfc::fcda:ecad:dcfb:ebfd]",
+hostPort:"[fbfc::fcda:ecad:dcfb:ebfd]",
+spec:"ws://[fbfc::fcda:ecad:dcfb:ebfd]",
+prePath:"ws://[fbfc::fcda:ecad:dcfb:ebfd]"}
 ]
 
 var gHashSuffixes = ["#", "#myRef", "#myRef?a=b", "#myRef#", "#myRef#x:yz"];
