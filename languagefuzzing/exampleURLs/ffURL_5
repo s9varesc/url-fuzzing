@@ -1,0 +1,12 @@
+{
+    spec: "http://a/b/c/d;p?q",
+    relativeURI: "#s",
+    scheme: "http",
+    prePath: "http://a",
+    pathQueryRef: "/b/c/d;p?q#s",
+    ref: "s", 
+    specIgnoringRef: "http://a/b/c/d;p?q",
+    hasRef: true,
+    nsIURL: true,
+    nsINestedURI: false,
+  }

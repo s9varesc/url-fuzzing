@@ -1,0 +1,9 @@
+{
+    spec: "file:///myFile.html",
+    scheme: "file",
+    prePath: "file://",
+    pathQueryRef: "/myFile.html",
+    ref: "",
+    nsIURL: true,
+    nsINestedURI: false,
+  }

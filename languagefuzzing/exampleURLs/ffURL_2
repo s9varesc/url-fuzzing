@@ -1,0 +1,12 @@
+{
+    spec: "ftp://foo:bar@ftp.mozilla.org:100/pub/mozilla.org/README",
+    scheme: "ftp",
+    prePath: "ftp://foo:bar@ftp.mozilla.org:100",
+    port: 100,
+    username: "foo",
+    password: "bar",
+    pathQueryRef: "/pub/mozilla.org/README",
+    ref: "",
+    nsIURL: true,
+    nsINestedURI: false,
+  }

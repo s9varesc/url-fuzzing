@@ -1,0 +1,5 @@
+{scheme:"ftp",
+host:"[::aaea:fbed:bcfa:beea]",
+hostPort:"[::aaea:fbed:bcfa:beea]",
+spec:"ftp://[::aaea:fbed:bcfa:beea]",
+prePath:"ftp://[::aaea:fbed:bcfa:beea]"}
