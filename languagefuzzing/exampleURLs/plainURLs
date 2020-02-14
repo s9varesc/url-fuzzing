@@ -1,0 +1,15 @@
+file:///myFile.html
+ftp://foo:bar@ftp.mozilla.org:100/pub/mozilla.org/README
+http://bar:foo@www.mozilla.org:8080/pub/mozilla.org/README.html
+http://a/b/c/d;p?q
+T:/?
+/?U+10FF4A
+wss://[fcfb::dffc:afae:accb:dbec:8.9.4.0]
+mailto:webmaster@mozilla.com
+https://7.250.8.9
+ftp://[::aaea:fbed:bcfa:beea]
+P://[va.3]~/,+::9%2d)//::@_)::
+U://254.254.164.250/)~_%01%05-@@/::-@:@/*,%86@G/;+:@:)K@@/%d4_/-G:=.@*
+//!D.&%fd%7b~
+//59.230.72.9+/@S%3c::%de%23//%ec*_*%60%ef%8d%e7&/:@~~~_:/%df+/-@:!:-,$);/%8d9%202/:_%3e$%43@%a6%9d/@%f4@%81/:_:3==&@)#)
+Z://.@%af+%a8~~-+..%24:/:::_=:%1e,.

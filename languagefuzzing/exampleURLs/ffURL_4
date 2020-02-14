@@ -1,9 +1,8 @@
 {
-    spec: "http://a/b/c/d;p?q",
-    relativeURI: "g:h",
-    scheme: "g",
-    prePath: "g:",
-    pathQueryRef: "h",
+    spec: "mailto:webmaster@mozilla.com",
+    scheme: "mailto",
+    prePath: "mailto:",
+    pathQueryRef: "webmaster@mozilla.com",
     ref: "",
     nsIURL: false,
     nsINestedURI: false,
