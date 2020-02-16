@@ -1,0 +1,12 @@
+
+//jacoco link
+https://github.com/jacoco/jacoco/releases/download/v0.8.5/jacoco-0.8.5.zip
+
+
+//java argument for instrumentation
+-javaagent:/home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jacocoagent.jar=address=*,destfile=rep/jacoco-it.exec,output=file
+
+//report generation
+java -jar /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jacococli.jar report /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/rep/jacoco-it.exec --classfiles /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/src/ --sourcefiles /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/src --html /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/rep/jacoco-report
+
+
