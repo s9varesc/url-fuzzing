@@ -8,16 +8,6 @@ public class TestJavaMain {
 
     public static void main(String[] args) {
         InputReader reader=new InputReader();
+        reader.readInput("../exampleURLs/plainURLs");
     }
-
-    private static void parseInput(String input){
-        try {
-            URL url=new URL(input);
-        } catch (MalformedURLException e) {
-            System.out.println("caught exception on parse of: "+input);
-            System.out.println(e.getMessage());
-        }
-    }
-
-
 }
