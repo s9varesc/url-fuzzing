@@ -4,9 +4,9 @@ https://github.com/jacoco/jacoco/releases/download/v0.8.5/jacoco-0.8.5.zip
 
 
 //java argument for instrumentation
--javaagent:/home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jacocoagent.jar=address=*,destfile=rep/jacoco-it.exec,output=file
+java -javaagent:/home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jacocoagent.jar=destfile=reports/jacoco-it.exec,dumponexit=true,output=file,classdumpdir=classes  -cp ./classes TestJavaMain
+
 
 //report generation
-java -jar /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jacococli.jar report /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/rep/jacoco-it.exec --classfiles /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/src/ --sourcefiles /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/src --html /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/rep/jacoco-report
-
+java -jar /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jacococli.jar report /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/reports/jacoco-it.exec --classfiles /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar --sourcefiles /usr/lib/jvm/java-8-openjdk-amd64/src.zip --html /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/reports/j8 
 
