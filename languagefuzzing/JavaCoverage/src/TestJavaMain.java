@@ -1,4 +1,4 @@
-import io.mola.galimatias.URL;
+import java.net.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -39,7 +39,7 @@ class ParsingHandler {
 
     public void parseInput(String input){
         try {
-            URL url=URL.parse(input);
+            URL url=new URL(input);
         } catch (Exception e) {
             System.out.println("caught exception on parse of: "+input);
             System.out.println(e.getMessage());
