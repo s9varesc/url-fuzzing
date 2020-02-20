@@ -37,7 +37,8 @@ jacoco-0.8.5.zip
 jacoco-0.8.5
 jacoco-0.8.5/
 jacoco/
-rep/
+reports/
+verboseout.txt
 
 #Java URL class
 URL.java
