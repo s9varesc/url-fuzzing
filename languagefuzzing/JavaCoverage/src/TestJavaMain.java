@@ -1,8 +1,12 @@
+import io.mola.galimatias.URL;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+
+
+
+
 
 public class TestJavaMain {
 
@@ -35,8 +39,8 @@ class ParsingHandler {
 
     public void parseInput(String input){
         try {
-            URL url=new URL(input);
-        } catch (MalformedURLException e) {
+            URL url=URL.parse(input);
+        } catch (Exception e) {
             System.out.println("caught exception on parse of: "+input);
             System.out.println(e.getMessage());
         }
