@@ -32,6 +32,11 @@ out/
 # Notebook Checkpoints
 .ipynb_checkpoints/
 
+#jcov
+template.xml
+
+#old stuff
+
 #JaCoCo
 jacoco-0.8.5.zip
 jacoco-0.8.5
@@ -40,5 +45,6 @@ jacoco/
 reports/
 verboseout.txt
 
-#jcov
-template.xml
+#galimatias
+galimatias
+
