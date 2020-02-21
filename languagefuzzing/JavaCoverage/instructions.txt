@@ -1,17 +1,9 @@
 
-//jacoco link
-https://github.com/jacoco/jacoco/releases/download/v0.8.5/jacoco-0.8.5.zip
 
+javac src/TestJavaMain.java  -d ./classes
 
-//java argument for instrumentation
-java -javaagent:/home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jacocoagent.jar=destfile=reports/jacoco-it.exec,dumponexit=true,output=file,classdumpdir=classes  -cp ./classes TestJavaMain
+java -Xmx128M -jar libs/jcov.jar JREInstr  -im java.net -implantrt libs/jcov.jar /usr/lib/jvm/java-8-openjdk-amd64/jre/
 
+java -javaagent:/home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jcov.jar=im=java.net -cp ./classes TestJavaMain
 
-//report generation
-java -jar /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jacococli.jar report /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/reports/jacoco-it.exec --classfiles /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar --sourcefiles /usr/lib/jvm/java-8-openjdk-amd64/src --html /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/reports/j8 
-
-
-
-root@UbuntuVM:/home/vera/url-fuzzing/languagefuzzing/JavaCoverage# javac src/TestJavaMain.java  -d ./classes
-root@UbuntuVM:/home/vera/url-fuzzing/languagefuzzing/JavaCoverage# java -javaagent:/home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jacocoagent.jar=destfile=reports/jacoco-it.exec,output=file,dumponexit=true,inclbootstrapclasses=true,inclnolocationclasses=true,excludes=java.util.*:sun.*:java.lang.*,classdumpdir=classes  -cp ./classes -verbose TestJavaMain >verboseout.txt
-root@UbuntuVM:/home/vera/url-fuzzing/languagefuzzing/JavaCoverage# java -jar /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jacococli.jar report /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/reports/jacoco-it.exec --classfiles /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/classes --sourcefiles /usr/lib/jvm/openjdk-8/src --sourcefiles /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/src --html /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/reports/j10
+java -cp /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jcov.jar com.sun.tdk.jcov.RepGen -include java.net.* -src /usr/lib/jvm/openjdk-8/src -format html -output out result.xml
