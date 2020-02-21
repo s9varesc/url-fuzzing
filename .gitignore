@@ -40,5 +40,5 @@ jacoco/
 reports/
 verboseout.txt
 
-#galimatias
-java
+#jcov
+template.xml
