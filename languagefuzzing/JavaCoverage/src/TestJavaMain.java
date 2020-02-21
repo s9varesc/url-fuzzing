@@ -25,7 +25,7 @@ class InputReader {
 
             String line;
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                //System.out.println(line);
                 parsingHandler.parseInput(line);
             }
             br.close();
