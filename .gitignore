@@ -36,6 +36,15 @@ out/
 template.xml
 result.xml
 
+## C
+*.o
+*.exe
+
+##gcov
+*.gcov
+*.gcda
+*.gcno
+
 #old stuff
 
 #JaCoCo
