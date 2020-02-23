@@ -39,6 +39,7 @@ result.xml
 ## C
 *.o
 *.exe
+*.so
 
 ##gcov
 *.gcov
