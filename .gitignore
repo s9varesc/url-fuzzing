@@ -40,6 +40,7 @@ result.xml
 *.o
 *.exe
 *.so
+TestCMain
 
 ##gcov
 *.gcov
