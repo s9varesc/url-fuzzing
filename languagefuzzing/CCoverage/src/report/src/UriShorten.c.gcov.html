@@ -1,0 +1,400 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main_coverage.info - src/UriShorten.c</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - UriShorten.c<span style="font-size: 80%;"> (source / <a href="UriShorten.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main_coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">98</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-23 16:03:14</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*</a>
+<span class="lineNum">       2 </span>            :  * uriparser - RFC 3986 URI parsing library
+<span class="lineNum">       3 </span>            :  *
+<span class="lineNum">       4 </span>            :  * Copyright (C) 2007, Weijia Song &lt;songweijia@gmail.com&gt;
+<span class="lineNum">       5 </span>            :  * Copyright (C) 2007, Sebastian Pipping &lt;sebastian@pipping.org&gt;
+<span class="lineNum">       6 </span>            :  * All rights reserved.
+<span class="lineNum">       7 </span>            :  *
+<span class="lineNum">       8 </span>            :  * Redistribution  and use in source and binary forms, with or without
+<span class="lineNum">       9 </span>            :  * modification,  are permitted provided that the following conditions
+<span class="lineNum">      10 </span>            :  * are met:
+<span class="lineNum">      11 </span>            :  *
+<span class="lineNum">      12 </span>            :  *     * Redistributions   of  source  code  must  retain  the   above
+<span class="lineNum">      13 </span>            :  *       copyright  notice, this list of conditions and the  following
+<span class="lineNum">      14 </span>            :  *       disclaimer.
+<span class="lineNum">      15 </span>            :  *
+<span class="lineNum">      16 </span>            :  *     * Redistributions  in  binary  form must  reproduce  the  above
+<span class="lineNum">      17 </span>            :  *       copyright  notice, this list of conditions and the  following
+<span class="lineNum">      18 </span>            :  *       disclaimer   in  the  documentation  and/or  other  materials
+<span class="lineNum">      19 </span>            :  *       provided with the distribution.
+<span class="lineNum">      20 </span>            :  *
+<span class="lineNum">      21 </span>            :  *     * Neither  the name of the &lt;ORGANIZATION&gt; nor the names of  its
+<span class="lineNum">      22 </span>            :  *       contributors  may  be  used to endorse  or  promote  products
+<span class="lineNum">      23 </span>            :  *       derived  from  this software without specific  prior  written
+<span class="lineNum">      24 </span>            :  *       permission.
+<span class="lineNum">      25 </span>            :  *
+<span class="lineNum">      26 </span>            :  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+<span class="lineNum">      27 </span>            :  * &quot;AS  IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT  NOT
+<span class="lineNum">      28 </span>            :  * LIMITED  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND  FITNESS
+<span class="lineNum">      29 </span>            :  * FOR  A  PARTICULAR  PURPOSE ARE DISCLAIMED. IN NO EVENT  SHALL  THE
+<span class="lineNum">      30 </span>            :  * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+<span class="lineNum">      31 </span>            :  * INCIDENTAL,    SPECIAL,   EXEMPLARY,   OR   CONSEQUENTIAL   DAMAGES
+<span class="lineNum">      32 </span>            :  * (INCLUDING,  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+<span class="lineNum">      33 </span>            :  * SERVICES;  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+<span class="lineNum">      34 </span>            :  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+<span class="lineNum">      35 </span>            :  * STRICT  LIABILITY,  OR  TORT (INCLUDING  NEGLIGENCE  OR  OTHERWISE)
+<span class="lineNum">      36 </span>            :  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+<span class="lineNum">      37 </span>            :  * OF THE POSSIBILITY OF SUCH DAMAGE.
+<span class="lineNum">      38 </span>            :  */
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : /* What encodings are enabled? */
+<span class="lineNum">      41 </span>            : #include &lt;uriparser/UriDefsConfig.h&gt;
+<span class="lineNum">      42 </span>            : #if (!defined(URI_PASS_ANSI) &amp;&amp; !defined(URI_PASS_UNICODE))
+<span class="lineNum">      43 </span>            : /* Include SELF twice */
+<span class="lineNum">      44 </span>            : # ifdef URI_ENABLE_ANSI
+<span class="lineNum">      45 </span>            : #  define URI_PASS_ANSI 1
+<span class="lineNum">      46 </span>            : #  include &quot;UriShorten.c&quot;
+<span class="lineNum">      47 </span>            : #  undef URI_PASS_ANSI
+<span class="lineNum">      48 </span>            : # endif
+<span class="lineNum">      49 </span>            : # ifdef URI_ENABLE_UNICODE
+<span class="lineNum">      50 </span>            : #  define URI_PASS_UNICODE 1
+<span class="lineNum">      51 </span>            : #  include &quot;UriShorten.c&quot;
+<span class="lineNum">      52 </span>            : #  undef URI_PASS_UNICODE
+<span class="lineNum">      53 </span>            : # endif
+<span class="lineNum">      54 </span>            : #else
+<span class="lineNum">      55 </span>            : # ifdef URI_PASS_ANSI
+<span class="lineNum">      56 </span>            : #  include &lt;uriparser/UriDefsAnsi.h&gt;
+<span class="lineNum">      57 </span>            : # else
+<span class="lineNum">      58 </span>            : #  include &lt;uriparser/UriDefsUnicode.h&gt;
+<span class="lineNum">      59 </span>            : #  include &lt;wchar.h&gt;
+<span class="lineNum">      60 </span>            : # endif
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span>            : #ifndef URI_DOXYGEN
+<span class="lineNum">      65 </span>            : # include &lt;uriparser/Uri.h&gt;
+<span class="lineNum">      66 </span>            : # include &quot;UriCommon.h&quot;
+<span class="lineNum">      67 </span>            : # include &quot;UriMemory.h&quot;
+<span class="lineNum">      68 </span>            : #endif
+<span class="lineNum">      69 </span>            : 
+<a name="70"><span class="lineNum">      70 </span>            : </a>
+<span class="lineNum">      71 </span>            : 
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 : static URI_INLINE UriBool URI_FUNC(AppendSegment)(URI_TYPE(Uri) * uri,</span>
+<span class="lineNum">      73 </span>            :                 const URI_CHAR * first, const URI_CHAR * afterLast,
+<span class="lineNum">      74 </span>            :                 UriMemoryManager * memory) {
+<span class="lineNum">      75 </span>            :         /* Create segment */
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :         URI_TYPE(PathSegment) * segment = memory-&gt;malloc(memory, 1 * sizeof(URI_TYPE(PathSegment)));</span>
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :         if (segment == NULL) {</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :                 return URI_FALSE; /* Raises malloc error */</span>
+<span class="lineNum">      79 </span>            :         }
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :         segment-&gt;next = NULL;</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :         segment-&gt;text.first = first;</span>
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :         segment-&gt;text.afterLast = afterLast;</span>
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            :         /* Put into chain */
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :         if (uri-&gt;pathTail == NULL) {</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :                 uri-&gt;pathHead = segment;</span>
+<span class="lineNum">      87 </span>            :         } else {
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :                 uri-&gt;pathTail-&gt;next = segment;</span>
+<span class="lineNum">      89 </span>            :         }
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :         uri-&gt;pathTail = segment;</span>
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :         return URI_TRUE;</span>
+<span class="lineNum">      93 </span>            : }
+<span class="lineNum">      94 </span>            : 
+<a name="95"><span class="lineNum">      95 </span>            : </a>
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 : static URI_INLINE UriBool URI_FUNC(EqualsAuthority)(const URI_TYPE(Uri) * first,</span>
+<span class="lineNum">      98 </span>            :                 const URI_TYPE(Uri) * second) {
+<span class="lineNum">      99 </span>            :         /* IPv4 */
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :         if (first-&gt;hostData.ip4 != NULL) {</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :                 return ((second-&gt;hostData.ip4 != NULL)</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :                                 &amp;&amp; !memcmp(first-&gt;hostData.ip4-&gt;data,</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :                                         second-&gt;hostData.ip4-&gt;data, 4)) ? URI_TRUE : URI_FALSE;</span>
+<span class="lineNum">     104 </span>            :         }
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            :         /* IPv6 */
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :         if (first-&gt;hostData.ip6 != NULL) {</span>
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :                 return ((second-&gt;hostData.ip6 != NULL)</span>
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :                                 &amp;&amp; !memcmp(first-&gt;hostData.ip6-&gt;data,</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :                                         second-&gt;hostData.ip6-&gt;data, 16)) ? URI_TRUE : URI_FALSE;</span>
+<span class="lineNum">     111 </span>            :         }
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span>            :         /* IPvFuture */
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :         if (first-&gt;hostData.ipFuture.first != NULL) {</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :                 return ((second-&gt;hostData.ipFuture.first != NULL)</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :                                 &amp;&amp; !URI_FUNC(CompareRange)(&amp;first-&gt;hostData.ipFuture,</span>
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :                                         &amp;second-&gt;hostData.ipFuture)) ? URI_TRUE : URI_FALSE;</span>
+<span class="lineNum">     118 </span>            :         }
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :         return !URI_FUNC(CompareRange)(&amp;first-&gt;hostText, &amp;second-&gt;hostText)</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :                         ? URI_TRUE : URI_FALSE;</span>
+<span class="lineNum">     122 </span>            : }
+<span class="lineNum">     123 </span>            : 
+<a name="124"><span class="lineNum">     124 </span>            : </a>
+<span class="lineNum">     125 </span>            : 
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 : static int URI_FUNC(RemoveBaseUriImpl)(URI_TYPE(Uri) * dest,</span>
+<span class="lineNum">     127 </span>            :                 const URI_TYPE(Uri) * absSource,
+<span class="lineNum">     128 </span>            :                 const URI_TYPE(Uri) * absBase,
+<span class="lineNum">     129 </span>            :                 UriBool domainRootMode, UriMemoryManager * memory) {
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :         if (dest == NULL) {</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :                 return URI_ERROR_NULL;</span>
+<span class="lineNum">     132 </span>            :         }
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :         URI_FUNC(ResetUri)(dest);</span>
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :         if ((absSource == NULL) || (absBase == NULL)) {</span>
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :                 return URI_ERROR_NULL;</span>
+<span class="lineNum">     137 </span>            :         }
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span>            :         /* absBase absolute? */
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :         if (absBase-&gt;scheme.first == NULL) {</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :                 return URI_ERROR_REMOVEBASE_REL_BASE;</span>
+<span class="lineNum">     142 </span>            :         }
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            :         /* absSource absolute? */
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :         if (absSource-&gt;scheme.first == NULL) {</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :                 return URI_ERROR_REMOVEBASE_REL_SOURCE;</span>
+<span class="lineNum">     147 </span>            :         }
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span>            :         /* [01/50]      if (A.scheme != Base.scheme) then */
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :                                 if (URI_FUNC(CompareRange)(&amp;absSource-&gt;scheme, &amp;absBase-&gt;scheme)) {</span>
+<span class="lineNum">     151 </span>            :         /* [02/50]         T.scheme    = A.scheme; */
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :                                         dest-&gt;scheme = absSource-&gt;scheme;</span>
+<span class="lineNum">     153 </span>            :         /* [03/50]         T.authority = A.authority; */
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :                                         if (!URI_FUNC(CopyAuthority)(dest, absSource, memory)) {</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :                                                 return URI_ERROR_MALLOC;</span>
+<span class="lineNum">     156 </span>            :                                         }
+<span class="lineNum">     157 </span>            :         /* [04/50]         T.path      = A.path; */
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :                                         if (!URI_FUNC(CopyPath)(dest, absSource, memory)) {</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :                                                 return URI_ERROR_MALLOC;</span>
+<span class="lineNum">     160 </span>            :                                         }
+<span class="lineNum">     161 </span>            :         /* [05/50]      else */
+<span class="lineNum">     162 </span>            :                                 } else {
+<span class="lineNum">     163 </span>            :         /* [06/50]         undef(T.scheme); */
+<span class="lineNum">     164 </span>            :                                         /* NOOP */
+<span class="lineNum">     165 </span>            :         /* [07/50]         if (A.authority != Base.authority) then */
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :                                         if (!URI_FUNC(EqualsAuthority)(absSource, absBase)) {</span>
+<span class="lineNum">     167 </span>            :         /* [08/50]            T.authority = A.authority; */
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :                                                 if (!URI_FUNC(CopyAuthority)(dest, absSource, memory)) {</span>
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :                                                         return URI_ERROR_MALLOC;</span>
+<span class="lineNum">     170 </span>            :                                                 }
+<span class="lineNum">     171 </span>            :         /* [09/50]            T.path      = A.path; */
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :                                                 if (!URI_FUNC(CopyPath)(dest, absSource, memory)) {</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :                                                         return URI_ERROR_MALLOC;</span>
+<span class="lineNum">     174 </span>            :                                                 }
+<span class="lineNum">     175 </span>            :         /* [10/50]         else */
+<span class="lineNum">     176 </span>            :                                         } else {
+<span class="lineNum">     177 </span>            :         /* [11/50]            if domainRootMode then */
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :                                                 if (domainRootMode == URI_TRUE) {</span>
+<span class="lineNum">     179 </span>            :         /* [12/50]               undef(T.authority); */
+<span class="lineNum">     180 </span>            :                                                         /* NOOP */
+<span class="lineNum">     181 </span>            :         /* [13/50]               if (first(A.path) == &quot;&quot;) then */
+<span class="lineNum">     182 </span>            :                                                         /* GROUPED */
+<span class="lineNum">     183 </span>            :         /* [14/50]                  T.path   = &quot;/.&quot; + A.path; */
+<span class="lineNum">     184 </span>            :                                                                 /* GROUPED */
+<span class="lineNum">     185 </span>            :         /* [15/50]               else */
+<span class="lineNum">     186 </span>            :                                                                 /* GROUPED */
+<span class="lineNum">     187 </span>            :         /* [16/50]                  T.path   = A.path; */
+<span class="lineNum">     188 </span>            :                                                                 /* GROUPED */
+<span class="lineNum">     189 </span>            :         /* [17/50]               endif; */
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :                                                         if (!URI_FUNC(CopyPath)(dest, absSource, memory)) {</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :                                                                 return URI_ERROR_MALLOC;</span>
+<span class="lineNum">     192 </span>            :                                                         }
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :                                                         dest-&gt;absolutePath = URI_TRUE;</span>
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :                                                         if (!URI_FUNC(FixAmbiguity)(dest, memory)) {</span>
+<span class="lineNum">     196 </span><span class="lineNoCov">          0 :                                                                 return URI_ERROR_MALLOC;</span>
+<span class="lineNum">     197 </span>            :                                                         }
+<span class="lineNum">     198 </span>            :         /* [18/50]            else */
+<span class="lineNum">     199 </span>            :                                                 } else {
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :                                                         const URI_TYPE(PathSegment) * sourceSeg = absSource-&gt;pathHead;</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :                                                         const URI_TYPE(PathSegment) * baseSeg = absBase-&gt;pathHead;</span>
+<span class="lineNum">     202 </span>            :         /* [19/50]               bool pathNaked = true; */
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :                                                         UriBool pathNaked = URI_TRUE;</span>
+<span class="lineNum">     204 </span>            :         /* [20/50]               undef(last(Base.path)); */
+<span class="lineNum">     205 </span>            :                                                         /* NOOP */
+<span class="lineNum">     206 </span>            :         /* [21/50]               T.path = &quot;&quot;; */
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :                                                         dest-&gt;absolutePath = URI_FALSE;</span>
+<span class="lineNum">     208 </span>            :         /* [22/50]               while (first(A.path) == first(Base.path)) do */
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :                                                         while ((sourceSeg != NULL) &amp;&amp; (baseSeg != NULL)</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :                                                                         &amp;&amp; !URI_FUNC(CompareRange)(&amp;sourceSeg-&gt;text, &amp;baseSeg-&gt;text)</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :                                                                         &amp;&amp; !((sourceSeg-&gt;text.first == sourceSeg-&gt;text.afterLast)</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :                                                                                 &amp;&amp; ((sourceSeg-&gt;next == NULL) != (baseSeg-&gt;next == NULL)))) {</span>
+<span class="lineNum">     213 </span>            :         /* [23/50]                  A.path++; */
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :                                                                 sourceSeg = sourceSeg-&gt;next;</span>
+<span class="lineNum">     215 </span>            :         /* [24/50]                  Base.path++; */
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :                                                                 baseSeg = baseSeg-&gt;next;</span>
+<span class="lineNum">     217 </span>            :         /* [25/50]               endwhile; */
+<span class="lineNum">     218 </span>            :                                                         }
+<span class="lineNum">     219 </span>            :         /* [26/50]               while defined(first(Base.path)) do */
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :                                                         while ((baseSeg != NULL) &amp;&amp; (baseSeg-&gt;next != NULL)) {</span>
+<span class="lineNum">     221 </span>            :         /* [27/50]                  Base.path++; */
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :                                                                 baseSeg = baseSeg-&gt;next;</span>
+<span class="lineNum">     223 </span>            :         /* [28/50]                  T.path += &quot;../&quot;; */
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :                                                                 if (!URI_FUNC(AppendSegment)(dest, URI_FUNC(ConstParent),</span>
+<span class="lineNum">     225 </span>            :                                                                                 URI_FUNC(ConstParent) + 2, memory)) {
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :                                                                         return URI_ERROR_MALLOC;</span>
+<span class="lineNum">     227 </span>            :                                                                 }
+<span class="lineNum">     228 </span>            :         /* [29/50]                  pathNaked = false; */
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :                                                                 pathNaked = URI_FALSE;</span>
+<span class="lineNum">     230 </span>            :         /* [30/50]               endwhile; */
+<span class="lineNum">     231 </span>            :                                                         }
+<span class="lineNum">     232 </span>            :         /* [31/50]               while defined(first(A.path)) do */
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :                                                         while (sourceSeg != NULL) {</span>
+<span class="lineNum">     234 </span>            :         /* [32/50]                  if pathNaked then */
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :                                                                 if (pathNaked == URI_TRUE) {</span>
+<span class="lineNum">     236 </span>            :         /* [33/50]                     if (first(A.path) contains &quot;:&quot;) then */
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :                                                                         UriBool containsColon = URI_FALSE;</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :                                                                         const URI_CHAR * ch = sourceSeg-&gt;text.first;</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :                                                                         for (; ch &lt; sourceSeg-&gt;text.afterLast; ch++) {</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :                                                                                 if (*ch == _UT(':')) {</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :                                                                                         containsColon = URI_TRUE;</span>
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :                                                                                         break;</span>
+<span class="lineNum">     243 </span>            :                                                                                 }
+<span class="lineNum">     244 </span>            :                                                                         }
+<span class="lineNum">     245 </span>            : 
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :                                                                         if (containsColon) {</span>
+<span class="lineNum">     247 </span>            :         /* [34/50]                        T.path += &quot;./&quot;; */
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :                                                                                 if (!URI_FUNC(AppendSegment)(dest, URI_FUNC(ConstPwd),</span>
+<span class="lineNum">     249 </span>            :                                                                                                 URI_FUNC(ConstPwd) + 1, memory)) {
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :                                                                                         return URI_ERROR_MALLOC;</span>
+<span class="lineNum">     251 </span>            :                                                                                 }
+<span class="lineNum">     252 </span>            :         /* [35/50]                     elseif (first(A.path) == &quot;&quot;) then */
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :                                                                         } else if (sourceSeg-&gt;text.first == sourceSeg-&gt;text.afterLast) {</span>
+<span class="lineNum">     254 </span>            :         /* [36/50]                        T.path += &quot;/.&quot;; */
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :                                                                                 if (!URI_FUNC(AppendSegment)(dest, URI_FUNC(ConstPwd),</span>
+<span class="lineNum">     256 </span>            :                                                                                                 URI_FUNC(ConstPwd) + 1, memory)) {
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :                                                                                         return URI_ERROR_MALLOC;</span>
+<span class="lineNum">     258 </span>            :                                                                                 }
+<span class="lineNum">     259 </span>            :         /* [37/50]                     endif; */
+<span class="lineNum">     260 </span>            :                                                                         }
+<span class="lineNum">     261 </span>            :         /* [38/50]                  endif; */
+<span class="lineNum">     262 </span>            :                                                                 }
+<span class="lineNum">     263 </span>            :         /* [39/50]                  T.path += first(A.path); */
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :                                                                 if (!URI_FUNC(AppendSegment)(dest, sourceSeg-&gt;text.first,</span>
+<span class="lineNum">     265 </span>            :                                                                                 sourceSeg-&gt;text.afterLast, memory)) {
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :                                                                         return URI_ERROR_MALLOC;</span>
+<span class="lineNum">     267 </span>            :                                                                 }
+<span class="lineNum">     268 </span>            :         /* [40/50]                  pathNaked = false; */
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :                                                                 pathNaked = URI_FALSE;</span>
+<span class="lineNum">     270 </span>            :         /* [41/50]                  A.path++; */
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :                                                                 sourceSeg = sourceSeg-&gt;next;</span>
+<span class="lineNum">     272 </span>            :         /* [42/50]                  if defined(first(A.path)) then */
+<span class="lineNum">     273 </span>            :                                                                 /* NOOP */
+<span class="lineNum">     274 </span>            :         /* [43/50]                     T.path += + &quot;/&quot;; */
+<span class="lineNum">     275 </span>            :                                                                 /* NOOP */
+<span class="lineNum">     276 </span>            :         /* [44/50]                  endif; */
+<span class="lineNum">     277 </span>            :                                                                 /* NOOP */
+<span class="lineNum">     278 </span>            :         /* [45/50]               endwhile; */
+<span class="lineNum">     279 </span>            :                                                         }
+<span class="lineNum">     280 </span>            :         /* [46/50]            endif; */
+<span class="lineNum">     281 </span>            :                                                 }
+<span class="lineNum">     282 </span>            :         /* [47/50]         endif; */
+<span class="lineNum">     283 </span>            :                                         }
+<span class="lineNum">     284 </span>            :         /* [48/50]      endif; */
+<span class="lineNum">     285 </span>            :                                 }
+<span class="lineNum">     286 </span>            :         /* [49/50]      T.query     = A.query; */
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :                                 dest-&gt;query = absSource-&gt;query;</span>
+<span class="lineNum">     288 </span>            :         /* [50/50]      T.fragment  = A.fragment; */
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :                                 dest-&gt;fragment = absSource-&gt;fragment;</span>
+<span class="lineNum">     290 </span>            : 
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :         return URI_SUCCESS;</span>
+<span class="lineNum">     292 </span>            : }
+<span class="lineNum">     293 </span>            : 
+<a name="294"><span class="lineNum">     294 </span>            : </a>
+<span class="lineNum">     295 </span>            : 
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 : int URI_FUNC(RemoveBaseUri)(URI_TYPE(Uri) * dest,</span>
+<span class="lineNum">     297 </span>            :                 const URI_TYPE(Uri) * absSource,
+<span class="lineNum">     298 </span>            :                 const URI_TYPE(Uri) * absBase,
+<span class="lineNum">     299 </span>            :                 UriBool domainRootMode) {
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 :         return URI_FUNC(RemoveBaseUriMm)(dest, absSource, absBase,</span>
+<span class="lineNum">     301 </span>            :                         domainRootMode, NULL);
+<span class="lineNum">     302 </span>            : }
+<span class="lineNum">     303 </span>            : 
+<a name="304"><span class="lineNum">     304 </span>            : </a>
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 : int URI_FUNC(RemoveBaseUriMm)(URI_TYPE(Uri) * dest,</span>
+<span class="lineNum">     307 </span>            :                 const URI_TYPE(Uri) * absSource,
+<span class="lineNum">     308 </span>            :                 const URI_TYPE(Uri) * absBase,
+<span class="lineNum">     309 </span>            :                 UriBool domainRootMode, UriMemoryManager * memory) {
+<span class="lineNum">     310 </span>            :         int res;
+<span class="lineNum">     311 </span>            : 
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :         URI_CHECK_MEMORY_MANAGER(memory);  /* may return */</span>
+<span class="lineNum">     313 </span>            : 
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :         res = URI_FUNC(RemoveBaseUriImpl)(dest, absSource,</span>
+<span class="lineNum">     315 </span>            :                         absBase, domainRootMode, memory);
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 :         if ((res != URI_SUCCESS) &amp;&amp; (dest != NULL)) {</span>
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :                 URI_FUNC(FreeUriMembersMm)(dest, memory);</span>
+<span class="lineNum">     318 </span>            :         }
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :         return res;</span>
+<span class="lineNum">     320 </span>            : }
+<span class="lineNum">     321 </span>            : 
+<span class="lineNum">     322 </span>            : 
+<span class="lineNum">     323 </span>            : 
+<span class="lineNum">     324 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
