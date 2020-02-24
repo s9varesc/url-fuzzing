@@ -47,6 +47,9 @@ TestCMain
 *.gcda
 *.gcno
 
+## Python
+*.coverage
+
 #old stuff
 
 #JaCoCo
