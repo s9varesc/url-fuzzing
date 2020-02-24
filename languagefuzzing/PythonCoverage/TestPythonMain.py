@@ -1,7 +1,7 @@
-from urllib.parse import urlparse
+from urlparse import urlparse
 
 
-file=open("../exampleURLs/PlainURLs","r")
+file=open("../exampleURLs/plainURLs","r")
 
 lines=file.readlines()
 urls=[]
@@ -10,5 +10,5 @@ for line in lines:
     print(line)
 
 for url in urls:
-    res=urlparse(url)
+    urlparse(url)
 
