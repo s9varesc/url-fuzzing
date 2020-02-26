@@ -51,6 +51,7 @@ TestCMain
 *.coverage
 
 ## C++
+TestCppMain
 # Executables
 *.exe
 *.out
