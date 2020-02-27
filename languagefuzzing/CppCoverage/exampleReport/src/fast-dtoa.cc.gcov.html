@@ -1,0 +1,741 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/fast-dtoa.cc</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - fast-dtoa.cc<span style="font-size: 80%;"> (source / <a href="fast-dtoa.cc.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">174</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Copyright 2012 the V8 project authors. All rights reserved.</a>
+<span class="lineNum">       2 </span>            : // Redistribution and use in source and binary forms, with or without
+<span class="lineNum">       3 </span>            : // modification, are permitted provided that the following conditions are
+<span class="lineNum">       4 </span>            : // met:
+<span class="lineNum">       5 </span>            : //
+<span class="lineNum">       6 </span>            : //     * Redistributions of source code must retain the above copyright
+<span class="lineNum">       7 </span>            : //       notice, this list of conditions and the following disclaimer.
+<span class="lineNum">       8 </span>            : //     * Redistributions in binary form must reproduce the above
+<span class="lineNum">       9 </span>            : //       copyright notice, this list of conditions and the following
+<span class="lineNum">      10 </span>            : //       disclaimer in the documentation and/or other materials provided
+<span class="lineNum">      11 </span>            : //       with the distribution.
+<span class="lineNum">      12 </span>            : //     * Neither the name of Google Inc. nor the names of its
+<span class="lineNum">      13 </span>            : //       contributors may be used to endorse or promote products derived
+<span class="lineNum">      14 </span>            : //       from this software without specific prior written permission.
+<span class="lineNum">      15 </span>            : //
+<span class="lineNum">      16 </span>            : // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+<span class="lineNum">      17 </span>            : // &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+<span class="lineNum">      18 </span>            : // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+<span class="lineNum">      19 </span>            : // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+<span class="lineNum">      20 </span>            : // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+<span class="lineNum">      21 </span>            : // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+<span class="lineNum">      22 </span>            : // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+<span class="lineNum">      23 </span>            : // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+<span class="lineNum">      24 </span>            : // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+<span class="lineNum">      25 </span>            : // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+<span class="lineNum">      26 </span>            : // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : #include &quot;fast-dtoa.h&quot;
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : #include &quot;cached-powers.h&quot;
+<span class="lineNum">      31 </span>            : #include &quot;diy-fp.h&quot;
+<span class="lineNum">      32 </span>            : #include &quot;ieee.h&quot;
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : namespace double_conversion {
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : // The minimal and maximal target exponent define the range of w's binary
+<span class="lineNum">      37 </span>            : // exponent, where 'w' is the result of multiplying the input by a cached power
+<span class="lineNum">      38 </span>            : // of ten.
+<span class="lineNum">      39 </span>            : //
+<span class="lineNum">      40 </span>            : // A different range might be chosen on a different platform, to optimize digit
+<span class="lineNum">      41 </span>            : // generation, but a smaller range requires more powers of ten to be cached.
+<span class="lineNum">      42 </span>            : static const int kMinimalTargetExponent = -60;
+<span class="lineNum">      43 </span>            : static const int kMaximalTargetExponent = -32;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            : // Adjusts the last digit of the generated number, and screens out generated
+<span class="lineNum">      47 </span>            : // solutions that may be inaccurate. A solution may be inaccurate if it is
+<span class="lineNum">      48 </span>            : // outside the safe interval, or if we cannot prove that it is closer to the
+<span class="lineNum">      49 </span>            : // input than a neighboring representation of the same length.
+<span class="lineNum">      50 </span>            : //
+<span class="lineNum">      51 </span>            : // Input: * buffer containing the digits of too_high / 10^kappa
+<span class="lineNum">      52 </span>            : //        * the buffer's length
+<span class="lineNum">      53 </span>            : //        * distance_too_high_w == (too_high - w).f() * unit
+<span class="lineNum">      54 </span>            : //        * unsafe_interval == (too_high - too_low).f() * unit
+<span class="lineNum">      55 </span>            : //        * rest = (too_high - buffer * 10^kappa).f() * unit
+<span class="lineNum">      56 </span>            : //        * ten_kappa = 10^kappa * unit
+<span class="lineNum">      57 </span>            : //        * unit = the common multiplier
+<span class="lineNum">      58 </span>            : // Output: returns true if the buffer is guaranteed to contain the closest
+<a name="59"><span class="lineNum">      59 </span>            : //    representable number to the input.</a>
+<span class="lineNum">      60 </span>            : //  Modifies the generated digits in the buffer to approach (round towards) w.
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 : static bool RoundWeed(Vector&lt;char&gt; buffer,</span>
+<span class="lineNum">      62 </span>            :                       int length,
+<span class="lineNum">      63 </span>            :                       uint64_t distance_too_high_w,
+<span class="lineNum">      64 </span>            :                       uint64_t unsafe_interval,
+<span class="lineNum">      65 </span>            :                       uint64_t rest,
+<span class="lineNum">      66 </span>            :                       uint64_t ten_kappa,
+<span class="lineNum">      67 </span>            :                       uint64_t unit) {
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :   uint64_t small_distance = distance_too_high_w - unit;</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :   uint64_t big_distance = distance_too_high_w + unit;</span>
+<span class="lineNum">      70 </span>            :   // Let w_low  = too_high - big_distance, and
+<span class="lineNum">      71 </span>            :   //     w_high = too_high - small_distance.
+<span class="lineNum">      72 </span>            :   // Note: w_low &lt; w &lt; w_high
+<span class="lineNum">      73 </span>            :   //
+<span class="lineNum">      74 </span>            :   // The real w (* unit) must lie somewhere inside the interval
+<span class="lineNum">      75 </span>            :   // ]w_low; w_high[ (often written as &quot;(w_low; w_high)&quot;)
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            :   // Basically the buffer currently contains a number in the unsafe interval
+<span class="lineNum">      78 </span>            :   // ]too_low; too_high[ with too_low &lt; w &lt; too_high
+<span class="lineNum">      79 </span>            :   //
+<span class="lineNum">      80 </span>            :   //  too_high - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<span class="lineNum">      81 </span>            :   //                     ^v 1 unit            ^      ^                 ^      ^
+<span class="lineNum">      82 </span>            :   //  boundary_high ---------------------     .      .                 .      .
+<span class="lineNum">      83 </span>            :   //                     ^v 1 unit            .      .                 .      .
+<span class="lineNum">      84 </span>            :   //   - - - - - - - - - - - - - - - - - - -  +  - - + - - - - - -     .      .
+<span class="lineNum">      85 </span>            :   //                                          .      .         ^       .      .
+<span class="lineNum">      86 </span>            :   //                                          .  big_distance  .       .      .
+<span class="lineNum">      87 </span>            :   //                                          .      .         .       .    rest
+<span class="lineNum">      88 </span>            :   //                              small_distance     .         .       .      .
+<span class="lineNum">      89 </span>            :   //                                          v      .         .       .      .
+<span class="lineNum">      90 </span>            :   //  w_high - - - - - - - - - - - - - - - - - -     .         .       .      .
+<span class="lineNum">      91 </span>            :   //                     ^v 1 unit                   .         .       .      .
+<span class="lineNum">      92 </span>            :   //  w ----------------------------------------     .         .       .      .
+<span class="lineNum">      93 </span>            :   //                     ^v 1 unit                   v         .       .      .
+<span class="lineNum">      94 </span>            :   //  w_low  - - - - - - - - - - - - - - - - - - - - -         .       .      .
+<span class="lineNum">      95 </span>            :   //                                                           .       .      v
+<span class="lineNum">      96 </span>            :   //  buffer --------------------------------------------------+-------+--------
+<span class="lineNum">      97 </span>            :   //                                                           .       .
+<span class="lineNum">      98 </span>            :   //                                                  safe_interval    .
+<span class="lineNum">      99 </span>            :   //                                                           v       .
+<span class="lineNum">     100 </span>            :   //   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -     .
+<span class="lineNum">     101 </span>            :   //                     ^v 1 unit                                     .
+<span class="lineNum">     102 </span>            :   //  boundary_low -------------------------                     unsafe_interval
+<span class="lineNum">     103 </span>            :   //                     ^v 1 unit                                     v
+<span class="lineNum">     104 </span>            :   //  too_low  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<span class="lineNum">     105 </span>            :   //
+<span class="lineNum">     106 </span>            :   //
+<span class="lineNum">     107 </span>            :   // Note that the value of buffer could lie anywhere inside the range too_low
+<span class="lineNum">     108 </span>            :   // to too_high.
+<span class="lineNum">     109 </span>            :   //
+<span class="lineNum">     110 </span>            :   // boundary_low, boundary_high and w are approximations of the real boundaries
+<span class="lineNum">     111 </span>            :   // and v (the input number). They are guaranteed to be precise up to one unit.
+<span class="lineNum">     112 </span>            :   // In fact the error is guaranteed to be strictly less than one unit.
+<span class="lineNum">     113 </span>            :   //
+<span class="lineNum">     114 </span>            :   // Anything that lies outside the unsafe interval is guaranteed not to round
+<span class="lineNum">     115 </span>            :   // to v when read again.
+<span class="lineNum">     116 </span>            :   // Anything that lies inside the safe interval is guaranteed to round to v
+<span class="lineNum">     117 </span>            :   // when read again.
+<span class="lineNum">     118 </span>            :   // If the number inside the buffer lies inside the unsafe interval but not
+<span class="lineNum">     119 </span>            :   // inside the safe interval then we simply do not know and bail out (returning
+<span class="lineNum">     120 </span>            :   // false).
+<span class="lineNum">     121 </span>            :   //
+<span class="lineNum">     122 </span>            :   // Similarly we have to take into account the imprecision of 'w' when finding
+<span class="lineNum">     123 </span>            :   // the closest representation of 'w'. If we have two potential
+<span class="lineNum">     124 </span>            :   // representations, and one is closer to both w_low and w_high, then we know
+<span class="lineNum">     125 </span>            :   // it is closer to the actual value v.
+<span class="lineNum">     126 </span>            :   //
+<span class="lineNum">     127 </span>            :   // By generating the digits of too_high we got the largest (closest to
+<span class="lineNum">     128 </span>            :   // too_high) buffer that is still in the unsafe interval. In the case where
+<span class="lineNum">     129 </span>            :   // w_high &lt; buffer &lt; too_high we try to decrement the buffer.
+<span class="lineNum">     130 </span>            :   // This way the buffer approaches (rounds towards) w.
+<span class="lineNum">     131 </span>            :   // There are 3 conditions that stop the decrementation process:
+<span class="lineNum">     132 </span>            :   //   1) the buffer is already below w_high
+<span class="lineNum">     133 </span>            :   //   2) decrementing the buffer would make it leave the unsafe interval
+<span class="lineNum">     134 </span>            :   //   3) decrementing the buffer would yield a number below w_high and farther
+<span class="lineNum">     135 </span>            :   //      away than the current number. In other words:
+<span class="lineNum">     136 </span>            :   //              (buffer{-1} &lt; w_high) &amp;&amp; w_high - buffer{-1} &gt; buffer - w_high
+<span class="lineNum">     137 </span>            :   // Instead of using the buffer directly we use its distance to too_high.
+<span class="lineNum">     138 </span>            :   // Conceptually rest ~= too_high - buffer
+<span class="lineNum">     139 </span>            :   // We need to do the following tests in this order to avoid over- and
+<span class="lineNum">     140 </span>            :   // underflows.
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :   ASSERT(rest &lt;= unsafe_interval);</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :   while (rest &lt; small_distance &amp;&amp;  // Negated condition 1</span>
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :          unsafe_interval - rest &gt;= ten_kappa &amp;&amp;  // Negated condition 2</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :          (rest + ten_kappa &lt; small_distance ||  // buffer{-1} &gt; w_high</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :           small_distance - rest &gt;= rest + ten_kappa - small_distance)) {</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :     buffer[length - 1]--;</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :     rest += ten_kappa;</span>
+<span class="lineNum">     148 </span>            :   }
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            :   // We have approached w+ as much as possible. We now test if approaching w-
+<span class="lineNum">     151 </span>            :   // would require changing the buffer. If yes, then we have two possible
+<span class="lineNum">     152 </span>            :   // representations close to w, but we cannot decide which one is closer.
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :   if (rest &lt; big_distance &amp;&amp;</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :       unsafe_interval - rest &gt;= ten_kappa &amp;&amp;</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :       (rest + ten_kappa &lt; big_distance ||</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :        big_distance - rest &gt; rest + ten_kappa - big_distance)) {</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     158 </span>            :   }
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            :   // Weeding test.
+<span class="lineNum">     161 </span>            :   //   The safe interval is [too_low + 2 ulp; too_high - 2 ulp]
+<span class="lineNum">     162 </span>            :   //   Since too_low = too_high - unsafe_interval this is equivalent to
+<span class="lineNum">     163 </span>            :   //      [too_high - unsafe_interval + 4 ulp; too_high - 2 ulp]
+<span class="lineNum">     164 </span>            :   //   Conceptually we have: rest ~= too_high - buffer
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :   return (2 * unit &lt;= rest) &amp;&amp; (rest &lt;= unsafe_interval - 4 * unit);</span>
+<span class="lineNum">     166 </span>            : }
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            : // Rounds the buffer upwards if the result is closer to v by possibly adding
+<span class="lineNum">     170 </span>            : // 1 to the buffer. If the precision of the calculation is not sufficient to
+<span class="lineNum">     171 </span>            : // round correctly, return false.
+<span class="lineNum">     172 </span>            : // The rounding might shift the whole buffer in which case the kappa is
+<span class="lineNum">     173 </span>            : // adjusted. For example &quot;99&quot;, kappa = 3 might become &quot;10&quot;, kappa = 4.
+<span class="lineNum">     174 </span>            : //
+<span class="lineNum">     175 </span>            : // If 2*rest &gt; ten_kappa then the buffer needs to be round up.
+<span class="lineNum">     176 </span>            : // rest can have an error of +/- 1 unit. This function accounts for the
+<span class="lineNum">     177 </span>            : // imprecision and returns false, if the rounding direction cannot be
+<span class="lineNum">     178 </span>            : // unambiguously determined.
+<a name="179"><span class="lineNum">     179 </span>            : //</a>
+<span class="lineNum">     180 </span>            : // Precondition: rest &lt; ten_kappa.
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 : static bool RoundWeedCounted(Vector&lt;char&gt; buffer,</span>
+<span class="lineNum">     182 </span>            :                              int length,
+<span class="lineNum">     183 </span>            :                              uint64_t rest,
+<span class="lineNum">     184 </span>            :                              uint64_t ten_kappa,
+<span class="lineNum">     185 </span>            :                              uint64_t unit,
+<span class="lineNum">     186 </span>            :                              int* kappa) {
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :   ASSERT(rest &lt; ten_kappa);</span>
+<span class="lineNum">     188 </span>            :   // The following tests are done in a specific order to avoid overflows. They
+<span class="lineNum">     189 </span>            :   // will work correctly with any uint64 values of rest &lt; ten_kappa and unit.
+<span class="lineNum">     190 </span>            :   //
+<span class="lineNum">     191 </span>            :   // If the unit is too big, then we don't know which way to round. For example
+<span class="lineNum">     192 </span>            :   // a unit of 50 means that the real number lies within rest +/- 50. If
+<span class="lineNum">     193 </span>            :   // 10^kappa == 40 then there is no way to tell which way to round.
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :   if (unit &gt;= ten_kappa) return false;</span>
+<span class="lineNum">     195 </span>            :   // Even if unit is just half the size of 10^kappa we are already completely
+<span class="lineNum">     196 </span>            :   // lost. (And after the previous test we know that the expression will not
+<span class="lineNum">     197 </span>            :   // over/underflow.)
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :   if (ten_kappa - unit &lt;= unit) return false;</span>
+<span class="lineNum">     199 </span>            :   // If 2 * (rest + unit) &lt;= 10^kappa we can safely round down.
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :   if ((ten_kappa - rest &gt; rest) &amp;&amp; (ten_kappa - 2 * rest &gt;= 2 * unit)) {</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     202 </span>            :   }
+<span class="lineNum">     203 </span>            :   // If 2 * (rest - unit) &gt;= 10^kappa, then we can safely round up.
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :   if ((rest &gt; unit) &amp;&amp; (ten_kappa - (rest - unit) &lt;= (rest - unit))) {</span>
+<span class="lineNum">     205 </span>            :     // Increment the last digit recursively until we find a non '9' digit.
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :     buffer[length - 1]++;</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :     for (int i = length - 1; i &gt; 0; --i) {</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :       if (buffer[i] != '0' + 10) break;</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :       buffer[i] = '0';</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :       buffer[i - 1]++;</span>
+<span class="lineNum">     211 </span>            :     }
+<span class="lineNum">     212 </span>            :     // If the first digit is now '0'+ 10 we had a buffer with all '9's. With the
+<span class="lineNum">     213 </span>            :     // exception of the first digit all digits are now '0'. Simply switch the
+<span class="lineNum">     214 </span>            :     // first digit to '1' and adjust the kappa. Example: &quot;99&quot; becomes &quot;10&quot; and
+<span class="lineNum">     215 </span>            :     // the power (the kappa) is increased.
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :     if (buffer[0] == '0' + 10) {</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :       buffer[0] = '1';</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :       (*kappa) += 1;</span>
+<span class="lineNum">     219 </span>            :     }
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     221 </span>            :   }
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     223 </span>            : }
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span>            : // Returns the biggest power of ten that is less than or equal to the given
+<span class="lineNum">     226 </span>            : // number. We furthermore receive the maximum number of bits 'number' has.
+<span class="lineNum">     227 </span>            : //
+<span class="lineNum">     228 </span>            : // Returns power == 10^(exponent_plus_one-1) such that
+<span class="lineNum">     229 </span>            : //    power &lt;= number &lt; power * 10.
+<span class="lineNum">     230 </span>            : // If number_bits == 0 then 0^(0-1) is returned.
+<span class="lineNum">     231 </span>            : // The number of bits must be &lt;= 32.
+<span class="lineNum">     232 </span>            : // Precondition: number &lt; (1 &lt;&lt; (number_bits + 1)).
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span>            : // Inspired by the method for finding an integer log base 10 from here:
+<span class="lineNum">     235 </span>            : // http://graphics.stanford.edu/~seander/bithacks.html#IntegerLog10
+<span class="lineNum">     236 </span>            : static unsigned int const kSmallPowersOfTen[] =
+<span class="lineNum">     237 </span>            :     {0, 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000,
+<a name="238"><span class="lineNum">     238 </span>            :      1000000000};</a>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 : static void BiggestPowerTen(uint32_t number,</span>
+<span class="lineNum">     241 </span>            :                             int number_bits,
+<span class="lineNum">     242 </span>            :                             uint32_t* power,
+<span class="lineNum">     243 </span>            :                             int* exponent_plus_one) {
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :   ASSERT(number &lt; (1u &lt;&lt; (number_bits + 1)));</span>
+<span class="lineNum">     245 </span>            :   // 1233/4096 is approximately 1/lg(10).
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :   int exponent_plus_one_guess = ((number_bits + 1) * 1233 &gt;&gt; 12);</span>
+<span class="lineNum">     247 </span>            :   // We increment to skip over the first entry in the kPowersOf10 table.
+<span class="lineNum">     248 </span>            :   // Note: kPowersOf10[i] == 10^(i-1).
+<span class="lineNum">     249 </span><span class="lineNoCov">          0 :   exponent_plus_one_guess++;</span>
+<span class="lineNum">     250 </span>            :   // We don't have any guarantees that 2^number_bits &lt;= number.
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :   if (number &lt; kSmallPowersOfTen[exponent_plus_one_guess]) {</span>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :     exponent_plus_one_guess--;</span>
+<span class="lineNum">     253 </span>            :   }
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :   *power = kSmallPowersOfTen[exponent_plus_one_guess];</span>
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :   *exponent_plus_one = exponent_plus_one_guess;</span>
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     257 </span>            : 
+<span class="lineNum">     258 </span>            : // Generates the digits of input number w.
+<span class="lineNum">     259 </span>            : // w is a floating-point number (DiyFp), consisting of a significand and an
+<span class="lineNum">     260 </span>            : // exponent. Its exponent is bounded by kMinimalTargetExponent and
+<span class="lineNum">     261 </span>            : // kMaximalTargetExponent.
+<span class="lineNum">     262 </span>            : //       Hence -60 &lt;= w.e() &lt;= -32.
+<span class="lineNum">     263 </span>            : //
+<span class="lineNum">     264 </span>            : // Returns false if it fails, in which case the generated digits in the buffer
+<span class="lineNum">     265 </span>            : // should not be used.
+<span class="lineNum">     266 </span>            : // Preconditions:
+<span class="lineNum">     267 </span>            : //  * low, w and high are correct up to 1 ulp (unit in the last place). That
+<span class="lineNum">     268 </span>            : //    is, their error must be less than a unit of their last digits.
+<span class="lineNum">     269 </span>            : //  * low.e() == w.e() == high.e()
+<span class="lineNum">     270 </span>            : //  * low &lt; w &lt; high, and taking into account their error: low~ &lt;= high~
+<span class="lineNum">     271 </span>            : //  * kMinimalTargetExponent &lt;= w.e() &lt;= kMaximalTargetExponent
+<span class="lineNum">     272 </span>            : // Postconditions: returns false if procedure fails.
+<span class="lineNum">     273 </span>            : //   otherwise:
+<span class="lineNum">     274 </span>            : //     * buffer is not null-terminated, but len contains the number of digits.
+<span class="lineNum">     275 </span>            : //     * buffer contains the shortest possible decimal digit-sequence
+<span class="lineNum">     276 </span>            : //       such that LOW &lt; buffer * 10^kappa &lt; HIGH, where LOW and HIGH are the
+<span class="lineNum">     277 </span>            : //       correct values of low and high (without their error).
+<span class="lineNum">     278 </span>            : //     * if more than one decimal representation gives the minimal number of
+<span class="lineNum">     279 </span>            : //       decimal digits then the one closest to W (where W is the correct value
+<span class="lineNum">     280 </span>            : //       of w) is chosen.
+<span class="lineNum">     281 </span>            : // Remark: this procedure takes into account the imprecision of its input
+<span class="lineNum">     282 </span>            : //   numbers. If the precision is not enough to guarantee all the postconditions
+<span class="lineNum">     283 </span>            : //   then false is returned. This usually happens rarely (~0.5%).
+<span class="lineNum">     284 </span>            : //
+<span class="lineNum">     285 </span>            : // Say, for the sake of example, that
+<span class="lineNum">     286 </span>            : //   w.e() == -48, and w.f() == 0x1234567890abcdef
+<span class="lineNum">     287 </span>            : // w's value can be computed by w.f() * 2^w.e()
+<span class="lineNum">     288 </span>            : // We can obtain w's integral digits by simply shifting w.f() by -w.e().
+<span class="lineNum">     289 </span>            : //  -&gt; w's integral part is 0x1234
+<span class="lineNum">     290 </span>            : //  w's fractional part is therefore 0x567890abcdef.
+<span class="lineNum">     291 </span>            : // Printing w's integral part is easy (simply print 0x1234 in decimal).
+<span class="lineNum">     292 </span>            : // In order to print its fraction we repeatedly multiply the fraction by 10 and
+<span class="lineNum">     293 </span>            : // get each digit. Example the first digit after the point would be computed by
+<span class="lineNum">     294 </span>            : //   (0x567890abcdef * 10) &gt;&gt; 48. -&gt; 3
+<span class="lineNum">     295 </span>            : // The whole thing becomes slightly more complicated because we want to stop
+<span class="lineNum">     296 </span>            : // once we have enough digits. That is, once the digits inside the buffer
+<span class="lineNum">     297 </span>            : // represent 'w' we can stop. Everything inside the interval low - high
+<a name="298"><span class="lineNum">     298 </span>            : // represents w. However we have to pay attention to low, high and w's</a>
+<span class="lineNum">     299 </span>            : // imprecision.
+<span class="lineNum">     300 </span><span class="lineNoCov">          0 : static bool DigitGen(DiyFp low,</span>
+<span class="lineNum">     301 </span>            :                      DiyFp w,
+<span class="lineNum">     302 </span>            :                      DiyFp high,
+<span class="lineNum">     303 </span>            :                      Vector&lt;char&gt; buffer,
+<span class="lineNum">     304 </span>            :                      int* length,
+<span class="lineNum">     305 </span>            :                      int* kappa) {
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :   ASSERT(low.e() == w.e() &amp;&amp; w.e() == high.e());</span>
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :   ASSERT(low.f() + 1 &lt;= high.f() - 1);</span>
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 :   ASSERT(kMinimalTargetExponent &lt;= w.e() &amp;&amp; w.e() &lt;= kMaximalTargetExponent);</span>
+<span class="lineNum">     309 </span>            :   // low, w and high are imprecise, but by less than one ulp (unit in the last
+<span class="lineNum">     310 </span>            :   // place).
+<span class="lineNum">     311 </span>            :   // If we remove (resp. add) 1 ulp from low (resp. high) we are certain that
+<span class="lineNum">     312 </span>            :   // the new numbers are outside of the interval we want the final
+<span class="lineNum">     313 </span>            :   // representation to lie in.
+<span class="lineNum">     314 </span>            :   // Inversely adding (resp. removing) 1 ulp from low (resp. high) would yield
+<span class="lineNum">     315 </span>            :   // numbers that are certain to lie in the interval. We will use this fact
+<span class="lineNum">     316 </span>            :   // later on.
+<span class="lineNum">     317 </span>            :   // We will now start by generating the digits within the uncertain
+<span class="lineNum">     318 </span>            :   // interval. Later we will weed out representations that lie outside the safe
+<span class="lineNum">     319 </span>            :   // interval and thus _might_ lie outside the correct interval.
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :   uint64_t unit = 1;</span>
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :   DiyFp too_low = DiyFp(low.f() - unit, low.e());</span>
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :   DiyFp too_high = DiyFp(high.f() + unit, high.e());</span>
+<span class="lineNum">     323 </span>            :   // too_low and too_high are guaranteed to lie outside the interval we want the
+<span class="lineNum">     324 </span>            :   // generated number in.
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 :   DiyFp unsafe_interval = DiyFp::Minus(too_high, too_low);</span>
+<span class="lineNum">     326 </span>            :   // We now cut the input number into two parts: the integral digits and the
+<span class="lineNum">     327 </span>            :   // fractionals. We will not write any decimal separator though, but adapt
+<span class="lineNum">     328 </span>            :   // kappa instead.
+<span class="lineNum">     329 </span>            :   // Reminder: we are currently computing the digits (stored inside the buffer)
+<span class="lineNum">     330 </span>            :   // such that:   too_low &lt; buffer * 10^kappa &lt; too_high
+<span class="lineNum">     331 </span>            :   // We use too_high for the digit_generation and stop as soon as possible.
+<span class="lineNum">     332 </span>            :   // If we stop early we effectively round down.
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :   DiyFp one = DiyFp(static_cast&lt;uint64_t&gt;(1) &lt;&lt; -w.e(), w.e());</span>
+<span class="lineNum">     334 </span>            :   // Division by one is a shift.
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :   uint32_t integrals = static_cast&lt;uint32_t&gt;(too_high.f() &gt;&gt; -one.e());</span>
+<span class="lineNum">     336 </span>            :   // Modulo by one is an and.
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :   uint64_t fractionals = too_high.f() &amp; (one.f() - 1);</span>
+<span class="lineNum">     338 </span>            :   uint32_t divisor;
+<span class="lineNum">     339 </span>            :   int divisor_exponent_plus_one;
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :   BiggestPowerTen(integrals, DiyFp::kSignificandSize - (-one.e()),</span>
+<span class="lineNum">     341 </span>            :                   &amp;divisor, &amp;divisor_exponent_plus_one);
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :   *kappa = divisor_exponent_plus_one;</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :   *length = 0;</span>
+<span class="lineNum">     344 </span>            :   // Loop invariant: buffer = too_high / 10^kappa  (integer division)
+<span class="lineNum">     345 </span>            :   // The invariant holds for the first iteration: kappa has been initialized
+<span class="lineNum">     346 </span>            :   // with the divisor exponent + 1. And the divisor is the biggest power of ten
+<span class="lineNum">     347 </span>            :   // that is smaller than integrals.
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :   while (*kappa &gt; 0) {</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :     int digit = integrals / divisor;</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :     ASSERT(digit &lt;= 9);</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :     buffer[*length] = static_cast&lt;char&gt;('0' + digit);</span>
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :     (*length)++;</span>
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :     integrals %= divisor;</span>
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :     (*kappa)--;</span>
+<span class="lineNum">     355 </span>            :     // Note that kappa now equals the exponent of the divisor and that the
+<span class="lineNum">     356 </span>            :     // invariant thus holds again.
+<span class="lineNum">     357 </span>            :     uint64_t rest =
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :         (static_cast&lt;uint64_t&gt;(integrals) &lt;&lt; -one.e()) + fractionals;</span>
+<span class="lineNum">     359 </span>            :     // Invariant: too_high = buffer * 10^kappa + DiyFp(rest, one.e())
+<span class="lineNum">     360 </span>            :     // Reminder: unsafe_interval.e() == one.e()
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :     if (rest &lt; unsafe_interval.f()) {</span>
+<span class="lineNum">     362 </span>            :       // Rounding down (by not emitting the remaining digits) yields a number
+<span class="lineNum">     363 </span>            :       // that lies within the unsafe interval.
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 :       return RoundWeed(buffer, *length, DiyFp::Minus(too_high, w).f(),</span>
+<span class="lineNum">     365 </span>            :                        unsafe_interval.f(), rest,
+<span class="lineNum">     366 </span><span class="lineNoCov">          0 :                        static_cast&lt;uint64_t&gt;(divisor) &lt;&lt; -one.e(), unit);</span>
+<span class="lineNum">     367 </span>            :     }
+<span class="lineNum">     368 </span><span class="lineNoCov">          0 :     divisor /= 10;</span>
+<span class="lineNum">     369 </span>            :   }
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span>            :   // The integrals have been generated. We are at the point of the decimal
+<span class="lineNum">     372 </span>            :   // separator. In the following loop we simply multiply the remaining digits by
+<span class="lineNum">     373 </span>            :   // 10 and divide by one. We just need to pay attention to multiply associated
+<span class="lineNum">     374 </span>            :   // data (like the interval or 'unit'), too.
+<span class="lineNum">     375 </span>            :   // Note that the multiplication by 10 does not overflow, because w.e &gt;= -60
+<span class="lineNum">     376 </span>            :   // and thus one.e &gt;= -60.
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :   ASSERT(one.e() &gt;= -60);</span>
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :   ASSERT(fractionals &lt; one.f());</span>
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :   ASSERT(UINT64_2PART_C(0xFFFFFFFF, FFFFFFFF) / 10 &gt;= one.f());</span>
+<span class="lineNum">     380 </span>            :   for (;;) {
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :     fractionals *= 10;</span>
+<span class="lineNum">     382 </span><span class="lineNoCov">          0 :     unit *= 10;</span>
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :     unsafe_interval.set_f(unsafe_interval.f() * 10);</span>
+<span class="lineNum">     384 </span>            :     // Integer division by one.
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 :     int digit = static_cast&lt;int&gt;(fractionals &gt;&gt; -one.e());</span>
+<span class="lineNum">     386 </span><span class="lineNoCov">          0 :     ASSERT(digit &lt;= 9);</span>
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :     buffer[*length] = static_cast&lt;char&gt;('0' + digit);</span>
+<span class="lineNum">     388 </span><span class="lineNoCov">          0 :     (*length)++;</span>
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 :     fractionals &amp;= one.f() - 1;  // Modulo by one.</span>
+<span class="lineNum">     390 </span><span class="lineNoCov">          0 :     (*kappa)--;</span>
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 :     if (fractionals &lt; unsafe_interval.f()) {</span>
+<span class="lineNum">     392 </span><span class="lineNoCov">          0 :       return RoundWeed(buffer, *length, DiyFp::Minus(too_high, w).f() * unit,</span>
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :                        unsafe_interval.f(), fractionals, one.f(), unit);</span>
+<span class="lineNum">     394 </span>            :     }
+<span class="lineNum">     395 </span><span class="lineNoCov">          0 :   }</span>
+<span class="lineNum">     396 </span>            : }
+<span class="lineNum">     397 </span>            : 
+<span class="lineNum">     398 </span>            : 
+<span class="lineNum">     399 </span>            : 
+<span class="lineNum">     400 </span>            : // Generates (at most) requested_digits digits of input number w.
+<span class="lineNum">     401 </span>            : // w is a floating-point number (DiyFp), consisting of a significand and an
+<span class="lineNum">     402 </span>            : // exponent. Its exponent is bounded by kMinimalTargetExponent and
+<span class="lineNum">     403 </span>            : // kMaximalTargetExponent.
+<span class="lineNum">     404 </span>            : //       Hence -60 &lt;= w.e() &lt;= -32.
+<span class="lineNum">     405 </span>            : //
+<span class="lineNum">     406 </span>            : // Returns false if it fails, in which case the generated digits in the buffer
+<span class="lineNum">     407 </span>            : // should not be used.
+<span class="lineNum">     408 </span>            : // Preconditions:
+<span class="lineNum">     409 </span>            : //  * w is correct up to 1 ulp (unit in the last place). That
+<span class="lineNum">     410 </span>            : //    is, its error must be strictly less than a unit of its last digit.
+<span class="lineNum">     411 </span>            : //  * kMinimalTargetExponent &lt;= w.e() &lt;= kMaximalTargetExponent
+<span class="lineNum">     412 </span>            : //
+<span class="lineNum">     413 </span>            : // Postconditions: returns false if procedure fails.
+<span class="lineNum">     414 </span>            : //   otherwise:
+<span class="lineNum">     415 </span>            : //     * buffer is not null-terminated, but length contains the number of
+<span class="lineNum">     416 </span>            : //       digits.
+<span class="lineNum">     417 </span>            : //     * the representation in buffer is the most precise representation of
+<span class="lineNum">     418 </span>            : //       requested_digits digits.
+<span class="lineNum">     419 </span>            : //     * buffer contains at most requested_digits digits of w. If there are less
+<span class="lineNum">     420 </span>            : //       than requested_digits digits then some trailing '0's have been removed.
+<span class="lineNum">     421 </span>            : //     * kappa is such that
+<span class="lineNum">     422 </span>            : //            w = buffer * 10^kappa + eps with |eps| &lt; 10^kappa / 2.
+<span class="lineNum">     423 </span>            : //
+<span class="lineNum">     424 </span>            : // Remark: This procedure takes into account the imprecision of its input
+<span class="lineNum">     425 </span>            : //   numbers. If the precision is not enough to guarantee all the postconditions
+<a name="426"><span class="lineNum">     426 </span>            : //   then false is returned. This usually happens rarely, but the failure-rate</a>
+<span class="lineNum">     427 </span>            : //   increases with higher requested_digits.
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 : static bool DigitGenCounted(DiyFp w,</span>
+<span class="lineNum">     429 </span>            :                             int requested_digits,
+<span class="lineNum">     430 </span>            :                             Vector&lt;char&gt; buffer,
+<span class="lineNum">     431 </span>            :                             int* length,
+<span class="lineNum">     432 </span>            :                             int* kappa) {
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :   ASSERT(kMinimalTargetExponent &lt;= w.e() &amp;&amp; w.e() &lt;= kMaximalTargetExponent);</span>
+<span class="lineNum">     434 </span>            :   ASSERT(kMinimalTargetExponent &gt;= -60);
+<span class="lineNum">     435 </span>            :   ASSERT(kMaximalTargetExponent &lt;= -32);
+<span class="lineNum">     436 </span>            :   // w is assumed to have an error less than 1 unit. Whenever w is scaled we
+<span class="lineNum">     437 </span>            :   // also scale its error.
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :   uint64_t w_error = 1;</span>
+<span class="lineNum">     439 </span>            :   // We cut the input number into two parts: the integral digits and the
+<span class="lineNum">     440 </span>            :   // fractional digits. We don't emit any decimal separator, but adapt kappa
+<span class="lineNum">     441 </span>            :   // instead. Example: instead of writing &quot;1.2&quot; we put &quot;12&quot; into the buffer and
+<span class="lineNum">     442 </span>            :   // increase kappa by 1.
+<span class="lineNum">     443 </span><span class="lineNoCov">          0 :   DiyFp one = DiyFp(static_cast&lt;uint64_t&gt;(1) &lt;&lt; -w.e(), w.e());</span>
+<span class="lineNum">     444 </span>            :   // Division by one is a shift.
+<span class="lineNum">     445 </span><span class="lineNoCov">          0 :   uint32_t integrals = static_cast&lt;uint32_t&gt;(w.f() &gt;&gt; -one.e());</span>
+<span class="lineNum">     446 </span>            :   // Modulo by one is an and.
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 :   uint64_t fractionals = w.f() &amp; (one.f() - 1);</span>
+<span class="lineNum">     448 </span>            :   uint32_t divisor;
+<span class="lineNum">     449 </span>            :   int divisor_exponent_plus_one;
+<span class="lineNum">     450 </span><span class="lineNoCov">          0 :   BiggestPowerTen(integrals, DiyFp::kSignificandSize - (-one.e()),</span>
+<span class="lineNum">     451 </span>            :                   &amp;divisor, &amp;divisor_exponent_plus_one);
+<span class="lineNum">     452 </span><span class="lineNoCov">          0 :   *kappa = divisor_exponent_plus_one;</span>
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :   *length = 0;</span>
+<span class="lineNum">     454 </span>            : 
+<span class="lineNum">     455 </span>            :   // Loop invariant: buffer = w / 10^kappa  (integer division)
+<span class="lineNum">     456 </span>            :   // The invariant holds for the first iteration: kappa has been initialized
+<span class="lineNum">     457 </span>            :   // with the divisor exponent + 1. And the divisor is the biggest power of ten
+<span class="lineNum">     458 </span>            :   // that is smaller than 'integrals'.
+<span class="lineNum">     459 </span><span class="lineNoCov">          0 :   while (*kappa &gt; 0) {</span>
+<span class="lineNum">     460 </span><span class="lineNoCov">          0 :     int digit = integrals / divisor;</span>
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :     ASSERT(digit &lt;= 9);</span>
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :     buffer[*length] = static_cast&lt;char&gt;('0' + digit);</span>
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :     (*length)++;</span>
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :     requested_digits--;</span>
+<span class="lineNum">     465 </span><span class="lineNoCov">          0 :     integrals %= divisor;</span>
+<span class="lineNum">     466 </span><span class="lineNoCov">          0 :     (*kappa)--;</span>
+<span class="lineNum">     467 </span>            :     // Note that kappa now equals the exponent of the divisor and that the
+<span class="lineNum">     468 </span>            :     // invariant thus holds again.
+<span class="lineNum">     469 </span><span class="lineNoCov">          0 :     if (requested_digits == 0) break;</span>
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 :     divisor /= 10;</span>
+<span class="lineNum">     471 </span>            :   }
+<span class="lineNum">     472 </span>            : 
+<span class="lineNum">     473 </span><span class="lineNoCov">          0 :   if (requested_digits == 0) {</span>
+<span class="lineNum">     474 </span>            :     uint64_t rest =
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :         (static_cast&lt;uint64_t&gt;(integrals) &lt;&lt; -one.e()) + fractionals;</span>
+<span class="lineNum">     476 </span><span class="lineNoCov">          0 :     return RoundWeedCounted(buffer, *length, rest,</span>
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :                             static_cast&lt;uint64_t&gt;(divisor) &lt;&lt; -one.e(), w_error,</span>
+<span class="lineNum">     478 </span><span class="lineNoCov">          0 :                             kappa);</span>
+<span class="lineNum">     479 </span>            :   }
+<span class="lineNum">     480 </span>            : 
+<span class="lineNum">     481 </span>            :   // The integrals have been generated. We are at the point of the decimal
+<span class="lineNum">     482 </span>            :   // separator. In the following loop we simply multiply the remaining digits by
+<span class="lineNum">     483 </span>            :   // 10 and divide by one. We just need to pay attention to multiply associated
+<span class="lineNum">     484 </span>            :   // data (the 'unit'), too.
+<span class="lineNum">     485 </span>            :   // Note that the multiplication by 10 does not overflow, because w.e &gt;= -60
+<span class="lineNum">     486 </span>            :   // and thus one.e &gt;= -60.
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :   ASSERT(one.e() &gt;= -60);</span>
+<span class="lineNum">     488 </span><span class="lineNoCov">          0 :   ASSERT(fractionals &lt; one.f());</span>
+<span class="lineNum">     489 </span><span class="lineNoCov">          0 :   ASSERT(UINT64_2PART_C(0xFFFFFFFF, FFFFFFFF) / 10 &gt;= one.f());</span>
+<span class="lineNum">     490 </span><span class="lineNoCov">          0 :   while (requested_digits &gt; 0 &amp;&amp; fractionals &gt; w_error) {</span>
+<span class="lineNum">     491 </span><span class="lineNoCov">          0 :     fractionals *= 10;</span>
+<span class="lineNum">     492 </span><span class="lineNoCov">          0 :     w_error *= 10;</span>
+<span class="lineNum">     493 </span>            :     // Integer division by one.
+<span class="lineNum">     494 </span><span class="lineNoCov">          0 :     int digit = static_cast&lt;int&gt;(fractionals &gt;&gt; -one.e());</span>
+<span class="lineNum">     495 </span><span class="lineNoCov">          0 :     ASSERT(digit &lt;= 9);</span>
+<span class="lineNum">     496 </span><span class="lineNoCov">          0 :     buffer[*length] = static_cast&lt;char&gt;('0' + digit);</span>
+<span class="lineNum">     497 </span><span class="lineNoCov">          0 :     (*length)++;</span>
+<span class="lineNum">     498 </span><span class="lineNoCov">          0 :     requested_digits--;</span>
+<span class="lineNum">     499 </span><span class="lineNoCov">          0 :     fractionals &amp;= one.f() - 1;  // Modulo by one.</span>
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :     (*kappa)--;</span>
+<span class="lineNum">     501 </span>            :   }
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :   if (requested_digits != 0) return false;</span>
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :   return RoundWeedCounted(buffer, *length, fractionals, one.f(), w_error,</span>
+<span class="lineNum">     504 </span><span class="lineNoCov">          0 :                           kappa);</span>
+<span class="lineNum">     505 </span>            : }
+<span class="lineNum">     506 </span>            : 
+<span class="lineNum">     507 </span>            : 
+<span class="lineNum">     508 </span>            : // Provides a decimal representation of v.
+<span class="lineNum">     509 </span>            : // Returns true if it succeeds, otherwise the result cannot be trusted.
+<span class="lineNum">     510 </span>            : // There will be *length digits inside the buffer (not null-terminated).
+<span class="lineNum">     511 </span>            : // If the function returns true then
+<span class="lineNum">     512 </span>            : //        v == (double) (buffer * 10^decimal_exponent).
+<span class="lineNum">     513 </span>            : // The digits in the buffer are the shortest representation possible: no
+<span class="lineNum">     514 </span>            : // 0.09999999999999999 instead of 0.1. The shorter representation will even be
+<span class="lineNum">     515 </span>            : // chosen even if the longer one would be closer to v.
+<span class="lineNum">     516 </span>            : // The last digit will be closest to the actual v. That is, even if several
+<a name="517"><span class="lineNum">     517 </span>            : // digits might correctly yield 'v' when read again, the closest will be</a>
+<span class="lineNum">     518 </span>            : // computed.
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 : static bool Grisu3(double v,</span>
+<span class="lineNum">     520 </span>            :                    FastDtoaMode mode,
+<span class="lineNum">     521 </span>            :                    Vector&lt;char&gt; buffer,
+<span class="lineNum">     522 </span>            :                    int* length,
+<span class="lineNum">     523 </span>            :                    int* decimal_exponent) {
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :   DiyFp w = Double(v).AsNormalizedDiyFp();</span>
+<span class="lineNum">     525 </span>            :   // boundary_minus and boundary_plus are the boundaries between v and its
+<span class="lineNum">     526 </span>            :   // closest floating-point neighbors. Any number strictly between
+<span class="lineNum">     527 </span>            :   // boundary_minus and boundary_plus will round to v when convert to a double.
+<span class="lineNum">     528 </span>            :   // Grisu3 will never output representations that lie exactly on a boundary.
+<span class="lineNum">     529 </span><span class="lineNoCov">          0 :   DiyFp boundary_minus, boundary_plus;</span>
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :   if (mode == FAST_DTOA_SHORTEST) {</span>
+<span class="lineNum">     531 </span><span class="lineNoCov">          0 :     Double(v).NormalizedBoundaries(&amp;boundary_minus, &amp;boundary_plus);</span>
+<span class="lineNum">     532 </span>            :   } else {
+<span class="lineNum">     533 </span><span class="lineNoCov">          0 :     ASSERT(mode == FAST_DTOA_SHORTEST_SINGLE);</span>
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :     float single_v = static_cast&lt;float&gt;(v);</span>
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :     Single(single_v).NormalizedBoundaries(&amp;boundary_minus, &amp;boundary_plus);</span>
+<span class="lineNum">     536 </span>            :   }
+<span class="lineNum">     537 </span><span class="lineNoCov">          0 :   ASSERT(boundary_plus.e() == w.e());</span>
+<span class="lineNum">     538 </span><span class="lineNoCov">          0 :   DiyFp ten_mk;  // Cached power of ten: 10^-k</span>
+<span class="lineNum">     539 </span>            :   int mk;        // -k
+<span class="lineNum">     540 </span>            :   int ten_mk_minimal_binary_exponent =
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :      kMinimalTargetExponent - (w.e() + DiyFp::kSignificandSize);</span>
+<span class="lineNum">     542 </span>            :   int ten_mk_maximal_binary_exponent =
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :      kMaximalTargetExponent - (w.e() + DiyFp::kSignificandSize);</span>
+<span class="lineNum">     544 </span><span class="lineNoCov">          0 :   PowersOfTenCache::GetCachedPowerForBinaryExponentRange(</span>
+<span class="lineNum">     545 </span>            :       ten_mk_minimal_binary_exponent,
+<span class="lineNum">     546 </span>            :       ten_mk_maximal_binary_exponent,
+<span class="lineNum">     547 </span>            :       &amp;ten_mk, &amp;mk);
+<span class="lineNum">     548 </span><span class="lineNoCov">          0 :   ASSERT((kMinimalTargetExponent &lt;= w.e() + ten_mk.e() +</span>
+<span class="lineNum">     549 </span>            :           DiyFp::kSignificandSize) &amp;&amp;
+<span class="lineNum">     550 </span>            :          (kMaximalTargetExponent &gt;= w.e() + ten_mk.e() +
+<span class="lineNum">     551 </span>            :           DiyFp::kSignificandSize));
+<span class="lineNum">     552 </span>            :   // Note that ten_mk is only an approximation of 10^-k. A DiyFp only contains a
+<span class="lineNum">     553 </span>            :   // 64 bit significand and ten_mk is thus only precise up to 64 bits.
+<span class="lineNum">     554 </span>            : 
+<span class="lineNum">     555 </span>            :   // The DiyFp::Times procedure rounds its result, and ten_mk is approximated
+<span class="lineNum">     556 </span>            :   // too. The variable scaled_w (as well as scaled_boundary_minus/plus) are now
+<span class="lineNum">     557 </span>            :   // off by a small amount.
+<span class="lineNum">     558 </span>            :   // In fact: scaled_w - w*10^k &lt; 1ulp (unit in the last place) of scaled_w.
+<span class="lineNum">     559 </span>            :   // In other words: let f = scaled_w.f() and e = scaled_w.e(), then
+<span class="lineNum">     560 </span>            :   //           (f-1) * 2^e &lt; w*10^k &lt; (f+1) * 2^e
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 :   DiyFp scaled_w = DiyFp::Times(w, ten_mk);</span>
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 :   ASSERT(scaled_w.e() ==</span>
+<span class="lineNum">     563 </span>            :          boundary_plus.e() + ten_mk.e() + DiyFp::kSignificandSize);
+<span class="lineNum">     564 </span>            :   // In theory it would be possible to avoid some recomputations by computing
+<span class="lineNum">     565 </span>            :   // the difference between w and boundary_minus/plus (a power of 2) and to
+<span class="lineNum">     566 </span>            :   // compute scaled_boundary_minus/plus by subtracting/adding from
+<span class="lineNum">     567 </span>            :   // scaled_w. However the code becomes much less readable and the speed
+<span class="lineNum">     568 </span>            :   // enhancements are not terriffic.
+<span class="lineNum">     569 </span><span class="lineNoCov">          0 :   DiyFp scaled_boundary_minus = DiyFp::Times(boundary_minus, ten_mk);</span>
+<span class="lineNum">     570 </span><span class="lineNoCov">          0 :   DiyFp scaled_boundary_plus  = DiyFp::Times(boundary_plus,  ten_mk);</span>
+<span class="lineNum">     571 </span>            : 
+<span class="lineNum">     572 </span>            :   // DigitGen will generate the digits of scaled_w. Therefore we have
+<span class="lineNum">     573 </span>            :   // v == (double) (scaled_w * 10^-mk).
+<span class="lineNum">     574 </span>            :   // Set decimal_exponent == -mk and pass it to DigitGen. If scaled_w is not an
+<span class="lineNum">     575 </span>            :   // integer than it will be updated. For instance if scaled_w == 1.23 then
+<span class="lineNum">     576 </span>            :   // the buffer will be filled with &quot;123&quot; und the decimal_exponent will be
+<span class="lineNum">     577 </span>            :   // decreased by 2.
+<span class="lineNum">     578 </span>            :   int kappa;
+<span class="lineNum">     579 </span>            :   bool result = DigitGen(scaled_boundary_minus, scaled_w, scaled_boundary_plus,
+<span class="lineNum">     580 </span><span class="lineNoCov">          0 :                          buffer, length, &amp;kappa);</span>
+<span class="lineNum">     581 </span><span class="lineNoCov">          0 :   *decimal_exponent = -mk + kappa;</span>
+<span class="lineNum">     582 </span><span class="lineNoCov">          0 :   return result;</span>
+<span class="lineNum">     583 </span>            : }
+<span class="lineNum">     584 </span>            : 
+<span class="lineNum">     585 </span>            : 
+<span class="lineNum">     586 </span>            : // The &quot;counted&quot; version of grisu3 (see above) only generates requested_digits
+<span class="lineNum">     587 </span>            : // number of digits. This version does not generate the shortest representation,
+<span class="lineNum">     588 </span>            : // and with enough requested digits 0.1 will at some point print as 0.9999999...
+<a name="589"><span class="lineNum">     589 </span>            : // Grisu3 is too imprecise for real halfway cases (1.5 will not work) and</a>
+<span class="lineNum">     590 </span>            : // therefore the rounding strategy for halfway cases is irrelevant.
+<span class="lineNum">     591 </span><span class="lineNoCov">          0 : static bool Grisu3Counted(double v,</span>
+<span class="lineNum">     592 </span>            :                           int requested_digits,
+<span class="lineNum">     593 </span>            :                           Vector&lt;char&gt; buffer,
+<span class="lineNum">     594 </span>            :                           int* length,
+<span class="lineNum">     595 </span>            :                           int* decimal_exponent) {
+<span class="lineNum">     596 </span><span class="lineNoCov">          0 :   DiyFp w = Double(v).AsNormalizedDiyFp();</span>
+<span class="lineNum">     597 </span><span class="lineNoCov">          0 :   DiyFp ten_mk;  // Cached power of ten: 10^-k</span>
+<span class="lineNum">     598 </span>            :   int mk;        // -k
+<span class="lineNum">     599 </span>            :   int ten_mk_minimal_binary_exponent =
+<span class="lineNum">     600 </span><span class="lineNoCov">          0 :      kMinimalTargetExponent - (w.e() + DiyFp::kSignificandSize);</span>
+<span class="lineNum">     601 </span>            :   int ten_mk_maximal_binary_exponent =
+<span class="lineNum">     602 </span><span class="lineNoCov">          0 :      kMaximalTargetExponent - (w.e() + DiyFp::kSignificandSize);</span>
+<span class="lineNum">     603 </span><span class="lineNoCov">          0 :   PowersOfTenCache::GetCachedPowerForBinaryExponentRange(</span>
+<span class="lineNum">     604 </span>            :       ten_mk_minimal_binary_exponent,
+<span class="lineNum">     605 </span>            :       ten_mk_maximal_binary_exponent,
+<span class="lineNum">     606 </span>            :       &amp;ten_mk, &amp;mk);
+<span class="lineNum">     607 </span><span class="lineNoCov">          0 :   ASSERT((kMinimalTargetExponent &lt;= w.e() + ten_mk.e() +</span>
+<span class="lineNum">     608 </span>            :           DiyFp::kSignificandSize) &amp;&amp;
+<span class="lineNum">     609 </span>            :          (kMaximalTargetExponent &gt;= w.e() + ten_mk.e() +
+<span class="lineNum">     610 </span>            :           DiyFp::kSignificandSize));
+<span class="lineNum">     611 </span>            :   // Note that ten_mk is only an approximation of 10^-k. A DiyFp only contains a
+<span class="lineNum">     612 </span>            :   // 64 bit significand and ten_mk is thus only precise up to 64 bits.
+<span class="lineNum">     613 </span>            : 
+<span class="lineNum">     614 </span>            :   // The DiyFp::Times procedure rounds its result, and ten_mk is approximated
+<span class="lineNum">     615 </span>            :   // too. The variable scaled_w (as well as scaled_boundary_minus/plus) are now
+<span class="lineNum">     616 </span>            :   // off by a small amount.
+<span class="lineNum">     617 </span>            :   // In fact: scaled_w - w*10^k &lt; 1ulp (unit in the last place) of scaled_w.
+<span class="lineNum">     618 </span>            :   // In other words: let f = scaled_w.f() and e = scaled_w.e(), then
+<span class="lineNum">     619 </span>            :   //           (f-1) * 2^e &lt; w*10^k &lt; (f+1) * 2^e
+<span class="lineNum">     620 </span><span class="lineNoCov">          0 :   DiyFp scaled_w = DiyFp::Times(w, ten_mk);</span>
+<span class="lineNum">     621 </span>            : 
+<span class="lineNum">     622 </span>            :   // We now have (double) (scaled_w * 10^-mk).
+<span class="lineNum">     623 </span>            :   // DigitGen will generate the first requested_digits digits of scaled_w and
+<span class="lineNum">     624 </span>            :   // return together with a kappa such that scaled_w ~= buffer * 10^kappa. (It
+<span class="lineNum">     625 </span>            :   // will not always be exactly the same since DigitGenCounted only produces a
+<span class="lineNum">     626 </span>            :   // limited number of digits.)
+<span class="lineNum">     627 </span>            :   int kappa;
+<span class="lineNum">     628 </span>            :   bool result = DigitGenCounted(scaled_w, requested_digits,
+<span class="lineNum">     629 </span><span class="lineNoCov">          0 :                                 buffer, length, &amp;kappa);</span>
+<span class="lineNum">     630 </span><span class="lineNoCov">          0 :   *decimal_exponent = -mk + kappa;</span>
+<span class="lineNum">     631 </span><span class="lineNoCov">          0 :   return result;</span>
+<span class="lineNum">     632 </span>            : }
+<a name="633"><span class="lineNum">     633 </span>            : </a>
+<span class="lineNum">     634 </span>            : 
+<span class="lineNum">     635 </span><span class="lineNoCov">          0 : bool FastDtoa(double v,</span>
+<span class="lineNum">     636 </span>            :               FastDtoaMode mode,
+<span class="lineNum">     637 </span>            :               int requested_digits,
+<span class="lineNum">     638 </span>            :               Vector&lt;char&gt; buffer,
+<span class="lineNum">     639 </span>            :               int* length,
+<span class="lineNum">     640 </span>            :               int* decimal_point) {
+<span class="lineNum">     641 </span><span class="lineNoCov">          0 :   ASSERT(v &gt; 0);</span>
+<span class="lineNum">     642 </span><span class="lineNoCov">          0 :   ASSERT(!Double(v).IsSpecial());</span>
+<span class="lineNum">     643 </span>            : 
+<span class="lineNum">     644 </span><span class="lineNoCov">          0 :   bool result = false;</span>
+<span class="lineNum">     645 </span><span class="lineNoCov">          0 :   int decimal_exponent = 0;</span>
+<span class="lineNum">     646 </span><span class="lineNoCov">          0 :   switch (mode) {</span>
+<span class="lineNum">     647 </span><span class="lineNoCov">          0 :     case FAST_DTOA_SHORTEST:</span>
+<span class="lineNum">     648 </span>            :     case FAST_DTOA_SHORTEST_SINGLE:
+<span class="lineNum">     649 </span><span class="lineNoCov">          0 :       result = Grisu3(v, mode, buffer, length, &amp;decimal_exponent);</span>
+<span class="lineNum">     650 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 :     case FAST_DTOA_PRECISION:</span>
+<span class="lineNum">     652 </span><span class="lineNoCov">          0 :       result = Grisu3Counted(v, requested_digits,</span>
+<span class="lineNum">     653 </span>            :                              buffer, length, &amp;decimal_exponent);
+<span class="lineNum">     654 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">     656 </span><span class="lineNoCov">          0 :       UNREACHABLE();</span>
+<span class="lineNum">     657 </span>            :   }
+<span class="lineNum">     658 </span><span class="lineNoCov">          0 :   if (result) {</span>
+<span class="lineNum">     659 </span><span class="lineNoCov">          0 :     *decimal_point = *length + decimal_exponent;</span>
+<span class="lineNum">     660 </span><span class="lineNoCov">          0 :     buffer[*length] = '\0';</span>
+<span class="lineNum">     661 </span>            :   }
+<span class="lineNum">     662 </span><span class="lineNoCov">          0 :   return result;</span>
+<span class="lineNum">     663 </span>            : }
+<span class="lineNum">     664 </span>            : 
+<span class="lineNum">     665 </span>            : }  // namespace double_conversion
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

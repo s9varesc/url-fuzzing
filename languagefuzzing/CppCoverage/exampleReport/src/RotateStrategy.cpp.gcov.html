@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/RotateStrategy.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - RotateStrategy.cpp<span style="font-size: 80%;"> (source / <a href="RotateStrategy.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">36</td>
+            <td class="headerCovTableEntryLo">5.6 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntryLo">15.4 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // RotateStrategy.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Logging
+<span class="lineNum">       6 </span>            : // Module:  FileChannel
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/RotateStrategy.h&quot;
+<span class="lineNum">      16 </span>            : #include &quot;Poco/FileStream.h&quot;
+<span class="lineNum">      17 </span>            : #include &quot;Poco/DateTimeParser.h&quot;
+<span class="lineNum">      18 </span>            : #include &quot;Poco/DateTimeFormatter.h&quot;
+<span class="lineNum">      19 </span>            : #include &quot;Poco/DateTimeFormat.h&quot;
+<span class="lineNum">      20 </span>            : #include &quot;Poco/LineEndingConverter.h&quot;
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            : namespace Poco {
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : //
+<span class="lineNum">      27 </span>            : // RotateStrategy
+<span class="lineNum">      28 </span>            : //
+<a name="29"><span class="lineNum">      29 </span>            : </a>
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span><span class="lineNoCov">          0 : RotateStrategy::RotateStrategy()</span>
+<span class="lineNum">      32 </span>            : {
+<span class="lineNum">      33 </span><span class="lineNoCov">          0 : }</span>
+<a name="34"><span class="lineNum">      34 </span>            : </a>
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span><span class="lineNoCov">          0 : RotateStrategy::~RotateStrategy()</span>
+<span class="lineNum">      37 </span>            : {
+<span class="lineNum">      38 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : //
+<span class="lineNum">      42 </span>            : // RotateByIntervalStrategy
+<span class="lineNum">      43 </span>            : //
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span><span class="lineCov">          1 : const std::string RotateByIntervalStrategy::ROTATE_TEXT(&quot;# Log file created/rotated &quot;);</span>
+<a name="47"><span class="lineNum">      47 </span>            : </a>
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span><span class="lineNoCov">          0 : RotateByIntervalStrategy::RotateByIntervalStrategy(const Timespan&amp; span): </span>
+<span class="lineNum">      50 </span>            :         _span(span),
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 :         _lastRotate(0)</span>
+<span class="lineNum">      52 </span>            : {
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :         if (span.totalMicroseconds() &lt;= 0) throw InvalidArgumentException(&quot;time span must be greater than zero&quot;);</span>
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 : }</span>
+<a name="55"><span class="lineNum">      55 </span>            : </a>
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 : RotateByIntervalStrategy::~RotateByIntervalStrategy()</span>
+<span class="lineNum">      58 </span>            : {
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 : }</span>
+<a name="60"><span class="lineNum">      60 </span>            : </a>
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 : bool RotateByIntervalStrategy::mustRotate(LogFile* pFile)</span>
+<span class="lineNum">      63 </span>            : {
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :         if (_lastRotate == 0 || pFile-&gt;size() == 0)</span>
+<span class="lineNum">      65 </span>            :         {
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :                 if (pFile-&gt;size() != 0)</span>
+<span class="lineNum">      67 </span>            :                 {
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :                         Poco::FileInputStream istr(pFile-&gt;path());</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :                         Poco::InputLineEndingConverter converter(istr, Poco::LineEnding::NEWLINE_LF);</span>
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :                         std::string tag;</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :                         std::getline(converter, tag);</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :                         if (tag.compare(0, ROTATE_TEXT.size(), ROTATE_TEXT) == 0)</span>
+<span class="lineNum">      73 </span>            :                         {
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :                                 std::string timestamp(tag, ROTATE_TEXT.size());</span>
+<span class="lineNum">      75 </span>            :                                 int tzd;
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :                                 _lastRotate = DateTimeParser::parse(DateTimeFormat::RFC1036_FORMAT, timestamp, tzd).timestamp();</span>
+<span class="lineNum">      77 </span>            :                         }
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :                         else _lastRotate = pFile-&gt;creationDate();</span>
+<span class="lineNum">      79 </span>            :                 }
+<span class="lineNum">      80 </span>            :                 else
+<span class="lineNum">      81 </span>            :                 {
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :                         _lastRotate.update();</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :                         std::string tag(ROTATE_TEXT);</span>
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :                         DateTimeFormatter::append(tag, _lastRotate, DateTimeFormat::RFC1036_FORMAT);</span>
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :                         pFile-&gt;write(tag);</span>
+<span class="lineNum">      86 </span>            :                 }
+<span class="lineNum">      87 </span>            :         }
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :         Timestamp now;</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :         return _span &lt;= now - _lastRotate;</span>
+<span class="lineNum">      90 </span>            : }
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span>            : //
+<span class="lineNum">      94 </span>            : // RotateBySizeStrategy
+<span class="lineNum">      95 </span>            : //
+<a name="96"><span class="lineNum">      96 </span>            : </a>
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 : RotateBySizeStrategy::RotateBySizeStrategy(UInt64 size): _size(size)</span>
+<span class="lineNum">      99 </span>            : {
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :         if (size == 0) throw InvalidArgumentException(&quot;size must be greater than zero&quot;);</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 : }</span>
+<a name="102"><span class="lineNum">     102 </span>            : </a>
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 : RotateBySizeStrategy::~RotateBySizeStrategy()</span>
+<span class="lineNum">     105 </span>            : {
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 : }</span>
+<a name="107"><span class="lineNum">     107 </span>            : </a>
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 : bool RotateBySizeStrategy::mustRotate(LogFile* pFile)</span>
+<span class="lineNum">     110 </span>            : {
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :         return pFile-&gt;size() &gt;= _size;</span>
+<span class="lineNum">     112 </span>            : }
+<a name="113"><span class="lineNum">     113 </span>            : </a>
+<span class="lineNum">     114 </span>            : 
+<span class="lineNum">     115 </span><span class="lineCov">          3 : } // namespace Poco</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

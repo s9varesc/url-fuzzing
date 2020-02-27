@@ -1,0 +1,464 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/LocalDateTime.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - LocalDateTime.h<span style="font-size: 80%;"> (source / <a href="LocalDateTime.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // LocalDateTime.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: DateTime
+<span class="lineNum">       6 </span>            : // Module:  LocalDateTime
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the LocalDateTime class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_LocalDateTime_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_LocalDateTime_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : #include &quot;Poco/DateTime.h&quot;
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : namespace Poco {
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : class Foundation_API LocalDateTime
+<span class="lineNum">      29 </span>            :         /// This class represents an instant in local time
+<span class="lineNum">      30 </span>            :         /// (as opposed to UTC), expressed in years, months, days, 
+<span class="lineNum">      31 </span>            :         /// hours, minutes, seconds and milliseconds based on the 
+<span class="lineNum">      32 </span>            :         /// Gregorian calendar.
+<span class="lineNum">      33 </span>            :         ///
+<span class="lineNum">      34 </span>            :         /// In addition to the date and time, the class also 
+<span class="lineNum">      35 </span>            :         /// maintains a time zone differential, which denotes
+<span class="lineNum">      36 </span>            :         /// the difference in seconds from UTC to local time,
+<span class="lineNum">      37 </span>            :         /// i.e. UTC = local time - time zone differential.
+<span class="lineNum">      38 </span>            :         ///
+<span class="lineNum">      39 </span>            :         /// Although LocalDateTime supports relational and arithmetic
+<span class="lineNum">      40 </span>            :         /// operators, all date/time comparisons and date/time arithmetic
+<span class="lineNum">      41 </span>            :         /// should be done in UTC, using the DateTime or Timestamp
+<span class="lineNum">      42 </span>            :         /// class for better performance. The relational operators
+<span class="lineNum">      43 </span>            :         /// normalize the dates/times involved to UTC before carrying out
+<span class="lineNum">      44 </span>            :         /// the comparison.
+<span class="lineNum">      45 </span>            :         ///
+<span class="lineNum">      46 </span>            :         /// The time zone differential is based on the input date and
+<span class="lineNum">      47 </span>            :         /// time and current time zone. A number of constructors accept
+<span class="lineNum">      48 </span>            :         /// an explicit time zone differential parameter. These should
+<span class="lineNum">      49 </span>            :         /// not be used since daylight savings time processing is impossible
+<span class="lineNum">      50 </span>            :         /// since the time zone is unknown. Each of the constructors
+<span class="lineNum">      51 </span>            :         /// accepting a tzd parameter have been marked as deprecated and
+<span class="lineNum">      52 </span>            :         /// may be removed in a future revision.
+<span class="lineNum">      53 </span>            : {
+<span class="lineNum">      54 </span>            : public:
+<span class="lineNum">      55 </span>            :         LocalDateTime();
+<span class="lineNum">      56 </span>            :                 /// Creates a LocalDateTime with the current date/time 
+<span class="lineNum">      57 </span>            :                 /// for the current time zone.
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            :         LocalDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0, int millisecond = 0, int microsecond = 0);
+<span class="lineNum">      60 </span>            :                 /// Creates a LocalDateTime for the given Gregorian local date and time.
+<span class="lineNum">      61 </span>            :                 ///   * year is from 0 to 9999.
+<span class="lineNum">      62 </span>            :                 ///   * month is from 1 to 12.
+<span class="lineNum">      63 </span>            :                 ///   * day is from 1 to 31.
+<span class="lineNum">      64 </span>            :                 ///   * hour is from 0 to 23.
+<span class="lineNum">      65 </span>            :                 ///   * minute is from 0 to 59.
+<span class="lineNum">      66 </span>            :                 ///   * second is from 0 to 60 (allowing leap seconds).
+<span class="lineNum">      67 </span>            :                 ///   * millisecond is from 0 to 999.
+<span class="lineNum">      68 </span>            :                 ///   * microsecond is from 0 to 999.
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            :         //@ deprecated
+<span class="lineNum">      71 </span>            :         LocalDateTime(int tzd, int year, int month, int day, int hour, int minute, int second, int millisecond, int microsecond);
+<span class="lineNum">      72 </span>            :                 /// Creates a LocalDateTime for the given Gregorian date and time in the
+<span class="lineNum">      73 </span>            :                 /// time zone denoted by the time zone differential in tzd.
+<span class="lineNum">      74 </span>            :                 ///   * tzd is in seconds.
+<span class="lineNum">      75 </span>            :                 ///   * year is from 0 to 9999.
+<span class="lineNum">      76 </span>            :                 ///   * month is from 1 to 12.
+<span class="lineNum">      77 </span>            :                 ///   * day is from 1 to 31.
+<span class="lineNum">      78 </span>            :                 ///   * hour is from 0 to 23.
+<span class="lineNum">      79 </span>            :                 ///   * minute is from 0 to 59.
+<span class="lineNum">      80 </span>            :                 ///   * second is from 0 to 60 (allowing leap seconds).
+<span class="lineNum">      81 </span>            :                 ///   * millisecond is from 0 to 999.
+<span class="lineNum">      82 </span>            :                 ///   * microsecond is from 0 to 999.
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            :         LocalDateTime(const DateTime&amp; dateTime);
+<span class="lineNum">      85 </span>            :                 /// Creates a LocalDateTime from the UTC time given in dateTime,
+<span class="lineNum">      86 </span>            :                 /// using the time zone differential of the current time zone.
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span>            :         //@ deprecated
+<span class="lineNum">      89 </span>            :         LocalDateTime(int tzd, const DateTime&amp; dateTime);
+<span class="lineNum">      90 </span>            :                 /// Creates a LocalDateTime from the UTC time given in dateTime,
+<span class="lineNum">      91 </span>            :                 /// using the given time zone differential. Adjusts dateTime
+<span class="lineNum">      92 </span>            :                 /// for the given time zone differential.
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            :         //@ deprecated
+<span class="lineNum">      95 </span>            :         LocalDateTime(int tzd, const DateTime&amp; dateTime, bool adjust);
+<span class="lineNum">      96 </span>            :                 /// Creates a LocalDateTime from the UTC time given in dateTime,
+<span class="lineNum">      97 </span>            :                 /// using the given time zone differential. If adjust is true, 
+<span class="lineNum">      98 </span>            :                 /// adjusts dateTime for the given time zone differential.
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span>            :         LocalDateTime(double julianDay);
+<span class="lineNum">     101 </span>            :                 /// Creates a LocalDateTime for the given Julian day in the local time zone.
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span>            :         //@ deprecated
+<span class="lineNum">     104 </span>            :         LocalDateTime(int tzd, double julianDay);
+<span class="lineNum">     105 </span>            :                 /// Creates a LocalDateTime for the given Julian day in the time zone
+<span class="lineNum">     106 </span>            :                 /// denoted by the time zone differential in tzd.
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span>            :         LocalDateTime(const LocalDateTime&amp; dateTime);
+<span class="lineNum">     109 </span>            :                 /// Copy constructor. Creates the LocalDateTime from another one.
+<span class="lineNum">     110 </span>            :                 
+<span class="lineNum">     111 </span>            :         ~LocalDateTime();
+<span class="lineNum">     112 </span>            :                 /// Destroys the LocalDateTime.
+<span class="lineNum">     113 </span>            :                 
+<span class="lineNum">     114 </span>            :         LocalDateTime&amp; operator = (const LocalDateTime&amp; dateTime);
+<span class="lineNum">     115 </span>            :                 /// Assigns another LocalDateTime.
+<span class="lineNum">     116 </span>            :         
+<span class="lineNum">     117 </span>            :         LocalDateTime&amp; operator = (const Timestamp&amp; timestamp);
+<span class="lineNum">     118 </span>            :                 /// Assigns a timestamp
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span>            :         LocalDateTime&amp; operator = (double julianDay);
+<span class="lineNum">     121 </span>            :                 /// Assigns a Julian day in the local time zone.
+<span class="lineNum">     122 </span>            :         
+<span class="lineNum">     123 </span>            :         LocalDateTime&amp; assign(int year, int month, int day, int hour = 0, int minute = 0, int second = 0, int millisecond = 0, int microseconds = 0);
+<span class="lineNum">     124 </span>            :                 /// Assigns a Gregorian local date and time.
+<span class="lineNum">     125 </span>            :                 ///   * year is from 0 to 9999.
+<span class="lineNum">     126 </span>            :                 ///   * month is from 1 to 12.
+<span class="lineNum">     127 </span>            :                 ///   * day is from 1 to 31.
+<span class="lineNum">     128 </span>            :                 ///   * hour is from 0 to 23.
+<span class="lineNum">     129 </span>            :                 ///   * minute is from 0 to 59.
+<span class="lineNum">     130 </span>            :                 ///   * second is from 0 to 60 (allowing leap seconds).
+<span class="lineNum">     131 </span>            :                 ///   * millisecond is from 0 to 999.
+<span class="lineNum">     132 </span>            :                 ///   * microsecond is from 0 to 999.
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span>            :         //@ deprecated
+<span class="lineNum">     135 </span>            :         LocalDateTime&amp; assign(int tzd, int year, int month, int day, int hour, int minute, int second, int millisecond, int microseconds);
+<span class="lineNum">     136 </span>            :                 /// Assigns a Gregorian local date and time in the time zone denoted by
+<span class="lineNum">     137 </span>            :                 /// the time zone differential in tzd.
+<span class="lineNum">     138 </span>            :                 ///   * tzd is in seconds.
+<span class="lineNum">     139 </span>            :                 ///   * year is from 0 to 9999.
+<span class="lineNum">     140 </span>            :                 ///   * month is from 1 to 12.
+<span class="lineNum">     141 </span>            :                 ///   * day is from 1 to 31.
+<span class="lineNum">     142 </span>            :                 ///   * hour is from 0 to 23.
+<span class="lineNum">     143 </span>            :                 ///   * minute is from 0 to 59.
+<span class="lineNum">     144 </span>            :                 ///   * second is from 0 to 60 (allowing leap seconds).
+<span class="lineNum">     145 </span>            :                 ///   * millisecond is from 0 to 999.
+<span class="lineNum">     146 </span>            :                 ///   * microsecond is from 0 to 999.
+<span class="lineNum">     147 </span>            : 
+<span class="lineNum">     148 </span>            :         //@ deprecated
+<span class="lineNum">     149 </span>            :         LocalDateTime&amp; assign(int tzd, double julianDay);
+<span class="lineNum">     150 </span>            :                 /// Assigns a Julian day in the time zone denoted by the
+<span class="lineNum">     151 </span>            :                 /// time zone differential in tzd.
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            :         void swap(LocalDateTime&amp; dateTime);
+<span class="lineNum">     154 </span>            :                 /// Swaps the LocalDateTime with another one.
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span>            :         int year() const;
+<span class="lineNum">     157 </span>            :                 /// Returns the year.
+<span class="lineNum">     158 </span>            :                 
+<span class="lineNum">     159 </span>            :         int month() const;
+<span class="lineNum">     160 </span>            :                 /// Returns the month (1 to 12).
+<span class="lineNum">     161 </span>            :         
+<span class="lineNum">     162 </span>            :         int week(int firstDayOfWeek = DateTime::MONDAY) const;
+<span class="lineNum">     163 </span>            :                 /// Returns the week number within the year.
+<span class="lineNum">     164 </span>            :                 /// FirstDayOfWeek should be either SUNDAY (0) or MONDAY (1).
+<span class="lineNum">     165 </span>            :                 /// The returned week number will be from 0 to 53. Week number 1 is the week 
+<span class="lineNum">     166 </span>            :                 /// containing January 4. This is in accordance to ISO 8601.
+<span class="lineNum">     167 </span>            :                 /// 
+<span class="lineNum">     168 </span>            :                 /// The following example assumes that firstDayOfWeek is MONDAY. For 2005, which started
+<span class="lineNum">     169 </span>            :                 /// on a Saturday, week 1 will be the week starting on Monday, January 3.
+<span class="lineNum">     170 </span>            :                 /// January 1 and 2 will fall within week 0 (or the last week of the previous year).
+<span class="lineNum">     171 </span>            :                 ///
+<span class="lineNum">     172 </span>            :                 /// For 2007, which starts on a Monday, week 1 will be the week starting on Monday, January 1.
+<span class="lineNum">     173 </span>            :                 /// There will be no week 0 in 2007.
+<span class="lineNum">     174 </span>            :         
+<span class="lineNum">     175 </span>            :         int day() const;
+<span class="lineNum">     176 </span>            :                 /// Returns the day within the month (1 to 31).
+<span class="lineNum">     177 </span>            :                 
+<span class="lineNum">     178 </span>            :         int dayOfWeek() const;
+<span class="lineNum">     179 </span>            :                 /// Returns the weekday (0 to 6, where
+<span class="lineNum">     180 </span>            :                 /// 0 = Sunday, 1 = Monday, ..., 6 = Saturday).
+<span class="lineNum">     181 </span>            :         
+<span class="lineNum">     182 </span>            :         int dayOfYear() const;
+<span class="lineNum">     183 </span>            :                 /// Returns the number of the day in the year.
+<span class="lineNum">     184 </span>            :                 /// January 1 is 1, February 1 is 32, etc.
+<span class="lineNum">     185 </span>            :         
+<span class="lineNum">     186 </span>            :         int hour() const;
+<span class="lineNum">     187 </span>            :                 /// Returns the hour (0 to 23).
+<span class="lineNum">     188 </span>            :                 
+<span class="lineNum">     189 </span>            :         int hourAMPM() const;
+<span class="lineNum">     190 </span>            :                 /// Returns the hour (0 to 12).
+<span class="lineNum">     191 </span>            :         
+<span class="lineNum">     192 </span>            :         bool isAM() const;
+<span class="lineNum">     193 </span>            :                 /// Returns true if hour &lt; 12;
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            :         bool isPM() const;
+<span class="lineNum">     196 </span>            :                 /// Returns true if hour &gt;= 12.
+<span class="lineNum">     197 </span>            :                 
+<span class="lineNum">     198 </span>            :         int minute() const;
+<span class="lineNum">     199 </span>            :                 /// Returns the minute (0 to 59).
+<span class="lineNum">     200 </span>            :                 
+<span class="lineNum">     201 </span>            :         int second() const;
+<span class="lineNum">     202 </span>            :                 /// Returns the second (0 to 59).
+<span class="lineNum">     203 </span>            :                 
+<span class="lineNum">     204 </span>            :         int millisecond() const;
+<span class="lineNum">     205 </span>            :                 /// Returns the millisecond (0 to 999)
+<span class="lineNum">     206 </span>            :         
+<span class="lineNum">     207 </span>            :         int microsecond() const;
+<span class="lineNum">     208 </span>            :                 /// Returns the microsecond (0 to 999)
+<span class="lineNum">     209 </span>            :         
+<span class="lineNum">     210 </span>            :         double julianDay() const;
+<span class="lineNum">     211 </span>            :                 /// Returns the Julian day for the date.
+<span class="lineNum">     212 </span>            : 
+<span class="lineNum">     213 </span>            :         int tzd() const;
+<span class="lineNum">     214 </span>            :                 /// Returns the time zone differential.
+<span class="lineNum">     215 </span>            :                 
+<span class="lineNum">     216 </span>            :         DateTime utc() const;
+<span class="lineNum">     217 </span>            :                 /// Returns the UTC equivalent for the local date and time.
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            :         Timestamp timestamp() const;
+<span class="lineNum">     220 </span>            :                 /// Returns the date and time expressed as a Timestamp.
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span>            :         Timestamp::UtcTimeVal utcTime() const;
+<span class="lineNum">     223 </span>            :                 /// Returns the UTC equivalent for the local date and time.
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span>            :         bool operator == (const LocalDateTime&amp; dateTime) const;     
+<span class="lineNum">     226 </span>            :         bool operator != (const LocalDateTime&amp; dateTime) const;     
+<span class="lineNum">     227 </span>            :         bool operator &lt;  (const LocalDateTime&amp; dateTime) const;  
+<span class="lineNum">     228 </span>            :         bool operator &lt;= (const LocalDateTime&amp; dateTime) const;  
+<span class="lineNum">     229 </span>            :         bool operator &gt;  (const LocalDateTime&amp; dateTime) const;  
+<span class="lineNum">     230 </span>            :         bool operator &gt;= (const LocalDateTime&amp; dateTime) const;  
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span>            :         LocalDateTime  operator +  (const Timespan&amp; span) const;
+<span class="lineNum">     233 </span>            :         LocalDateTime  operator -  (const Timespan&amp; span) const;
+<span class="lineNum">     234 </span>            :         Timespan       operator -  (const LocalDateTime&amp; dateTime) const;
+<span class="lineNum">     235 </span>            :         LocalDateTime&amp; operator += (const Timespan&amp; span);
+<span class="lineNum">     236 </span>            :         LocalDateTime&amp; operator -= (const Timespan&amp; span);
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            : protected:
+<span class="lineNum">     239 </span>            :         LocalDateTime(Timestamp::UtcTimeVal utcTime, Timestamp::TimeDiff diff, int tzd);
+<span class="lineNum">     240 </span>            :                 
+<span class="lineNum">     241 </span>            :         void determineTzd(bool adjust = false);
+<span class="lineNum">     242 </span>            :                 /// Recalculate the tzd based on the _dateTime member based
+<span class="lineNum">     243 </span>            :                 /// on the current timezone using the Standard C runtime functions.
+<span class="lineNum">     244 </span>            :                 /// If adjust is true, then adjustForTzd() is called after the
+<span class="lineNum">     245 </span>            :                 /// differential is calculated.
+<span class="lineNum">     246 </span>            :                 
+<span class="lineNum">     247 </span>            :         void adjustForTzd();
+<span class="lineNum">     248 </span>            :                 /// Adjust the _dateTime member based on the _tzd member.
+<span class="lineNum">     249 </span>            :                 
+<span class="lineNum">     250 </span>            :         std::time_t dstOffset(int&amp; dstOffset) const;
+<span class="lineNum">     251 </span>            :                 /// Determine the DST offset for the current date/time.
+<span class="lineNum">     252 </span>            :         
+<span class="lineNum">     253 </span>            : private:
+<span class="lineNum">     254 </span>            :         DateTime _dateTime;
+<span class="lineNum">     255 </span>            :         int      _tzd;
+<span class="lineNum">     256 </span>            :         
+<span class="lineNum">     257 </span>            :         friend class DateTimeFormatter;
+<span class="lineNum">     258 </span>            :         friend class DateTimeParser;
+<span class="lineNum">     259 </span>            : };
+<span class="lineNum">     260 </span>            : 
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span>            : //
+<a name="263"><span class="lineNum">     263 </span>            : // inlines</a>
+<span class="lineNum">     264 </span>            : //
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 : inline int LocalDateTime::year() const</span>
+<span class="lineNum">     266 </span>            : {
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :         return _dateTime.year();</span>
+<span class="lineNum">     268 </span>            : }
+<a name="269"><span class="lineNum">     269 </span>            : </a>
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 : inline int LocalDateTime::month() const</span>
+<span class="lineNum">     272 </span>            : {
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :         return _dateTime.month();</span>
+<span class="lineNum">     274 </span>            : }
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span>            : 
+<span class="lineNum">     277 </span>            : inline int LocalDateTime::week(int firstDayOfWeek) const
+<span class="lineNum">     278 </span>            : {
+<span class="lineNum">     279 </span>            :         return _dateTime.week(firstDayOfWeek);
+<span class="lineNum">     280 </span>            : }
+<a name="281"><span class="lineNum">     281 </span>            : </a>
+<span class="lineNum">     282 </span>            : 
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 : inline int LocalDateTime::day() const</span>
+<span class="lineNum">     284 </span>            : {
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :         return _dateTime.day();</span>
+<span class="lineNum">     286 </span>            : }
+<a name="287"><span class="lineNum">     287 </span>            : </a>
+<span class="lineNum">     288 </span>            :         
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 : inline int LocalDateTime::dayOfWeek() const</span>
+<span class="lineNum">     290 </span>            : {
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :         return _dateTime.dayOfWeek();</span>
+<span class="lineNum">     292 </span>            : }
+<span class="lineNum">     293 </span>            : 
+<span class="lineNum">     294 </span>            : 
+<span class="lineNum">     295 </span>            : inline int LocalDateTime::dayOfYear() const
+<span class="lineNum">     296 </span>            : {
+<span class="lineNum">     297 </span>            :         return _dateTime.dayOfYear();
+<span class="lineNum">     298 </span>            : }
+<a name="299"><span class="lineNum">     299 </span>            : </a>
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 : inline int LocalDateTime::hour() const</span>
+<span class="lineNum">     302 </span>            : {
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :         return _dateTime.hour();</span>
+<span class="lineNum">     304 </span>            : }
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span>            :         
+<span class="lineNum">     307 </span>            : inline int LocalDateTime::hourAMPM() const
+<span class="lineNum">     308 </span>            : {
+<span class="lineNum">     309 </span>            :         return _dateTime.hourAMPM();
+<span class="lineNum">     310 </span>            : }
+<span class="lineNum">     311 </span>            : 
+<span class="lineNum">     312 </span>            : 
+<span class="lineNum">     313 </span>            : inline bool LocalDateTime::isAM() const
+<span class="lineNum">     314 </span>            : {
+<span class="lineNum">     315 </span>            :         return _dateTime.isAM();
+<span class="lineNum">     316 </span>            : }
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span>            : 
+<span class="lineNum">     319 </span>            : inline bool LocalDateTime::isPM() const
+<span class="lineNum">     320 </span>            : {
+<span class="lineNum">     321 </span>            :         return _dateTime.isPM();
+<span class="lineNum">     322 </span>            : }
+<a name="323"><span class="lineNum">     323 </span>            : </a>
+<span class="lineNum">     324 </span>            :         
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 : inline int LocalDateTime::minute() const</span>
+<span class="lineNum">     326 </span>            : {
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :         return _dateTime.minute();</span>
+<span class="lineNum">     328 </span>            : }
+<span class="lineNum">     329 </span>            : 
+<span class="lineNum">     330 </span>            :         
+<span class="lineNum">     331 </span>            : inline int LocalDateTime::second() const
+<span class="lineNum">     332 </span>            : {
+<span class="lineNum">     333 </span>            :         return _dateTime.second();
+<span class="lineNum">     334 </span>            : }
+<span class="lineNum">     335 </span>            : 
+<span class="lineNum">     336 </span>            :         
+<span class="lineNum">     337 </span>            : inline int LocalDateTime::millisecond() const
+<span class="lineNum">     338 </span>            : {
+<span class="lineNum">     339 </span>            :         return _dateTime.millisecond();
+<span class="lineNum">     340 </span>            : }
+<span class="lineNum">     341 </span>            : 
+<span class="lineNum">     342 </span>            : 
+<span class="lineNum">     343 </span>            : inline int LocalDateTime::microsecond() const
+<span class="lineNum">     344 </span>            : {
+<span class="lineNum">     345 </span>            :         return _dateTime.microsecond();
+<span class="lineNum">     346 </span>            : }
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span>            : 
+<span class="lineNum">     349 </span>            : inline double LocalDateTime::julianDay() const
+<span class="lineNum">     350 </span>            : {
+<span class="lineNum">     351 </span>            :         return _dateTime.julianDay();
+<span class="lineNum">     352 </span>            : }
+<a name="353"><span class="lineNum">     353 </span>            : </a>
+<span class="lineNum">     354 </span>            : 
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 : inline int LocalDateTime::tzd() const</span>
+<span class="lineNum">     356 </span>            : {
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :         return _tzd;</span>
+<span class="lineNum">     358 </span>            : }
+<a name="359"><span class="lineNum">     359 </span>            : </a>
+<span class="lineNum">     360 </span>            : 
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 : inline Timestamp LocalDateTime::timestamp() const</span>
+<span class="lineNum">     362 </span>            : {
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 :         return Timestamp::fromUtcTime(_dateTime.utcTime());</span>
+<span class="lineNum">     364 </span>            : }
+<a name="365"><span class="lineNum">     365 </span>            : </a>
+<span class="lineNum">     366 </span>            : 
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 : inline Timestamp::UtcTimeVal LocalDateTime::utcTime() const</span>
+<span class="lineNum">     368 </span>            : {
+<span class="lineNum">     369 </span><span class="lineNoCov">          0 :         return _dateTime.utcTime() - ((Timestamp::TimeDiff) _tzd)*10000000;</span>
+<span class="lineNum">     370 </span>            : }
+<a name="371"><span class="lineNum">     371 </span>            : </a>
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 : inline void LocalDateTime::adjustForTzd()</span>
+<span class="lineNum">     374 </span>            : {
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :         _dateTime += Timespan(((Timestamp::TimeDiff) _tzd)*Timespan::SECONDS);</span>
+<span class="lineNum">     376 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     377 </span>            : 
+<span class="lineNum">     378 </span>            : 
+<span class="lineNum">     379 </span>            : inline void swap(LocalDateTime&amp; d1, LocalDateTime&amp; d2)
+<span class="lineNum">     380 </span>            : {
+<span class="lineNum">     381 </span>            :         d1.swap(d2);
+<span class="lineNum">     382 </span>            : }
+<span class="lineNum">     383 </span>            : 
+<span class="lineNum">     384 </span>            : 
+<span class="lineNum">     385 </span>            : } // namespace Poco
+<span class="lineNum">     386 </span>            : 
+<span class="lineNum">     387 </span>            : 
+<span class="lineNum">     388 </span>            : #endif // Foundation_LocalDateTime_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

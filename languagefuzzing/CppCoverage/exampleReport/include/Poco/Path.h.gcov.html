@@ -1,0 +1,583 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/Path.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - Path.h<span style="font-size: 80%;"> (source / <a href="Path.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Path.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Filesystem
+<span class="lineNum">       6 </span>            : // Module:  Path
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the Path class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_Path_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_Path_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : namespace Poco {
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : class Foundation_API Path
+<span class="lineNum">      29 </span>            :         /// This class represents filesystem paths in a 
+<span class="lineNum">      30 </span>            :         /// platform-independent manner.
+<span class="lineNum">      31 </span>            :         /// Unix, Windows and OpenVMS all use a different
+<span class="lineNum">      32 </span>            :         /// syntax for filesystem paths.
+<span class="lineNum">      33 </span>            :         /// This class can work with all three formats.
+<span class="lineNum">      34 </span>            :         /// A path is made up of an optional node name
+<span class="lineNum">      35 </span>            :         /// (only Windows and OpenVMS), an optional
+<span class="lineNum">      36 </span>            :         /// device name (also only Windows and OpenVMS),
+<span class="lineNum">      37 </span>            :         /// a list of directory names and an optional
+<span class="lineNum">      38 </span>            :         /// filename.
+<span class="lineNum">      39 </span>            : {
+<span class="lineNum">      40 </span>            : public:
+<span class="lineNum">      41 </span>            :         enum Style
+<span class="lineNum">      42 </span>            :         {
+<span class="lineNum">      43 </span>            :                 PATH_UNIX,    /// Unix-style path
+<span class="lineNum">      44 </span>            :                 PATH_URI = PATH_UNIX, /// URI-style path, same as Unix-style
+<span class="lineNum">      45 </span>            :                 PATH_WINDOWS, /// Windows-style path
+<span class="lineNum">      46 </span>            :                 PATH_VMS,     /// VMS-style path
+<span class="lineNum">      47 </span>            :                 PATH_NATIVE,  /// The current platform's native style
+<span class="lineNum">      48 </span>            :                 PATH_GUESS    /// Guess the style by examining the path
+<span class="lineNum">      49 </span>            :         };
+<span class="lineNum">      50 </span>            :         
+<span class="lineNum">      51 </span>            :         typedef std::vector&lt;std::string&gt; StringVec;
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            :         Path();
+<span class="lineNum">      54 </span>            :                 /// Creates an empty relative path.
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            :         Path(bool absolute);
+<span class="lineNum">      57 </span>            :                 /// Creates an empty absolute or relative path.
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            :         Path(const char* path);
+<span class="lineNum">      60 </span>            :                 /// Creates a path from a string.
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            :         Path(const char* path, Style style);
+<span class="lineNum">      63 </span>            :                 /// Creates a path from a string.
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            :         Path(const std::string&amp; path);
+<span class="lineNum">      66 </span>            :                 /// Creates a path from a string.
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            :         Path(const std::string&amp; path, Style style);
+<span class="lineNum">      69 </span>            :                 /// Creates a path from a string.
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            :         Path(const Path&amp; path);
+<span class="lineNum">      72 </span>            :                 /// Copy constructor
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            :         Path(Path&amp;&amp; path) noexcept;
+<span class="lineNum">      75 </span>            :                 /// Move constructor.
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            :         Path(const Path&amp; parent, const std::string&amp; fileName);
+<span class="lineNum">      78 </span>            :                 /// Creates a path from a parent path and a filename.
+<span class="lineNum">      79 </span>            :                 /// The parent path is expected to reference a directory.
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            :         Path(const Path&amp; parent, const char* fileName);
+<span class="lineNum">      82 </span>            :                 /// Creates a path from a parent path and a filename.
+<span class="lineNum">      83 </span>            :                 /// The parent path is expected to reference a directory.
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            :         Path(const Path&amp; parent, const Path&amp; relative);
+<span class="lineNum">      86 </span>            :                 /// Creates a path from a parent path and a relative path.
+<span class="lineNum">      87 </span>            :                 /// The parent path is expected to reference a directory.
+<span class="lineNum">      88 </span>            :                 /// The relative path is appended to the parent path.
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            :         ~Path();
+<span class="lineNum">      91 </span>            :                 /// Destroys the Path.
+<span class="lineNum">      92 </span>            :                 
+<span class="lineNum">      93 </span>            :         Path&amp; operator = (const Path&amp; path);
+<span class="lineNum">      94 </span>            :                 /// Assignment operator.
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span>            :         Path&amp; operator = (Path&amp;&amp; path) noexcept;
+<span class="lineNum">      97 </span>            :                 /// Move assignment.
+<span class="lineNum">      98 </span>            :                 
+<span class="lineNum">      99 </span>            :         Path&amp; operator = (const std::string&amp; path);
+<span class="lineNum">     100 </span>            :                 /// Assigns a string containing a path in native format.
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span>            :         Path&amp; operator = (const char* path);
+<span class="lineNum">     103 </span>            :                 /// Assigns a string containing a path in native format.
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span>            :         void swap(Path&amp; path);
+<span class="lineNum">     106 </span>            :                 /// Swaps the path with another one.
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span>            :         Path&amp; assign(const std::string&amp; path);
+<span class="lineNum">     109 </span>            :                 /// Assigns a string containing a path in native format.
+<span class="lineNum">     110 </span>            :                 
+<span class="lineNum">     111 </span>            :         Path&amp; assign(const std::string&amp; path, Style style);
+<span class="lineNum">     112 </span>            :                 /// Assigns a string containing a path.
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            :         Path&amp; assign(const Path&amp; path);
+<span class="lineNum">     115 </span>            :                 /// Assigns the given path.
+<span class="lineNum">     116 </span>            :                 
+<span class="lineNum">     117 </span>            :         Path&amp; assign(const char* path);
+<span class="lineNum">     118 </span>            :                 /// Assigns a string containing a path.
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span>            :         std::string toString() const;
+<span class="lineNum">     121 </span>            :                 /// Returns a string containing the path in native format.
+<span class="lineNum">     122 </span>            :                 
+<span class="lineNum">     123 </span>            :         std::string toString(Style style) const;
+<span class="lineNum">     124 </span>            :                 /// Returns a string containing the path in the given format.
+<span class="lineNum">     125 </span>            :                 
+<span class="lineNum">     126 </span>            :         Path&amp; parse(const std::string&amp; path);
+<span class="lineNum">     127 </span>            :                 /// Same as assign().
+<span class="lineNum">     128 </span>            : 
+<span class="lineNum">     129 </span>            :         Path&amp; parse(const std::string&amp; path, Style style);
+<span class="lineNum">     130 </span>            :                 /// Assigns a string containing a path.
+<span class="lineNum">     131 </span>            : 
+<span class="lineNum">     132 </span>            :         bool tryParse(const std::string&amp; path);
+<span class="lineNum">     133 </span>            :                 /// Tries to interpret the given string as a path
+<span class="lineNum">     134 </span>            :                 /// in native format.
+<span class="lineNum">     135 </span>            :                 /// If the path is syntactically valid, assigns the
+<span class="lineNum">     136 </span>            :                 /// path and returns true. Otherwise leaves the 
+<span class="lineNum">     137 </span>            :                 /// object unchanged and returns false.
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span>            :         bool tryParse(const std::string&amp; path, Style style);
+<span class="lineNum">     140 </span>            :                 /// Tries to interpret the given string as a path,
+<span class="lineNum">     141 </span>            :                 /// according to the given style.
+<span class="lineNum">     142 </span>            :                 /// If the path is syntactically valid, assigns the
+<span class="lineNum">     143 </span>            :                 /// path and returns true. Otherwise leaves the
+<span class="lineNum">     144 </span>            :                 /// object unchanged and returns false.
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span>            :         Path&amp; parseDirectory(const std::string&amp; path);
+<span class="lineNum">     147 </span>            :                 /// The resulting path always refers to a directory and
+<span class="lineNum">     148 </span>            :                 /// the filename part is empty.
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            :         Path&amp; parseDirectory(const std::string&amp; path, Style style);
+<span class="lineNum">     151 </span>            :                 /// The resulting path always refers to a directory and
+<span class="lineNum">     152 </span>            :                 /// the filename part is empty.
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span>            :         Path&amp; makeDirectory();
+<span class="lineNum">     155 </span>            :                 /// If the path contains a filename, the filename is appended
+<span class="lineNum">     156 </span>            :                 /// to the directory list and cleared. Thus the resulting path
+<span class="lineNum">     157 </span>            :                 /// always refers to a directory.
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            :         Path&amp; makeFile();
+<span class="lineNum">     160 </span>            :                 /// If the path contains no filename, the last directory
+<span class="lineNum">     161 </span>            :                 /// becomes the filename.
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span>            :         Path&amp; makeParent();
+<span class="lineNum">     164 </span>            :                 /// Makes the path refer to its parent.
+<span class="lineNum">     165 </span>            :                 
+<span class="lineNum">     166 </span>            :         Path&amp; makeAbsolute();
+<span class="lineNum">     167 </span>            :                 /// Makes the path absolute if it is relative.
+<span class="lineNum">     168 </span>            :                 /// The current working directory is taken as base directory.
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span>            :         Path&amp; makeAbsolute(const Path&amp; base);
+<span class="lineNum">     171 </span>            :                 /// Makes the path absolute if it is relative.
+<span class="lineNum">     172 </span>            :                 /// The given path is taken as base. 
+<span class="lineNum">     173 </span>            : 
+<span class="lineNum">     174 </span>            :         Path&amp; append(const Path&amp; path);
+<span class="lineNum">     175 </span>            :                 /// Appends the given path.
+<span class="lineNum">     176 </span>            :                 
+<span class="lineNum">     177 </span>            :         Path&amp; resolve(const Path&amp; path);
+<span class="lineNum">     178 </span>            :                 /// Resolves the given path against the current one.
+<span class="lineNum">     179 </span>            :                 ///
+<span class="lineNum">     180 </span>            :                 /// If the given path is absolute, it replaces the current one.
+<span class="lineNum">     181 </span>            :                 /// Otherwise, the relative path is appended to the current path.
+<span class="lineNum">     182 </span>            : 
+<span class="lineNum">     183 </span>            :         bool isAbsolute() const;
+<span class="lineNum">     184 </span>            :                 /// Returns true iff the path is absolute.
+<span class="lineNum">     185 </span>            :                 
+<span class="lineNum">     186 </span>            :         bool isRelative() const;
+<span class="lineNum">     187 </span>            :                 /// Returns true iff the path is relative.
+<span class="lineNum">     188 </span>            :         
+<span class="lineNum">     189 </span>            :         bool isDirectory() const;
+<span class="lineNum">     190 </span>            :                 /// Returns true iff the path references a directory
+<span class="lineNum">     191 </span>            :                 /// (the filename part is empty).
+<span class="lineNum">     192 </span>            :                 
+<span class="lineNum">     193 </span>            :         bool isFile() const;
+<span class="lineNum">     194 </span>            :                 /// Returns true iff the path references a file
+<span class="lineNum">     195 </span>            :                 /// (the filename part is not empty).
+<span class="lineNum">     196 </span>            :         
+<span class="lineNum">     197 </span>            :         Path&amp; setNode(const std::string&amp; node);
+<span class="lineNum">     198 </span>            :                 /// Sets the node name.
+<span class="lineNum">     199 </span>            :                 /// Setting a non-empty node automatically makes
+<span class="lineNum">     200 </span>            :                 /// the path an absolute one.
+<span class="lineNum">     201 </span>            :                 
+<span class="lineNum">     202 </span>            :         const std::string&amp; getNode() const;
+<span class="lineNum">     203 </span>            :                 /// Returns the node name.
+<span class="lineNum">     204 </span>            :                 
+<span class="lineNum">     205 </span>            :         Path&amp; setDevice(const std::string&amp; device);
+<span class="lineNum">     206 </span>            :                 /// Sets the device name.
+<span class="lineNum">     207 </span>            :                 /// Setting a non-empty device automatically makes
+<span class="lineNum">     208 </span>            :                 /// the path an absolute one.
+<span class="lineNum">     209 </span>            :                 
+<span class="lineNum">     210 </span>            :         const std::string&amp; getDevice() const;
+<span class="lineNum">     211 </span>            :                 /// Returns the device name.
+<span class="lineNum">     212 </span>            :         
+<span class="lineNum">     213 </span>            :         int depth() const;
+<span class="lineNum">     214 </span>            :                 /// Returns the number of directories in the directory list.
+<span class="lineNum">     215 </span>            : 
+<span class="lineNum">     216 </span>            :         const std::string&amp; directory(int n) const;
+<span class="lineNum">     217 </span>            :                 /// Returns the n'th directory in the directory list.
+<span class="lineNum">     218 </span>            :                 /// If n == depth(), returns the filename.
+<span class="lineNum">     219 </span>            :                 
+<span class="lineNum">     220 </span>            :         const std::string&amp; operator [] (int n) const;
+<span class="lineNum">     221 </span>            :                 /// Returns the n'th directory in the directory list.
+<span class="lineNum">     222 </span>            :                 /// If n == depth(), returns the filename.
+<span class="lineNum">     223 </span>            :                 
+<span class="lineNum">     224 </span>            :         Path&amp; pushDirectory(const std::string&amp; dir);
+<span class="lineNum">     225 </span>            :                 /// Adds a directory to the directory list.
+<span class="lineNum">     226 </span>            :                 
+<span class="lineNum">     227 </span>            :         Path&amp; popDirectory();
+<span class="lineNum">     228 </span>            :                 /// Removes the last directory from the directory list.
+<span class="lineNum">     229 </span>            :                 
+<span class="lineNum">     230 </span>            :         Path&amp; popFrontDirectory();
+<span class="lineNum">     231 </span>            :                 /// Removes the first directory from the directory list.
+<span class="lineNum">     232 </span>            :                 
+<span class="lineNum">     233 </span>            :         Path&amp; setFileName(const std::string&amp; name);
+<span class="lineNum">     234 </span>            :                 /// Sets the filename.
+<span class="lineNum">     235 </span>            :                 
+<span class="lineNum">     236 </span>            :         const std::string&amp; getFileName() const;
+<span class="lineNum">     237 </span>            :                 /// Returns the filename.
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span>            :         Path&amp; setBaseName(const std::string&amp; name);
+<span class="lineNum">     240 </span>            :                 /// Sets the basename part of the filename and
+<span class="lineNum">     241 </span>            :                 /// does not change the extension.
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span>            :         std::string getBaseName() const;
+<span class="lineNum">     244 </span>            :                 /// Returns the basename (the filename sans
+<span class="lineNum">     245 </span>            :                 /// extension) of the path.
+<span class="lineNum">     246 </span>            : 
+<span class="lineNum">     247 </span>            :         Path&amp; setExtension(const std::string&amp; extension);
+<span class="lineNum">     248 </span>            :                 /// Sets the filename extension.
+<span class="lineNum">     249 </span>            :                                 
+<span class="lineNum">     250 </span>            :         std::string getExtension() const;
+<span class="lineNum">     251 </span>            :                 /// Returns the filename extension.
+<span class="lineNum">     252 </span>            :                 
+<span class="lineNum">     253 </span>            :         const std::string&amp; version() const;
+<span class="lineNum">     254 </span>            :                 /// Returns the file version. VMS only.
+<span class="lineNum">     255 </span>            :                 
+<span class="lineNum">     256 </span>            :         Path&amp; clear();
+<span class="lineNum">     257 </span>            :                 /// Clears all components.
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span>            :         Path parent() const;
+<span class="lineNum">     260 </span>            :                 /// Returns a path referring to the path's
+<span class="lineNum">     261 </span>            :                 /// directory.
+<span class="lineNum">     262 </span>            :                 
+<span class="lineNum">     263 </span>            :         Path absolute() const;
+<span class="lineNum">     264 </span>            :                 /// Returns an absolute variant of the path,
+<span class="lineNum">     265 </span>            :                 /// taking the current working directory as base.
+<span class="lineNum">     266 </span>            : 
+<span class="lineNum">     267 </span>            :         Path absolute(const Path&amp; base) const;
+<span class="lineNum">     268 </span>            :                 /// Returns an absolute variant of the path,
+<span class="lineNum">     269 </span>            :                 /// taking the given path as base.
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span>            :         static Path forDirectory(const std::string&amp; path);
+<span class="lineNum">     272 </span>            :                 /// Creates a path referring to a directory.
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span>            :         static Path forDirectory(const std::string&amp; path, Style style);
+<span class="lineNum">     275 </span>            :                 /// Creates a path referring to a directory.
+<span class="lineNum">     276 </span>            : 
+<span class="lineNum">     277 </span>            :         static char separator();
+<span class="lineNum">     278 </span>            :                 /// Returns the platform's path name separator, which separates
+<span class="lineNum">     279 </span>            :                 /// the components (names) in a path. 
+<span class="lineNum">     280 </span>            :                 ///
+<span class="lineNum">     281 </span>            :                 /// On Unix systems, this is the slash '/'. On Windows systems, 
+<span class="lineNum">     282 </span>            :                 /// this is the backslash '\'. On OpenVMS systems, this is the
+<span class="lineNum">     283 </span>            :                 /// period '.'.
+<span class="lineNum">     284 </span>            :                 
+<span class="lineNum">     285 </span>            :         static char pathSeparator();
+<span class="lineNum">     286 </span>            :                 /// Returns the platform's path separator, which separates
+<span class="lineNum">     287 </span>            :                 /// single paths in a list of paths.
+<span class="lineNum">     288 </span>            :                 ///
+<span class="lineNum">     289 </span>            :                 /// On Unix systems, this is the colon ':'. On Windows systems,
+<span class="lineNum">     290 </span>            :                 /// this is the semicolon ';'. On OpenVMS systems, this is the
+<span class="lineNum">     291 </span>            :                 /// comma ','.
+<span class="lineNum">     292 </span>            : 
+<span class="lineNum">     293 </span>            :         static std::string current();
+<span class="lineNum">     294 </span>            :                 /// Returns the current working directory.
+<span class="lineNum">     295 </span>            :                 
+<span class="lineNum">     296 </span>            :         static std::string home();
+<span class="lineNum">     297 </span>            :                 /// Returns the user's home directory.
+<span class="lineNum">     298 </span>            : 
+<span class="lineNum">     299 </span>            :         static std::string configHome();
+<span class="lineNum">     300 </span>            :                 /// Returns the user's config directory.
+<span class="lineNum">     301 </span>            :                 ///
+<span class="lineNum">     302 </span>            :                 /// On Unix systems, this is the '~/.config/'. On Windows systems,
+<span class="lineNum">     303 </span>            :                 /// this is '%APPDATA%'.
+<span class="lineNum">     304 </span>            : 
+<span class="lineNum">     305 </span>            :         static std::string dataHome();
+<span class="lineNum">     306 </span>            :                 /// Returns the user's data directory.
+<span class="lineNum">     307 </span>            :                 ///
+<span class="lineNum">     308 </span>            :                 /// On Unix systems, this is the '~/.local/share/'. On Windows systems,
+<span class="lineNum">     309 </span>            :                 /// this is '%APPDATA%'.
+<span class="lineNum">     310 </span>            : 
+<span class="lineNum">     311 </span>            :         static std::string tempHome();
+<span class="lineNum">     312 </span>            :                 /// Returns the user's temp directory.
+<span class="lineNum">     313 </span>            :                 ///
+<span class="lineNum">     314 </span>            :                 /// On Unix systems, this is the '~/.local/temp/'.
+<span class="lineNum">     315 </span>            : 
+<span class="lineNum">     316 </span>            :         static std::string cacheHome();
+<span class="lineNum">     317 </span>            :                 /// Returns the user's cache directory.
+<span class="lineNum">     318 </span>            :                 ///
+<span class="lineNum">     319 </span>            :                 /// On Unix systems, this is the '~/.cache/'. On Windows systems,
+<span class="lineNum">     320 </span>            :                 /// this is '%APPDATA%'.
+<span class="lineNum">     321 </span>            : 
+<span class="lineNum">     322 </span>            :         static std::string temp();
+<span class="lineNum">     323 </span>            :                 /// Returns the temporary directory.
+<span class="lineNum">     324 </span>            :                 
+<span class="lineNum">     325 </span>            :         static std::string config();
+<span class="lineNum">     326 </span>            :                 /// Returns the systemwide config directory.
+<span class="lineNum">     327 </span>            :                 ///
+<span class="lineNum">     328 </span>            :                 /// On Unix systems, this is the '/etc/'.
+<span class="lineNum">     329 </span>            :                 
+<span class="lineNum">     330 </span>            :         static std::string null();
+<span class="lineNum">     331 </span>            :                 /// Returns the name of the null device.
+<span class="lineNum">     332 </span>            :                 
+<span class="lineNum">     333 </span>            :         static std::string expand(const std::string&amp; path);
+<span class="lineNum">     334 </span>            :                 /// Expands all environment variables contained in the path.
+<span class="lineNum">     335 </span>            :                 ///
+<span class="lineNum">     336 </span>            :                 /// On Unix, a tilde as first character in the path is
+<span class="lineNum">     337 </span>            :                 /// replaced with the path to user's home directory.
+<span class="lineNum">     338 </span>            : 
+<span class="lineNum">     339 </span>            :         static void listRoots(std::vector&lt;std::string&gt;&amp; roots);
+<span class="lineNum">     340 </span>            :                 /// Fills the vector with all filesystem roots available on the
+<span class="lineNum">     341 </span>            :                 /// system. On Unix, there is exactly one root, &quot;/&quot;.
+<span class="lineNum">     342 </span>            :                 /// On Windows, the roots are the drive letters.
+<span class="lineNum">     343 </span>            :                 /// On OpenVMS, the roots are the mounted disks.
+<span class="lineNum">     344 </span>            :                 
+<span class="lineNum">     345 </span>            :         static bool find(StringVec::const_iterator it, StringVec::const_iterator end, const std::string&amp; name, Path&amp; path);
+<span class="lineNum">     346 </span>            :                 /// Searches the file with the given name in the locations (paths) specified
+<span class="lineNum">     347 </span>            :                 /// by it and end. A relative path may be given in name.
+<span class="lineNum">     348 </span>            :                 ///
+<span class="lineNum">     349 </span>            :                 /// If the file is found in one of the locations, the complete
+<span class="lineNum">     350 </span>            :                 /// path of the file is stored in the path given as argument and true is returned. 
+<span class="lineNum">     351 </span>            :                 /// Otherwise false is returned and the path argument remains unchanged.
+<span class="lineNum">     352 </span>            : 
+<span class="lineNum">     353 </span>            :         static bool find(const std::string&amp; pathList, const std::string&amp; name, Path&amp; path);
+<span class="lineNum">     354 </span>            :                 /// Searches the file with the given name in the locations (paths) specified
+<span class="lineNum">     355 </span>            :                 /// in pathList. The paths in pathList must be delimited by the platform's
+<span class="lineNum">     356 </span>            :                 /// path separator (see pathSeparator()). A relative path may be given in name.
+<span class="lineNum">     357 </span>            :                 ///
+<span class="lineNum">     358 </span>            :                 /// If the file is found in one of the locations, the complete
+<span class="lineNum">     359 </span>            :                 /// path of the file is stored in the path given as argument and true is returned. 
+<span class="lineNum">     360 </span>            :                 /// Otherwise false is returned and the path argument remains unchanged.
+<span class="lineNum">     361 </span>            :                 
+<span class="lineNum">     362 </span>            :         static std::string transcode(const std::string&amp; path);
+<span class="lineNum">     363 </span>            :                 /// On Windows, this function converts a string (usually containing a path) 
+<span class="lineNum">     364 </span>            :                 /// encoded in UTF-8 into a string encoded in the current Windows code page.
+<span class="lineNum">     365 </span>            :                 /// 
+<span class="lineNum">     366 </span>            :                 /// This function should be used for every string passed as a file name to
+<span class="lineNum">     367 </span>            :                 /// a string stream or fopen().
+<span class="lineNum">     368 </span>            :                 ///
+<span class="lineNum">     369 </span>            :                 /// On all other platforms, or if POCO has not been compiled with Windows UTF-8
+<span class="lineNum">     370 </span>            :                 /// support, this function returns the string unchanged.
+<span class="lineNum">     371 </span>            : 
+<span class="lineNum">     372 </span>            : protected:
+<span class="lineNum">     373 </span>            :         void parseUnix(const std::string&amp; path);
+<span class="lineNum">     374 </span>            :         void parseWindows(const std::string&amp; path);
+<span class="lineNum">     375 </span>            :         void parseVMS(const std::string&amp; path);
+<span class="lineNum">     376 </span>            :         void parseGuess(const std::string&amp; path);
+<span class="lineNum">     377 </span>            :         std::string buildUnix() const;
+<span class="lineNum">     378 </span>            :         std::string buildWindows() const;
+<span class="lineNum">     379 </span>            :         std::string buildVMS() const;
+<span class="lineNum">     380 </span>            : 
+<span class="lineNum">     381 </span>            : private:
+<span class="lineNum">     382 </span>            :         std::string _node;
+<span class="lineNum">     383 </span>            :         std::string _device;
+<span class="lineNum">     384 </span>            :         std::string _name;
+<span class="lineNum">     385 </span>            :         std::string _version;
+<span class="lineNum">     386 </span>            :         StringVec   _dirs;
+<span class="lineNum">     387 </span>            :         bool        _absolute;
+<span class="lineNum">     388 </span>            : };
+<span class="lineNum">     389 </span>            : 
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span>            : //
+<a name="392"><span class="lineNum">     392 </span>            : // inlines</a>
+<span class="lineNum">     393 </span>            : //
+<span class="lineNum">     394 </span><span class="lineNoCov">          0 : inline bool Path::isAbsolute() const</span>
+<span class="lineNum">     395 </span>            : {
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :         return _absolute;</span>
+<span class="lineNum">     397 </span>            : }
+<span class="lineNum">     398 </span>            : 
+<span class="lineNum">     399 </span>            :         
+<span class="lineNum">     400 </span>            : inline bool Path::isRelative() const
+<span class="lineNum">     401 </span>            : {
+<span class="lineNum">     402 </span>            :         return !_absolute;
+<span class="lineNum">     403 </span>            : }
+<a name="404"><span class="lineNum">     404 </span>            : </a>
+<span class="lineNum">     405 </span>            : 
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 : inline bool Path::isDirectory() const</span>
+<span class="lineNum">     407 </span>            : {
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :         return _name.empty();</span>
+<span class="lineNum">     409 </span>            : }
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            : 
+<span class="lineNum">     412 </span>            : inline bool Path::isFile() const
+<span class="lineNum">     413 </span>            : {
+<span class="lineNum">     414 </span>            :         return !_name.empty();
+<span class="lineNum">     415 </span>            : }
+<a name="416"><span class="lineNum">     416 </span>            : </a>
+<span class="lineNum">     417 </span>            : 
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 : inline Path&amp; Path::parse(const std::string&amp; path)</span>
+<span class="lineNum">     419 </span>            : {
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :         return assign(path);</span>
+<span class="lineNum">     421 </span>            : }
+<a name="422"><span class="lineNum">     422 </span>            : </a>
+<span class="lineNum">     423 </span>            : 
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 : inline Path&amp; Path::parse(const std::string&amp; path, Style style)</span>
+<span class="lineNum">     425 </span>            : {
+<span class="lineNum">     426 </span><span class="lineNoCov">          0 :         return assign(path, style);</span>
+<span class="lineNum">     427 </span>            : }
+<a name="428"><span class="lineNum">     428 </span>            : </a>
+<span class="lineNum">     429 </span>            : 
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 : inline const std::string&amp; Path::getNode() const</span>
+<span class="lineNum">     431 </span>            : {
+<span class="lineNum">     432 </span><span class="lineNoCov">          0 :         return _node;</span>
+<span class="lineNum">     433 </span>            : }
+<span class="lineNum">     434 </span>            : 
+<span class="lineNum">     435 </span>            : 
+<span class="lineNum">     436 </span>            : inline const std::string&amp; Path::getDevice() const
+<span class="lineNum">     437 </span>            : {
+<span class="lineNum">     438 </span>            :         return _device;
+<span class="lineNum">     439 </span>            : }
+<a name="440"><span class="lineNum">     440 </span>            : </a>
+<span class="lineNum">     441 </span>            : 
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 : inline const std::string&amp; Path::getFileName() const</span>
+<span class="lineNum">     443 </span>            : {
+<span class="lineNum">     444 </span><span class="lineNoCov">          0 :         return _name;</span>
+<span class="lineNum">     445 </span>            : }
+<a name="446"><span class="lineNum">     446 </span>            : </a>
+<span class="lineNum">     447 </span>            : 
+<span class="lineNum">     448 </span><span class="lineNoCov">          0 : inline int Path::depth() const</span>
+<span class="lineNum">     449 </span>            : {
+<span class="lineNum">     450 </span><span class="lineNoCov">          0 :         return int(_dirs.size());</span>
+<span class="lineNum">     451 </span>            : }
+<span class="lineNum">     452 </span>            : 
+<span class="lineNum">     453 </span>            : 
+<span class="lineNum">     454 </span>            : inline const std::string&amp; Path::version() const
+<span class="lineNum">     455 </span>            : {
+<span class="lineNum">     456 </span>            :         return _version;
+<span class="lineNum">     457 </span>            : }
+<span class="lineNum">     458 </span>            : 
+<span class="lineNum">     459 </span>            : 
+<span class="lineNum">     460 </span>            : inline Path Path::forDirectory(const std::string&amp; path)
+<span class="lineNum">     461 </span>            : {
+<span class="lineNum">     462 </span>            :         Path p;
+<span class="lineNum">     463 </span>            :         return p.parseDirectory(path);
+<span class="lineNum">     464 </span>            : }
+<span class="lineNum">     465 </span>            :         
+<span class="lineNum">     466 </span>            : 
+<span class="lineNum">     467 </span>            : inline Path Path::forDirectory(const std::string&amp; path, Style style)
+<span class="lineNum">     468 </span>            : {
+<span class="lineNum">     469 </span>            :         Path p;
+<span class="lineNum">     470 </span>            :         return p.parseDirectory(path, style);
+<span class="lineNum">     471 </span>            : }
+<a name="472"><span class="lineNum">     472 </span>            : </a>
+<span class="lineNum">     473 </span>            : 
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 : inline char Path::separator()</span>
+<span class="lineNum">     475 </span>            : {
+<span class="lineNum">     476 </span>            : #if defined(POCO_OS_FAMILY_VMS)
+<span class="lineNum">     477 </span>            :         return '.';
+<span class="lineNum">     478 </span>            : #elif defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">     479 </span>            :         return '\\';
+<span class="lineNum">     480 </span>            : #else
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 :         return '/';</span>
+<span class="lineNum">     482 </span>            : #endif
+<span class="lineNum">     483 </span>            : }
+<a name="484"><span class="lineNum">     484 </span>            : </a>
+<span class="lineNum">     485 </span>            : 
+<span class="lineNum">     486 </span><span class="lineNoCov">          0 : inline char Path::pathSeparator()</span>
+<span class="lineNum">     487 </span>            : {
+<span class="lineNum">     488 </span>            : #if defined(POCO_OS_FAMILY_VMS)
+<span class="lineNum">     489 </span>            :         return ',';
+<span class="lineNum">     490 </span>            : #elif defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">     491 </span>            :         return ';';
+<span class="lineNum">     492 </span>            : #else
+<span class="lineNum">     493 </span><span class="lineNoCov">          0 :         return ':';</span>
+<span class="lineNum">     494 </span>            : #endif
+<span class="lineNum">     495 </span>            : }
+<span class="lineNum">     496 </span>            : 
+<span class="lineNum">     497 </span>            : 
+<span class="lineNum">     498 </span>            : inline void swap(Path&amp; p1, Path&amp; p2)
+<span class="lineNum">     499 </span>            : {
+<span class="lineNum">     500 </span>            :         p1.swap(p2);
+<span class="lineNum">     501 </span>            : }
+<span class="lineNum">     502 </span>            : 
+<span class="lineNum">     503 </span>            : 
+<span class="lineNum">     504 </span>            : } // namespace Poco
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span>            : 
+<span class="lineNum">     507 </span>            : #endif // Foundation_Path_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

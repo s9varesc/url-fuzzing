@@ -1,0 +1,1362 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/ordered_hash.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - ordered_hash.h<span style="font-size: 80%;"> (source / <a href="ordered_hash.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">153</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">64</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /**</a>
+<span class="lineNum">       2 </span>            :  * MIT License
+<span class="lineNum">       3 </span>            :  * 
+<span class="lineNum">       4 </span>            :  * Copyright (c) 2017 Tessil
+<span class="lineNum">       5 </span>            :  * 
+<span class="lineNum">       6 </span>            :  * Permission is hereby granted, free of charge, to any person obtaining a copy
+<span class="lineNum">       7 </span>            :  * of this software and associated documentation files (the &quot;Software&quot;), to deal
+<span class="lineNum">       8 </span>            :  * in the Software without restriction, including without limitation the rights
+<span class="lineNum">       9 </span>            :  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+<span class="lineNum">      10 </span>            :  * copies of the Software, and to permit persons to whom the Software is
+<span class="lineNum">      11 </span>            :  * furnished to do so, subject to the following conditions:
+<span class="lineNum">      12 </span>            :  * 
+<span class="lineNum">      13 </span>            :  * The above copyright notice and this permission notice shall be included in all
+<span class="lineNum">      14 </span>            :  * copies or substantial portions of the Software.
+<span class="lineNum">      15 </span>            :  * 
+<span class="lineNum">      16 </span>            :  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+<span class="lineNum">      17 </span>            :  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+<span class="lineNum">      18 </span>            :  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+<span class="lineNum">      19 </span>            :  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+<span class="lineNum">      20 </span>            :  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+<span class="lineNum">      21 </span>            :  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+<span class="lineNum">      22 </span>            :  * SOFTWARE.
+<span class="lineNum">      23 </span>            :  */
+<span class="lineNum">      24 </span>            : #ifndef TSL_ORDERED_HASH_H
+<span class="lineNum">      25 </span>            : #define TSL_ORDERED_HASH_H
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : #include &lt;algorithm&gt;
+<span class="lineNum">      29 </span>            : #include &lt;cassert&gt;
+<span class="lineNum">      30 </span>            : #include &lt;climits&gt;
+<span class="lineNum">      31 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">      32 </span>            : #include &lt;cstddef&gt;
+<span class="lineNum">      33 </span>            : #include &lt;cstdint&gt;
+<span class="lineNum">      34 </span>            : #include &lt;functional&gt;
+<span class="lineNum">      35 </span>            : #include &lt;iterator&gt;
+<span class="lineNum">      36 </span>            : #include &lt;limits&gt;
+<span class="lineNum">      37 </span>            : #include &lt;memory&gt;
+<span class="lineNum">      38 </span>            : #include &lt;stdexcept&gt;
+<span class="lineNum">      39 </span>            : #include &lt;tuple&gt;
+<span class="lineNum">      40 </span>            : #include &lt;type_traits&gt;
+<span class="lineNum">      41 </span>            : #include &lt;utility&gt;
+<span class="lineNum">      42 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : /**
+<span class="lineNum">      46 </span>            :  * Macros for compatibility with GCC 4.8
+<span class="lineNum">      47 </span>            :  */
+<span class="lineNum">      48 </span>            : #ifndef TSL_NO_CONTAINER_ERASE_CONST_ITERATOR
+<span class="lineNum">      49 </span>            :     #if (defined(__GNUC__) &amp;&amp; (__GNUC__ == 4) &amp;&amp; (__GNUC_MINOR__ &lt; 9))
+<span class="lineNum">      50 </span>            :     #define TSL_NO_CONTAINER_ERASE_CONST_ITERATOR
+<span class="lineNum">      51 </span>            :     #endif
+<span class="lineNum">      52 </span>            : #endif
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : #ifndef TSL_NO_CONTAINER_EMPLACE_CONST_ITERATOR
+<span class="lineNum">      55 </span>            :     #if (defined(__GNUC__) &amp;&amp; (__GNUC__ == 4) &amp;&amp; (__GNUC_MINOR__ &lt; 9))
+<span class="lineNum">      56 </span>            :     #define TSL_NO_CONTAINER_EMPLACE_CONST_ITERATOR
+<span class="lineNum">      57 </span>            :     #endif
+<span class="lineNum">      58 </span>            : #endif
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            : /*
+<span class="lineNum">      62 </span>            :  * Only activate tsl_assert if TSL_DEBUG is defined. 
+<span class="lineNum">      63 </span>            :  * This way we avoid the performance hit when NDEBUG is not defined with assert as tsl_assert is used a lot
+<span class="lineNum">      64 </span>            :  * (people usually compile with &quot;-O3&quot; and not &quot;-O3 -DNDEBUG&quot;).
+<span class="lineNum">      65 </span>            :  */
+<span class="lineNum">      66 </span>            : #ifndef tsl_assert
+<span class="lineNum">      67 </span>            :     #ifdef TSL_DEBUG
+<span class="lineNum">      68 </span>            :     #define tsl_assert(expr) assert(expr)
+<span class="lineNum">      69 </span>            :     #else
+<span class="lineNum">      70 </span>            :     #define tsl_assert(expr) (static_cast&lt;void&gt;(0))
+<span class="lineNum">      71 </span>            :     #endif
+<span class="lineNum">      72 </span>            : #endif
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            : namespace tsl {
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            : namespace detail_ordered_hash {
+<span class="lineNum">      78 </span>            :     
+<span class="lineNum">      79 </span>            : template&lt;typename T&gt;
+<span class="lineNum">      80 </span>            : struct make_void {
+<span class="lineNum">      81 </span>            :     using type = void;
+<span class="lineNum">      82 </span>            : };
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            : template&lt;typename T, typename = void&gt;
+<span class="lineNum">      85 </span>            : struct has_is_transparent: std::false_type {
+<span class="lineNum">      86 </span>            : };
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span>            : template&lt;typename T&gt;
+<span class="lineNum">      89 </span>            : struct has_is_transparent&lt;T, typename make_void&lt;typename T::is_transparent&gt;::type&gt;: std::true_type {
+<span class="lineNum">      90 </span>            : };
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span>            : template&lt;typename T, typename = void&gt;
+<span class="lineNum">      94 </span>            : struct is_vector: std::false_type {
+<span class="lineNum">      95 </span>            : };
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            : template&lt;typename T&gt;
+<span class="lineNum">      98 </span>            : struct is_vector&lt;T, typename std::enable_if&lt;
+<span class="lineNum">      99 </span>            :                         std::is_same&lt;T, std::vector&lt;typename T::value_type, typename T::allocator_type&gt;&gt;::value
+<span class="lineNum">     100 </span>            :                     &gt;::type&gt;: std::true_type {
+<span class="lineNum">     101 </span>            : };
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            : /**
+<span class="lineNum">     105 </span>            :  * Each bucket entry stores a 32-bits index which is the index in m_values corresponding to the bucket's value 
+<span class="lineNum">     106 </span>            :  * and a 32 bits hash (truncated if the original was 64-bits) corresponding to the hash of the value.
+<span class="lineNum">     107 </span>            :  * 
+<span class="lineNum">     108 </span>            :  * The 32-bit index limits the size of the map to 2^32 - 1 elements (-1 due to a reserved value used to mark a
+<span class="lineNum">     109 </span>            :  * bucket as empty).
+<span class="lineNum">     110 </span>            :  */
+<span class="lineNum">     111 </span>            : class bucket_entry {
+<span class="lineNum">     112 </span>            : public:
+<span class="lineNum">     113 </span>            :     using index_type = std::uint_least32_t;
+<span class="lineNum">     114 </span>            :     using truncated_hash_type = std::uint_least32_t;
+<a name="115"><span class="lineNum">     115 </span>            :     </a>
+<span class="lineNum">     116 </span>            :     
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :     bucket_entry() noexcept: m_index(EMPTY_MARKER_INDEX), m_hash(0) {</span>
+<a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 :     }</span></a>
+<span class="lineNum">     119 </span>            :     
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :     bool empty() const noexcept {</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :         return m_index == EMPTY_MARKER_INDEX;</span>
+<span class="lineNum">     122 </span>            :     }
+<span class="lineNum">     123 </span>            :     
+<span class="lineNum">     124 </span>            :     void clear() noexcept {
+<span class="lineNum">     125 </span>            :         m_index = EMPTY_MARKER_INDEX;
+<a name="126"><span class="lineNum">     126 </span>            :     }</a>
+<span class="lineNum">     127 </span>            :     
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :     index_type index() const noexcept {</span>
+<span class="lineNum">     129 </span>            :         tsl_assert(!empty());
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :         return m_index;</span>
+<a name="131"><span class="lineNum">     131 </span>            :     }</a>
+<span class="lineNum">     132 </span>            :     
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :     index_type&amp; index_ref() noexcept {</span>
+<span class="lineNum">     134 </span>            :         tsl_assert(!empty());
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :         return m_index;</span>
+<a name="136"><span class="lineNum">     136 </span>            :     }</a>
+<span class="lineNum">     137 </span>            :     
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :     void set_index(index_type index) noexcept {</span>
+<span class="lineNum">     139 </span>            :         tsl_assert(index &lt;= max_size());
+<span class="lineNum">     140 </span>            :         
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :         m_index = index;</span>
+<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :     }</span></a>
+<span class="lineNum">     143 </span>            :     
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :     truncated_hash_type truncated_hash() const noexcept {</span>
+<span class="lineNum">     145 </span>            :         tsl_assert(!empty());
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :         return m_hash;</span>
+<a name="147"><span class="lineNum">     147 </span>            :     }</a>
+<span class="lineNum">     148 </span>            :     
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :     truncated_hash_type&amp; truncated_hash_ref() noexcept {</span>
+<span class="lineNum">     150 </span>            :         tsl_assert(!empty());
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :         return m_hash;</span>
+<a name="152"><span class="lineNum">     152 </span>            :     }</a>
+<span class="lineNum">     153 </span>            :     
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :     void set_hash(std::size_t hash) noexcept {</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :         m_hash = truncate_hash(hash);</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :     }</span>
+<span class="lineNum">     157 </span>            :     
+<a name="158"><span class="lineNum">     158 </span>            :     </a>
+<span class="lineNum">     159 </span>            :     
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :     static truncated_hash_type truncate_hash(std::size_t hash) noexcept {</span>
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :         return truncated_hash_type(hash);</span>
+<a name="162"><span class="lineNum">     162 </span>            :     }</a>
+<span class="lineNum">     163 </span>            :     
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :     static std::size_t max_size() noexcept {</span>
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :         return std::numeric_limits&lt;index_type&gt;::max() - NB_RESERVED_INDEXES;</span>
+<span class="lineNum">     166 </span>            :     }
+<span class="lineNum">     167 </span>            :     
+<span class="lineNum">     168 </span>            : private:
+<span class="lineNum">     169 </span>            :     static const index_type EMPTY_MARKER_INDEX = std::numeric_limits&lt;index_type&gt;::max();
+<span class="lineNum">     170 </span>            :     static const std::size_t NB_RESERVED_INDEXES = 1;
+<span class="lineNum">     171 </span>            :     
+<span class="lineNum">     172 </span>            :     index_type m_index;
+<span class="lineNum">     173 </span>            :     truncated_hash_type m_hash;
+<span class="lineNum">     174 </span>            : };
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span>            : 
+<span class="lineNum">     178 </span>            : /**
+<span class="lineNum">     179 </span>            :  * Internal common class used by ordered_map and ordered_set.
+<span class="lineNum">     180 </span>            :  * 
+<span class="lineNum">     181 </span>            :  * ValueType is what will be stored by ordered_hash (usually std::pair&lt;Key, T&gt; for map and Key for set).
+<span class="lineNum">     182 </span>            :  * 
+<span class="lineNum">     183 </span>            :  * KeySelect should be a FunctionObject which takes a ValueType in parameter and return a reference to the key.
+<span class="lineNum">     184 </span>            :  * 
+<span class="lineNum">     185 </span>            :  * ValueSelect should be a FunctionObject which takes a ValueType in parameter and return a reference to the value. 
+<span class="lineNum">     186 </span>            :  * ValueSelect should be void if there is no value (in set for example).
+<span class="lineNum">     187 </span>            :  * 
+<span class="lineNum">     188 </span>            :  * ValueTypeContainer is the container which will be used to store ValueType values. 
+<span class="lineNum">     189 </span>            :  * Usually a std::deque&lt;ValueType, Allocator&gt; or std::vector&lt;ValueType, Allocator&gt;.
+<span class="lineNum">     190 </span>            :  * 
+<span class="lineNum">     191 </span>            :  * 
+<span class="lineNum">     192 </span>            :  * 
+<span class="lineNum">     193 </span>            :  * The orderd_hash structure is a hash table which preserves the order of insertion of the elements.
+<span class="lineNum">     194 </span>            :  * To do so, it stores the values in the ValueTypeContainer (m_values) using emplace_back at each
+<span class="lineNum">     195 </span>            :  * insertion of a new element. Another structure (m_buckets of type std::vector&lt;bucket_entry&gt;) will 
+<span class="lineNum">     196 </span>            :  * serve as buckets array for the hash table part. Each bucket stores an index which corresponds to 
+<span class="lineNum">     197 </span>            :  * the index in m_values where the bucket's value is and the (truncated) hash of this value. An index
+<span class="lineNum">     198 </span>            :  * is used instead of a pointer to the value to reduce the size of each bucket entry.
+<span class="lineNum">     199 </span>            :  * 
+<span class="lineNum">     200 </span>            :  * To resolve collisions in the buckets array, the structures use robin hood linear probing with 
+<span class="lineNum">     201 </span>            :  * backward shift deletion.
+<span class="lineNum">     202 </span>            :  */
+<span class="lineNum">     203 </span>            : template&lt;class ValueType,
+<span class="lineNum">     204 </span>            :          class KeySelect,
+<span class="lineNum">     205 </span>            :          class ValueSelect,
+<span class="lineNum">     206 </span>            :          class Hash,
+<span class="lineNum">     207 </span>            :          class KeyEqual,
+<span class="lineNum">     208 </span>            :          class Allocator,
+<span class="lineNum">     209 </span>            :          class ValueTypeContainer&gt;
+<span class="lineNum">     210 </span>            : class ordered_hash: private Hash, private KeyEqual {
+<span class="lineNum">     211 </span>            : private:
+<span class="lineNum">     212 </span>            :     template&lt;typename U&gt;
+<span class="lineNum">     213 </span>            :     using has_mapped_type = typename std::integral_constant&lt;bool, !std::is_same&lt;U, void&gt;::value&gt;;
+<span class="lineNum">     214 </span>            :     
+<span class="lineNum">     215 </span>            :     static_assert(std::is_same&lt;typename ValueTypeContainer::value_type, ValueType&gt;::value, 
+<span class="lineNum">     216 </span>            :                   &quot;ValueTypeContainer::value_type != ValueType.&quot;);
+<span class="lineNum">     217 </span>            :     static_assert(std::is_same&lt;typename ValueTypeContainer::allocator_type, Allocator&gt;::value, 
+<span class="lineNum">     218 </span>            :                   &quot;ValueTypeContainer::allocator_type != Allocator.&quot;);
+<span class="lineNum">     219 </span>            :     
+<span class="lineNum">     220 </span>            :     
+<span class="lineNum">     221 </span>            : public:
+<span class="lineNum">     222 </span>            :     template&lt;bool IsConst&gt;
+<span class="lineNum">     223 </span>            :     class ordered_iterator;
+<span class="lineNum">     224 </span>            :     
+<span class="lineNum">     225 </span>            :     using key_type = typename KeySelect::key_type;
+<span class="lineNum">     226 </span>            :     using value_type = ValueType;
+<span class="lineNum">     227 </span>            :     using size_type = std::size_t;
+<span class="lineNum">     228 </span>            :     using difference_type = std::ptrdiff_t;
+<span class="lineNum">     229 </span>            :     using hasher = Hash;
+<span class="lineNum">     230 </span>            :     using key_equal = KeyEqual;
+<span class="lineNum">     231 </span>            :     using allocator_type = Allocator;
+<span class="lineNum">     232 </span>            :     using reference = value_type&amp;;
+<span class="lineNum">     233 </span>            :     using const_reference = const value_type&amp;;
+<span class="lineNum">     234 </span>            :     using pointer = value_type*;
+<span class="lineNum">     235 </span>            :     using const_pointer = const value_type*;
+<span class="lineNum">     236 </span>            :     using iterator = ordered_iterator&lt;false&gt;;
+<span class="lineNum">     237 </span>            :     using const_iterator = ordered_iterator&lt;true&gt;;
+<span class="lineNum">     238 </span>            :     using reverse_iterator = std::reverse_iterator&lt;iterator&gt;;
+<span class="lineNum">     239 </span>            :     using const_reverse_iterator = std::reverse_iterator&lt;const_iterator&gt;;
+<span class="lineNum">     240 </span>            :     
+<span class="lineNum">     241 </span>            :     using values_container_type = ValueTypeContainer;
+<span class="lineNum">     242 </span>            :     
+<span class="lineNum">     243 </span>            : public:
+<span class="lineNum">     244 </span>            :     template&lt;bool IsConst&gt;
+<span class="lineNum">     245 </span>            :     class ordered_iterator {
+<span class="lineNum">     246 </span>            :         friend class ordered_hash;
+<span class="lineNum">     247 </span>            :         
+<span class="lineNum">     248 </span>            :     private:
+<span class="lineNum">     249 </span>            :         using iterator = typename std::conditional&lt;IsConst, 
+<span class="lineNum">     250 </span>            :                                                     typename values_container_type::const_iterator, 
+<span class="lineNum">     251 </span>            :                                                     typename values_container_type::iterator&gt;::type;
+<a name="252"><span class="lineNum">     252 </span>            :     </a>
+<span class="lineNum">     253 </span>            :         
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :         ordered_iterator(iterator it) noexcept: m_iterator(it) {</span>
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     256 </span>            :         
+<span class="lineNum">     257 </span>            :     public:
+<span class="lineNum">     258 </span>            :         using iterator_category = std::random_access_iterator_tag;
+<span class="lineNum">     259 </span>            :         using value_type = const typename ordered_hash::value_type;
+<span class="lineNum">     260 </span>            :         using difference_type = typename iterator::difference_type;
+<span class="lineNum">     261 </span>            :         using reference = value_type&amp;;
+<span class="lineNum">     262 </span>            :         using pointer = value_type*;
+<span class="lineNum">     263 </span>            :         
+<span class="lineNum">     264 </span>            :         
+<span class="lineNum">     265 </span>            :         ordered_iterator() noexcept {
+<a name="266"><span class="lineNum">     266 </span>            :         }</a>
+<span class="lineNum">     267 </span>            :         
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :         ordered_iterator(const ordered_iterator&lt;false&gt;&amp; other) noexcept: m_iterator(other.m_iterator) {</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span>            :         const typename ordered_hash::key_type&amp; key() const {
+<span class="lineNum">     272 </span>            :             return KeySelect()(*m_iterator);
+<span class="lineNum">     273 </span>            :         }
+<span class="lineNum">     274 </span>            : 
+<span class="lineNum">     275 </span>            :         template&lt;class U = ValueSelect, typename std::enable_if&lt;has_mapped_type&lt;U&gt;::value &amp;&amp; IsConst&gt;::type* = nullptr&gt;
+<span class="lineNum">     276 </span>            :         const typename U::value_type&amp; value() const {
+<span class="lineNum">     277 </span>            :             return U()(*m_iterator);
+<span class="lineNum">     278 </span>            :         }
+<a name="279"><span class="lineNum">     279 </span>            : </a>
+<span class="lineNum">     280 </span>            :         template&lt;class U = ValueSelect, typename std::enable_if&lt;has_mapped_type&lt;U&gt;::value &amp;&amp; !IsConst&gt;::type* = nullptr&gt;
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :         typename U::value_type&amp; value() {</span>
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :             return U()(*m_iterator);</span>
+<span class="lineNum">     283 </span>            :         }
+<span class="lineNum">     284 </span>            :         
+<span class="lineNum">     285 </span>            :         reference operator*() const { return *m_iterator; }
+<span class="lineNum">     286 </span>            :         pointer operator-&gt;() const { return m_iterator.operator-&gt;(); }
+<span class="lineNum">     287 </span>            :         
+<span class="lineNum">     288 </span>            :         ordered_iterator&amp; operator++() { ++m_iterator; return *this; }
+<span class="lineNum">     289 </span>            :         ordered_iterator&amp; operator--() { --m_iterator; return *this; }
+<span class="lineNum">     290 </span>            :         
+<span class="lineNum">     291 </span>            :         ordered_iterator operator++(int) { ordered_iterator tmp(*this); ++(*this); return tmp; }
+<span class="lineNum">     292 </span>            :         ordered_iterator operator--(int) { ordered_iterator tmp(*this); --(*this); return tmp; }
+<span class="lineNum">     293 </span>            :         
+<a name="294"><span class="lineNum">     294 </span>            :         reference operator[](difference_type n) const { return m_iterator[n]; }</a>
+<span class="lineNum">     295 </span>            :         
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :         ordered_iterator&amp; operator+=(difference_type n) { m_iterator += n; return *this; }</span>
+<a name="297"><span class="lineNum">     297 </span>            :         ordered_iterator&amp; operator-=(difference_type n) { m_iterator -= n; return *this; }</a>
+<span class="lineNum">     298 </span>            :         
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :         ordered_iterator operator+(difference_type n) { ordered_iterator tmp(*this); tmp += n; return tmp; }</span>
+<span class="lineNum">     300 </span>            :         ordered_iterator operator-(difference_type n) { ordered_iterator tmp(*this); tmp -= n; return tmp; }
+<span class="lineNum">     301 </span>            :         
+<span class="lineNum">     302 </span>            :         friend bool operator==(const ordered_iterator&amp; lhs, const ordered_iterator&amp; rhs) { 
+<span class="lineNum">     303 </span>            :             return lhs.m_iterator == rhs.m_iterator; 
+<span class="lineNum">     304 </span>            :         }
+<span class="lineNum">     305 </span>            :         
+<span class="lineNum">     306 </span>            :         friend bool operator!=(const ordered_iterator&amp; lhs, const ordered_iterator&amp; rhs) { 
+<span class="lineNum">     307 </span>            :             return lhs.m_iterator != rhs.m_iterator; 
+<span class="lineNum">     308 </span>            :         }
+<span class="lineNum">     309 </span>            :         
+<span class="lineNum">     310 </span>            :         friend bool operator&lt;(const ordered_iterator&amp; lhs, const ordered_iterator&amp; rhs) { 
+<span class="lineNum">     311 </span>            :             return lhs.m_iterator &lt; rhs.m_iterator; 
+<span class="lineNum">     312 </span>            :         }
+<span class="lineNum">     313 </span>            :         
+<span class="lineNum">     314 </span>            :         friend bool operator&gt;(const ordered_iterator&amp; lhs, const ordered_iterator&amp; rhs) { 
+<span class="lineNum">     315 </span>            :             return lhs.m_iterator &gt; rhs.m_iterator; 
+<span class="lineNum">     316 </span>            :         }
+<span class="lineNum">     317 </span>            :         
+<span class="lineNum">     318 </span>            :         friend bool operator&lt;=(const ordered_iterator&amp; lhs, const ordered_iterator&amp; rhs) { 
+<span class="lineNum">     319 </span>            :             return lhs.m_iterator &lt;= rhs.m_iterator; 
+<span class="lineNum">     320 </span>            :         }
+<span class="lineNum">     321 </span>            :         
+<span class="lineNum">     322 </span>            :         friend bool operator&gt;=(const ordered_iterator&amp; lhs, const ordered_iterator&amp; rhs) { 
+<span class="lineNum">     323 </span>            :             return lhs.m_iterator &gt;= rhs.m_iterator; 
+<span class="lineNum">     324 </span>            :         }
+<span class="lineNum">     325 </span>            : 
+<span class="lineNum">     326 </span>            :         friend ordered_iterator operator+(difference_type n, const ordered_iterator&amp; it) { 
+<span class="lineNum">     327 </span>            :             return n + it.m_iterator;
+<span class="lineNum">     328 </span>            :         }
+<span class="lineNum">     329 </span>            : 
+<span class="lineNum">     330 </span>            :         friend difference_type operator-(const ordered_iterator&amp; lhs, const ordered_iterator&amp; rhs) { 
+<span class="lineNum">     331 </span>            :             return lhs.m_iterator - rhs.m_iterator; 
+<span class="lineNum">     332 </span>            :         }
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span>            :     private:
+<span class="lineNum">     335 </span>            :         iterator m_iterator;
+<span class="lineNum">     336 </span>            :     };
+<span class="lineNum">     337 </span>            :     
+<span class="lineNum">     338 </span>            :     
+<span class="lineNum">     339 </span>            : private:
+<span class="lineNum">     340 </span>            :     using buckets_container_allocator = typename 
+<span class="lineNum">     341 </span>            :                             std::allocator_traits&lt;allocator_type&gt;::template rebind_alloc&lt;bucket_entry&gt;; 
+<span class="lineNum">     342 </span>            :                             
+<span class="lineNum">     343 </span>            :     using buckets_container_type = std::vector&lt;bucket_entry, buckets_container_allocator&gt;;
+<span class="lineNum">     344 </span>            :     
+<span class="lineNum">     345 </span>            :     
+<span class="lineNum">     346 </span>            :     using truncated_hash_type = typename bucket_entry::truncated_hash_type;
+<span class="lineNum">     347 </span>            :     using index_type = typename bucket_entry::index_type;
+<span class="lineNum">     348 </span>            :     
+<span class="lineNum">     349 </span>            : public:
+<span class="lineNum">     350 </span>            :     ordered_hash(size_type bucket_count, 
+<span class="lineNum">     351 </span>            :                  const Hash&amp; hash,
+<span class="lineNum">     352 </span>            :                  const KeyEqual&amp; equal,
+<span class="lineNum">     353 </span>            :                  const Allocator&amp; alloc,
+<span class="lineNum">     354 </span>            :                  float max_load_factor): Hash(hash), KeyEqual(equal), m_buckets(alloc), 
+<span class="lineNum">     355 </span>            :                                          m_values(alloc), m_grow_on_next_insert(false)
+<span class="lineNum">     356 </span>            :     {
+<span class="lineNum">     357 </span>            :         bucket_count = round_up_to_power_of_two(bucket_count);
+<span class="lineNum">     358 </span>            :         if(bucket_count &gt; max_bucket_count()) {
+<span class="lineNum">     359 </span>            :             throw std::length_error(&quot;The map exceeds its maxmimum size.&quot;);
+<span class="lineNum">     360 </span>            :         }
+<span class="lineNum">     361 </span>            :         tsl_assert(bucket_count &gt; 0);
+<span class="lineNum">     362 </span>            :         
+<span class="lineNum">     363 </span>            :         m_buckets.resize(bucket_count);
+<span class="lineNum">     364 </span>            :         m_mask = bucket_count - 1; 
+<span class="lineNum">     365 </span>            :         
+<span class="lineNum">     366 </span>            :         this-&gt;max_load_factor(max_load_factor);
+<span class="lineNum">     367 </span>            :     }
+<span class="lineNum">     368 </span>            :     
+<span class="lineNum">     369 </span>            :     allocator_type get_allocator() const {
+<span class="lineNum">     370 </span>            :         return m_values.get_allocator();
+<span class="lineNum">     371 </span>            :     }
+<span class="lineNum">     372 </span>            :     
+<span class="lineNum">     373 </span>            :     
+<span class="lineNum">     374 </span>            :     /*
+<a name="375"><span class="lineNum">     375 </span>            :      * Iterators</a>
+<span class="lineNum">     376 </span>            :      */
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :     iterator begin() noexcept {</span>
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :         return iterator(m_values.begin());</span>
+<span class="lineNum">     379 </span>            :     }
+<span class="lineNum">     380 </span>            :     
+<span class="lineNum">     381 </span>            :     const_iterator begin() const noexcept {
+<span class="lineNum">     382 </span>            :         return cbegin();
+<span class="lineNum">     383 </span>            :     }
+<span class="lineNum">     384 </span>            :     
+<span class="lineNum">     385 </span>            :     const_iterator cbegin() const noexcept {
+<span class="lineNum">     386 </span>            :         return const_iterator(m_values.cbegin());
+<span class="lineNum">     387 </span>            :     }
+<span class="lineNum">     388 </span>            :     
+<span class="lineNum">     389 </span>            :     iterator end() noexcept {
+<span class="lineNum">     390 </span>            :         return iterator(m_values.end());
+<span class="lineNum">     391 </span>            :     }
+<span class="lineNum">     392 </span>            :     
+<span class="lineNum">     393 </span>            :     const_iterator end() const noexcept {
+<span class="lineNum">     394 </span>            :         return cend();
+<span class="lineNum">     395 </span>            :     }
+<span class="lineNum">     396 </span>            :     
+<span class="lineNum">     397 </span>            :     const_iterator cend() const noexcept {
+<span class="lineNum">     398 </span>            :         return const_iterator(m_values.cend());
+<span class="lineNum">     399 </span>            :     }  
+<span class="lineNum">     400 </span>            :     
+<span class="lineNum">     401 </span>            :     
+<span class="lineNum">     402 </span>            :     reverse_iterator rbegin() noexcept {
+<span class="lineNum">     403 </span>            :         return reverse_iterator(m_values.end());
+<span class="lineNum">     404 </span>            :     }
+<span class="lineNum">     405 </span>            :     
+<span class="lineNum">     406 </span>            :     const_reverse_iterator rbegin() const noexcept {
+<span class="lineNum">     407 </span>            :         return rcbegin();
+<span class="lineNum">     408 </span>            :     }
+<span class="lineNum">     409 </span>            :     
+<span class="lineNum">     410 </span>            :     const_reverse_iterator rcbegin() const noexcept {
+<span class="lineNum">     411 </span>            :         return const_reverse_iterator(m_values.cend());
+<span class="lineNum">     412 </span>            :     }
+<span class="lineNum">     413 </span>            :     
+<span class="lineNum">     414 </span>            :     reverse_iterator rend() noexcept {
+<span class="lineNum">     415 </span>            :         return reverse_iterator(m_values.begin());
+<span class="lineNum">     416 </span>            :     }
+<span class="lineNum">     417 </span>            :     
+<span class="lineNum">     418 </span>            :     const_reverse_iterator rend() const noexcept {
+<span class="lineNum">     419 </span>            :         return rcend();
+<span class="lineNum">     420 </span>            :     }
+<span class="lineNum">     421 </span>            :     
+<span class="lineNum">     422 </span>            :     const_reverse_iterator rcend() const noexcept {
+<span class="lineNum">     423 </span>            :         return const_reverse_iterator(m_values.cbegin());
+<span class="lineNum">     424 </span>            :     }  
+<span class="lineNum">     425 </span>            :     
+<span class="lineNum">     426 </span>            :     
+<span class="lineNum">     427 </span>            :     /*
+<span class="lineNum">     428 </span>            :      * Capacity
+<span class="lineNum">     429 </span>            :      */
+<span class="lineNum">     430 </span>            :     bool empty() const noexcept {
+<span class="lineNum">     431 </span>            :         return m_values.empty();
+<a name="432"><span class="lineNum">     432 </span>            :     }</a>
+<span class="lineNum">     433 </span>            :     
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :     size_type size() const noexcept {</span>
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :         return m_values.size();</span>
+<a name="436"><span class="lineNum">     436 </span>            :     }</a>
+<span class="lineNum">     437 </span>            :     
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :     size_type max_size() const noexcept {</span>
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :         return std::min(bucket_entry::max_size(), m_values.max_size());</span>
+<span class="lineNum">     440 </span>            :     }
+<span class="lineNum">     441 </span>            :     
+<span class="lineNum">     442 </span>            : 
+<span class="lineNum">     443 </span>            :     /*
+<span class="lineNum">     444 </span>            :      * Modifiers
+<span class="lineNum">     445 </span>            :      */
+<span class="lineNum">     446 </span>            :     void clear() noexcept {
+<span class="lineNum">     447 </span>            :         for(auto&amp; bucket: m_buckets) {
+<span class="lineNum">     448 </span>            :             bucket.clear();
+<span class="lineNum">     449 </span>            :         }
+<span class="lineNum">     450 </span>            :         
+<span class="lineNum">     451 </span>            :         m_values.clear();
+<span class="lineNum">     452 </span>            :         m_grow_on_next_insert = false;
+<span class="lineNum">     453 </span>            :     }
+<span class="lineNum">     454 </span>            :     
+<span class="lineNum">     455 </span>            :     template&lt;typename P&gt;
+<span class="lineNum">     456 </span>            :     std::pair&lt;iterator, bool&gt; insert(P&amp;&amp; value) {
+<span class="lineNum">     457 </span>            :         return insert_impl(KeySelect()(value), std::forward&lt;P&gt;(value));
+<span class="lineNum">     458 </span>            :     }
+<span class="lineNum">     459 </span>            :     
+<span class="lineNum">     460 </span>            :     template&lt;typename P&gt;
+<span class="lineNum">     461 </span>            :     iterator insert(const_iterator hint, P&amp;&amp; value) { 
+<span class="lineNum">     462 </span>            :         if(hint != cend() &amp;&amp; compare_keys(KeySelect()(*hint), KeySelect()(value))) { 
+<span class="lineNum">     463 </span>            :             return mutable_iterator(hint); 
+<span class="lineNum">     464 </span>            :         }
+<span class="lineNum">     465 </span>            :         
+<span class="lineNum">     466 </span>            :         return insert(std::forward&lt;P&gt;(value)).first; 
+<span class="lineNum">     467 </span>            :     }
+<span class="lineNum">     468 </span>            :     
+<span class="lineNum">     469 </span>            :     template&lt;class InputIt&gt;
+<span class="lineNum">     470 </span>            :     void insert(InputIt first, InputIt last) {
+<span class="lineNum">     471 </span>            :         if(std::is_base_of&lt;std::forward_iterator_tag, 
+<span class="lineNum">     472 </span>            :                            typename std::iterator_traits&lt;InputIt&gt;::iterator_category&gt;::value) 
+<span class="lineNum">     473 </span>            :         {
+<span class="lineNum">     474 </span>            :             const auto nb_elements_insert = std::distance(first, last);
+<span class="lineNum">     475 </span>            :             const size_type nb_free_buckets = m_load_threshold - size();
+<span class="lineNum">     476 </span>            :             tsl_assert(m_load_threshold &gt;= size());
+<span class="lineNum">     477 </span>            :             
+<span class="lineNum">     478 </span>            :             if(nb_elements_insert &gt; 0 &amp;&amp; nb_free_buckets &lt; size_type(nb_elements_insert)) {
+<span class="lineNum">     479 </span>            :                 reserve(size() + size_type(nb_elements_insert));
+<span class="lineNum">     480 </span>            :             }
+<span class="lineNum">     481 </span>            :         }
+<span class="lineNum">     482 </span>            :         
+<span class="lineNum">     483 </span>            :         for(; first != last; ++first) {
+<span class="lineNum">     484 </span>            :             insert(*first);
+<span class="lineNum">     485 </span>            :         }
+<span class="lineNum">     486 </span>            :     }
+<span class="lineNum">     487 </span>            :     
+<span class="lineNum">     488 </span>            :     
+<span class="lineNum">     489 </span>            :     
+<span class="lineNum">     490 </span>            :     template&lt;class K, class M&gt;
+<span class="lineNum">     491 </span>            :     std::pair&lt;iterator, bool&gt; insert_or_assign(K&amp;&amp; key, M&amp;&amp; value) {
+<span class="lineNum">     492 </span>            :         auto it = try_emplace(std::forward&lt;K&gt;(key), std::forward&lt;M&gt;(value));
+<span class="lineNum">     493 </span>            :         if(!it.second) {
+<span class="lineNum">     494 </span>            :             it.first.value() = std::forward&lt;M&gt;(value);
+<span class="lineNum">     495 </span>            :         }
+<span class="lineNum">     496 </span>            :         
+<span class="lineNum">     497 </span>            :         return it;
+<span class="lineNum">     498 </span>            :     }
+<span class="lineNum">     499 </span>            :     
+<span class="lineNum">     500 </span>            :     template&lt;class K, class M&gt;
+<span class="lineNum">     501 </span>            :     iterator insert_or_assign(const_iterator hint, K&amp;&amp; key, M&amp;&amp; obj) {
+<span class="lineNum">     502 </span>            :         if(hint != cend() &amp;&amp; compare_keys(KeySelect()(*hint), key)) { 
+<span class="lineNum">     503 </span>            :             auto it = mutable_iterator(hint); 
+<span class="lineNum">     504 </span>            :             it.value() = std::forward&lt;M&gt;(obj);
+<span class="lineNum">     505 </span>            :             
+<span class="lineNum">     506 </span>            :             return it;
+<span class="lineNum">     507 </span>            :         }
+<span class="lineNum">     508 </span>            :         
+<span class="lineNum">     509 </span>            :         return insert_or_assign(std::forward&lt;K&gt;(key), std::forward&lt;M&gt;(obj)).first;
+<span class="lineNum">     510 </span>            :     }
+<span class="lineNum">     511 </span>            :     
+<span class="lineNum">     512 </span>            :     
+<span class="lineNum">     513 </span>            :     
+<span class="lineNum">     514 </span>            :     template&lt;class... Args&gt;
+<span class="lineNum">     515 </span>            :     std::pair&lt;iterator, bool&gt; emplace(Args&amp;&amp;... args) {
+<span class="lineNum">     516 </span>            :         return insert(value_type(std::forward&lt;Args&gt;(args)...));
+<span class="lineNum">     517 </span>            :     }
+<span class="lineNum">     518 </span>            :     
+<span class="lineNum">     519 </span>            :     template&lt;class... Args&gt;
+<span class="lineNum">     520 </span>            :     iterator emplace_hint(const_iterator hint, Args&amp;&amp;... args) { 
+<span class="lineNum">     521 </span>            :         return insert(hint, value_type(std::forward&lt;Args&gt;(args)...));
+<span class="lineNum">     522 </span>            :     }
+<span class="lineNum">     523 </span>            :     
+<span class="lineNum">     524 </span>            :     
+<a name="525"><span class="lineNum">     525 </span>            :     </a>
+<span class="lineNum">     526 </span>            :     template&lt;class K, class... Args&gt;
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :     std::pair&lt;iterator, bool&gt; try_emplace(K&amp;&amp; key, Args&amp;&amp;... value_args) {</span>
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :         return insert_impl(key, std::piecewise_construct, </span>
+<span class="lineNum">     529 </span>            :                                 std::forward_as_tuple(std::forward&lt;K&gt;(key)), 
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :                                 std::forward_as_tuple(std::forward&lt;Args&gt;(value_args)...));     </span>
+<span class="lineNum">     531 </span>            :     }
+<span class="lineNum">     532 </span>            :     
+<span class="lineNum">     533 </span>            :     template&lt;class K, class... Args&gt;
+<span class="lineNum">     534 </span>            :     iterator try_emplace(const_iterator hint, K&amp;&amp; key, Args&amp;&amp;... args) {
+<span class="lineNum">     535 </span>            :         if(hint != cend() &amp;&amp; compare_keys(KeySelect()(*hint), key)) { 
+<span class="lineNum">     536 </span>            :             return mutable_iterator(hint); 
+<span class="lineNum">     537 </span>            :         }
+<span class="lineNum">     538 </span>            :         
+<span class="lineNum">     539 </span>            :         return try_emplace(std::forward&lt;K&gt;(key), std::forward&lt;Args&gt;(args)...).first;
+<span class="lineNum">     540 </span>            :     }
+<span class="lineNum">     541 </span>            :     
+<span class="lineNum">     542 </span>            :     
+<span class="lineNum">     543 </span>            :     
+<span class="lineNum">     544 </span>            :     /**
+<span class="lineNum">     545 </span>            :      * Here to avoid `template&lt;class K&gt; size_type erase(const K&amp; key)` being used when
+<span class="lineNum">     546 </span>            :      * we use a iterator instead of a const_iterator.
+<span class="lineNum">     547 </span>            :      */
+<span class="lineNum">     548 </span>            :     iterator erase(iterator pos) {
+<span class="lineNum">     549 </span>            :         return erase(const_iterator(pos));
+<span class="lineNum">     550 </span>            :     }
+<span class="lineNum">     551 </span>            :     
+<span class="lineNum">     552 </span>            :     iterator erase(const_iterator pos) {
+<span class="lineNum">     553 </span>            :         tsl_assert(pos != cend());
+<span class="lineNum">     554 </span>            :         
+<span class="lineNum">     555 </span>            :         const std::size_t index_erase = iterator_to_index(pos);
+<span class="lineNum">     556 </span>            :         
+<span class="lineNum">     557 </span>            :         auto it_bucket = find_key(pos.key(), hash_key(pos.key()));
+<span class="lineNum">     558 </span>            :         tsl_assert(it_bucket != m_buckets.end());
+<span class="lineNum">     559 </span>            :         
+<span class="lineNum">     560 </span>            :         erase_value_from_bucket(it_bucket);
+<span class="lineNum">     561 </span>            :         
+<span class="lineNum">     562 </span>            :         /*
+<span class="lineNum">     563 </span>            :          * One element was removed from m_values, due to the left shift the next element 
+<span class="lineNum">     564 </span>            :          * is now at the position of the previous element (or end if none).
+<span class="lineNum">     565 </span>            :          */
+<span class="lineNum">     566 </span>            :         return begin() + index_erase;
+<span class="lineNum">     567 </span>            :     }
+<span class="lineNum">     568 </span>            : 
+<span class="lineNum">     569 </span>            :     iterator erase(const_iterator first, const_iterator last) {
+<span class="lineNum">     570 </span>            :         if(first == last) {
+<span class="lineNum">     571 </span>            :             return mutable_iterator(first);
+<span class="lineNum">     572 </span>            :         }
+<span class="lineNum">     573 </span>            :         
+<span class="lineNum">     574 </span>            :         tsl_assert(std::distance(first, last) &gt; 0);
+<span class="lineNum">     575 </span>            :         const std::size_t start_index = iterator_to_index(first);
+<span class="lineNum">     576 </span>            :         const std::size_t nb_values = std::size_t(std::distance(first, last));
+<span class="lineNum">     577 </span>            :         const std::size_t end_index = start_index + nb_values;
+<span class="lineNum">     578 </span>            :         
+<span class="lineNum">     579 </span>            :         // Delete all values
+<span class="lineNum">     580 </span>            : #ifdef TSL_NO_CONTAINER_ERASE_CONST_ITERATOR     
+<span class="lineNum">     581 </span>            :         auto next_it = m_values.erase(mutable_iterator(first).m_iterator, mutable_iterator(last).m_iterator);   
+<span class="lineNum">     582 </span>            : #else
+<span class="lineNum">     583 </span>            :         auto next_it = m_values.erase(first.m_iterator, last.m_iterator);
+<span class="lineNum">     584 </span>            : #endif
+<span class="lineNum">     585 </span>            :         
+<span class="lineNum">     586 </span>            :         /*
+<span class="lineNum">     587 </span>            :          * Mark the buckets corresponding to the values as empty and do a backward shift.
+<span class="lineNum">     588 </span>            :          * 
+<span class="lineNum">     589 </span>            :          * Also, the erase operation on m_values has shifted all the values on the right of last.m_iterator.
+<span class="lineNum">     590 </span>            :          * Adapt the indexes for these values.
+<span class="lineNum">     591 </span>            :          */
+<span class="lineNum">     592 </span>            :         std::size_t ibucket = 0;
+<span class="lineNum">     593 </span>            :         while(ibucket &lt; m_buckets.size()) {
+<span class="lineNum">     594 </span>            :             if(m_buckets[ibucket].empty()) {
+<span class="lineNum">     595 </span>            :                 ibucket++;
+<span class="lineNum">     596 </span>            :             }
+<span class="lineNum">     597 </span>            :             else if(m_buckets[ibucket].index() &gt;= start_index &amp;&amp; m_buckets[ibucket].index() &lt; end_index) {
+<span class="lineNum">     598 </span>            :                 m_buckets[ibucket].clear();
+<span class="lineNum">     599 </span>            :                 backward_shift(ibucket);
+<span class="lineNum">     600 </span>            :                 // Don't increment ibucket, backward_shift may have replaced current bucket.
+<span class="lineNum">     601 </span>            :             }
+<span class="lineNum">     602 </span>            :             else if(m_buckets[ibucket].index() &gt;= end_index) {
+<span class="lineNum">     603 </span>            :                 m_buckets[ibucket].set_index(index_type(m_buckets[ibucket].index() - nb_values));
+<span class="lineNum">     604 </span>            :                 ibucket++;
+<span class="lineNum">     605 </span>            :             }
+<span class="lineNum">     606 </span>            :             else {
+<span class="lineNum">     607 </span>            :                 ibucket++;
+<span class="lineNum">     608 </span>            :             }
+<span class="lineNum">     609 </span>            :         }
+<span class="lineNum">     610 </span>            :         
+<span class="lineNum">     611 </span>            :         return iterator(next_it);
+<span class="lineNum">     612 </span>            :     }
+<span class="lineNum">     613 </span>            :     
+<span class="lineNum">     614 </span>            : 
+<span class="lineNum">     615 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     616 </span>            :     size_type erase(const K&amp; key) {
+<span class="lineNum">     617 </span>            :         return erase(key, hash_key(key));
+<span class="lineNum">     618 </span>            :     }
+<span class="lineNum">     619 </span>            :     
+<span class="lineNum">     620 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     621 </span>            :     size_type erase(const K&amp; key, std::size_t hash) {
+<span class="lineNum">     622 </span>            :         return erase_impl(key, hash);
+<span class="lineNum">     623 </span>            :     }
+<span class="lineNum">     624 </span>            :     
+<span class="lineNum">     625 </span>            :     void swap(ordered_hash&amp; other) {
+<span class="lineNum">     626 </span>            :         using std::swap;
+<span class="lineNum">     627 </span>            :         
+<span class="lineNum">     628 </span>            :         swap(static_cast&lt;Hash&amp;&gt;(*this), static_cast&lt;Hash&amp;&gt;(other));
+<span class="lineNum">     629 </span>            :         swap(static_cast&lt;KeyEqual&amp;&gt;(*this), static_cast&lt;KeyEqual&amp;&gt;(other));
+<span class="lineNum">     630 </span>            :         swap(m_buckets, other.m_buckets);
+<span class="lineNum">     631 </span>            :         swap(m_mask, other.m_mask);
+<span class="lineNum">     632 </span>            :         swap(m_values, other.m_values);
+<span class="lineNum">     633 </span>            :         swap(m_grow_on_next_insert, other.m_grow_on_next_insert);
+<span class="lineNum">     634 </span>            :         swap(m_max_load_factor, other.m_max_load_factor);
+<span class="lineNum">     635 </span>            :         swap(m_load_threshold, other.m_load_threshold);
+<span class="lineNum">     636 </span>            :     }
+<span class="lineNum">     637 </span>            :     
+<span class="lineNum">     638 </span>            :         
+<span class="lineNum">     639 </span>            :     
+<span class="lineNum">     640 </span>            : 
+<span class="lineNum">     641 </span>            :     /*
+<span class="lineNum">     642 </span>            :      * Lookup
+<span class="lineNum">     643 </span>            :      */    
+<span class="lineNum">     644 </span>            :     template&lt;class K, class U = ValueSelect, typename std::enable_if&lt;has_mapped_type&lt;U&gt;::value&gt;::type* = nullptr&gt;
+<span class="lineNum">     645 </span>            :     typename U::value_type&amp; at(const K&amp; key) {
+<span class="lineNum">     646 </span>            :         return at(key, hash_key(key));
+<span class="lineNum">     647 </span>            :     }
+<span class="lineNum">     648 </span>            :     
+<span class="lineNum">     649 </span>            :     template&lt;class K, class U = ValueSelect, typename std::enable_if&lt;has_mapped_type&lt;U&gt;::value&gt;::type* = nullptr&gt;
+<span class="lineNum">     650 </span>            :     typename U::value_type&amp; at(const K&amp; key, std::size_t hash) {
+<span class="lineNum">     651 </span>            :         return const_cast&lt;typename U::value_type&amp;&gt;(static_cast&lt;const ordered_hash*&gt;(this)-&gt;at(key, hash));
+<span class="lineNum">     652 </span>            :     }
+<span class="lineNum">     653 </span>            :     
+<span class="lineNum">     654 </span>            :     template&lt;class K, class U = ValueSelect, typename std::enable_if&lt;has_mapped_type&lt;U&gt;::value&gt;::type* = nullptr&gt;
+<span class="lineNum">     655 </span>            :     const typename U::value_type&amp; at(const K&amp; key) const {
+<span class="lineNum">     656 </span>            :         return at(key, hash_key(key));
+<span class="lineNum">     657 </span>            :     }
+<span class="lineNum">     658 </span>            :     
+<span class="lineNum">     659 </span>            :     template&lt;class K, class U = ValueSelect, typename std::enable_if&lt;has_mapped_type&lt;U&gt;::value&gt;::type* = nullptr&gt;
+<span class="lineNum">     660 </span>            :     const typename U::value_type&amp; at(const K&amp; key, std::size_t hash) const {
+<span class="lineNum">     661 </span>            :         auto it = find(key, hash);
+<span class="lineNum">     662 </span>            :         if(it != end()) {
+<span class="lineNum">     663 </span>            :             return it.value();
+<span class="lineNum">     664 </span>            :         }
+<span class="lineNum">     665 </span>            :         else {
+<span class="lineNum">     666 </span>            :             throw std::out_of_range(&quot;Couldn't find the key.&quot;);
+<span class="lineNum">     667 </span>            :         }
+<span class="lineNum">     668 </span>            :     }
+<span class="lineNum">     669 </span>            :     
+<a name="670"><span class="lineNum">     670 </span>            :     </a>
+<span class="lineNum">     671 </span>            :     template&lt;class K, class U = ValueSelect, typename std::enable_if&lt;has_mapped_type&lt;U&gt;::value&gt;::type* = nullptr&gt;
+<span class="lineNum">     672 </span><span class="lineNoCov">          0 :     typename U::value_type&amp; operator[](K&amp;&amp; key) {</span>
+<span class="lineNum">     673 </span><span class="lineNoCov">          0 :         return try_emplace(std::forward&lt;K&gt;(key)).first.value();</span>
+<span class="lineNum">     674 </span>            :     }
+<span class="lineNum">     675 </span>            :     
+<span class="lineNum">     676 </span>            :     
+<span class="lineNum">     677 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     678 </span>            :     size_type count(const K&amp; key) const {
+<span class="lineNum">     679 </span>            :         return count(key, hash_key(key));
+<span class="lineNum">     680 </span>            :     }
+<span class="lineNum">     681 </span>            :     
+<span class="lineNum">     682 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     683 </span>            :     size_type count(const K&amp; key, std::size_t hash) const {
+<span class="lineNum">     684 </span>            :         if(find(key, hash) == cend()) {
+<span class="lineNum">     685 </span>            :             return 0;
+<span class="lineNum">     686 </span>            :         }
+<span class="lineNum">     687 </span>            :         else {
+<span class="lineNum">     688 </span>            :             return 1;
+<span class="lineNum">     689 </span>            :         }
+<span class="lineNum">     690 </span>            :     }
+<span class="lineNum">     691 </span>            :     
+<span class="lineNum">     692 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     693 </span>            :     iterator find(const K&amp; key) {
+<span class="lineNum">     694 </span>            :         return find(key, hash_key(key));
+<span class="lineNum">     695 </span>            :     }
+<span class="lineNum">     696 </span>            :     
+<span class="lineNum">     697 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     698 </span>            :     iterator find(const K&amp; key, std::size_t hash) {
+<span class="lineNum">     699 </span>            :         auto it_bucket = find_key(key, hash);
+<span class="lineNum">     700 </span>            :         return (it_bucket != m_buckets.end())?iterator(m_values.begin() + it_bucket-&gt;index()):end();
+<span class="lineNum">     701 </span>            :     }
+<span class="lineNum">     702 </span>            :     
+<span class="lineNum">     703 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     704 </span>            :     const_iterator find(const K&amp; key) const {
+<span class="lineNum">     705 </span>            :         return find(key, hash_key(key));
+<span class="lineNum">     706 </span>            :     }
+<span class="lineNum">     707 </span>            :     
+<span class="lineNum">     708 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     709 </span>            :     const_iterator find(const K&amp; key, std::size_t hash) const {
+<span class="lineNum">     710 </span>            :         auto it_bucket = find_key(key, hash);
+<span class="lineNum">     711 </span>            :         return (it_bucket != m_buckets.cend())?const_iterator(m_values.begin() + it_bucket-&gt;index()):end();
+<span class="lineNum">     712 </span>            :     }
+<span class="lineNum">     713 </span>            :     
+<span class="lineNum">     714 </span>            :     
+<span class="lineNum">     715 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     716 </span>            :     std::pair&lt;iterator, iterator&gt; equal_range(const K&amp; key) {
+<span class="lineNum">     717 </span>            :         return equal_range(key, hash_key(key));
+<span class="lineNum">     718 </span>            :     }
+<span class="lineNum">     719 </span>            :     
+<span class="lineNum">     720 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     721 </span>            :     std::pair&lt;iterator, iterator&gt; equal_range(const K&amp; key, std::size_t hash) {
+<span class="lineNum">     722 </span>            :         iterator it = find(key, hash);
+<span class="lineNum">     723 </span>            :         return std::make_pair(it, (it == end())?it:std::next(it));
+<span class="lineNum">     724 </span>            :     }
+<span class="lineNum">     725 </span>            :     
+<span class="lineNum">     726 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     727 </span>            :     std::pair&lt;const_iterator, const_iterator&gt; equal_range(const K&amp; key) const {
+<span class="lineNum">     728 </span>            :         return equal_range(key, hash_key(key));
+<span class="lineNum">     729 </span>            :     }
+<span class="lineNum">     730 </span>            :     
+<span class="lineNum">     731 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     732 </span>            :     std::pair&lt;const_iterator, const_iterator&gt; equal_range(const K&amp; key, std::size_t hash) const {
+<span class="lineNum">     733 </span>            :         const_iterator it = find(key, hash);
+<span class="lineNum">     734 </span>            :         return std::make_pair(it, (it == cend())?it:std::next(it));
+<span class="lineNum">     735 </span>            :     }    
+<span class="lineNum">     736 </span>            :     
+<span class="lineNum">     737 </span>            :     
+<span class="lineNum">     738 </span>            :     /*
+<a name="739"><span class="lineNum">     739 </span>            :      * Bucket interface </a>
+<span class="lineNum">     740 </span>            :      */
+<span class="lineNum">     741 </span><span class="lineNoCov">          0 :     size_type bucket_count() const {</span>
+<span class="lineNum">     742 </span><span class="lineNoCov">          0 :         return m_buckets.size(); </span>
+<a name="743"><span class="lineNum">     743 </span>            :     }</a>
+<span class="lineNum">     744 </span>            :     
+<span class="lineNum">     745 </span><span class="lineNoCov">          0 :     size_type max_bucket_count() const {</span>
+<span class="lineNum">     746 </span><span class="lineNoCov">          0 :         return m_buckets.max_size();</span>
+<span class="lineNum">     747 </span>            :     }    
+<span class="lineNum">     748 </span>            :     
+<span class="lineNum">     749 </span>            :     /*
+<a name="750"><span class="lineNum">     750 </span>            :      *  Hash policy </a>
+<span class="lineNum">     751 </span>            :      */
+<span class="lineNum">     752 </span><span class="lineNoCov">          0 :     float load_factor() const {</span>
+<span class="lineNum">     753 </span><span class="lineNoCov">          0 :         return float(size())/float(bucket_count());</span>
+<span class="lineNum">     754 </span>            :     }
+<span class="lineNum">     755 </span>            :     
+<span class="lineNum">     756 </span>            :     float max_load_factor() const {
+<span class="lineNum">     757 </span>            :         return m_max_load_factor;
+<a name="758"><span class="lineNum">     758 </span>            :     }</a>
+<span class="lineNum">     759 </span>            :     
+<span class="lineNum">     760 </span><span class="lineNoCov">          0 :     void max_load_factor(float ml) {</span>
+<span class="lineNum">     761 </span><span class="lineNoCov">          0 :         m_max_load_factor = std::max(0.1f, std::min(ml, 0.95f));</span>
+<span class="lineNum">     762 </span><span class="lineNoCov">          0 :         m_load_threshold = size_type(float(bucket_count())*m_max_load_factor);</span>
+<span class="lineNum">     763 </span><span class="lineNoCov">          0 :     }</span>
+<span class="lineNum">     764 </span>            :     
+<span class="lineNum">     765 </span>            :     void rehash(size_type count) {
+<span class="lineNum">     766 </span>            :         count = std::max(count, size_type(std::ceil(float(size())/max_load_factor())));
+<span class="lineNum">     767 </span>            :         rehash_impl(count);
+<span class="lineNum">     768 </span>            :     }
+<span class="lineNum">     769 </span>            :     
+<span class="lineNum">     770 </span>            :     void reserve(size_type count) {
+<span class="lineNum">     771 </span>            :         reserve_space_for_values(count);
+<span class="lineNum">     772 </span>            :         
+<span class="lineNum">     773 </span>            :         count = size_type(std::ceil(float(count)/max_load_factor()));
+<span class="lineNum">     774 </span>            :         rehash(count);
+<span class="lineNum">     775 </span>            :     }
+<span class="lineNum">     776 </span>            :     
+<span class="lineNum">     777 </span>            :     
+<span class="lineNum">     778 </span>            :     /*
+<span class="lineNum">     779 </span>            :      * Observers
+<span class="lineNum">     780 </span>            :      */
+<span class="lineNum">     781 </span>            :     hasher hash_function() const {
+<span class="lineNum">     782 </span>            :         return static_cast&lt;const Hash&amp;&gt;(*this);
+<span class="lineNum">     783 </span>            :     }
+<span class="lineNum">     784 </span>            :     
+<span class="lineNum">     785 </span>            :     key_equal key_eq() const {
+<span class="lineNum">     786 </span>            :         return static_cast&lt;const KeyEqual&amp;&gt;(*this);
+<span class="lineNum">     787 </span>            :     }
+<span class="lineNum">     788 </span>            : 
+<span class="lineNum">     789 </span>            :     
+<span class="lineNum">     790 </span>            :     /*
+<span class="lineNum">     791 </span>            :      * Other
+<span class="lineNum">     792 </span>            :      */
+<span class="lineNum">     793 </span>            :     iterator mutable_iterator(const_iterator pos) {
+<span class="lineNum">     794 </span>            :         return iterator(m_values.begin() + iterator_to_index(pos));
+<span class="lineNum">     795 </span>            :     }
+<span class="lineNum">     796 </span>            :     
+<span class="lineNum">     797 </span>            :     iterator nth(size_type index) {
+<span class="lineNum">     798 </span>            :         return iterator(m_values.begin() + index);
+<span class="lineNum">     799 </span>            :     }
+<span class="lineNum">     800 </span>            :     
+<span class="lineNum">     801 </span>            :     const_iterator nth(size_type index) const {
+<span class="lineNum">     802 </span>            :         return const_iterator(m_values.cbegin() + index);
+<span class="lineNum">     803 </span>            :     }
+<span class="lineNum">     804 </span>            :     
+<span class="lineNum">     805 </span>            :     const_reference front() const {
+<span class="lineNum">     806 </span>            :         return m_values.front();
+<span class="lineNum">     807 </span>            :     }
+<span class="lineNum">     808 </span>            :     
+<span class="lineNum">     809 </span>            :     const_reference back() const {
+<span class="lineNum">     810 </span>            :         return m_values.back();
+<span class="lineNum">     811 </span>            :     }
+<span class="lineNum">     812 </span>            :     
+<span class="lineNum">     813 </span>            :     const values_container_type&amp; values_container() const noexcept {
+<span class="lineNum">     814 </span>            :         return m_values;
+<span class="lineNum">     815 </span>            :     }
+<span class="lineNum">     816 </span>            :     
+<span class="lineNum">     817 </span>            :     template&lt;class U = values_container_type, typename std::enable_if&lt;is_vector&lt;U&gt;::value&gt;::type* = nullptr&gt;    
+<span class="lineNum">     818 </span>            :     const typename values_container_type::value_type* data() const noexcept {
+<span class="lineNum">     819 </span>            :         return m_values.data();
+<span class="lineNum">     820 </span>            :     }
+<span class="lineNum">     821 </span>            :     
+<span class="lineNum">     822 </span>            :     template&lt;class U = values_container_type, typename std::enable_if&lt;is_vector&lt;U&gt;::value&gt;::type* = nullptr&gt;    
+<span class="lineNum">     823 </span>            :     size_type capacity() const noexcept {
+<span class="lineNum">     824 </span>            :         return m_values.capacity();
+<span class="lineNum">     825 </span>            :     }
+<span class="lineNum">     826 </span>            :     
+<span class="lineNum">     827 </span>            :     void shrink_to_fit() {
+<span class="lineNum">     828 </span>            :         m_values.shrink_to_fit();
+<span class="lineNum">     829 </span>            :     }
+<span class="lineNum">     830 </span>            :     
+<span class="lineNum">     831 </span>            :     
+<span class="lineNum">     832 </span>            :     template&lt;typename P&gt;
+<span class="lineNum">     833 </span>            :     std::pair&lt;iterator, bool&gt; insert_at_position(const_iterator pos, P&amp;&amp; value) {
+<span class="lineNum">     834 </span>            :         return insert_at_position_impl(pos.m_iterator, KeySelect()(value), std::forward&lt;P&gt;(value));
+<span class="lineNum">     835 </span>            :     }
+<span class="lineNum">     836 </span>            :     
+<span class="lineNum">     837 </span>            :     template&lt;class... Args&gt;
+<span class="lineNum">     838 </span>            :     std::pair&lt;iterator, bool&gt; emplace_at_position(const_iterator pos, Args&amp;&amp;... args) {
+<span class="lineNum">     839 </span>            :         return insert_at_position(pos, value_type(std::forward&lt;Args&gt;(args)...));
+<span class="lineNum">     840 </span>            :     }
+<span class="lineNum">     841 </span>            :     
+<span class="lineNum">     842 </span>            :     template&lt;class K, class... Args&gt;
+<span class="lineNum">     843 </span>            :     std::pair&lt;iterator, bool&gt; try_emplace_at_position(const_iterator pos, K&amp;&amp; key, Args&amp;&amp;... value_args) {
+<span class="lineNum">     844 </span>            :         return insert_at_position_impl(pos.m_iterator, key, 
+<span class="lineNum">     845 </span>            :                                        std::piecewise_construct, 
+<span class="lineNum">     846 </span>            :                                        std::forward_as_tuple(std::forward&lt;K&gt;(key)), 
+<span class="lineNum">     847 </span>            :                                        std::forward_as_tuple(std::forward&lt;Args&gt;(value_args)...));
+<span class="lineNum">     848 </span>            :     }
+<span class="lineNum">     849 </span>            :     
+<span class="lineNum">     850 </span>            : 
+<span class="lineNum">     851 </span>            :     void pop_back() {
+<span class="lineNum">     852 </span>            :         tsl_assert(!empty());
+<span class="lineNum">     853 </span>            :         erase(std::prev(end()));
+<span class="lineNum">     854 </span>            :     }
+<span class="lineNum">     855 </span>            :     
+<span class="lineNum">     856 </span>            :     
+<span class="lineNum">     857 </span>            :     /**
+<span class="lineNum">     858 </span>            :      * Here to avoid `template&lt;class K&gt; size_type unordered_erase(const K&amp; key)` being used when
+<span class="lineNum">     859 </span>            :      * we use a iterator instead of a const_iterator.
+<span class="lineNum">     860 </span>            :      */    
+<span class="lineNum">     861 </span>            :     iterator unordered_erase(iterator pos) {
+<span class="lineNum">     862 </span>            :         return unordered_erase(const_iterator(pos));
+<span class="lineNum">     863 </span>            :     }
+<span class="lineNum">     864 </span>            :     
+<span class="lineNum">     865 </span>            :     iterator unordered_erase(const_iterator pos) {
+<span class="lineNum">     866 </span>            :         const std::size_t index_erase = iterator_to_index(pos);
+<span class="lineNum">     867 </span>            :         unordered_erase(pos.key());
+<span class="lineNum">     868 </span>            :         
+<span class="lineNum">     869 </span>            :         /*
+<span class="lineNum">     870 </span>            :          * One element was deleted, index_erase now points to the next element as the elements after
+<span class="lineNum">     871 </span>            :          * the deleted value were shifted to the left in m_values (will be end() if we deleted the last element).
+<span class="lineNum">     872 </span>            :          */
+<span class="lineNum">     873 </span>            :         return begin() + index_erase;
+<span class="lineNum">     874 </span>            :     }
+<span class="lineNum">     875 </span>            :     
+<span class="lineNum">     876 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     877 </span>            :     size_type unordered_erase(const K&amp; key) {
+<span class="lineNum">     878 </span>            :         return unordered_erase(key, hash_key(key));
+<span class="lineNum">     879 </span>            :     }
+<span class="lineNum">     880 </span>            :     
+<span class="lineNum">     881 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     882 </span>            :     size_type unordered_erase(const K&amp; key, std::size_t hash) {
+<span class="lineNum">     883 </span>            :         auto it_bucket_key = find_key(key, hash);
+<span class="lineNum">     884 </span>            :         if(it_bucket_key == m_buckets.end()) {
+<span class="lineNum">     885 </span>            :             return 0;
+<span class="lineNum">     886 </span>            :         }
+<span class="lineNum">     887 </span>            :         
+<span class="lineNum">     888 </span>            :         /**
+<span class="lineNum">     889 </span>            :          * If we are not erasing the last element in m_values, we swap 
+<span class="lineNum">     890 </span>            :          * the element we are erasing with the last element. We then would 
+<span class="lineNum">     891 </span>            :          * just have to do a pop_back() in m_values.
+<span class="lineNum">     892 </span>            :          */
+<span class="lineNum">     893 </span>            :         if(!compare_keys(key, KeySelect()(back()))) {
+<span class="lineNum">     894 </span>            :             auto it_bucket_last_elem = find_key(KeySelect()(back()), hash_key(KeySelect()(back())));
+<span class="lineNum">     895 </span>            :             tsl_assert(it_bucket_last_elem != m_buckets.end());
+<span class="lineNum">     896 </span>            :             tsl_assert(it_bucket_last_elem-&gt;index() == m_values.size() - 1);
+<span class="lineNum">     897 </span>            :             
+<span class="lineNum">     898 </span>            :             using std::swap;
+<span class="lineNum">     899 </span>            :             swap(m_values[it_bucket_key-&gt;index()], m_values[it_bucket_last_elem-&gt;index()]);
+<span class="lineNum">     900 </span>            :             swap(it_bucket_key-&gt;index_ref(), it_bucket_last_elem-&gt;index_ref());
+<span class="lineNum">     901 </span>            :         }
+<span class="lineNum">     902 </span>            :         
+<span class="lineNum">     903 </span>            :         erase_value_from_bucket(it_bucket_key);
+<span class="lineNum">     904 </span>            :         
+<span class="lineNum">     905 </span>            :         return 1;
+<span class="lineNum">     906 </span>            :     }
+<span class="lineNum">     907 </span>            :     
+<span class="lineNum">     908 </span>            :     friend bool operator==(const ordered_hash&amp; lhs, const ordered_hash&amp; rhs) {
+<span class="lineNum">     909 </span>            :         return lhs.m_values == rhs.m_values;
+<span class="lineNum">     910 </span>            :     }
+<span class="lineNum">     911 </span>            :     
+<span class="lineNum">     912 </span>            :     friend bool operator!=(const ordered_hash&amp; lhs, const ordered_hash&amp; rhs) {
+<span class="lineNum">     913 </span>            :         return lhs.m_values != rhs.m_values;
+<span class="lineNum">     914 </span>            :     }
+<span class="lineNum">     915 </span>            :     
+<span class="lineNum">     916 </span>            :     friend bool operator&lt;(const ordered_hash&amp; lhs, const ordered_hash&amp; rhs) {
+<span class="lineNum">     917 </span>            :         return lhs.m_values &lt; rhs.m_values;
+<span class="lineNum">     918 </span>            :     }
+<span class="lineNum">     919 </span>            :     
+<span class="lineNum">     920 </span>            :     friend bool operator&lt;=(const ordered_hash&amp; lhs, const ordered_hash&amp; rhs) {
+<span class="lineNum">     921 </span>            :         return lhs.m_values &lt;= rhs.m_values;
+<span class="lineNum">     922 </span>            :     }
+<span class="lineNum">     923 </span>            :     
+<span class="lineNum">     924 </span>            :     friend bool operator&gt;(const ordered_hash&amp; lhs, const ordered_hash&amp; rhs) {
+<span class="lineNum">     925 </span>            :         return lhs.m_values &gt; rhs.m_values;
+<span class="lineNum">     926 </span>            :     }
+<span class="lineNum">     927 </span>            :     
+<span class="lineNum">     928 </span>            :     friend bool operator&gt;=(const ordered_hash&amp; lhs, const ordered_hash&amp; rhs) {
+<span class="lineNum">     929 </span>            :         return lhs.m_values &gt;= rhs.m_values;
+<span class="lineNum">     930 </span>            :     }
+<span class="lineNum">     931 </span>            :     
+<span class="lineNum">     932 </span>            :     
+<a name="933"><span class="lineNum">     933 </span>            : private:</a>
+<span class="lineNum">     934 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     935 </span><span class="lineNoCov">          0 :     std::size_t hash_key(const K&amp; key) const {</span>
+<span class="lineNum">     936 </span><span class="lineNoCov">          0 :         return Hash::operator()(key);</span>
+<span class="lineNum">     937 </span>            :     }
+<a name="938"><span class="lineNum">     938 </span>            :     </a>
+<span class="lineNum">     939 </span>            :     template&lt;class K1, class K2&gt;
+<span class="lineNum">     940 </span><span class="lineNoCov">          0 :     bool compare_keys(const K1&amp; key1, const K2&amp; key2) const {</span>
+<span class="lineNum">     941 </span><span class="lineNoCov">          0 :         return KeyEqual::operator()(key1, key2);</span>
+<span class="lineNum">     942 </span>            :     }
+<span class="lineNum">     943 </span>            :     
+<span class="lineNum">     944 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     945 </span>            :     typename buckets_container_type::iterator find_key(const K&amp; key, std::size_t hash) {
+<span class="lineNum">     946 </span>            :         auto it = static_cast&lt;const ordered_hash*&gt;(this)-&gt;find_key(key, hash);
+<span class="lineNum">     947 </span>            :         return m_buckets.begin() + std::distance(m_buckets.cbegin(), it);
+<span class="lineNum">     948 </span>            :     }
+<span class="lineNum">     949 </span>            :     
+<span class="lineNum">     950 </span>            :     /**
+<span class="lineNum">     951 </span>            :      * Return bucket which has the key 'key' or m_buckets.end() if none.
+<span class="lineNum">     952 </span>            :      * 
+<span class="lineNum">     953 </span>            :      * From the bucket_for_hash, search for the value until we either find an empty bucket
+<span class="lineNum">     954 </span>            :      * or a bucket which has a value with a distance from its ideal bucket longer
+<span class="lineNum">     955 </span>            :      * than the probe length for the value we are looking for.
+<span class="lineNum">     956 </span>            :      */
+<span class="lineNum">     957 </span>            :     template&lt;class K&gt;
+<span class="lineNum">     958 </span>            :     typename buckets_container_type::const_iterator find_key(const K&amp; key, std::size_t hash) const {
+<span class="lineNum">     959 </span>            :         for(std::size_t ibucket = bucket_for_hash(hash), dist_from_ideal_bucket = 0; ; 
+<span class="lineNum">     960 </span>            :             ibucket = next_bucket(ibucket), dist_from_ideal_bucket++) 
+<span class="lineNum">     961 </span>            :         {
+<span class="lineNum">     962 </span>            :             if(m_buckets[ibucket].empty()) {
+<span class="lineNum">     963 </span>            :                 return m_buckets.end();
+<span class="lineNum">     964 </span>            :             }
+<span class="lineNum">     965 </span>            :             else if(m_buckets[ibucket].truncated_hash() == bucket_entry::truncate_hash(hash) &amp;&amp; 
+<span class="lineNum">     966 </span>            :                     compare_keys(key, KeySelect()(m_values[m_buckets[ibucket].index()]))) 
+<span class="lineNum">     967 </span>            :             {
+<span class="lineNum">     968 </span>            :                 return m_buckets.begin() + ibucket;
+<span class="lineNum">     969 </span>            :             }
+<span class="lineNum">     970 </span>            :             else if(dist_from_ideal_bucket &gt; distance_from_ideal_bucket(ibucket)) {
+<span class="lineNum">     971 </span>            :                 return m_buckets.end();
+<span class="lineNum">     972 </span>            :             }
+<span class="lineNum">     973 </span>            :         }
+<a name="974"><span class="lineNum">     974 </span>            :     }</a>
+<span class="lineNum">     975 </span>            :     
+<span class="lineNum">     976 </span><span class="lineNoCov">          0 :     void rehash_impl(size_type bucket_count) {</span>
+<span class="lineNum">     977 </span><span class="lineNoCov">          0 :         bucket_count = round_up_to_power_of_two(bucket_count);</span>
+<span class="lineNum">     978 </span>            :         tsl_assert(bucket_count &gt; 0);
+<span class="lineNum">     979 </span>            :         
+<span class="lineNum">     980 </span><span class="lineNoCov">          0 :         if(bucket_count == this-&gt;bucket_count()) {</span>
+<span class="lineNum">     981 </span><span class="lineNoCov">          0 :             return;</span>
+<span class="lineNum">     982 </span>            :         }
+<span class="lineNum">     983 </span>            :         
+<span class="lineNum">     984 </span><span class="lineNoCov">          0 :         if(bucket_count &gt; max_bucket_count()) {</span>
+<span class="lineNum">     985 </span><span class="lineNoCov">          0 :             throw std::length_error(&quot;The map exceeds its maxmimum size.&quot;);</span>
+<span class="lineNum">     986 </span>            :         }
+<span class="lineNum">     987 </span>            :         
+<span class="lineNum">     988 </span>            :         
+<span class="lineNum">     989 </span><span class="lineNoCov">          0 :         buckets_container_type old_buckets(bucket_count);</span>
+<span class="lineNum">     990 </span><span class="lineNoCov">          0 :         m_buckets.swap(old_buckets);</span>
+<span class="lineNum">     991 </span>            :         // Everything should be noexcept from here.
+<span class="lineNum">     992 </span>            :         
+<span class="lineNum">     993 </span><span class="lineNoCov">          0 :         m_mask = bucket_count - 1;</span>
+<span class="lineNum">     994 </span><span class="lineNoCov">          0 :         this-&gt;max_load_factor(m_max_load_factor);</span>
+<span class="lineNum">     995 </span><span class="lineNoCov">          0 :         m_grow_on_next_insert = false;</span>
+<span class="lineNum">     996 </span>            :         
+<span class="lineNum">     997 </span>            :         
+<span class="lineNum">     998 </span>            :         
+<span class="lineNum">     999 </span><span class="lineNoCov">          0 :         for(const bucket_entry&amp; old_bucket: old_buckets) {</span>
+<span class="lineNum">    1000 </span><span class="lineNoCov">          0 :             if(old_bucket.empty()) {</span>
+<span class="lineNum">    1001 </span><span class="lineNoCov">          0 :                 continue;</span>
+<span class="lineNum">    1002 </span>            :             }
+<span class="lineNum">    1003 </span>            :             
+<span class="lineNum">    1004 </span><span class="lineNoCov">          0 :             truncated_hash_type insert_hash = old_bucket.truncated_hash();</span>
+<span class="lineNum">    1005 </span><span class="lineNoCov">          0 :             index_type insert_index = old_bucket.index();</span>
+<span class="lineNum">    1006 </span>            :             
+<span class="lineNum">    1007 </span><span class="lineNoCov">          0 :             for(std::size_t ibucket = bucket_for_hash(insert_hash), dist_from_ideal_bucket = 0; ; </span>
+<span class="lineNum">    1008 </span>            :                 ibucket = next_bucket(ibucket), dist_from_ideal_bucket++) 
+<span class="lineNum">    1009 </span>            :             {
+<span class="lineNum">    1010 </span><span class="lineNoCov">          0 :                 if(m_buckets[ibucket].empty()) {</span>
+<span class="lineNum">    1011 </span><span class="lineNoCov">          0 :                     m_buckets[ibucket].set_index(insert_index);</span>
+<span class="lineNum">    1012 </span><span class="lineNoCov">          0 :                     m_buckets[ibucket].set_hash(insert_hash);</span>
+<span class="lineNum">    1013 </span><span class="lineNoCov">          0 :                     break;</span>
+<span class="lineNum">    1014 </span>            :                 }
+<span class="lineNum">    1015 </span>            :                 
+<span class="lineNum">    1016 </span><span class="lineNoCov">          0 :                 const std::size_t distance = distance_from_ideal_bucket(ibucket);</span>
+<span class="lineNum">    1017 </span><span class="lineNoCov">          0 :                 if(dist_from_ideal_bucket &gt; distance) {</span>
+<span class="lineNum">    1018 </span><span class="lineNoCov">          0 :                     std::swap(insert_index, m_buckets[ibucket].index_ref());</span>
+<span class="lineNum">    1019 </span><span class="lineNoCov">          0 :                     std::swap(insert_hash, m_buckets[ibucket].truncated_hash_ref());</span>
+<span class="lineNum">    1020 </span><span class="lineNoCov">          0 :                     dist_from_ideal_bucket = distance;</span>
+<span class="lineNum">    1021 </span>            :                 }
+<span class="lineNum">    1022 </span>            :             }
+<span class="lineNum">    1023 </span>            :         }
+<span class="lineNum">    1024 </span>            :     }
+<span class="lineNum">    1025 </span>            :     
+<span class="lineNum">    1026 </span>            :     template&lt;class T = values_container_type, typename std::enable_if&lt;is_vector&lt;T&gt;::value&gt;::type* = nullptr&gt;
+<span class="lineNum">    1027 </span>            :     void reserve_space_for_values(size_type count) {
+<span class="lineNum">    1028 </span>            :         m_values.reserve(count);
+<span class="lineNum">    1029 </span>            :     }
+<span class="lineNum">    1030 </span>            :     
+<span class="lineNum">    1031 </span>            :     template&lt;class T = values_container_type, typename std::enable_if&lt;!is_vector&lt;T&gt;::value&gt;::type* = nullptr&gt;
+<span class="lineNum">    1032 </span>            :     void reserve_space_for_values(size_type /*count*/) {
+<span class="lineNum">    1033 </span>            :     }
+<span class="lineNum">    1034 </span>            :     
+<span class="lineNum">    1035 </span>            :     /**
+<span class="lineNum">    1036 </span>            :      * Swap the empty bucket with the values on its right until we cross another empty bucket
+<span class="lineNum">    1037 </span>            :      * or if the other bucket has a distance_from_ideal_bucket == 0.
+<span class="lineNum">    1038 </span>            :      */
+<span class="lineNum">    1039 </span>            :     void backward_shift(std::size_t empty_ibucket) noexcept {
+<span class="lineNum">    1040 </span>            :         tsl_assert(m_buckets[empty_ibucket].empty());
+<span class="lineNum">    1041 </span>            :         
+<span class="lineNum">    1042 </span>            :         std::size_t previous_ibucket = empty_ibucket;
+<span class="lineNum">    1043 </span>            :         for(std::size_t current_ibucket = next_bucket(previous_ibucket); 
+<span class="lineNum">    1044 </span>            :             !m_buckets[current_ibucket].empty() &amp;&amp; distance_from_ideal_bucket(current_ibucket) &gt; 0;
+<span class="lineNum">    1045 </span>            :             previous_ibucket = current_ibucket, current_ibucket = next_bucket(current_ibucket)) 
+<span class="lineNum">    1046 </span>            :         {
+<span class="lineNum">    1047 </span>            :             std::swap(m_buckets[current_ibucket], m_buckets[previous_ibucket]);
+<span class="lineNum">    1048 </span>            :         }
+<span class="lineNum">    1049 </span>            :     }
+<span class="lineNum">    1050 </span>            :     
+<span class="lineNum">    1051 </span>            :     void erase_value_from_bucket(typename buckets_container_type::iterator it_bucket) {
+<span class="lineNum">    1052 </span>            :         tsl_assert(it_bucket != m_buckets.end() &amp;&amp; !it_bucket-&gt;empty());
+<span class="lineNum">    1053 </span>            :         
+<span class="lineNum">    1054 </span>            :         m_values.erase(m_values.begin() + it_bucket-&gt;index());
+<span class="lineNum">    1055 </span>            :         
+<span class="lineNum">    1056 </span>            :         /*
+<span class="lineNum">    1057 </span>            :          * m_values.erase shifted all the values on the right of the erased value, 
+<span class="lineNum">    1058 </span>            :          * shift the indexes by 1 in the buckets array for these values.
+<span class="lineNum">    1059 </span>            :          */
+<span class="lineNum">    1060 </span>            :         if(it_bucket-&gt;index() != m_values.size()) {
+<span class="lineNum">    1061 </span>            :             shift_indexes_in_buckets(it_bucket-&gt;index(), short(1));
+<span class="lineNum">    1062 </span>            :         }        
+<span class="lineNum">    1063 </span>            :         
+<span class="lineNum">    1064 </span>            :         // Mark the bucket as empty and do a backward shift of the values on the right
+<span class="lineNum">    1065 </span>            :         it_bucket-&gt;clear();
+<span class="lineNum">    1066 </span>            :         backward_shift(std::size_t(std::distance(m_buckets.begin(), it_bucket)));
+<span class="lineNum">    1067 </span>            :     }
+<span class="lineNum">    1068 </span>            :     
+<span class="lineNum">    1069 </span>            :     /**
+<span class="lineNum">    1070 </span>            :      * Go through each value from [from_ivalue, m_values.size()) in m_values and for each
+<a name="1071"><span class="lineNum">    1071 </span>            :      * bucket corresponding to the value, shift the indexes to the left by delta.</a>
+<span class="lineNum">    1072 </span>            :      */
+<span class="lineNum">    1073 </span><span class="lineNoCov">          0 :     void shift_indexes_in_buckets(index_type from_ivalue, short delta) noexcept  {</span>
+<span class="lineNum">    1074 </span>            :         static_assert(std::is_unsigned&lt;index_type&gt;::value &amp;&amp; sizeof(index_type) &gt;= sizeof(short), 
+<span class="lineNum">    1075 </span>            :                       &quot;index_type should be unsigned and sizeof(index_type) &gt;= sizeof(short)&quot;);
+<span class="lineNum">    1076 </span>            :         
+<span class="lineNum">    1077 </span><span class="lineNoCov">          0 :         for(std::size_t ivalue = from_ivalue; ivalue &lt; m_values.size(); ivalue++) {</span>
+<span class="lineNum">    1078 </span><span class="lineNoCov">          0 :             std::size_t ibucket = bucket_for_hash(hash_key(KeySelect()(m_values[ivalue])));</span>
+<span class="lineNum">    1079 </span>            :             
+<span class="lineNum">    1080 </span>            :             // Modulo arithmetic, we should be alright for index_type(ivalue + delta). TODO further checks
+<span class="lineNum">    1081 </span><span class="lineNoCov">          0 :             while(m_buckets[ibucket].index() != index_type(ivalue + delta)) {</span>
+<span class="lineNum">    1082 </span><span class="lineNoCov">          0 :                 ibucket = next_bucket(ibucket);</span>
+<span class="lineNum">    1083 </span>            :             }
+<span class="lineNum">    1084 </span>            :             
+<span class="lineNum">    1085 </span><span class="lineNoCov">          0 :             m_buckets[ibucket].set_index(index_type(m_buckets[ibucket].index() - delta));</span>
+<span class="lineNum">    1086 </span>            :         }
+<span class="lineNum">    1087 </span><span class="lineNoCov">          0 :     }</span>
+<span class="lineNum">    1088 </span>            :     
+<span class="lineNum">    1089 </span>            :     template&lt;class K&gt;
+<span class="lineNum">    1090 </span>            :     size_type erase_impl(const K&amp; key, std::size_t hash) {
+<span class="lineNum">    1091 </span>            :         auto it_bucket = find_key(key, hash);
+<span class="lineNum">    1092 </span>            :         if(it_bucket != m_buckets.end()) {
+<span class="lineNum">    1093 </span>            :             erase_value_from_bucket(it_bucket);
+<span class="lineNum">    1094 </span>            :             
+<span class="lineNum">    1095 </span>            :             return 1;
+<span class="lineNum">    1096 </span>            :         }
+<span class="lineNum">    1097 </span>            :         else {
+<span class="lineNum">    1098 </span>            :             return 0;
+<span class="lineNum">    1099 </span>            :         }
+<span class="lineNum">    1100 </span>            :     }
+<a name="1101"><span class="lineNum">    1101 </span>            :     </a>
+<span class="lineNum">    1102 </span>            :     template&lt;class K, class... Args&gt;
+<span class="lineNum">    1103 </span><span class="lineNoCov">          0 :     std::pair&lt;iterator, bool&gt; insert_impl(const K&amp; key, Args&amp;&amp;... value_type_args) {</span>
+<span class="lineNum">    1104 </span><span class="lineNoCov">          0 :         return insert_at_position_impl(m_values.cend(), key, std::forward&lt;Args&gt;(value_type_args)...);</span>
+<span class="lineNum">    1105 </span>            :     }
+<span class="lineNum">    1106 </span>            :     
+<span class="lineNum">    1107 </span>            :     /**
+<span class="lineNum">    1108 </span>            :      * Insert the element before insert_position.
+<a name="1109"><span class="lineNum">    1109 </span>            :      */</a>
+<span class="lineNum">    1110 </span>            :     template&lt;class K, class... Args&gt;
+<span class="lineNum">    1111 </span><span class="lineNoCov">          0 :     std::pair&lt;iterator, bool&gt; insert_at_position_impl(typename values_container_type::const_iterator insert_position,</span>
+<span class="lineNum">    1112 </span>            :                                                       const K&amp; key, Args&amp;&amp;... value_type_args) 
+<span class="lineNum">    1113 </span>            :     {
+<span class="lineNum">    1114 </span><span class="lineNoCov">          0 :         const std::size_t hash = hash_key(key);</span>
+<span class="lineNum">    1115 </span>            :         
+<span class="lineNum">    1116 </span><span class="lineNoCov">          0 :         std::size_t ibucket = bucket_for_hash(hash); </span>
+<span class="lineNum">    1117 </span><span class="lineNoCov">          0 :         std::size_t dist_from_ideal_bucket = 0;</span>
+<span class="lineNum">    1118 </span>            :         
+<span class="lineNum">    1119 </span><span class="lineNoCov">          0 :         while(!m_buckets[ibucket].empty() &amp;&amp; dist_from_ideal_bucket &lt;= distance_from_ideal_bucket(ibucket)) {</span>
+<span class="lineNum">    1120 </span><span class="lineNoCov">          0 :             if(m_buckets[ibucket].truncated_hash() == bucket_entry::truncate_hash(hash) &amp;&amp; </span>
+<span class="lineNum">    1121 </span><span class="lineNoCov">          0 :                compare_keys(key, KeySelect()(m_values[m_buckets[ibucket].index()]))) </span>
+<span class="lineNum">    1122 </span>            :             {
+<span class="lineNum">    1123 </span><span class="lineNoCov">          0 :                 return std::make_pair(begin() + m_buckets[ibucket].index(), false);</span>
+<span class="lineNum">    1124 </span>            :             }
+<span class="lineNum">    1125 </span>            :             
+<span class="lineNum">    1126 </span><span class="lineNoCov">          0 :             ibucket = next_bucket(ibucket);</span>
+<span class="lineNum">    1127 </span><span class="lineNoCov">          0 :             dist_from_ideal_bucket++;</span>
+<span class="lineNum">    1128 </span>            :         }
+<span class="lineNum">    1129 </span>            :         
+<span class="lineNum">    1130 </span><span class="lineNoCov">          0 :         if(size() &gt;= max_size()) {</span>
+<span class="lineNum">    1131 </span><span class="lineNoCov">          0 :             throw std::length_error(&quot;We reached the maximum size for the hash table.&quot;);</span>
+<span class="lineNum">    1132 </span>            :         }
+<span class="lineNum">    1133 </span>            :         
+<span class="lineNum">    1134 </span>            :         
+<span class="lineNum">    1135 </span><span class="lineNoCov">          0 :         if(grow_on_high_load()) {</span>
+<span class="lineNum">    1136 </span><span class="lineNoCov">          0 :             ibucket = bucket_for_hash(hash);</span>
+<span class="lineNum">    1137 </span><span class="lineNoCov">          0 :             dist_from_ideal_bucket = 0;</span>
+<span class="lineNum">    1138 </span>            :         }
+<span class="lineNum">    1139 </span>            :         
+<span class="lineNum">    1140 </span>            :         
+<span class="lineNum">    1141 </span><span class="lineNoCov">          0 :         const index_type index_insert_position = index_type(std::distance(m_values.cbegin(), insert_position));</span>
+<span class="lineNum">    1142 </span>            :         
+<span class="lineNum">    1143 </span>            : #ifdef TSL_NO_CONTAINER_EMPLACE_CONST_ITERATOR
+<span class="lineNum">    1144 </span>            :         m_values.emplace(m_values.begin() + std::distance(m_values.cbegin(), insert_position), std::forward&lt;Args&gt;(value_type_args)...);
+<span class="lineNum">    1145 </span>            : #else        
+<span class="lineNum">    1146 </span><span class="lineNoCov">          0 :         m_values.emplace(insert_position, std::forward&lt;Args&gt;(value_type_args)...);</span>
+<span class="lineNum">    1147 </span>            : #endif        
+<span class="lineNum">    1148 </span>            : 
+<span class="lineNum">    1149 </span><span class="lineNoCov">          0 :         insert_index(ibucket, dist_from_ideal_bucket, </span>
+<span class="lineNum">    1150 </span>            :                      index_insert_position, bucket_entry::truncate_hash(hash));
+<span class="lineNum">    1151 </span>            :         
+<span class="lineNum">    1152 </span>            :         /*
+<span class="lineNum">    1153 </span>            :          * The insertion didn't happend at the end of the m_values container, 
+<span class="lineNum">    1154 </span>            :          * we need to shift the indexes in m_buckets.
+<span class="lineNum">    1155 </span>            :          */
+<span class="lineNum">    1156 </span><span class="lineNoCov">          0 :         if(index_insert_position != m_values.size() - 1) {</span>
+<span class="lineNum">    1157 </span><span class="lineNoCov">          0 :             shift_indexes_in_buckets(index_insert_position + 1, short(-1));</span>
+<span class="lineNum">    1158 </span>            :         }
+<span class="lineNum">    1159 </span>            :         
+<span class="lineNum">    1160 </span><span class="lineNoCov">          0 :         return std::make_pair(iterator(m_values.begin() + index_insert_position), true);</span>
+<a name="1161"><span class="lineNum">    1161 </span>            :     }</a>
+<span class="lineNum">    1162 </span>            :     
+<span class="lineNum">    1163 </span><span class="lineNoCov">          0 :     void insert_index(std::size_t ibucket, std::size_t dist_from_ideal_bucket, </span>
+<span class="lineNum">    1164 </span>            :                       index_type index_insert, truncated_hash_type hash_insert) noexcept
+<span class="lineNum">    1165 </span>            :     {
+<span class="lineNum">    1166 </span><span class="lineNoCov">          0 :         while(!m_buckets[ibucket].empty()) {</span>
+<span class="lineNum">    1167 </span><span class="lineNoCov">          0 :             const std::size_t distance = distance_from_ideal_bucket(ibucket);</span>
+<span class="lineNum">    1168 </span><span class="lineNoCov">          0 :             if(dist_from_ideal_bucket &gt; distance) {</span>
+<span class="lineNum">    1169 </span><span class="lineNoCov">          0 :                 std::swap(index_insert, m_buckets[ibucket].index_ref());</span>
+<span class="lineNum">    1170 </span><span class="lineNoCov">          0 :                 std::swap(hash_insert, m_buckets[ibucket].truncated_hash_ref());</span>
+<span class="lineNum">    1171 </span>            :                 
+<span class="lineNum">    1172 </span><span class="lineNoCov">          0 :                 dist_from_ideal_bucket = distance;</span>
+<span class="lineNum">    1173 </span>            :             }
+<span class="lineNum">    1174 </span>            : 
+<span class="lineNum">    1175 </span>            :             
+<span class="lineNum">    1176 </span><span class="lineNoCov">          0 :             ibucket = next_bucket(ibucket);</span>
+<span class="lineNum">    1177 </span><span class="lineNoCov">          0 :             dist_from_ideal_bucket++;</span>
+<span class="lineNum">    1178 </span>            :             
+<span class="lineNum">    1179 </span>            :             
+<span class="lineNum">    1180 </span><span class="lineNoCov">          0 :             if(dist_from_ideal_bucket &gt; REHASH_ON_HIGH_NB_PROBES__NPROBES &amp;&amp; !m_grow_on_next_insert &amp;&amp;</span>
+<span class="lineNum">    1181 </span><span class="lineNoCov">          0 :                load_factor() &gt;= REHASH_ON_HIGH_NB_PROBES__MIN_LOAD_FACTOR)</span>
+<span class="lineNum">    1182 </span>            :             {
+<span class="lineNum">    1183 </span>            :                 // We don't want to grow the map now as we need this method to be noexcept.
+<span class="lineNum">    1184 </span>            :                 // Do it on next insert.
+<span class="lineNum">    1185 </span><span class="lineNoCov">          0 :                 m_grow_on_next_insert = true;</span>
+<span class="lineNum">    1186 </span>            :             }
+<span class="lineNum">    1187 </span>            :         }
+<span class="lineNum">    1188 </span>            :         
+<span class="lineNum">    1189 </span>            :         
+<span class="lineNum">    1190 </span><span class="lineNoCov">          0 :         m_buckets[ibucket].set_index(index_insert);</span>
+<span class="lineNum">    1191 </span><span class="lineNoCov">          0 :         m_buckets[ibucket].set_hash(hash_insert); </span>
+<a name="1192"><span class="lineNum">    1192 </span><span class="lineNoCov">          0 :     }</span></a>
+<span class="lineNum">    1193 </span>            :     
+<span class="lineNum">    1194 </span><span class="lineNoCov">          0 :     std::size_t distance_from_ideal_bucket(std::size_t ibucket) const noexcept {</span>
+<span class="lineNum">    1195 </span><span class="lineNoCov">          0 :         const std::size_t ideal_bucket = bucket_for_hash(m_buckets[ibucket].truncated_hash());</span>
+<span class="lineNum">    1196 </span>            :         
+<span class="lineNum">    1197 </span><span class="lineNoCov">          0 :         if(ibucket &gt;= ideal_bucket) {</span>
+<span class="lineNum">    1198 </span><span class="lineNoCov">          0 :             return ibucket - ideal_bucket;</span>
+<span class="lineNum">    1199 </span>            :         }
+<span class="lineNum">    1200 </span>            :         // If the bucket is smaller than the ideal bucket for the value, there was a wrapping at the end of the 
+<span class="lineNum">    1201 </span>            :         // bucket array due to the modulo.
+<span class="lineNum">    1202 </span>            :         else {
+<span class="lineNum">    1203 </span><span class="lineNoCov">          0 :             return (bucket_count() + ibucket) - ideal_bucket;</span>
+<span class="lineNum">    1204 </span>            :         }
+<a name="1205"><span class="lineNum">    1205 </span>            :     }</a>
+<span class="lineNum">    1206 </span>            :     
+<span class="lineNum">    1207 </span><span class="lineNoCov">          0 :     std::size_t next_bucket(std::size_t index) const noexcept {</span>
+<span class="lineNum">    1208 </span>            :         tsl_assert(index &lt; m_buckets.size());
+<span class="lineNum">    1209 </span>            :         
+<span class="lineNum">    1210 </span><span class="lineNoCov">          0 :         index++;</span>
+<span class="lineNum">    1211 </span><span class="lineNoCov">          0 :         return (index &lt; m_buckets.size())?index:0;</span>
+<a name="1212"><span class="lineNum">    1212 </span>            :     }</a>
+<span class="lineNum">    1213 </span>            :     
+<span class="lineNum">    1214 </span><span class="lineNoCov">          0 :     std::size_t bucket_for_hash(std::size_t hash) const noexcept {</span>
+<span class="lineNum">    1215 </span><span class="lineNoCov">          0 :         return hash &amp; m_mask;</span>
+<span class="lineNum">    1216 </span>            :     }    
+<span class="lineNum">    1217 </span>            :     
+<span class="lineNum">    1218 </span>            :     std::size_t iterator_to_index(const_iterator it) const noexcept {
+<span class="lineNum">    1219 </span>            :         const auto dist = std::distance(cbegin(), it);
+<span class="lineNum">    1220 </span>            :         tsl_assert(dist &gt;= 0);
+<span class="lineNum">    1221 </span>            :         
+<span class="lineNum">    1222 </span>            :         return std::size_t(dist);
+<span class="lineNum">    1223 </span>            :     }
+<span class="lineNum">    1224 </span>            :     
+<span class="lineNum">    1225 </span>            :     /**
+<a name="1226"><span class="lineNum">    1226 </span>            :      * Return true if the map has been rehashed.</a>
+<span class="lineNum">    1227 </span>            :      */
+<span class="lineNum">    1228 </span><span class="lineNoCov">          0 :     bool grow_on_high_load() {</span>
+<span class="lineNum">    1229 </span><span class="lineNoCov">          0 :         if(m_grow_on_next_insert || size() &gt;= m_load_threshold) {</span>
+<span class="lineNum">    1230 </span><span class="lineNoCov">          0 :             rehash_impl(bucket_count() * 2);</span>
+<span class="lineNum">    1231 </span><span class="lineNoCov">          0 :             m_grow_on_next_insert = false;</span>
+<span class="lineNum">    1232 </span>            :             
+<span class="lineNum">    1233 </span><span class="lineNoCov">          0 :             return true;</span>
+<span class="lineNum">    1234 </span>            :         }
+<span class="lineNum">    1235 </span>            :         else {
+<span class="lineNum">    1236 </span><span class="lineNoCov">          0 :             return false;</span>
+<span class="lineNum">    1237 </span>            :         }
+<a name="1238"><span class="lineNum">    1238 </span>            :     }</a>
+<span class="lineNum">    1239 </span>            :     
+<span class="lineNum">    1240 </span><span class="lineNoCov">          0 :     static std::size_t round_up_to_power_of_two(std::size_t value) {</span>
+<span class="lineNum">    1241 </span><span class="lineNoCov">          0 :         if(is_power_of_two(value)) {</span>
+<span class="lineNum">    1242 </span><span class="lineNoCov">          0 :             return value;</span>
+<span class="lineNum">    1243 </span>            :         }
+<span class="lineNum">    1244 </span>            :         
+<span class="lineNum">    1245 </span><span class="lineNoCov">          0 :         if(value == 0) {</span>
+<span class="lineNum">    1246 </span><span class="lineNoCov">          0 :             return 1;</span>
+<span class="lineNum">    1247 </span>            :         }
+<span class="lineNum">    1248 </span>            :         
+<span class="lineNum">    1249 </span><span class="lineNoCov">          0 :         --value;</span>
+<span class="lineNum">    1250 </span><span class="lineNoCov">          0 :         for(std::size_t i = 1; i &lt; sizeof(std::size_t) * CHAR_BIT; i *= 2) {</span>
+<span class="lineNum">    1251 </span><span class="lineNoCov">          0 :             value |= value &gt;&gt; i;</span>
+<span class="lineNum">    1252 </span>            :         }
+<span class="lineNum">    1253 </span>            :         
+<span class="lineNum">    1254 </span><span class="lineNoCov">          0 :         return value + 1;</span>
+<a name="1255"><span class="lineNum">    1255 </span>            :     }</a>
+<span class="lineNum">    1256 </span>            :     
+<span class="lineNum">    1257 </span><span class="lineNoCov">          0 :     static constexpr bool is_power_of_two(std::size_t value) {</span>
+<span class="lineNum">    1258 </span><span class="lineNoCov">          0 :         return value != 0 &amp;&amp; (value &amp; (value - 1)) == 0;</span>
+<span class="lineNum">    1259 </span>            :     }
+<span class="lineNum">    1260 </span>            : 
+<span class="lineNum">    1261 </span>            :     
+<span class="lineNum">    1262 </span>            : public:
+<span class="lineNum">    1263 </span>            :     static const size_type DEFAULT_INIT_BUCKETS_SIZE = 16;
+<span class="lineNum">    1264 </span>            :     static constexpr float DEFAULT_MAX_LOAD_FACTOR = 0.75f;
+<span class="lineNum">    1265 </span>            : 
+<span class="lineNum">    1266 </span>            : private:    
+<span class="lineNum">    1267 </span>            :     static const size_type REHASH_ON_HIGH_NB_PROBES__NPROBES = 128;
+<span class="lineNum">    1268 </span>            :     static constexpr float REHASH_ON_HIGH_NB_PROBES__MIN_LOAD_FACTOR = 0.15f;
+<span class="lineNum">    1269 </span>            :     
+<span class="lineNum">    1270 </span>            : private:
+<span class="lineNum">    1271 </span>            :     buckets_container_type m_buckets;
+<span class="lineNum">    1272 </span>            :     size_type m_mask;
+<span class="lineNum">    1273 </span>            :     
+<span class="lineNum">    1274 </span>            :     values_container_type m_values;
+<span class="lineNum">    1275 </span>            :     
+<span class="lineNum">    1276 </span>            :     bool m_grow_on_next_insert;
+<span class="lineNum">    1277 </span>            :     float m_max_load_factor;
+<span class="lineNum">    1278 </span>            :     size_type m_load_threshold;
+<span class="lineNum">    1279 </span>            : };
+<span class="lineNum">    1280 </span>            : 
+<span class="lineNum">    1281 </span>            : 
+<span class="lineNum">    1282 </span>            : } // end namespace detail_ordered_hash
+<span class="lineNum">    1283 </span>            : 
+<span class="lineNum">    1284 </span>            : } // end namespace tsl
+<span class="lineNum">    1285 </span>            : 
+<span class="lineNum">    1286 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

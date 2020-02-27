@@ -1,0 +1,389 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/Timestamp.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - Timestamp.cpp<span style="font-size: 80%;"> (source / <a href="Timestamp.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">40</td>
+            <td class="headerCovTableEntryLo">2.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntryLo">12.5 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Timestamp.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: DateTime
+<span class="lineNum">       6 </span>            : // Module:  Timestamp
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/Timestamp.h&quot;
+<span class="lineNum">      16 </span>            : #include &quot;Poco/Timespan.h&quot;
+<span class="lineNum">      17 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      18 </span>            : #include &lt;algorithm&gt;
+<span class="lineNum">      19 </span>            : #undef min
+<span class="lineNum">      20 </span>            : #undef max
+<span class="lineNum">      21 </span>            : #include &lt;limits&gt;
+<span class="lineNum">      22 </span>            : #if defined(POCO_OS_FAMILY_UNIX)
+<span class="lineNum">      23 </span>            : #include &lt;time.h&gt;
+<span class="lineNum">      24 </span>            : #include &lt;unistd.h&gt;
+<span class="lineNum">      25 </span>            : #if defined(POCO_VXWORKS)
+<span class="lineNum">      26 </span>            : #include &lt;timers.h&gt;
+<span class="lineNum">      27 </span>            : #else
+<span class="lineNum">      28 </span>            : #include &lt;sys/time.h&gt;
+<span class="lineNum">      29 </span>            : #include &lt;sys/times.h&gt;
+<span class="lineNum">      30 </span>            : #endif
+<span class="lineNum">      31 </span>            : #elif defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">      32 </span>            : #include &quot;Poco/UnWindows.h&quot;
+<span class="lineNum">      33 </span>            : #if defined(_WIN32_WCE)
+<span class="lineNum">      34 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">      35 </span>            : #endif
+<span class="lineNum">      36 </span>            : #endif
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : #ifndef POCO_HAVE_CLOCK_GETTIME
+<span class="lineNum">      40 </span>            :         #if (defined(_POSIX_TIMERS) &amp;&amp; defined(CLOCK_REALTIME)) || defined(POCO_VXWORKS) || defined(__QNX__)
+<span class="lineNum">      41 </span>            :                 #ifndef __APPLE__ // See GitHub issue #1453 - not available before Mac OS 10.12/iOS 10
+<span class="lineNum">      42 </span>            :                         #define POCO_HAVE_CLOCK_GETTIME
+<span class="lineNum">      43 </span>            :                 #endif
+<span class="lineNum">      44 </span>            :         #endif
+<span class="lineNum">      45 </span>            : #endif
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : #if defined(_WIN32_WCE) &amp;&amp; defined(POCO_WINCE_TIMESTAMP_HACK)
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : //
+<span class="lineNum">      52 </span>            : // See &lt;http://community.opennetcf.com/articles/cf/archive/2007/11/20/getting-a-millisecond-resolution-datetime-under-windows-ce.aspx&gt;
+<span class="lineNum">      53 </span>            : // for an explanation of the following code.
+<span class="lineNum">      54 </span>            : //
+<span class="lineNum">      55 </span>            : // In short: Windows CE system time in most cases only has a resolution of one second.
+<span class="lineNum">      56 </span>            : // But we want millisecond resolution.
+<span class="lineNum">      57 </span>            : //
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : namespace {
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : class TickOffset
+<span class="lineNum">      64 </span>            : {
+<span class="lineNum">      65 </span>            : public:
+<span class="lineNum">      66 </span>            :         TickOffset()
+<span class="lineNum">      67 </span>            :         {
+<span class="lineNum">      68 </span>            :                 SYSTEMTIME st1, st2;
+<span class="lineNum">      69 </span>            :                 std::memset(&amp;st1, 0, sizeof(SYSTEMTIME));
+<span class="lineNum">      70 </span>            :                 std::memset(&amp;st2, 0, sizeof(SYSTEMTIME));
+<span class="lineNum">      71 </span>            :                 GetSystemTime(&amp;st1);
+<span class="lineNum">      72 </span>            :                 while (true)
+<span class="lineNum">      73 </span>            :                 {
+<span class="lineNum">      74 </span>            :                         GetSystemTime(&amp;st2);
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            :                         // wait for a rollover
+<span class="lineNum">      77 </span>            :                         if (st1.wSecond != st2.wSecond)
+<span class="lineNum">      78 </span>            :                         {
+<span class="lineNum">      79 </span>            :                                 _offset = GetTickCount() % 1000;
+<span class="lineNum">      80 </span>            :                                 break;
+<span class="lineNum">      81 </span>            :                         }
+<span class="lineNum">      82 </span>            :                 }
+<span class="lineNum">      83 </span>            :         }
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            :         void calibrate(int seconds)
+<span class="lineNum">      86 </span>            :         {
+<span class="lineNum">      87 </span>            :                 SYSTEMTIME st1, st2;
+<span class="lineNum">      88 </span>            :                 systemTime(&amp;st1);
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            :                 WORD s = st1.wSecond;
+<span class="lineNum">      91 </span>            :                 int sum = 0;
+<span class="lineNum">      92 </span>            :                 int remaining = seconds;
+<span class="lineNum">      93 </span>            :                 while (remaining &gt; 0)
+<span class="lineNum">      94 </span>            :                 {
+<span class="lineNum">      95 </span>            :                         systemTime(&amp;st2);
+<span class="lineNum">      96 </span>            :                         WORD s2 = st2.wSecond;
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :                         if (s != s2)
+<span class="lineNum">      99 </span>            :                         {
+<span class="lineNum">     100 </span>            :                                 remaining--;
+<span class="lineNum">     101 </span>            :                                 // store the offset from zero
+<span class="lineNum">     102 </span>            :                                 sum += (st2.wMilliseconds &gt; 500) ? (st2.wMilliseconds - 1000) : st2.wMilliseconds;
+<span class="lineNum">     103 </span>            :                                 s = st2.wSecond;
+<span class="lineNum">     104 </span>            :                         }
+<span class="lineNum">     105 </span>            :                 }
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            :                 // adjust the offset by the average deviation from zero (round to the integer farthest from zero)
+<span class="lineNum">     108 </span>            :                 if (sum &lt; 0)
+<span class="lineNum">     109 </span>            :                         _offset += (int) std::floor(sum / (float)seconds);
+<span class="lineNum">     110 </span>            :                 else
+<span class="lineNum">     111 </span>            :                         _offset += (int) std::ceil(sum / (float)seconds);
+<span class="lineNum">     112 </span>            :         }
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            :         void systemTime(SYSTEMTIME* pST)
+<span class="lineNum">     115 </span>            :         {
+<span class="lineNum">     116 </span>            :                 std::memset(pST, 0, sizeof(SYSTEMTIME));
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span>            :                 WORD tick = GetTickCount() % 1000;
+<span class="lineNum">     119 </span>            :                 GetSystemTime(pST);
+<span class="lineNum">     120 </span>            :                 WORD ms = (tick &gt;= _offset) ? (tick - _offset) : (1000 - (_offset - tick));
+<span class="lineNum">     121 </span>            :                 pST-&gt;wMilliseconds = ms;
+<span class="lineNum">     122 </span>            :         }
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span>            :         void systemTimeAsFileTime(FILETIME* pFT)
+<span class="lineNum">     125 </span>            :         {
+<span class="lineNum">     126 </span>            :                 SYSTEMTIME st;
+<span class="lineNum">     127 </span>            :                 systemTime(&amp;st);
+<span class="lineNum">     128 </span>            :                 SystemTimeToFileTime(&amp;st, pFT);
+<span class="lineNum">     129 </span>            :         }
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span>            : private:
+<span class="lineNum">     132 </span>            :         WORD _offset;
+<span class="lineNum">     133 </span>            : };
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span>            : static TickOffset offset;
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span>            : void GetSystemTimeAsFileTimeWithMillisecondResolution(FILETIME* pFT)
+<span class="lineNum">     140 </span>            : {
+<span class="lineNum">     141 </span>            :         offset.systemTimeAsFileTime(pFT);
+<span class="lineNum">     142 </span>            : }
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span>            : } // namespace
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            : 
+<span class="lineNum">     148 </span>            : #endif // defined(_WIN32_WCE) &amp;&amp; defined(POCO_WINCE_TIMESTAMP_HACK)
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            : namespace Poco {
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span>            : const Timestamp::TimeVal Timestamp::TIMEVAL_MIN = std::numeric_limits&lt;Timestamp::TimeVal&gt;::min();
+<span class="lineNum">     155 </span>            : const Timestamp::TimeVal Timestamp::TIMEVAL_MAX = std::numeric_limits&lt;Timestamp::TimeVal&gt;::max();
+<a name="156"><span class="lineNum">     156 </span>            : </a>
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 : Timestamp::Timestamp()</span>
+<span class="lineNum">     159 </span>            : {
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :         update();</span>
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 : }</span>
+<a name="162"><span class="lineNum">     162 </span>            : </a>
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 : Timestamp::Timestamp(TimeVal tv)</span>
+<span class="lineNum">     165 </span>            : {
+<span class="lineNum">     166 </span><span class="lineNoCov">          0 :         _ts = tv;</span>
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 : }</span>
+<a name="168"><span class="lineNum">     168 </span>            : </a>
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 : Timestamp::Timestamp(const Timestamp&amp; other)</span>
+<span class="lineNum">     171 </span>            : {
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :         _ts = other._ts;</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 : }</span>
+<a name="174"><span class="lineNum">     174 </span>            : </a>
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 : Timestamp::~Timestamp()</span>
+<span class="lineNum">     177 </span>            : {
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 : }</span>
+<a name="179"><span class="lineNum">     179 </span>            : </a>
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 : Timestamp&amp; Timestamp::operator = (const Timestamp&amp; other)</span>
+<span class="lineNum">     182 </span>            : {
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :         _ts = other._ts;</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     185 </span>            : }
+<a name="186"><span class="lineNum">     186 </span>            : </a>
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 : Timestamp&amp; Timestamp::operator = (TimeVal tv)</span>
+<span class="lineNum">     189 </span>            : {
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :         _ts = tv;</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     192 </span>            : }
+<a name="193"><span class="lineNum">     193 </span>            : </a>
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 : void Timestamp::swap(Timestamp&amp; timestamp)</span>
+<span class="lineNum">     196 </span>            : {
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :         std::swap(_ts, timestamp._ts);</span>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 : }</span>
+<a name="199"><span class="lineNum">     199 </span>            : </a>
+<span class="lineNum">     200 </span>            : 
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 : Timestamp Timestamp::fromEpochTime(std::time_t t)</span>
+<span class="lineNum">     202 </span>            : {
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :         return Timestamp(TimeVal(t)*resolution());</span>
+<span class="lineNum">     204 </span>            : }
+<a name="205"><span class="lineNum">     205 </span>            : </a>
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 : Timestamp Timestamp::fromUtcTime(UtcTimeVal val)</span>
+<span class="lineNum">     208 </span>            : {
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :         val -= (TimeDiff(0x01b21dd2) &lt;&lt; 32) + 0x13814000;</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :         val /= 10;</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :         return Timestamp(val);</span>
+<span class="lineNum">     212 </span>            : }
+<a name="213"><span class="lineNum">     213 </span>            : </a>
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 : void Timestamp::update()</span>
+<span class="lineNum">     216 </span>            : {
+<span class="lineNum">     217 </span>            : #if defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            :         FILETIME ft;
+<span class="lineNum">     220 </span>            : #if defined(_WIN32_WCE) &amp;&amp; defined(POCO_WINCE_TIMESTAMP_HACK)
+<span class="lineNum">     221 </span>            :         GetSystemTimeAsFileTimeWithMillisecondResolution(&amp;ft);
+<span class="lineNum">     222 </span>            : #else
+<span class="lineNum">     223 </span>            :         GetSystemTimeAsFileTime(&amp;ft);
+<span class="lineNum">     224 </span>            : #endif
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            :         ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
+<span class="lineNum">     227 </span>            :         epoch.LowPart  = 0xD53E8000;
+<span class="lineNum">     228 </span>            :         epoch.HighPart = 0x019DB1DE;
+<span class="lineNum">     229 </span>            : 
+<span class="lineNum">     230 </span>            :         ULARGE_INTEGER ts;
+<span class="lineNum">     231 </span>            :         ts.LowPart  = ft.dwLowDateTime;
+<span class="lineNum">     232 </span>            :         ts.HighPart = ft.dwHighDateTime;
+<span class="lineNum">     233 </span>            :         ts.QuadPart -= epoch.QuadPart;
+<span class="lineNum">     234 </span>            :         _ts = ts.QuadPart/10;
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span>            : #elif defined(POCO_HAVE_CLOCK_GETTIME)
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            :         struct timespec ts;
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :         if (clock_gettime(CLOCK_REALTIME, &amp;ts))</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :                 throw SystemException(&quot;cannot get time of day&quot;);</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :         _ts = TimeVal(ts.tv_sec)*resolution() + ts.tv_nsec/1000;</span>
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span>            : #else
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span>            :         struct timeval tv;
+<span class="lineNum">     246 </span>            :         if (gettimeofday(&amp;tv, NULL))
+<span class="lineNum">     247 </span>            :                 throw SystemException(&quot;cannot get time of day&quot;);
+<span class="lineNum">     248 </span>            :         _ts = TimeVal(tv.tv_sec)*resolution() + tv.tv_usec;
+<span class="lineNum">     249 </span>            : 
+<span class="lineNum">     250 </span>            : #endif
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 : }</span>
+<a name="252"><span class="lineNum">     252 </span>            : </a>
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 : Timestamp  Timestamp::operator +  (const Timespan&amp; span) const</span>
+<span class="lineNum">     255 </span>            : {
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :         return *this + span.totalMicroseconds();</span>
+<span class="lineNum">     257 </span>            : }
+<a name="258"><span class="lineNum">     258 </span>            : </a>
+<span class="lineNum">     259 </span>            : 
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 : Timestamp  Timestamp::operator -  (const Timespan&amp; span) const</span>
+<span class="lineNum">     261 </span>            : {
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :         return *this - span.totalMicroseconds();</span>
+<span class="lineNum">     263 </span>            : }
+<a name="264"><span class="lineNum">     264 </span>            : </a>
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 : Timestamp&amp; Timestamp::operator += (const Timespan&amp; span)</span>
+<span class="lineNum">     267 </span>            : {
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :         return *this += span.totalMicroseconds();</span>
+<span class="lineNum">     269 </span>            : }
+<a name="270"><span class="lineNum">     270 </span>            : </a>
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 : Timestamp&amp; Timestamp::operator -= (const Timespan&amp; span)</span>
+<span class="lineNum">     273 </span>            : {
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :         return *this -= span.totalMicroseconds();</span>
+<span class="lineNum">     275 </span>            : }
+<span class="lineNum">     276 </span>            : 
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span>            : #if defined(_WIN32)
+<span class="lineNum">     279 </span>            : 
+<span class="lineNum">     280 </span>            : 
+<span class="lineNum">     281 </span>            : Timestamp Timestamp::fromFileTimeNP(UInt32 fileTimeLow, UInt32 fileTimeHigh)
+<span class="lineNum">     282 </span>            : {
+<span class="lineNum">     283 </span>            :         ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
+<span class="lineNum">     284 </span>            :         epoch.LowPart  = 0xD53E8000;
+<span class="lineNum">     285 </span>            :         epoch.HighPart = 0x019DB1DE;
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span>            :         ULARGE_INTEGER ts;
+<span class="lineNum">     288 </span>            :         ts.LowPart  = fileTimeLow;
+<span class="lineNum">     289 </span>            :         ts.HighPart = fileTimeHigh;
+<span class="lineNum">     290 </span>            :         ts.QuadPart -= epoch.QuadPart;
+<span class="lineNum">     291 </span>            : 
+<span class="lineNum">     292 </span>            :         return Timestamp(ts.QuadPart/10);
+<span class="lineNum">     293 </span>            : }
+<span class="lineNum">     294 </span>            : 
+<span class="lineNum">     295 </span>            : 
+<span class="lineNum">     296 </span>            : void Timestamp::toFileTimeNP(UInt32&amp; fileTimeLow, UInt32&amp; fileTimeHigh) const
+<span class="lineNum">     297 </span>            : {
+<span class="lineNum">     298 </span>            :         ULARGE_INTEGER epoch; // UNIX epoch (1970-01-01 00:00:00) expressed in Windows NT FILETIME
+<span class="lineNum">     299 </span>            :         epoch.LowPart  = 0xD53E8000;
+<span class="lineNum">     300 </span>            :         epoch.HighPart = 0x019DB1DE;
+<span class="lineNum">     301 </span>            : 
+<span class="lineNum">     302 </span>            :         ULARGE_INTEGER ts;
+<span class="lineNum">     303 </span>            :         ts.QuadPart  = _ts*10;
+<span class="lineNum">     304 </span>            :         ts.QuadPart += epoch.QuadPart;
+<span class="lineNum">     305 </span>            :         fileTimeLow  = ts.LowPart;
+<span class="lineNum">     306 </span>            :         fileTimeHigh = ts.HighPart;
+<span class="lineNum">     307 </span>            : }
+<span class="lineNum">     308 </span>            : 
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span>            : #endif
+<a name="311"><span class="lineNum">     311 </span>            : </a>
+<span class="lineNum">     312 </span>            : 
+<span class="lineNum">     313 </span><span class="lineCov">          3 : } // namespace Poco</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

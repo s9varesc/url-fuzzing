@@ -1,0 +1,380 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/Process_UNIX.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - Process_UNIX.cpp<span style="font-size: 80%;"> (source / <a href="Process_UNIX.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">101</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Process_UNIX.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Processes
+<span class="lineNum">       6 </span>            : // Module:  Process
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/Process_UNIX.h&quot;
+<span class="lineNum">      16 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      17 </span>            : #include &quot;Poco/NumberFormatter.h&quot;
+<span class="lineNum">      18 </span>            : #include &quot;Poco/Pipe.h&quot;
+<span class="lineNum">      19 </span>            : #include &lt;errno.h&gt;
+<span class="lineNum">      20 </span>            : #include &lt;signal.h&gt;
+<span class="lineNum">      21 </span>            : #include &lt;stdlib.h&gt;
+<span class="lineNum">      22 </span>            : #include &lt;sys/time.h&gt;
+<span class="lineNum">      23 </span>            : #include &lt;sys/types.h&gt;
+<span class="lineNum">      24 </span>            : #include &lt;sys/resource.h&gt;
+<span class="lineNum">      25 </span>            : #include &lt;sys/wait.h&gt;
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : #if defined(__QNX__)
+<span class="lineNum">      29 </span>            : #include &lt;process.h&gt;
+<span class="lineNum">      30 </span>            : #include &lt;spawn.h&gt;
+<span class="lineNum">      31 </span>            : #include &lt;cstring&gt;
+<span class="lineNum">      32 </span>            : #endif
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : namespace Poco {
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : //
+<a name="39"><span class="lineNum">      39 </span>            : // ProcessHandleImpl</a>
+<span class="lineNum">      40 </span>            : //
+<span class="lineNum">      41 </span><span class="lineNoCov">          0 : ProcessHandleImpl::ProcessHandleImpl(pid_t pid):</span>
+<span class="lineNum">      42 </span><span class="lineNoCov">          0 :         _pid(pid)</span>
+<span class="lineNum">      43 </span>            : {
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 : }</span>
+<a name="45"><span class="lineNum">      45 </span>            : </a>
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span><span class="lineNoCov">          0 : ProcessHandleImpl::~ProcessHandleImpl()</span>
+<span class="lineNum">      48 </span>            : {
+<span class="lineNum">      49 </span><span class="lineNoCov">          0 : }</span>
+<a name="50"><span class="lineNum">      50 </span>            : </a>
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 : pid_t ProcessHandleImpl::id() const</span>
+<span class="lineNum">      53 </span>            : {
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :         return _pid;</span>
+<span class="lineNum">      55 </span>            : }
+<a name="56"><span class="lineNum">      56 </span>            : </a>
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span><span class="lineNoCov">          0 : int ProcessHandleImpl::wait() const</span>
+<span class="lineNum">      59 </span>            : {
+<span class="lineNum">      60 </span>            :         int status;
+<span class="lineNum">      61 </span>            :         int rc;
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :         do</span>
+<span class="lineNum">      63 </span>            :         {
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :                 rc = waitpid(_pid, &amp;status, 0);</span>
+<span class="lineNum">      65 </span>            :         }
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :         while (rc &lt; 0 &amp;&amp; errno == EINTR);</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :         if (rc != _pid)</span>
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :                 throw SystemException(&quot;Cannot wait for process&quot;, NumberFormatter::format(_pid));</span>
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :         if (WIFEXITED(status)) // normal termination</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :                 return WEXITSTATUS(status);</span>
+<span class="lineNum">      72 </span>            :         else // termination by a signal
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :                 return 256 + WTERMSIG(status);</span>
+<span class="lineNum">      74 </span>            : }
+<a name="75"><span class="lineNum">      75 </span>            : </a>
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 : int ProcessHandleImpl::tryWait() const</span>
+<span class="lineNum">      78 </span>            : {
+<span class="lineNum">      79 </span>            :         int status;
+<span class="lineNum">      80 </span>            :         int rc;
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :         do</span>
+<span class="lineNum">      82 </span>            :         {
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :                 rc = waitpid(_pid, &amp;status, WNOHANG);</span>
+<span class="lineNum">      84 </span>            :         }
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :         while (rc &lt; 0 &amp;&amp; errno == EINTR);</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :         if (rc == 0)</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :                 return -1;</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :         if (rc != _pid)</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :                 throw SystemException(&quot;Cannot wait for process&quot;, NumberFormatter::format(_pid));</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :         if (WIFEXITED(status)) // normal termination</span>
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :                 return WEXITSTATUS(status);</span>
+<span class="lineNum">      92 </span>            :         else // termination by a signal
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :                 return 256 + WTERMSIG(status);</span>
+<span class="lineNum">      94 </span>            : }
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            : //
+<a name="98"><span class="lineNum">      98 </span>            : // ProcessImpl</a>
+<span class="lineNum">      99 </span>            : //
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 : ProcessImpl::PIDImpl ProcessImpl::idImpl()</span>
+<span class="lineNum">     101 </span>            : {
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :         return getpid();</span>
+<span class="lineNum">     103 </span>            : }
+<a name="104"><span class="lineNum">     104 </span>            : </a>
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 : void ProcessImpl::timesImpl(long&amp; userTime, long&amp; kernelTime)</span>
+<span class="lineNum">     107 </span>            : {
+<span class="lineNum">     108 </span>            :         struct rusage usage;
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :         getrusage(RUSAGE_SELF, &amp;usage);</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :         userTime   = usage.ru_utime.tv_sec;</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :         kernelTime = usage.ru_stime.tv_sec;</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 : }</span>
+<a name="113"><span class="lineNum">     113 </span>            : </a>
+<span class="lineNum">     114 </span>            : 
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 : ProcessHandleImpl* ProcessImpl::launchImpl(const std::string&amp; command, const ArgsImpl&amp; args, const std::string&amp; initialDirectory, Pipe* inPipe, Pipe* outPipe, Pipe* errPipe, const EnvImpl&amp; env)</span>
+<span class="lineNum">     116 </span>            : {
+<span class="lineNum">     117 </span>            : #if defined(__QNX__)
+<span class="lineNum">     118 </span>            :         if (initialDirectory.empty())
+<span class="lineNum">     119 </span>            :         {
+<span class="lineNum">     120 </span>            :                 /// use QNX's spawn system call which is more efficient than fork/exec.
+<span class="lineNum">     121 </span>            :                 char** argv = new char*[args.size() + 2];
+<span class="lineNum">     122 </span>            :                 int i = 0;
+<span class="lineNum">     123 </span>            :                 argv[i++] = const_cast&lt;char*&gt;(command.c_str());
+<span class="lineNum">     124 </span>            :                 for (const auto&amp; a: args)
+<span class="lineNum">     125 </span>            :                         argv[i++] = const_cast&lt;char*&gt;(a.c_str());
+<span class="lineNum">     126 </span>            :                 argv[i] = NULL;
+<span class="lineNum">     127 </span>            :                 struct inheritance inherit;
+<span class="lineNum">     128 </span>            :                 std::memset(&amp;inherit, 0, sizeof(inherit));
+<span class="lineNum">     129 </span>            :                 inherit.flags = SPAWN_ALIGN_DEFAULT | SPAWN_CHECK_SCRIPT | SPAWN_SEARCH_PATH;
+<span class="lineNum">     130 </span>            :                 int fdmap[3];
+<span class="lineNum">     131 </span>            :                 fdmap[0] = inPipe  ? inPipe-&gt;readHandle()   : 0;
+<span class="lineNum">     132 </span>            :                 fdmap[1] = outPipe ? outPipe-&gt;writeHandle() : 1;
+<span class="lineNum">     133 </span>            :                 fdmap[2] = errPipe ? errPipe-&gt;writeHandle() : 2;
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            :                 char** envPtr = 0;
+<span class="lineNum">     136 </span>            :                 std::vector&lt;char&gt; envChars;
+<span class="lineNum">     137 </span>            :                 std::vector&lt;char*&gt; envPtrs;
+<span class="lineNum">     138 </span>            :                 if (!env.empty())
+<span class="lineNum">     139 </span>            :                 {
+<span class="lineNum">     140 </span>            :                         envChars = getEnvironmentVariablesBuffer(env);
+<span class="lineNum">     141 </span>            :                         envPtrs.reserve(env.size() + 1);
+<span class="lineNum">     142 </span>            :                         char* p = &amp;envChars[0];
+<span class="lineNum">     143 </span>            :                         while (*p)
+<span class="lineNum">     144 </span>            :                         {
+<span class="lineNum">     145 </span>            :                                 envPtrs.push_back(p);
+<span class="lineNum">     146 </span>            :                                 while (*p) ++p;
+<span class="lineNum">     147 </span>            :                                 ++p;
+<span class="lineNum">     148 </span>            :                         }
+<span class="lineNum">     149 </span>            :                         envPtrs.push_back(0);
+<span class="lineNum">     150 </span>            :                         envPtr = &amp;envPtrs[0];
+<span class="lineNum">     151 </span>            :                 }
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            :                 int pid = spawn(command.c_str(), 3, fdmap, &amp;inherit, argv, envPtr);
+<span class="lineNum">     154 </span>            :                 delete [] argv;
+<span class="lineNum">     155 </span>            :                 if (pid == -1)
+<span class="lineNum">     156 </span>            :                         throw SystemException(&quot;cannot spawn&quot;, command);
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span>            :                 if (inPipe)  inPipe-&gt;close(Pipe::CLOSE_READ);
+<span class="lineNum">     159 </span>            :                 if (outPipe) outPipe-&gt;close(Pipe::CLOSE_WRITE);
+<span class="lineNum">     160 </span>            :                 if (errPipe) errPipe-&gt;close(Pipe::CLOSE_WRITE);
+<span class="lineNum">     161 </span>            :                 return new ProcessHandleImpl(pid);
+<span class="lineNum">     162 </span>            :         }
+<span class="lineNum">     163 </span>            :         else
+<span class="lineNum">     164 </span>            :         {
+<span class="lineNum">     165 </span>            :                 return launchByForkExecImpl(command, args, initialDirectory, inPipe, outPipe, errPipe, env);
+<span class="lineNum">     166 </span>            :         }
+<span class="lineNum">     167 </span>            : #else
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :         return launchByForkExecImpl(command, args, initialDirectory, inPipe, outPipe, errPipe, env);</span>
+<span class="lineNum">     169 </span>            : #endif
+<span class="lineNum">     170 </span>            : }
+<a name="171"><span class="lineNum">     171 </span>            : </a>
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 : ProcessHandleImpl* ProcessImpl::launchByForkExecImpl(const std::string&amp; command, const ArgsImpl&amp; args, const std::string&amp; initialDirectory, Pipe* inPipe, Pipe* outPipe, Pipe* errPipe, const EnvImpl&amp; env)</span>
+<span class="lineNum">     174 </span>            : {
+<span class="lineNum">     175 </span>            : #if !defined(POCO_NO_FORK_EXEC)
+<span class="lineNum">     176 </span>            :         // We must not allocated memory after fork(),
+<span class="lineNum">     177 </span>            :         // therefore allocate all required buffers first.
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :         std::vector&lt;char&gt; envChars = getEnvironmentVariablesBuffer(env);</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :         std::vector&lt;char*&gt; argv(args.size() + 2);</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :         int i = 0;</span>
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :         argv[i++] = const_cast&lt;char*&gt;(command.c_str());</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :         for (const auto&amp; a: args)</span>
+<span class="lineNum">     183 </span>            :         {
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :                 argv[i++] = const_cast&lt;char*&gt;(a.c_str());</span>
+<span class="lineNum">     185 </span>            :         }
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :         argv[i] = NULL;</span>
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :         const char* pInitialDirectory = initialDirectory.empty() ? 0 : initialDirectory.c_str();</span>
+<span class="lineNum">     189 </span>            : 
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :         int pid = fork();</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :         if (pid &lt; 0)</span>
+<span class="lineNum">     192 </span>            :         {
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :                 throw SystemException(&quot;Cannot fork process for&quot;, command);</span>
+<span class="lineNum">     194 </span>            :         }
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :         else if (pid == 0)</span>
+<span class="lineNum">     196 </span>            :         {
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :                 if (pInitialDirectory)</span>
+<span class="lineNum">     198 </span>            :                 {
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :                         if (chdir(pInitialDirectory) != 0)</span>
+<span class="lineNum">     200 </span>            :                         {
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 :                                 _exit(72);</span>
+<span class="lineNum">     202 </span>            :                         }
+<span class="lineNum">     203 </span>            :                 }
+<span class="lineNum">     204 </span>            : 
+<span class="lineNum">     205 </span>            :                 // set environment variables
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :                 char* p = &amp;envChars[0];</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :                 while (*p)</span>
+<span class="lineNum">     208 </span>            :                 {
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :                         putenv(p);</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :                         while (*p) ++p;</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :                         ++p;</span>
+<span class="lineNum">     212 </span>            :                 }
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span>            :                 // setup redirection
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :                 if (inPipe)</span>
+<span class="lineNum">     216 </span>            :                 {
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :                         dup2(inPipe-&gt;readHandle(), STDIN_FILENO);</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :                         inPipe-&gt;close(Pipe::CLOSE_BOTH);</span>
+<span class="lineNum">     219 </span>            :                 }
+<span class="lineNum">     220 </span>            :                 // outPipe and errPipe may be the same, so we dup first and close later
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :                 if (outPipe) dup2(outPipe-&gt;writeHandle(), STDOUT_FILENO);</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :                 if (errPipe) dup2(errPipe-&gt;writeHandle(), STDERR_FILENO);</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :                 if (outPipe) outPipe-&gt;close(Pipe::CLOSE_BOTH);</span>
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :                 if (errPipe) errPipe-&gt;close(Pipe::CLOSE_BOTH);</span>
+<span class="lineNum">     225 </span>            :                 // close all open file descriptors other than stdin, stdout, stderr
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :                 for (int i = 3; i &lt; sysconf(_SC_OPEN_MAX); ++i)</span>
+<span class="lineNum">     227 </span>            :                 {
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :                         close(i);</span>
+<span class="lineNum">     229 </span>            :                 }
+<span class="lineNum">     230 </span>            : 
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :                 execvp(argv[0], &amp;argv[0]);</span>
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :                 _exit(72);</span>
+<span class="lineNum">     233 </span>            :         }
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :         if (inPipe)  inPipe-&gt;close(Pipe::CLOSE_READ);</span>
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :         if (outPipe) outPipe-&gt;close(Pipe::CLOSE_WRITE);</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :         if (errPipe) errPipe-&gt;close(Pipe::CLOSE_WRITE);</span>
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :         return new ProcessHandleImpl(pid);</span>
+<span class="lineNum">     239 </span>            : #else
+<span class="lineNum">     240 </span>            :         throw Poco::NotImplementedException(&quot;platform does not allow fork/exec&quot;);
+<span class="lineNum">     241 </span>            : #endif
+<span class="lineNum">     242 </span>            : }
+<a name="243"><span class="lineNum">     243 </span>            : </a>
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 : void ProcessImpl::killImpl(ProcessHandleImpl&amp; handle)</span>
+<span class="lineNum">     246 </span>            : {
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :         killImpl(handle.id());</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 : }</span>
+<a name="249"><span class="lineNum">     249 </span>            : </a>
+<span class="lineNum">     250 </span>            : 
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 : void ProcessImpl::killImpl(PIDImpl pid)</span>
+<span class="lineNum">     252 </span>            : {
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :         if (kill(pid, SIGKILL) != 0)</span>
+<span class="lineNum">     254 </span>            :         {
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :                 switch (errno)</span>
+<span class="lineNum">     256 </span>            :                 {
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :                 case ESRCH:</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :                         throw NotFoundException(&quot;cannot kill process&quot;);</span>
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 :                 case EPERM:</span>
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :                         throw NoPermissionException(&quot;cannot kill process&quot;);</span>
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :                 default:</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :                         throw SystemException(&quot;cannot kill process&quot;);</span>
+<span class="lineNum">     263 </span>            :                 }
+<span class="lineNum">     264 </span>            :         }
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 : }</span>
+<a name="266"><span class="lineNum">     266 </span>            : </a>
+<span class="lineNum">     267 </span>            : 
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 : bool ProcessImpl::isRunningImpl(const ProcessHandleImpl&amp; handle)</span>
+<span class="lineNum">     269 </span>            : {
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :         return isRunningImpl(handle.id());</span>
+<span class="lineNum">     271 </span>            : }
+<a name="272"><span class="lineNum">     272 </span>            : </a>
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 : bool ProcessImpl::isRunningImpl(PIDImpl pid)</span>
+<span class="lineNum">     275 </span>            : {
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :         if (kill(pid, 0) == 0)</span>
+<span class="lineNum">     277 </span>            :         {
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :                 return true;</span>
+<span class="lineNum">     279 </span>            :         }
+<span class="lineNum">     280 </span>            :         else
+<span class="lineNum">     281 </span>            :         {
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :                 return false;</span>
+<span class="lineNum">     283 </span>            :         }
+<span class="lineNum">     284 </span>            : }
+<a name="285"><span class="lineNum">     285 </span>            : </a>
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 : void ProcessImpl::requestTerminationImpl(PIDImpl pid)</span>
+<span class="lineNum">     288 </span>            : {
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :         if (kill(pid, SIGINT) != 0)</span>
+<span class="lineNum">     290 </span>            :         {
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :                 switch (errno)</span>
+<span class="lineNum">     292 </span>            :                 {
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :                 case ESRCH:</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :                         throw NotFoundException(&quot;cannot terminate process&quot;);</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :                 case EPERM:</span>
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :                         throw NoPermissionException(&quot;cannot terminate process&quot;);</span>
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :                 default:</span>
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :                         throw SystemException(&quot;cannot terminate process&quot;);</span>
+<span class="lineNum">     299 </span>            :                 }
+<span class="lineNum">     300 </span>            :         }
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span>            : } // namespace Poco
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

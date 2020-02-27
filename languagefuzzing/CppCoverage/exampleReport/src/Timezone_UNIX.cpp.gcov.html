@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/Timezone_UNIX.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - Timezone_UNIX.cpp<span style="font-size: 80%;"> (source / <a href="Timezone_UNIX.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">32</td>
+            <td class="headerCovTableEntryLo">18.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">20.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Timezone_UNIX.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: DateTime
+<span class="lineNum">       6 </span>            : // Module:  Timezone
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/Timezone.h&quot;
+<span class="lineNum">      16 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      17 </span>            : #include &quot;Poco/Mutex.h&quot;
+<span class="lineNum">      18 </span>            : #include &lt;ctime&gt;
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : namespace Poco {
+<a name="22"><span class="lineNum">      22 </span>            : </a>
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span><span class="lineCov">          1 : class TZInfo</span>
+<a name="25"><span class="lineNum">      25 </span>            : {</a>
+<span class="lineNum">      26 </span>            : public:
+<span class="lineNum">      27 </span><span class="lineCov">          1 :         TZInfo()</span>
+<span class="lineNum">      28 </span><span class="lineCov">          1 :         {</span>
+<span class="lineNum">      29 </span><span class="lineCov">          1 :                 tzset();</span>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">          1 :         }</span></a>
+<span class="lineNum">      31 </span>            :         
+<span class="lineNum">      32 </span><span class="lineNoCov">          0 :         int timeZone()</span>
+<span class="lineNum">      33 </span>            :         {
+<span class="lineNum">      34 </span><span class="lineNoCov">          0 :                 Poco::FastMutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            :         #if defined(__APPLE__)  || defined(__FreeBSD__) || defined (__OpenBSD__) || POCO_OS == POCO_OS_ANDROID // no timezone global var
+<span class="lineNum">      37 </span>            :                 std::time_t now = std::time(NULL);
+<span class="lineNum">      38 </span>            :                 struct std::tm t;
+<span class="lineNum">      39 </span>            :                 gmtime_r(&amp;now, &amp;t);
+<span class="lineNum">      40 </span>            :                 std::time_t utc = std::mktime(&amp;t);
+<span class="lineNum">      41 </span>            :                 return now - utc;
+<span class="lineNum">      42 </span>            :         #elif defined(__CYGWIN__)
+<span class="lineNum">      43 </span>            :                 tzset();
+<span class="lineNum">      44 </span>            :                 return -_timezone;
+<span class="lineNum">      45 </span>            :         #else
+<span class="lineNum">      46 </span><span class="lineNoCov">          0 :                 tzset();</span>
+<span class="lineNum">      47 </span><span class="lineNoCov">          0 :                 return -timezone;</span>
+<span class="lineNum">      48 </span>            :         #endif
+<a name="49"><span class="lineNum">      49 </span>            :         }</a>
+<span class="lineNum">      50 </span>            :         
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 :         const char* name(bool dst)</span>
+<span class="lineNum">      52 </span>            :         {
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :                 Poco::FastMutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span><span class="lineNoCov">          0 :                 tzset();                </span>
+<span class="lineNum">      56 </span><span class="lineNoCov">          0 :                 return tzname[dst ? 1 : 0];</span>
+<span class="lineNum">      57 </span>            :         }
+<span class="lineNum">      58 </span>            :                 
+<span class="lineNum">      59 </span>            : private:
+<span class="lineNum">      60 </span>            :         Poco::FastMutex _mutex;
+<span class="lineNum">      61 </span>            : };
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span><span class="lineCov">          1 : static TZInfo tzInfo;</span>
+<a name="65"><span class="lineNum">      65 </span>            : </a>
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 : int Timezone::utcOffset()</span>
+<span class="lineNum">      68 </span>            : {
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :         return tzInfo.timeZone();</span>
+<span class="lineNum">      70 </span>            : }
+<a name="71"><span class="lineNum">      71 </span>            : </a>
+<span class="lineNum">      72 </span>            :         
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 : int Timezone::dst()</span>
+<span class="lineNum">      74 </span>            : {
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 :         std::time_t now = std::time(NULL);</span>
+<span class="lineNum">      76 </span>            :         struct std::tm t;
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :         if (!localtime_r(&amp;now, &amp;t))</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :                 throw Poco::SystemException(&quot;cannot get local time DST offset&quot;);</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :         return t.tm_isdst == 1 ? 3600 : 0;</span>
+<span class="lineNum">      80 </span>            : }
+<a name="81"><span class="lineNum">      81 </span>            : </a>
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 : bool Timezone::isDst(const Timestamp&amp; timestamp)</span>
+<span class="lineNum">      84 </span>            : {
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :         std::time_t time = timestamp.epochTime();</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :         struct std::tm* tms = std::localtime(&amp;time);</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :         if (!tms) throw Poco::SystemException(&quot;cannot get local time DST flag&quot;);</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :         return tms-&gt;tm_isdst &gt; 0;</span>
+<span class="lineNum">      89 </span>            : }
+<a name="90"><span class="lineNum">      90 </span>            : </a>
+<span class="lineNum">      91 </span>            :         
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 : std::string Timezone::name()</span>
+<span class="lineNum">      93 </span>            : {
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :         return std::string(tzInfo.name(dst() != 0));</span>
+<span class="lineNum">      95 </span>            : }
+<a name="96"><span class="lineNum">      96 </span>            : </a>
+<span class="lineNum">      97 </span>            :         
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 : std::string Timezone::standardName()</span>
+<span class="lineNum">      99 </span>            : {
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :         return std::string(tzInfo.name(false));</span>
+<span class="lineNum">     101 </span>            : }
+<a name="102"><span class="lineNum">     102 </span>            : </a>
+<span class="lineNum">     103 </span>            :         
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 : std::string Timezone::dstName()</span>
+<span class="lineNum">     105 </span>            : {
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :         return std::string(tzInfo.name(true));</span>
+<span class="lineNum">     107 </span>            : }
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span>            : } // namespace Poco
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/FIFOBuffer.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - FIFOBuffer.h<span style="font-size: 80%;"> (source / <a href="FIFOBuffer.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">77</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // FIFOBuffer.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Core
+<span class="lineNum">       6 </span>            : // Module:  FIFOBuffer
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the FIFOBuffer class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_FIFOBuffer_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_FIFOBuffer_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      23 </span>            : #include &quot;Poco/Buffer.h&quot;
+<span class="lineNum">      24 </span>            : #include &quot;Poco/BasicEvent.h&quot;
+<span class="lineNum">      25 </span>            : #include &quot;Poco/Mutex.h&quot;
+<span class="lineNum">      26 </span>            : #include &quot;Poco/Format.h&quot;
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : namespace Poco {
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : template &lt;class T&gt;
+<span class="lineNum">      33 </span>            : class BasicFIFOBuffer
+<span class="lineNum">      34 </span>            :         /// A simple buffer class with support for re-entrant,
+<span class="lineNum">      35 </span>            :         /// FIFO-style read/write operations, as well as (optional)
+<span class="lineNum">      36 </span>            :         /// empty/non-empty/full (i.e. writable/readable) transition
+<span class="lineNum">      37 </span>            :         /// notifications. Buffer can be flagged with end-of-file and
+<span class="lineNum">      38 </span>            :         /// error flags, which renders it un-readable/writable.
+<span class="lineNum">      39 </span>            :         ///
+<span class="lineNum">      40 </span>            :         /// Critical portions of code are protected by a recursive mutex.
+<span class="lineNum">      41 </span>            :         /// However, to achieve thread-safety in cases where multiple
+<span class="lineNum">      42 </span>            :         /// member function calls are involved and have to be atomic,
+<span class="lineNum">      43 </span>            :         /// the mutex must be locked externally.
+<span class="lineNum">      44 </span>            :         /// 
+<span class="lineNum">      45 </span>            :         /// Buffer size, as well as amount of unread data and
+<span class="lineNum">      46 </span>            :         /// available space introspections are supported as well.
+<span class="lineNum">      47 </span>            :         ///
+<span class="lineNum">      48 </span>            :         /// This class is useful anywhere where a FIFO functionality
+<span class="lineNum">      49 </span>            :         /// is needed.
+<span class="lineNum">      50 </span>            : {
+<span class="lineNum">      51 </span>            : public:
+<span class="lineNum">      52 </span>            :         typedef T Type;
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            :         mutable Poco::BasicEvent&lt;bool&gt; writable;
+<span class="lineNum">      55 </span>            :                 /// Event indicating &quot;writability&quot; of the buffer,
+<span class="lineNum">      56 </span>            :                 /// triggered as follows:
+<span class="lineNum">      57 </span>            :                 ///
+<span class="lineNum">      58 </span>            :                 ///     * when buffer transitions from non-full to full, 
+<span class="lineNum">      59 </span>            :                 ///       Writable event observers are notified, with 
+<span class="lineNum">      60 </span>            :                 ///       false value as the argument
+<span class="lineNum">      61 </span>            :                 ///
+<span class="lineNum">      62 </span>            :                 ///     * when buffer transitions from full to non-full,
+<span class="lineNum">      63 </span>            :                 ///       Writable event observers are notified, with 
+<span class="lineNum">      64 </span>            :                 ///       true value as the argument
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            :         mutable Poco::BasicEvent&lt;bool&gt; readable;
+<span class="lineNum">      67 </span>            :                 /// Event indicating &quot;readability&quot; of the buffer,
+<span class="lineNum">      68 </span>            :                 /// triggered as follows:
+<span class="lineNum">      69 </span>            :                 ///
+<span class="lineNum">      70 </span>            :                 ///     * when buffer transitions from non-empty to empty,
+<span class="lineNum">      71 </span>            :                 ///       Readable event observers are notified, with false  
+<span class="lineNum">      72 </span>            :                 ///       value as the argument
+<span class="lineNum">      73 </span>            :                 ///
+<span class="lineNum">      74 </span>            :                 ///     * when FIFOBuffer transitions from empty to non-empty,
+<span class="lineNum">      75 </span>            :                 ///       Readable event observers are notified, with true value
+<a name="76"><span class="lineNum">      76 </span>            :                 ///       as the argument</a>
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :         BasicFIFOBuffer(std::size_t size, bool notify = false):</span>
+<span class="lineNum">      79 </span>            :                 _buffer(size),
+<span class="lineNum">      80 </span>            :                 _begin(0),
+<span class="lineNum">      81 </span>            :                 _used(0),
+<span class="lineNum">      82 </span>            :                 _notify(notify),
+<span class="lineNum">      83 </span>            :                 _eof(false),
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :                 _error(false)</span>
+<span class="lineNum">      85 </span>            :                 /// Creates the FIFOBuffer.
+<span class="lineNum">      86 </span>            :         {
+<a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :         }</span></a>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :         BasicFIFOBuffer(T* pBuffer, std::size_t size, bool notify = false):</span>
+<span class="lineNum">      90 </span>            :                 _buffer(pBuffer, size),
+<span class="lineNum">      91 </span>            :                 _begin(0),
+<span class="lineNum">      92 </span>            :                 _used(0),
+<span class="lineNum">      93 </span>            :                 _notify(notify),
+<span class="lineNum">      94 </span>            :                 _eof(false),
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :                 _error(false)</span>
+<span class="lineNum">      96 </span>            :                 /// Creates the FIFOBuffer.
+<span class="lineNum">      97 </span>            :         {
+<a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :         }</span></a>
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :         BasicFIFOBuffer(const T* pBuffer, std::size_t size, bool notify = false):</span>
+<span class="lineNum">     101 </span>            :                 _buffer(pBuffer, size),
+<span class="lineNum">     102 </span>            :                 _begin(0),
+<span class="lineNum">     103 </span>            :                 _used(size),
+<span class="lineNum">     104 </span>            :                 _notify(notify),
+<span class="lineNum">     105 </span>            :                 _eof(false),
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :                 _error(false)</span>
+<span class="lineNum">     107 </span>            :                 /// Creates the FIFOBuffer.
+<span class="lineNum">     108 </span>            :         {
+<a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :         }</span></a>
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :         ~BasicFIFOBuffer()</span>
+<span class="lineNum">     112 </span>            :                 /// Destroys the FIFOBuffer.
+<span class="lineNum">     113 </span>            :         {
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     115 </span>            :         
+<span class="lineNum">     116 </span>            :         void resize(std::size_t newSize, bool preserveContent = true)
+<span class="lineNum">     117 </span>            :                 /// Resizes the buffer. If preserveContent is true,
+<span class="lineNum">     118 </span>            :                 /// the content of the old buffer is preserved.
+<span class="lineNum">     119 </span>            :                 /// New size can be larger or smaller than
+<span class="lineNum">     120 </span>            :                 /// the current size, but it must not be 0.
+<span class="lineNum">     121 </span>            :                 /// Additionally, if the new length is smaller
+<span class="lineNum">     122 </span>            :                 /// than currently used length and preserveContent
+<span class="lineNum">     123 </span>            :                 /// is true, InvalidAccessException is thrown.
+<span class="lineNum">     124 </span>            :         {
+<span class="lineNum">     125 </span>            :                 Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :                 if (preserveContent &amp;&amp; (newSize &lt; _used))
+<span class="lineNum">     128 </span>            :                         throw InvalidAccessException(&quot;Can not resize FIFO without data loss.&quot;);
+<span class="lineNum">     129 </span>            :                 
+<span class="lineNum">     130 </span>            :                 std::size_t usedBefore = _used;
+<span class="lineNum">     131 </span>            :                 _buffer.resize(newSize, preserveContent);
+<span class="lineNum">     132 </span>            :                 if (!preserveContent) _used = 0;
+<span class="lineNum">     133 </span>            :                 if (_notify) notify(usedBefore);
+<a name="134"><span class="lineNum">     134 </span>            :         }</a>
+<span class="lineNum">     135 </span>            :         
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :         std::size_t peek(T* pBuffer, std::size_t length) const</span>
+<span class="lineNum">     137 </span>            :                 /// Peeks into the data currently in the FIFO
+<span class="lineNum">     138 </span>            :                 /// without actually extracting it.
+<span class="lineNum">     139 </span>            :                 /// If length is zero, the return is immediate.
+<span class="lineNum">     140 </span>            :                 /// If length is greater than used length,
+<span class="lineNum">     141 </span>            :                 /// it is substituted with the the current FIFO 
+<span class="lineNum">     142 </span>            :                 /// used length.
+<span class="lineNum">     143 </span>            :                 /// 
+<span class="lineNum">     144 </span>            :                 /// Returns the number of elements copied in the 
+<span class="lineNum">     145 </span>            :                 /// supplied buffer.
+<span class="lineNum">     146 </span>            :         {
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :                 if (0 == length) return 0;</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :                 Mutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :                 if (!isReadable()) return 0;</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :                 if (length &gt; _used) length = _used;</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :                 std::memcpy(pBuffer, _buffer.begin() + _begin, length * sizeof(T));</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :                 return length;</span>
+<span class="lineNum">     153 </span>            :         }
+<span class="lineNum">     154 </span>            :         
+<span class="lineNum">     155 </span>            :         std::size_t peek(Poco::Buffer&lt;T&gt;&amp; buffer, std::size_t length = 0) const
+<span class="lineNum">     156 </span>            :                 /// Peeks into the data currently in the FIFO
+<span class="lineNum">     157 </span>            :                 /// without actually extracting it.
+<span class="lineNum">     158 </span>            :                 /// Resizes the supplied buffer to the size of
+<span class="lineNum">     159 </span>            :                 /// data written to it. If length is not
+<span class="lineNum">     160 </span>            :                 /// supplied by the caller or is greater than length 
+<span class="lineNum">     161 </span>            :                 /// of currently used data, the current FIFO used 
+<span class="lineNum">     162 </span>            :                 /// data length is substituted for it.
+<span class="lineNum">     163 </span>            :                 /// 
+<span class="lineNum">     164 </span>            :                 /// Returns the number of elements copied in the 
+<span class="lineNum">     165 </span>            :                 /// supplied buffer.
+<span class="lineNum">     166 </span>            :         {
+<span class="lineNum">     167 </span>            :                 Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     168 </span>            :                 if (!isReadable()) return 0;
+<span class="lineNum">     169 </span>            :                 if (0 == length || length &gt; _used) length = _used;
+<span class="lineNum">     170 </span>            :                 buffer.resize(length);
+<span class="lineNum">     171 </span>            :                 return peek(buffer.begin(), length);
+<a name="172"><span class="lineNum">     172 </span>            :         }</a>
+<span class="lineNum">     173 </span>            :         
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :         std::size_t read(T* pBuffer, std::size_t length)</span>
+<span class="lineNum">     175 </span>            :                 /// Copies the data currently in the FIFO
+<span class="lineNum">     176 </span>            :                 /// into the supplied buffer, which must be
+<span class="lineNum">     177 </span>            :                 /// preallocated to at least the length size
+<span class="lineNum">     178 </span>            :                 /// before calling this function.
+<span class="lineNum">     179 </span>            :                 /// 
+<span class="lineNum">     180 </span>            :                 /// Returns the size of the copied data.
+<span class="lineNum">     181 </span>            :         {
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :                 if (0 == length) return 0;</span>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :                 Mutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :                 if (!isReadable()) return 0;</span>
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :                 std::size_t usedBefore = _used;</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :                 std::size_t readLen = peek(pBuffer, length);</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :                 poco_assert (_used &gt;= readLen);</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :                 _used -= readLen;</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :                 if (0 == _used) _begin = 0;</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :                 else _begin += length;</span>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :                 if (_notify) notify(usedBefore);</span>
+<span class="lineNum">     193 </span>            : 
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :                 return readLen;</span>
+<span class="lineNum">     195 </span>            :         }
+<span class="lineNum">     196 </span>            :         
+<span class="lineNum">     197 </span>            :         std::size_t read(Poco::Buffer&lt;T&gt;&amp; buffer, std::size_t length = 0)
+<span class="lineNum">     198 </span>            :                 /// Copies the data currently in the FIFO
+<span class="lineNum">     199 </span>            :                 /// into the supplied buffer.
+<span class="lineNum">     200 </span>            :                 /// Resizes the supplied buffer to the size of
+<span class="lineNum">     201 </span>            :                 /// data written to it.
+<span class="lineNum">     202 </span>            :                 /// 
+<span class="lineNum">     203 </span>            :                 /// Returns the size of the copied data.
+<span class="lineNum">     204 </span>            :         {
+<span class="lineNum">     205 </span>            :                 Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     206 </span>            :                 if (!isReadable()) return 0;
+<span class="lineNum">     207 </span>            :                 std::size_t usedBefore = _used;
+<span class="lineNum">     208 </span>            :                 std::size_t readLen = peek(buffer, length);
+<span class="lineNum">     209 </span>            :                 poco_assert (_used &gt;= readLen);
+<span class="lineNum">     210 </span>            :                 _used -= readLen;
+<span class="lineNum">     211 </span>            :                 if (0 == _used) _begin = 0;
+<span class="lineNum">     212 </span>            :                 else _begin += length;
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span>            :                 if (_notify) notify(usedBefore);
+<span class="lineNum">     215 </span>            : 
+<span class="lineNum">     216 </span>            :                 return readLen;
+<a name="217"><span class="lineNum">     217 </span>            :         }</a>
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :         std::size_t write(const T* pBuffer, std::size_t length)</span>
+<span class="lineNum">     220 </span>            :                 /// Writes data from supplied buffer to the FIFO buffer.
+<span class="lineNum">     221 </span>            :                 /// If there is no sufficient space for the whole
+<span class="lineNum">     222 </span>            :                 /// buffer to be written, data up to available 
+<span class="lineNum">     223 </span>            :                 /// length is written.
+<span class="lineNum">     224 </span>            :                 /// The length of data to be written is determined from the
+<span class="lineNum">     225 </span>            :                 /// length argument. Function does nothing and returns zero
+<span class="lineNum">     226 </span>            :                 /// if length argument is equal to zero.
+<span class="lineNum">     227 </span>            :                 /// 
+<span class="lineNum">     228 </span>            :                 /// Returns the length of data written.
+<span class="lineNum">     229 </span>            :         {
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :                 if (0 == length) return 0;</span>
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :                 Mutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">     233 </span>            :                 
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :                 if (!isWritable()) return 0;</span>
+<span class="lineNum">     235 </span>            :                 
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :                 if (_buffer.size() - (_begin + _used) &lt; length)</span>
+<span class="lineNum">     237 </span>            :                 {
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :                         std::memmove(_buffer.begin(), begin(), _used * sizeof(T));</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :                         _begin = 0;</span>
+<span class="lineNum">     240 </span>            :                 }
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :                 std::size_t usedBefore = _used;</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :                 std::size_t available =  _buffer.size() - _used - _begin;</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :                 std::size_t len = length &gt; available ? available : length;</span>
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :                 std::memcpy(begin() + _used, pBuffer, len * sizeof(T));</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :                 _used += len;</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :                 poco_assert (_used &lt;= _buffer.size());</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :                 if (_notify) notify(usedBefore);</span>
+<span class="lineNum">     249 </span>            : 
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :                 return len;</span>
+<span class="lineNum">     251 </span>            :         }
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span>            :         std::size_t write(const Buffer&lt;T&gt;&amp; buffer, std::size_t length = 0)
+<span class="lineNum">     254 </span>            :                 /// Writes data from supplied buffer to the FIFO buffer.
+<span class="lineNum">     255 </span>            :                 /// If there is no sufficient space for the whole
+<span class="lineNum">     256 </span>            :                 /// buffer to be written, data up to available 
+<span class="lineNum">     257 </span>            :                 /// length is written.
+<span class="lineNum">     258 </span>            :                 /// The length of data to be written is determined from the
+<span class="lineNum">     259 </span>            :                 /// length argument or buffer size (when length argument is
+<span class="lineNum">     260 </span>            :                 /// default zero or greater than buffer size).
+<span class="lineNum">     261 </span>            :                 /// 
+<span class="lineNum">     262 </span>            :                 /// Returns the length of data written.
+<span class="lineNum">     263 </span>            :         {
+<span class="lineNum">     264 </span>            :                 if (length == 0 || length &gt; buffer.size())
+<span class="lineNum">     265 </span>            :                         length = buffer.size();
+<span class="lineNum">     266 </span>            : 
+<span class="lineNum">     267 </span>            :                 return write(buffer.begin(), length);
+<a name="268"><span class="lineNum">     268 </span>            :         }</a>
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :         std::size_t size() const</span>
+<span class="lineNum">     271 </span>            :                 /// Returns the size of the buffer.
+<span class="lineNum">     272 </span>            :         {
+<span class="lineNum">     273 </span><span class="lineNoCov">          0 :                 return _buffer.size();</span>
+<span class="lineNum">     274 </span>            :         }
+<span class="lineNum">     275 </span>            :         
+<span class="lineNum">     276 </span>            :         std::size_t used() const
+<span class="lineNum">     277 </span>            :                 /// Returns the size of the used portion of the buffer.
+<span class="lineNum">     278 </span>            :         {
+<span class="lineNum">     279 </span>            :                 return _used;
+<span class="lineNum">     280 </span>            :         }
+<span class="lineNum">     281 </span>            :         
+<span class="lineNum">     282 </span>            :         std::size_t available() const
+<span class="lineNum">     283 </span>            :                 /// Returns the size of the available portion of the buffer.
+<span class="lineNum">     284 </span>            :         {
+<span class="lineNum">     285 </span>            :                 return size() - _used;
+<span class="lineNum">     286 </span>            :         }
+<span class="lineNum">     287 </span>            : 
+<span class="lineNum">     288 </span>            :         void drain(std::size_t length = 0)
+<span class="lineNum">     289 </span>            :                 /// Drains length number of elements from the buffer.
+<span class="lineNum">     290 </span>            :                 /// If length is zero or greater than buffer current
+<span class="lineNum">     291 </span>            :                 /// content length, buffer is emptied.
+<span class="lineNum">     292 </span>            :         {
+<span class="lineNum">     293 </span>            :                 Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     294 </span>            : 
+<span class="lineNum">     295 </span>            :                 std::size_t usedBefore = _used;
+<span class="lineNum">     296 </span>            : 
+<span class="lineNum">     297 </span>            :                 if (0 == length || length &gt;= _used)
+<span class="lineNum">     298 </span>            :                 {
+<span class="lineNum">     299 </span>            :                         _begin = 0;
+<span class="lineNum">     300 </span>            :                         _used = 0;
+<span class="lineNum">     301 </span>            :                 }
+<span class="lineNum">     302 </span>            :                 else
+<span class="lineNum">     303 </span>            :                 {
+<span class="lineNum">     304 </span>            :                         _begin += length;
+<span class="lineNum">     305 </span>            :                         _used -= length;
+<span class="lineNum">     306 </span>            :                 }
+<span class="lineNum">     307 </span>            : 
+<span class="lineNum">     308 </span>            :                 if (_notify) notify(usedBefore);
+<span class="lineNum">     309 </span>            :         }
+<span class="lineNum">     310 </span>            : 
+<span class="lineNum">     311 </span>            :         void copy(const T* ptr, std::size_t length)
+<span class="lineNum">     312 </span>            :                 /// Copies the supplied data to the buffer and adjusts
+<span class="lineNum">     313 </span>            :                 /// the used buffer size.
+<span class="lineNum">     314 </span>            :         {
+<span class="lineNum">     315 </span>            :                 poco_check_ptr(ptr);
+<span class="lineNum">     316 </span>            :                 if (0 == length) return;
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span>            :                 Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     319 </span>            :                 
+<span class="lineNum">     320 </span>            :                 if (length &gt; available())
+<span class="lineNum">     321 </span>            :                         throw Poco::InvalidAccessException(&quot;Cannot extend buffer.&quot;);
+<span class="lineNum">     322 </span>            :                 
+<span class="lineNum">     323 </span>            :                 if (!isWritable())
+<span class="lineNum">     324 </span>            :                         throw Poco::InvalidAccessException(&quot;Buffer not writable.&quot;);
+<span class="lineNum">     325 </span>            : 
+<span class="lineNum">     326 </span>            :                 std::memcpy(begin() + _used, ptr, length * sizeof(T));
+<span class="lineNum">     327 </span>            :                 std::size_t usedBefore = _used;
+<span class="lineNum">     328 </span>            :                 _used += length;
+<span class="lineNum">     329 </span>            :                 if (_notify) notify(usedBefore);
+<span class="lineNum">     330 </span>            :         }
+<span class="lineNum">     331 </span>            : 
+<span class="lineNum">     332 </span>            :         void advance(std::size_t length)
+<span class="lineNum">     333 </span>            :                 /// Advances buffer by length elements.
+<span class="lineNum">     334 </span>            :                 /// Should be called AFTER the data 
+<span class="lineNum">     335 </span>            :                 /// was copied into the buffer.
+<span class="lineNum">     336 </span>            :         {
+<span class="lineNum">     337 </span>            :                 Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     338 </span>            : 
+<span class="lineNum">     339 </span>            :                 if (length &gt; available())
+<span class="lineNum">     340 </span>            :                         throw Poco::InvalidAccessException(&quot;Cannot extend buffer.&quot;);
+<span class="lineNum">     341 </span>            :                 
+<span class="lineNum">     342 </span>            :                 if (!isWritable())
+<span class="lineNum">     343 </span>            :                         throw Poco::InvalidAccessException(&quot;Buffer not writable.&quot;);
+<span class="lineNum">     344 </span>            : 
+<span class="lineNum">     345 </span>            :                 if (_buffer.size() - (_begin + _used) &lt; length)
+<span class="lineNum">     346 </span>            :                 {
+<span class="lineNum">     347 </span>            :                         std::memmove(_buffer.begin(), begin(), _used * sizeof(T));
+<span class="lineNum">     348 </span>            :                         _begin = 0;
+<span class="lineNum">     349 </span>            :                 }
+<span class="lineNum">     350 </span>            : 
+<span class="lineNum">     351 </span>            :                 std::size_t usedBefore = _used;
+<span class="lineNum">     352 </span>            :                 _used += length;
+<span class="lineNum">     353 </span>            :                 if (_notify) notify(usedBefore);
+<a name="354"><span class="lineNum">     354 </span>            :         }</a>
+<span class="lineNum">     355 </span>            : 
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :         T* begin()</span>
+<span class="lineNum">     357 </span>            :                 /// Returns the pointer to the beginning of the buffer.
+<span class="lineNum">     358 </span>            :         {
+<span class="lineNum">     359 </span><span class="lineNoCov">          0 :                 Mutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :                 if (_begin != 0)</span>
+<span class="lineNum">     361 </span>            :                 {
+<span class="lineNum">     362 </span>            :                         // Move the data to the start of the buffer so begin() and next()
+<span class="lineNum">     363 </span>            :                         // always return consistent pointers with each other and allow writing
+<span class="lineNum">     364 </span>            :                         // to the end of the buffer.
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 :                         std::memmove(_buffer.begin(), _buffer.begin() + _begin, _used * sizeof(T));</span>
+<span class="lineNum">     366 </span><span class="lineNoCov">          0 :                         _begin = 0;</span>
+<span class="lineNum">     367 </span>            :                 }
+<span class="lineNum">     368 </span><span class="lineNoCov">          0 :                 return _buffer.begin();</span>
+<span class="lineNum">     369 </span>            :         }
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span>            :         T* next()
+<span class="lineNum">     372 </span>            :                 /// Returns the pointer to the next available position in the buffer.
+<span class="lineNum">     373 </span>            :         {
+<span class="lineNum">     374 </span>            :                 Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     375 </span>            :                 return begin() + _used;
+<span class="lineNum">     376 </span>            :         }
+<span class="lineNum">     377 </span>            : 
+<span class="lineNum">     378 </span>            :         T&amp; operator [] (std::size_t index)
+<span class="lineNum">     379 </span>            :                 /// Returns value at index position.
+<span class="lineNum">     380 </span>            :                 /// Throws InvalidAccessException if index is larger than 
+<span class="lineNum">     381 </span>            :                 /// the last valid (used) buffer position.
+<span class="lineNum">     382 </span>            :         {
+<span class="lineNum">     383 </span>            :                 Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     384 </span>            :                 if (index &gt;= _used)
+<span class="lineNum">     385 </span>            :                         throw InvalidAccessException(format(&quot;Index out of bounds: %z (max index allowed: %z)&quot;, index, _used - 1));
+<span class="lineNum">     386 </span>            : 
+<span class="lineNum">     387 </span>            :                 return _buffer[_begin + index];
+<span class="lineNum">     388 </span>            :         }
+<span class="lineNum">     389 </span>            : 
+<span class="lineNum">     390 </span>            :         const T&amp; operator [] (std::size_t index) const
+<span class="lineNum">     391 </span>            :                 /// Returns value at index position.
+<span class="lineNum">     392 </span>            :                 /// Throws InvalidAccessException if index is larger than 
+<span class="lineNum">     393 </span>            :                 /// the last valid (used) buffer position.
+<span class="lineNum">     394 </span>            :         {
+<span class="lineNum">     395 </span>            :                 Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     396 </span>            :                 if (index &gt;= _used)
+<span class="lineNum">     397 </span>            :                         throw InvalidAccessException(format(&quot;Index out of bounds: %z (max index allowed: %z)&quot;, index, _used - 1));
+<span class="lineNum">     398 </span>            : 
+<span class="lineNum">     399 </span>            :                 return _buffer[_begin + index];
+<span class="lineNum">     400 </span>            :         }
+<span class="lineNum">     401 </span>            : 
+<span class="lineNum">     402 </span>            :         const Buffer&lt;T&gt;&amp; buffer() const
+<span class="lineNum">     403 </span>            :                 /// Returns const reference to the underlying buffer.
+<span class="lineNum">     404 </span>            :         {
+<span class="lineNum">     405 </span>            :                 return _buffer;
+<span class="lineNum">     406 </span>            :         }
+<span class="lineNum">     407 </span>            :         
+<span class="lineNum">     408 </span>            :         void setError(bool error = true)
+<span class="lineNum">     409 </span>            :                 /// Sets the error flag on the buffer and empties it.
+<span class="lineNum">     410 </span>            :                 /// If notifications are enabled, they will be triggered 
+<span class="lineNum">     411 </span>            :                 /// if appropriate.
+<span class="lineNum">     412 </span>            :                 /// 
+<span class="lineNum">     413 </span>            :                 /// Setting error flag to true prevents reading and writing
+<span class="lineNum">     414 </span>            :                 /// to the buffer; to re-enable FIFOBuffer for reading/writing,
+<span class="lineNum">     415 </span>            :                 /// the error flag must be set to false.
+<span class="lineNum">     416 </span>            :         {
+<span class="lineNum">     417 </span>            :                 if (error)
+<span class="lineNum">     418 </span>            :                 {
+<span class="lineNum">     419 </span>            :                         bool f = false;
+<span class="lineNum">     420 </span>            :                         Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     421 </span>            :                         if (error &amp;&amp; isReadable() &amp;&amp; _notify) readable.notify(this, f);
+<span class="lineNum">     422 </span>            :                         if (error &amp;&amp; isWritable() &amp;&amp; _notify) writable.notify(this, f);
+<span class="lineNum">     423 </span>            :                         _error = error;
+<span class="lineNum">     424 </span>            :                         _used = 0;
+<span class="lineNum">     425 </span>            :                 }
+<span class="lineNum">     426 </span>            :                 else
+<span class="lineNum">     427 </span>            :                 {
+<span class="lineNum">     428 </span>            :                         bool t = true;
+<span class="lineNum">     429 </span>            :                         Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     430 </span>            :                         _error = false;
+<span class="lineNum">     431 </span>            :                         if (_notify &amp;&amp; !_eof) writable.notify(this, t);
+<span class="lineNum">     432 </span>            :                 }
+<a name="433"><span class="lineNum">     433 </span>            :         }</a>
+<span class="lineNum">     434 </span>            : 
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :         bool isValid() const</span>
+<span class="lineNum">     436 </span>            :                 /// Returns true if error flag is not set on the buffer,
+<span class="lineNum">     437 </span>            :                 /// otherwise returns false.
+<span class="lineNum">     438 </span>            :         {
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :                 return !_error;</span>
+<span class="lineNum">     440 </span>            :         }
+<span class="lineNum">     441 </span>            : 
+<span class="lineNum">     442 </span>            :         void setEOF(bool eof = true)
+<span class="lineNum">     443 </span>            :                 /// Sets end-of-file flag on the buffer.
+<span class="lineNum">     444 </span>            :                 /// 
+<span class="lineNum">     445 </span>            :                 /// Setting EOF flag to true prevents writing to the
+<span class="lineNum">     446 </span>            :                 /// buffer; reading from the buffer will still be
+<span class="lineNum">     447 </span>            :                 /// allowed until all data present in the buffer at the 
+<span class="lineNum">     448 </span>            :                 /// EOF set time is drained. After that, to re-enable 
+<span class="lineNum">     449 </span>            :                 /// FIFOBuffer for reading/writing, EOF must be
+<span class="lineNum">     450 </span>            :                 /// set to false.
+<span class="lineNum">     451 </span>            :                 /// 
+<span class="lineNum">     452 </span>            :                 /// Setting EOF flag to false clears EOF state if it
+<span class="lineNum">     453 </span>            :                 /// was previously set. If EOF was not set, it has no
+<span class="lineNum">     454 </span>            :                 /// effect.
+<span class="lineNum">     455 </span>            :         {
+<span class="lineNum">     456 </span>            :                 Mutex::ScopedLock lock(_mutex);
+<span class="lineNum">     457 </span>            :                 bool flag = !eof;
+<span class="lineNum">     458 </span>            :                 if (_notify) writable.notify(this, flag);
+<span class="lineNum">     459 </span>            :                 _eof = eof;
+<span class="lineNum">     460 </span>            :         }
+<span class="lineNum">     461 </span>            : 
+<span class="lineNum">     462 </span>            :         bool hasEOF() const
+<span class="lineNum">     463 </span>            :                 /// Returns true if EOF flag has been set.
+<span class="lineNum">     464 </span>            :         {
+<span class="lineNum">     465 </span>            :                 return _eof;
+<span class="lineNum">     466 </span>            :         }
+<span class="lineNum">     467 </span>            : 
+<span class="lineNum">     468 </span>            :         bool isEOF() const
+<span class="lineNum">     469 </span>            :                 /// Returns true if EOF flag has been set and buffer is empty.
+<span class="lineNum">     470 </span>            :         {
+<span class="lineNum">     471 </span>            :                 return isEmpty() &amp;&amp; _eof;
+<a name="472"><span class="lineNum">     472 </span>            :         }</a>
+<span class="lineNum">     473 </span>            : 
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :         bool isEmpty() const</span>
+<span class="lineNum">     475 </span>            :                 /// Returns true is buffer is empty, false otherwise.
+<span class="lineNum">     476 </span>            :         {
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :                 return 0 == _used;</span>
+<a name="478"><span class="lineNum">     478 </span>            :         }</a>
+<span class="lineNum">     479 </span>            : 
+<span class="lineNum">     480 </span><span class="lineNoCov">          0 :         bool isFull() const</span>
+<span class="lineNum">     481 </span>            :                 /// Returns true is buffer is full, false otherwise.
+<span class="lineNum">     482 </span>            :         {
+<span class="lineNum">     483 </span><span class="lineNoCov">          0 :                 return size() == _used;</span>
+<a name="484"><span class="lineNum">     484 </span>            :         }</a>
+<span class="lineNum">     485 </span>            : 
+<span class="lineNum">     486 </span><span class="lineNoCov">          0 :         bool isReadable() const</span>
+<span class="lineNum">     487 </span>            :                 /// Returns true if buffer contains data and is not
+<span class="lineNum">     488 </span>            :                 /// in error state.
+<span class="lineNum">     489 </span>            :         {
+<span class="lineNum">     490 </span><span class="lineNoCov">          0 :                 return !isEmpty() &amp;&amp; isValid();</span>
+<a name="491"><span class="lineNum">     491 </span>            :         }</a>
+<span class="lineNum">     492 </span>            : 
+<span class="lineNum">     493 </span><span class="lineNoCov">          0 :         bool isWritable() const</span>
+<span class="lineNum">     494 </span>            :                 /// Returns true if buffer is not full and is not
+<span class="lineNum">     495 </span>            :                 /// in error state.
+<span class="lineNum">     496 </span>            :         {
+<span class="lineNum">     497 </span><span class="lineNoCov">          0 :                 return !isFull() &amp;&amp; isValid() &amp;&amp; !_eof;</span>
+<a name="498"><span class="lineNum">     498 </span>            :         }</a>
+<span class="lineNum">     499 </span>            : 
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :         void setNotify(bool notify = true)</span>
+<span class="lineNum">     501 </span>            :                 /// Enables/disables notifications.
+<span class="lineNum">     502 </span>            :         {
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :                 _notify = notify;</span>
+<span class="lineNum">     504 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span>            :         bool getNotify() const
+<span class="lineNum">     507 </span>            :                 /// Returns true if notifications are enabled, false otherwise.
+<span class="lineNum">     508 </span>            :         {
+<span class="lineNum">     509 </span>            :                 return _notify;
+<span class="lineNum">     510 </span>            :         }
+<span class="lineNum">     511 </span>            : 
+<span class="lineNum">     512 </span>            :         Mutex&amp; mutex()
+<span class="lineNum">     513 </span>            :                 /// Returns reference to mutex.
+<span class="lineNum">     514 </span>            :         {
+<span class="lineNum">     515 </span>            :                 return _mutex;
+<span class="lineNum">     516 </span>            :         }
+<a name="517"><span class="lineNum">     517 </span>            : </a>
+<span class="lineNum">     518 </span>            : private:
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :         void notify(std::size_t usedBefore)</span>
+<span class="lineNum">     520 </span>            :         {
+<span class="lineNum">     521 </span><span class="lineNoCov">          0 :                 bool t = true, f = false;</span>
+<span class="lineNum">     522 </span><span class="lineNoCov">          0 :                 if (usedBefore == 0 &amp;&amp; _used &gt; 0)</span>
+<span class="lineNum">     523 </span><span class="lineNoCov">          0 :                         readable.notify(this, t);</span>
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :                 else if (usedBefore &gt; 0 &amp;&amp; 0 == _used)</span>
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :                         readable.notify(this, f);</span>
+<span class="lineNum">     526 </span>            :                 
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :                 if (usedBefore == _buffer.size() &amp;&amp; _used &lt; _buffer.size())</span>
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :                         writable.notify(this, t);</span>
+<span class="lineNum">     529 </span><span class="lineNoCov">          0 :                 else if (usedBefore &lt; _buffer.size() &amp;&amp; _used == _buffer.size())</span>
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :                         writable.notify(this, f);</span>
+<span class="lineNum">     531 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     532 </span>            : 
+<span class="lineNum">     533 </span>            :         BasicFIFOBuffer();
+<span class="lineNum">     534 </span>            :         BasicFIFOBuffer(const BasicFIFOBuffer&amp;);
+<span class="lineNum">     535 </span>            :         BasicFIFOBuffer&amp; operator = (const BasicFIFOBuffer&amp;);
+<span class="lineNum">     536 </span>            : 
+<span class="lineNum">     537 </span>            :         Buffer&lt;T&gt;     _buffer;
+<span class="lineNum">     538 </span>            :         std::size_t   _begin;
+<span class="lineNum">     539 </span>            :         std::size_t   _used;
+<span class="lineNum">     540 </span>            :         bool          _notify;
+<span class="lineNum">     541 </span>            :         mutable Mutex _mutex;
+<span class="lineNum">     542 </span>            :         bool          _eof;
+<span class="lineNum">     543 </span>            :         bool          _error;
+<span class="lineNum">     544 </span>            : };
+<span class="lineNum">     545 </span>            : 
+<span class="lineNum">     546 </span>            : 
+<span class="lineNum">     547 </span>            : //
+<span class="lineNum">     548 </span>            : // We provide an instantiation for char
+<span class="lineNum">     549 </span>            : //
+<span class="lineNum">     550 </span>            : typedef BasicFIFOBuffer&lt;char&gt; FIFOBuffer;
+<span class="lineNum">     551 </span>            : 
+<span class="lineNum">     552 </span>            : 
+<span class="lineNum">     553 </span>            : } // namespace Poco
+<span class="lineNum">     554 </span>            : 
+<span class="lineNum">     555 </span>            : 
+<span class="lineNum">     556 </span>            : #endif // Foundation_FIFOBuffer_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

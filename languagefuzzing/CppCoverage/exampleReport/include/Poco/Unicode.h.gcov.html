@@ -1,0 +1,403 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/Unicode.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - Unicode.h<span style="font-size: 80%;"> (source / <a href="Unicode.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Unicode.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Text
+<span class="lineNum">       6 </span>            : // Module:  Unicode
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the Unicode class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2007, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_Unicode_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_Unicode_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : namespace Poco {
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : class Foundation_API Unicode
+<span class="lineNum">      28 </span>            :         /// This class contains enumerations and static
+<span class="lineNum">      29 </span>            :         /// utility functions for dealing with Unicode characters
+<span class="lineNum">      30 </span>            :         /// and their properties.
+<span class="lineNum">      31 </span>            :         ///
+<span class="lineNum">      32 </span>            :         /// For more information on Unicode, see &lt;http://www.unicode.org&gt;.
+<span class="lineNum">      33 </span>            :         ///
+<span class="lineNum">      34 </span>            :         /// The implementation is based on the Unicode support
+<span class="lineNum">      35 </span>            :         /// functions in PCRE.
+<span class="lineNum">      36 </span>            : {
+<span class="lineNum">      37 </span>            : public:
+<span class="lineNum">      38 </span>            :         // Implementation note: the following definitions must be kept
+<span class="lineNum">      39 </span>            :         // in sync with those from ucp.h (PCRE).
+<span class="lineNum">      40 </span>            :         enum CharacterCategory
+<span class="lineNum">      41 </span>            :                 /// Unicode character categories.
+<span class="lineNum">      42 </span>            :         {
+<span class="lineNum">      43 </span>            :                 UCP_OTHER,
+<span class="lineNum">      44 </span>            :                 UCP_LETTER,
+<span class="lineNum">      45 </span>            :                 UCP_MARK,
+<span class="lineNum">      46 </span>            :                 UCP_NUMBER,
+<span class="lineNum">      47 </span>            :                 UCP_PUNCTUATION,
+<span class="lineNum">      48 </span>            :                 UCP_SYMBOL,
+<span class="lineNum">      49 </span>            :                 UCP_SEPARATOR
+<span class="lineNum">      50 </span>            :         };
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            :         enum CharacterType
+<span class="lineNum">      53 </span>            :                 /// Unicode character types.
+<span class="lineNum">      54 </span>            :         {
+<span class="lineNum">      55 </span>            :                 UCP_CONTROL,
+<span class="lineNum">      56 </span>            :                 UCP_FORMAT,
+<span class="lineNum">      57 </span>            :                 UCP_UNASSIGNED,
+<span class="lineNum">      58 </span>            :                 UCP_PRIVATE_USE,
+<span class="lineNum">      59 </span>            :                 UCP_SURROGATE,
+<span class="lineNum">      60 </span>            :                 UCP_LOWER_CASE_LETTER,
+<span class="lineNum">      61 </span>            :                 UCP_MODIFIER_LETTER,
+<span class="lineNum">      62 </span>            :                 UCP_OTHER_LETTER,
+<span class="lineNum">      63 </span>            :                 UCP_TITLE_CASE_LETTER,
+<span class="lineNum">      64 </span>            :                 UCP_UPPER_CASE_LETTER,
+<span class="lineNum">      65 </span>            :                 UCP_SPACING_MARK,
+<span class="lineNum">      66 </span>            :                 UCP_ENCLOSING_MARK,
+<span class="lineNum">      67 </span>            :                 UCP_NON_SPACING_MARK,
+<span class="lineNum">      68 </span>            :                 UCP_DECIMAL_NUMBER,
+<span class="lineNum">      69 </span>            :                 UCP_LETTER_NUMBER,
+<span class="lineNum">      70 </span>            :                 UCP_OTHER_NUMBER,
+<span class="lineNum">      71 </span>            :                 UCP_CONNECTOR_PUNCTUATION,
+<span class="lineNum">      72 </span>            :                 UCP_DASH_PUNCTUATION,
+<span class="lineNum">      73 </span>            :                 UCP_CLOSE_PUNCTUATION,
+<span class="lineNum">      74 </span>            :                 UCP_FINAL_PUNCTUATION,
+<span class="lineNum">      75 </span>            :                 UCP_INITIAL_PUNCTUATION,
+<span class="lineNum">      76 </span>            :                 UCP_OTHER_PUNCTUATION,
+<span class="lineNum">      77 </span>            :                 UCP_OPEN_PUNCTUATION,
+<span class="lineNum">      78 </span>            :                 UCP_CURRENCY_SYMBOL,
+<span class="lineNum">      79 </span>            :                 UCP_MODIFIER_SYMBOL,
+<span class="lineNum">      80 </span>            :                 UCP_MATHEMATICAL_SYMBOL,
+<span class="lineNum">      81 </span>            :                 UCP_OTHER_SYMBOL,
+<span class="lineNum">      82 </span>            :                 UCP_LINE_SEPARATOR,
+<span class="lineNum">      83 </span>            :                 UCP_PARAGRAPH_SEPARATOR,
+<span class="lineNum">      84 </span>            :                 UCP_SPACE_SEPARATOR
+<span class="lineNum">      85 </span>            :         };
+<span class="lineNum">      86 </span>            :         
+<span class="lineNum">      87 </span>            :         enum Script
+<span class="lineNum">      88 </span>            :                 /// Unicode 7.0 script identifiers.
+<span class="lineNum">      89 </span>            :         {
+<span class="lineNum">      90 </span>            :                 UCP_ARABIC,
+<span class="lineNum">      91 </span>            :                 UCP_ARMENIAN,
+<span class="lineNum">      92 </span>            :                 UCP_BENGALI,
+<span class="lineNum">      93 </span>            :                 UCP_BOPOMOFO,
+<span class="lineNum">      94 </span>            :                 UCP_BRAILLE,
+<span class="lineNum">      95 </span>            :                 UCP_BUGINESE,
+<span class="lineNum">      96 </span>            :                 UCP_BUHID,
+<span class="lineNum">      97 </span>            :                 UCP_CANADIAN_ABORIGINAL,
+<span class="lineNum">      98 </span>            :                 UCP_CHEROKEE,
+<span class="lineNum">      99 </span>            :                 UCP_COMMON,
+<span class="lineNum">     100 </span>            :                 UCP_COPTIC,
+<span class="lineNum">     101 </span>            :                 UCP_CYPRIOT,
+<span class="lineNum">     102 </span>            :                 UCP_CYRILLIC,
+<span class="lineNum">     103 </span>            :                 UCP_DESERET,
+<span class="lineNum">     104 </span>            :                 UCP_DEVANAGARI,
+<span class="lineNum">     105 </span>            :                 UCP_ETHIOPIC,
+<span class="lineNum">     106 </span>            :                 UCP_GEORGIAN,
+<span class="lineNum">     107 </span>            :                 UCP_GLAGOLITIC,
+<span class="lineNum">     108 </span>            :                 UCP_GOTHIC,
+<span class="lineNum">     109 </span>            :                 UCP_GREEK,
+<span class="lineNum">     110 </span>            :                 UCP_GUJARATI,
+<span class="lineNum">     111 </span>            :                 UCP_GURMUKHI,
+<span class="lineNum">     112 </span>            :                 UCP_HAN,
+<span class="lineNum">     113 </span>            :                 UCP_HANGUL,
+<span class="lineNum">     114 </span>            :                 UCP_HANUNOO,
+<span class="lineNum">     115 </span>            :                 UCP_HEBREW,
+<span class="lineNum">     116 </span>            :                 UCP_HIRAGANA,
+<span class="lineNum">     117 </span>            :                 UCP_INHERITED,
+<span class="lineNum">     118 </span>            :                 UCP_KANNADA,
+<span class="lineNum">     119 </span>            :                 UCP_KATAKANA,
+<span class="lineNum">     120 </span>            :                 UCP_KHAROSHTHI,
+<span class="lineNum">     121 </span>            :                 UCP_KHMER,
+<span class="lineNum">     122 </span>            :                 UCP_LAO,
+<span class="lineNum">     123 </span>            :                 UCP_LATIN,
+<span class="lineNum">     124 </span>            :                 UCP_LIMBU,
+<span class="lineNum">     125 </span>            :                 UCP_LINEAR_B,
+<span class="lineNum">     126 </span>            :                 UCP_MALAYALAM,
+<span class="lineNum">     127 </span>            :                 UCP_MONGOLIAN,
+<span class="lineNum">     128 </span>            :                 UCP_MYANMAR,
+<span class="lineNum">     129 </span>            :                 UCP_NEW_TAI_LUE,
+<span class="lineNum">     130 </span>            :                 UCP_OGHAM,
+<span class="lineNum">     131 </span>            :                 UCP_OLD_ITALIC,
+<span class="lineNum">     132 </span>            :                 UCP_OLD_PERSIAN,
+<span class="lineNum">     133 </span>            :                 UCP_ORIYA,
+<span class="lineNum">     134 </span>            :                 UCP_OSMANYA,
+<span class="lineNum">     135 </span>            :                 UCP_RUNIC,
+<span class="lineNum">     136 </span>            :                 UCP_SHAVIAN,
+<span class="lineNum">     137 </span>            :                 UCP_SINHALA,
+<span class="lineNum">     138 </span>            :                 UCP_SYLOTI_NAGRI,
+<span class="lineNum">     139 </span>            :                 UCP_SYRIAC,
+<span class="lineNum">     140 </span>            :                 UCP_TAGALOG,
+<span class="lineNum">     141 </span>            :                 UCP_TAGBANWA,
+<span class="lineNum">     142 </span>            :                 UCP_TAI_LE,
+<span class="lineNum">     143 </span>            :                 UCP_TAMIL,
+<span class="lineNum">     144 </span>            :                 UCP_TELUGU,
+<span class="lineNum">     145 </span>            :                 UCP_THAANA,
+<span class="lineNum">     146 </span>            :                 UCP_THAI,
+<span class="lineNum">     147 </span>            :                 UCP_TIBETAN,
+<span class="lineNum">     148 </span>            :                 UCP_TIFINAGH,
+<span class="lineNum">     149 </span>            :                 UCP_UGARITIC,
+<span class="lineNum">     150 </span>            :                 UCP_YI,
+<span class="lineNum">     151 </span>            :                 // Unicode 5.0
+<span class="lineNum">     152 </span>            :                 UCP_BALINESE,
+<span class="lineNum">     153 </span>            :                 UCP_CUNEIFORM,
+<span class="lineNum">     154 </span>            :                 UCP_NKO,
+<span class="lineNum">     155 </span>            :                 UCP_PHAGS_PA,
+<span class="lineNum">     156 </span>            :                 UCP_PHOENICIAN,
+<span class="lineNum">     157 </span>            :                 // Unicode 5.1
+<span class="lineNum">     158 </span>            :                 UCP_CARIAN,
+<span class="lineNum">     159 </span>            :                 UCP_CHAM,
+<span class="lineNum">     160 </span>            :                 UCP_KAYAH_LI,
+<span class="lineNum">     161 </span>            :                 UCP_LEPCHA,
+<span class="lineNum">     162 </span>            :                 UCP_LYCIAN,
+<span class="lineNum">     163 </span>            :                 UCP_LYDIAN,
+<span class="lineNum">     164 </span>            :                 UCP_OL_CHIKI,
+<span class="lineNum">     165 </span>            :                 UCP_REJANG,
+<span class="lineNum">     166 </span>            :                 UCP_SAURASHTRA,
+<span class="lineNum">     167 </span>            :                 UCP_SUNDANESE,
+<span class="lineNum">     168 </span>            :                 UCP_VAI,
+<span class="lineNum">     169 </span>            :                 // Unicode 5.2
+<span class="lineNum">     170 </span>            :                 UCP_AVESTAN,
+<span class="lineNum">     171 </span>            :                 UCP_BAMUM,
+<span class="lineNum">     172 </span>            :                 UCP_EGYPTIAN_HIEROGLYPHS,
+<span class="lineNum">     173 </span>            :                 UCP_IMPERIAL_ARAMAIC,
+<span class="lineNum">     174 </span>            :                 UCP_INSCRIPTIONAL_PAHLAVI,
+<span class="lineNum">     175 </span>            :                 UCP_INSCRIPTIONAL_PARTHIAN,
+<span class="lineNum">     176 </span>            :                 UCP_JAVANESE,
+<span class="lineNum">     177 </span>            :                 UCP_KAITHI,
+<span class="lineNum">     178 </span>            :                 UCP_LISU,
+<span class="lineNum">     179 </span>            :                 UCP_MEETEI_MAYEK,
+<span class="lineNum">     180 </span>            :                 UCP_OLD_SOUTH_ARABIAN,
+<span class="lineNum">     181 </span>            :                 UCP_OLD_TURKIC,
+<span class="lineNum">     182 </span>            :                 UCP_SAMARITAN,
+<span class="lineNum">     183 </span>            :                 UCP_TAI_THAM,
+<span class="lineNum">     184 </span>            :                 UCP_TAI_VIET,
+<span class="lineNum">     185 </span>            :                 // Unicode 6.0
+<span class="lineNum">     186 </span>            :                 UCP_BATAK,
+<span class="lineNum">     187 </span>            :                 UCP_BRAHMI,
+<span class="lineNum">     188 </span>            :                 UCP_MANDAIC,
+<span class="lineNum">     189 </span>            :                 // Unicode 6.1
+<span class="lineNum">     190 </span>            :                 UCP_CHAKMA,
+<span class="lineNum">     191 </span>            :                 UCP_MEROITIC_CURSIVE,
+<span class="lineNum">     192 </span>            :                 UCP_MEROITIC_HIEROGLYPHS,
+<span class="lineNum">     193 </span>            :                 UCP_MIAO,
+<span class="lineNum">     194 </span>            :                 UCP_SHARADA,
+<span class="lineNum">     195 </span>            :                 UCP_SORA_SOMPENG,
+<span class="lineNum">     196 </span>            :                 UCP_TAKRI,
+<span class="lineNum">     197 </span>            :                 // Unicode 7.0
+<span class="lineNum">     198 </span>            :                 UCP_BASSA_VAH,
+<span class="lineNum">     199 </span>            :                 UCP_CAUCASIAN_ALBANIAN,
+<span class="lineNum">     200 </span>            :                 UCP_DUPLOYAN,
+<span class="lineNum">     201 </span>            :                 UCP_ELBASAN,
+<span class="lineNum">     202 </span>            :                 UCP_GRANTHA,
+<span class="lineNum">     203 </span>            :                 UCP_KHOJKI,
+<span class="lineNum">     204 </span>            :                 UCP_KHUDAWADI,
+<span class="lineNum">     205 </span>            :                 UCP_LINEAR_A,
+<span class="lineNum">     206 </span>            :                 UCP_MAHAJANI,
+<span class="lineNum">     207 </span>            :                 UCP_MANICHAEAN,
+<span class="lineNum">     208 </span>            :                 UCP_MENDE_KIKAKUI,
+<span class="lineNum">     209 </span>            :                 UCP_MODI,
+<span class="lineNum">     210 </span>            :                 UCP_MRO,
+<span class="lineNum">     211 </span>            :                 UCP_NABATAEAN,
+<span class="lineNum">     212 </span>            :                 UCP_OLD_NORTH_ARABIAN,
+<span class="lineNum">     213 </span>            :                 UCP_OLD_PERMIC,
+<span class="lineNum">     214 </span>            :                 UCP_PAHAWH_HMONG,
+<span class="lineNum">     215 </span>            :                 UCP_PALMYRENE,
+<span class="lineNum">     216 </span>            :                 UCP_PSALTER_PAHLAVI,
+<span class="lineNum">     217 </span>            :                 UCP_PAU_CIN_HAU,
+<span class="lineNum">     218 </span>            :                 UCP_SIDDHAM,
+<span class="lineNum">     219 </span>            :                 UCP_TIRHUTA,
+<span class="lineNum">     220 </span>            :                 UCP_WARANG_CITI
+<span class="lineNum">     221 </span>            :         };
+<span class="lineNum">     222 </span>            :         
+<span class="lineNum">     223 </span>            :         enum
+<span class="lineNum">     224 </span>            :         {
+<span class="lineNum">     225 </span>            :                 UCP_MAX_CODEPOINT = 0x10FFFF
+<span class="lineNum">     226 </span>            :         };
+<span class="lineNum">     227 </span>            :         
+<span class="lineNum">     228 </span>            :         struct CharacterProperties
+<span class="lineNum">     229 </span>            :                 /// This structure holds the character properties
+<span class="lineNum">     230 </span>            :                 /// of an Unicode character.
+<span class="lineNum">     231 </span>            :         {
+<span class="lineNum">     232 </span>            :                 CharacterCategory category;
+<span class="lineNum">     233 </span>            :                 CharacterType     type;
+<span class="lineNum">     234 </span>            :                 Script            script;
+<span class="lineNum">     235 </span>            :         };
+<span class="lineNum">     236 </span>            : 
+<span class="lineNum">     237 </span>            :         static void properties(int ch, CharacterProperties&amp; props);
+<span class="lineNum">     238 </span>            :                 /// Return the Unicode character properties for the
+<span class="lineNum">     239 </span>            :                 /// character with the given Unicode value.
+<span class="lineNum">     240 </span>            :                 
+<span class="lineNum">     241 </span>            :         static bool isSpace(int ch);
+<span class="lineNum">     242 </span>            :                 /// Returns true iff the given character is a separator.
+<span class="lineNum">     243 </span>            :                 
+<span class="lineNum">     244 </span>            :         static bool isDigit(int ch);
+<span class="lineNum">     245 </span>            :                 /// Returns true iff the given character is a numeric character.
+<span class="lineNum">     246 </span>            :                 
+<span class="lineNum">     247 </span>            :         static bool isPunct(int ch);
+<span class="lineNum">     248 </span>            :                 /// Returns true iff the given character is a punctuation character.
+<span class="lineNum">     249 </span>            :                 
+<span class="lineNum">     250 </span>            :         static bool isAlpha(int ch);
+<span class="lineNum">     251 </span>            :                 /// Returns true iff the given character is a letter.   
+<span class="lineNum">     252 </span>            :                 
+<span class="lineNum">     253 </span>            :         static bool isLower(int ch);
+<span class="lineNum">     254 </span>            :                 /// Returns true iff the given character is a lowercase
+<span class="lineNum">     255 </span>            :                 /// character.
+<span class="lineNum">     256 </span>            :                 
+<span class="lineNum">     257 </span>            :         static bool isUpper(int ch);
+<span class="lineNum">     258 </span>            :                 /// Returns true iff the given character is an uppercase
+<span class="lineNum">     259 </span>            :                 /// character.
+<span class="lineNum">     260 </span>            :                 
+<span class="lineNum">     261 </span>            :         static int toLower(int ch);
+<span class="lineNum">     262 </span>            :                 /// If the given character is an uppercase character,
+<span class="lineNum">     263 </span>            :                 /// return its lowercase counterpart, otherwise return
+<span class="lineNum">     264 </span>            :                 /// the character.
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span>            :         static int toUpper(int ch);
+<span class="lineNum">     267 </span>            :                 /// If the given character is a lowercase character,
+<span class="lineNum">     268 </span>            :                 /// return its uppercase counterpart, otherwise return
+<span class="lineNum">     269 </span>            :                 /// the character.
+<span class="lineNum">     270 </span>            : };
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span>            : //
+<span class="lineNum">     274 </span>            : // inlines
+<span class="lineNum">     275 </span>            : //
+<span class="lineNum">     276 </span>            : inline bool Unicode::isSpace(int ch)
+<span class="lineNum">     277 </span>            : {
+<span class="lineNum">     278 </span>            :         CharacterProperties props;
+<span class="lineNum">     279 </span>            :         properties(ch, props);
+<span class="lineNum">     280 </span>            :         return props.category == UCP_SEPARATOR;
+<span class="lineNum">     281 </span>            : }
+<span class="lineNum">     282 </span>            : 
+<span class="lineNum">     283 </span>            : 
+<span class="lineNum">     284 </span>            : inline bool Unicode::isDigit(int ch)
+<span class="lineNum">     285 </span>            : {
+<span class="lineNum">     286 </span>            :         CharacterProperties props;
+<span class="lineNum">     287 </span>            :         properties(ch, props);
+<span class="lineNum">     288 </span>            :         return props.category == UCP_NUMBER;
+<span class="lineNum">     289 </span>            : }
+<span class="lineNum">     290 </span>            : 
+<span class="lineNum">     291 </span>            : 
+<span class="lineNum">     292 </span>            : inline bool Unicode::isPunct(int ch)
+<span class="lineNum">     293 </span>            : {
+<span class="lineNum">     294 </span>            :         CharacterProperties props;
+<span class="lineNum">     295 </span>            :         properties(ch, props);
+<span class="lineNum">     296 </span>            :         return props.category == UCP_PUNCTUATION;
+<span class="lineNum">     297 </span>            : }
+<span class="lineNum">     298 </span>            : 
+<span class="lineNum">     299 </span>            : 
+<span class="lineNum">     300 </span>            : inline bool Unicode::isAlpha(int ch)
+<span class="lineNum">     301 </span>            : {
+<span class="lineNum">     302 </span>            :         CharacterProperties props;
+<span class="lineNum">     303 </span>            :         properties(ch, props);
+<span class="lineNum">     304 </span>            :         return props.category == UCP_LETTER;
+<span class="lineNum">     305 </span>            : }
+<a name="306"><span class="lineNum">     306 </span>            : </a>
+<span class="lineNum">     307 </span>            : 
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 : inline bool Unicode::isLower(int ch)</span>
+<span class="lineNum">     309 </span>            : {
+<span class="lineNum">     310 </span>            :         CharacterProperties props;
+<span class="lineNum">     311 </span><span class="lineNoCov">          0 :         properties(ch, props);</span>
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :         return props.category == UCP_LETTER &amp;&amp; props.type == UCP_LOWER_CASE_LETTER;</span>
+<span class="lineNum">     313 </span>            : }
+<a name="314"><span class="lineNum">     314 </span>            : </a>
+<span class="lineNum">     315 </span>            :         
+<span class="lineNum">     316 </span><span class="lineNoCov">          0 : inline bool Unicode::isUpper(int ch)</span>
+<span class="lineNum">     317 </span>            : {
+<span class="lineNum">     318 </span>            :         CharacterProperties props;
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :         properties(ch, props);</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :         return props.category == UCP_LETTER &amp;&amp; props.type == UCP_UPPER_CASE_LETTER;</span>
+<span class="lineNum">     321 </span>            : }
+<span class="lineNum">     322 </span>            : 
+<span class="lineNum">     323 </span>            : 
+<span class="lineNum">     324 </span>            : } // namespace Poco
+<span class="lineNum">     325 </span>            : 
+<span class="lineNum">     326 </span>            : 
+<span class="lineNum">     327 </span>            : #endif // Foundation_Unicode_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

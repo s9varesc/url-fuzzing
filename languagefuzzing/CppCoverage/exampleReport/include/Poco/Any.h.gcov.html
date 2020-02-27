@@ -1,0 +1,709 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/Any.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - Any.h<span style="font-size: 80%;"> (source / <a href="Any.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">60</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">68</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Any.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Core
+<span class="lineNum">       6 </span>            : // Module:      Any
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright Kevlin Henney, 2000, 2001, 2002. All rights reserved.
+<span class="lineNum">       9 </span>            : // Extracted from Boost 1.33.1 lib and adapted for poco: Peter Schojer/AppliedInformatics 2006-02-02
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #ifndef Foundation_Any_INCLUDED
+<span class="lineNum">      16 </span>            : #define Foundation_Any_INCLUDED
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      20 </span>            : #include &quot;Poco/MetaProgramming.h&quot;
+<span class="lineNum">      21 </span>            : #include &lt;algorithm&gt;
+<span class="lineNum">      22 </span>            : #include &lt;typeinfo&gt;
+<span class="lineNum">      23 </span>            : #include &lt;cstring&gt;
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : namespace Poco {
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : class Any;
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : namespace Dynamic {
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : class Var;
+<span class="lineNum">      35 </span>            : class VarHolder;
+<span class="lineNum">      36 </span>            : template &lt;class T&gt; class VarHolderImpl;
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : }
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span>            : #ifndef POCO_NO_SOO
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            : template &lt;typename PlaceholderT, unsigned int SizeV = POCO_SMALL_OBJECT_SIZE&gt;
+<span class="lineNum">      45 </span>            : union Placeholder
+<span class="lineNum">      46 </span>            :         /// ValueHolder union (used by Poco::Any and Poco::Dynamic::Var for small
+<span class="lineNum">      47 </span>            :         /// object optimization, when enabled).
+<span class="lineNum">      48 </span>            :         ///
+<span class="lineNum">      49 </span>            :         /// If Holder&lt;Type&gt; fits into POCO_SMALL_OBJECT_SIZE bytes of storage,
+<span class="lineNum">      50 </span>            :         /// it will be placement-new-allocated into the local buffer
+<span class="lineNum">      51 </span>            :         /// (i.e. there will be no heap-allocation). The local buffer size is one byte
+<span class="lineNum">      52 </span>            :         /// larger - [POCO_SMALL_OBJECT_SIZE + 1], additional byte value indicating
+<span class="lineNum">      53 </span>            :         /// where the object was allocated (0 =&gt; heap, 1 =&gt; local).
+<span class="lineNum">      54 </span>            : {
+<span class="lineNum">      55 </span>            : public:
+<span class="lineNum">      56 </span>            :         struct Size
+<span class="lineNum">      57 </span>            :         {
+<span class="lineNum">      58 </span>            :                 static const unsigned int value = SizeV;
+<span class="lineNum">      59 </span>            :         };
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            :         Placeholder()
+<span class="lineNum">      62 </span>            :         {
+<span class="lineNum">      63 </span>            :                 erase();
+<span class="lineNum">      64 </span>            :         }
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            :         void erase()
+<span class="lineNum">      67 </span>            :         {
+<span class="lineNum">      68 </span>            :                 std::memset(holder, 0, sizeof(Placeholder));
+<span class="lineNum">      69 </span>            :         }
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            :         bool isLocal() const
+<span class="lineNum">      72 </span>            :         {
+<span class="lineNum">      73 </span>            :                 return holder[SizeV] != 0;
+<span class="lineNum">      74 </span>            :         }
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            :         void setLocal(bool local) const
+<span class="lineNum">      77 </span>            :         {
+<span class="lineNum">      78 </span>            :                 holder[SizeV] = local ? 1 : 0;
+<span class="lineNum">      79 </span>            :         }
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            :         PlaceholderT* content() const
+<span class="lineNum">      82 </span>            :         {
+<span class="lineNum">      83 </span>            :                 if (isLocal())
+<span class="lineNum">      84 </span>            :                         return reinterpret_cast&lt;PlaceholderT*&gt;(holder);
+<span class="lineNum">      85 </span>            :                 else
+<span class="lineNum">      86 </span>            :                         return pHolder;
+<span class="lineNum">      87 </span>            :         }
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span>            : // MSVC71,80 won't extend friendship to nested class (Any::Holder)
+<span class="lineNum">      90 </span>            : #if !defined(POCO_MSVC_VERSION) || (defined(POCO_MSVC_VERSION) &amp;&amp; (POCO_MSVC_VERSION &gt; 80))
+<span class="lineNum">      91 </span>            : private:
+<span class="lineNum">      92 </span>            : #endif
+<span class="lineNum">      93 </span>            :         typedef typename std::aligned_storage&lt;SizeV + 1&gt;::type AlignerType;
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            :         PlaceholderT* pHolder;
+<span class="lineNum">      96 </span>            :         mutable char  holder[SizeV + 1];
+<span class="lineNum">      97 </span>            :         AlignerType   aligner;
+<span class="lineNum">      98 </span>            : 
+<span class="lineNum">      99 </span>            :         friend class Any;
+<span class="lineNum">     100 </span>            :         friend class Dynamic::Var;
+<span class="lineNum">     101 </span>            :         friend class Dynamic::VarHolder;
+<span class="lineNum">     102 </span>            :         template &lt;class&gt; friend class Dynamic::VarHolderImpl;
+<span class="lineNum">     103 </span>            : };
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            : #else // !POCO_NO_SOO
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            : template &lt;typename PlaceholderT&gt;
+<span class="lineNum">     110 </span>            : union Placeholder
+<span class="lineNum">     111 </span>            :         /// ValueHolder union (used by Poco::Any and Poco::Dynamic::Var for small
+<span class="lineNum">     112 </span>            :         /// object optimization, when enabled).
+<span class="lineNum">     113 </span>            :         ///
+<span class="lineNum">     114 </span>            :         /// If Holder&lt;Type&gt; fits into POCO_SMALL_OBJECT_SIZE bytes of storage,
+<span class="lineNum">     115 </span>            :         /// it will be placement-new-allocated into the local buffer
+<span class="lineNum">     116 </span>            :         /// (i.e. there will be no heap-allocation). The local buffer size is one byte
+<span class="lineNum">     117 </span>            :         /// larger - [POCO_SMALL_OBJECT_SIZE + 1], additional byte value indicating
+<span class="lineNum">     118 </span>            :         /// where the object was allocated (0 =&gt; heap, 1 =&gt; local).
+<span class="lineNum">     119 </span>            : {
+<span class="lineNum">     120 </span>            : public:
+<span class="lineNum">     121 </span>            :         Placeholder ()
+<span class="lineNum">     122 </span>            :         {
+<span class="lineNum">     123 </span>            :         }
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span>            :         PlaceholderT* content() const
+<span class="lineNum">     126 </span>            :         {
+<span class="lineNum">     127 </span>            :                 return pHolder;
+<span class="lineNum">     128 </span>            :         }
+<span class="lineNum">     129 </span>            : 
+<span class="lineNum">     130 </span>            : // MSVC71,80 won't extend friendship to nested class (Any::Holder)
+<span class="lineNum">     131 </span>            : #if !defined(POCO_MSVC_VERSION) || (defined(POCO_MSVC_VERSION) &amp;&amp; (POCO_MSVC_VERSION &gt; 80))
+<span class="lineNum">     132 </span>            : private:
+<span class="lineNum">     133 </span>            : #endif
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            :         PlaceholderT* pHolder;
+<span class="lineNum">     136 </span>            : 
+<span class="lineNum">     137 </span>            :         friend class Any;
+<span class="lineNum">     138 </span>            :         friend class Dynamic::Var;
+<span class="lineNum">     139 </span>            :         friend class Dynamic::VarHolder;
+<span class="lineNum">     140 </span>            :         template &lt;class&gt; friend class Dynamic::VarHolderImpl;
+<span class="lineNum">     141 </span>            : };
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            : #endif // POCO_NO_SOO
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            : class Any
+<span class="lineNum">     148 </span>            :         /// An Any class represents a general type and is capable of storing any type, supporting type-safe extraction
+<span class="lineNum">     149 </span>            :         /// of the internally stored data.
+<span class="lineNum">     150 </span>            :         ///
+<span class="lineNum">     151 </span>            :         /// Code taken from the Boost 1.33.1 library. Original copyright by Kevlin Henney. Modified for Poco
+<span class="lineNum">     152 </span>            :         /// by Applied Informatics.
+<span class="lineNum">     153 </span>            :         ///
+<span class="lineNum">     154 </span>            :         /// Modified for small object optimization support (optionally supported through conditional compilation)
+<span class="lineNum">     155 </span>            :         /// by Alex Fabijanic.
+<span class="lineNum">     156 </span>            : {
+<span class="lineNum">     157 </span>            : public:
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            : #ifndef POCO_NO_SOO
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span>            :         Any()
+<span class="lineNum">     162 </span>            :                 /// Creates an empty any type.
+<span class="lineNum">     163 </span>            :         {
+<span class="lineNum">     164 </span>            :         }
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span>            :         template&lt;typename ValueType&gt;
+<span class="lineNum">     167 </span>            :         Any(const ValueType &amp; value)
+<span class="lineNum">     168 </span>            :                 /// Creates an any which stores the init parameter inside.
+<span class="lineNum">     169 </span>            :                 ///
+<span class="lineNum">     170 </span>            :                 /// Example:
+<span class="lineNum">     171 </span>            :                 ///   Any a(13);
+<span class="lineNum">     172 </span>            :                 ///   Any a(string(&quot;12345&quot;));
+<span class="lineNum">     173 </span>            :         {
+<span class="lineNum">     174 </span>            :                 construct(value);
+<span class="lineNum">     175 </span>            :         }
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span>            :         Any(const Any&amp; other)
+<span class="lineNum">     178 </span>            :                 /// Copy constructor, works with both empty and initialized Any values.
+<span class="lineNum">     179 </span>            :         {
+<span class="lineNum">     180 </span>            :                 if ((this != &amp;other) &amp;&amp; !other.empty())
+<span class="lineNum">     181 </span>            :                         construct(other);
+<span class="lineNum">     182 </span>            :         }
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span>            :         ~Any()
+<span class="lineNum">     185 </span>            :                 /// Destructor. If Any is locally held, calls ValueHolder destructor;
+<span class="lineNum">     186 </span>            :                 /// otherwise, deletes the placeholder from the heap.
+<span class="lineNum">     187 </span>            :         {
+<span class="lineNum">     188 </span>            :                 if (!empty())
+<span class="lineNum">     189 </span>            :                 {
+<span class="lineNum">     190 </span>            :                         if (_valueHolder.isLocal())
+<span class="lineNum">     191 </span>            :                                 destruct();
+<span class="lineNum">     192 </span>            :                         else
+<span class="lineNum">     193 </span>            :                                 delete content();
+<span class="lineNum">     194 </span>            :                 }
+<span class="lineNum">     195 </span>            :         }
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span>            :         Any&amp; swap(Any&amp; other)
+<span class="lineNum">     198 </span>            :                 /// Swaps the content of the two Anys.
+<span class="lineNum">     199 </span>            :                 ///
+<span class="lineNum">     200 </span>            :                 /// When small object optimization is enabled, swap only
+<span class="lineNum">     201 </span>            :                 /// has no-throw guarantee when both (*this and other)
+<span class="lineNum">     202 </span>            :                 /// objects are allocated on the heap.
+<span class="lineNum">     203 </span>            :         {
+<span class="lineNum">     204 </span>            :                 if (this == &amp;other) return *this;
+<span class="lineNum">     205 </span>            : 
+<span class="lineNum">     206 </span>            :                 if (!_valueHolder.isLocal() &amp;&amp; !other._valueHolder.isLocal())
+<span class="lineNum">     207 </span>            :                 {
+<span class="lineNum">     208 </span>            :                         std::swap(_valueHolder.pHolder, other._valueHolder.pHolder);
+<span class="lineNum">     209 </span>            :                 }
+<span class="lineNum">     210 </span>            :                 else
+<span class="lineNum">     211 </span>            :                 {
+<span class="lineNum">     212 </span>            :                         Any tmp(*this);
+<span class="lineNum">     213 </span>            :                         try
+<span class="lineNum">     214 </span>            :                         {
+<span class="lineNum">     215 </span>            :                                 if (_valueHolder.isLocal()) destruct();
+<span class="lineNum">     216 </span>            :                                 construct(other);
+<span class="lineNum">     217 </span>            :                                 other = tmp;
+<span class="lineNum">     218 </span>            :                         }
+<span class="lineNum">     219 </span>            :                         catch (...)
+<span class="lineNum">     220 </span>            :                         {
+<span class="lineNum">     221 </span>            :                                 construct(tmp);
+<span class="lineNum">     222 </span>            :                                 throw;
+<span class="lineNum">     223 </span>            :                         }
+<span class="lineNum">     224 </span>            :                 }
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            :                 return *this;
+<span class="lineNum">     227 </span>            :         }
+<span class="lineNum">     228 </span>            : 
+<span class="lineNum">     229 </span>            :         template&lt;typename ValueType&gt;
+<span class="lineNum">     230 </span>            :         Any&amp; operator = (const ValueType&amp; rhs)
+<span class="lineNum">     231 </span>            :                 /// Assignment operator for all types != Any.
+<span class="lineNum">     232 </span>            :                 ///
+<span class="lineNum">     233 </span>            :                 /// Example:
+<span class="lineNum">     234 </span>            :                 ///   Any a = 13;
+<span class="lineNum">     235 </span>            :                 ///   Any a = string(&quot;12345&quot;);
+<span class="lineNum">     236 </span>            :         {
+<span class="lineNum">     237 </span>            :                 construct(rhs);
+<span class="lineNum">     238 </span>            :                 return *this;
+<span class="lineNum">     239 </span>            :         }
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span>            :         Any&amp; operator = (const Any&amp; rhs)
+<span class="lineNum">     242 </span>            :                 /// Assignment operator for Any.
+<span class="lineNum">     243 </span>            :         {
+<span class="lineNum">     244 </span>            :                 if ((this != &amp;rhs) &amp;&amp; !rhs.empty())
+<span class="lineNum">     245 </span>            :                         construct(rhs);
+<span class="lineNum">     246 </span>            :                 else if ((this != &amp;rhs) &amp;&amp; rhs.empty())
+<span class="lineNum">     247 </span>            :                         _valueHolder.erase();
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span>            :                 return *this;
+<span class="lineNum">     250 </span>            :         }
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span>            :         bool empty() const
+<span class="lineNum">     253 </span>            :                 /// Returns true if the Any is empty.
+<span class="lineNum">     254 </span>            :         {
+<span class="lineNum">     255 </span>            :                 char buf[POCO_SMALL_OBJECT_SIZE] = { 0 };
+<span class="lineNum">     256 </span>            :                 return 0 == std::memcmp(_valueHolder.holder, buf, POCO_SMALL_OBJECT_SIZE);
+<span class="lineNum">     257 </span>            :         }
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span>            :         const std::type_info &amp; type() const
+<span class="lineNum">     260 </span>            :                 /// Returns the type information of the stored content.
+<span class="lineNum">     261 </span>            :                 /// If the Any is empty typeid(void) is returned.
+<span class="lineNum">     262 </span>            :                 /// It is recommended to always query an Any for its type info before
+<span class="lineNum">     263 </span>            :                 /// trying to extract data via an AnyCast/RefAnyCast.
+<span class="lineNum">     264 </span>            :         {
+<span class="lineNum">     265 </span>            :                 return empty() ? typeid(void) : content()-&gt;type();
+<span class="lineNum">     266 </span>            :         }
+<span class="lineNum">     267 </span>            : 
+<span class="lineNum">     268 </span>            : private:
+<span class="lineNum">     269 </span>            :         class ValueHolder
+<span class="lineNum">     270 </span>            :         {
+<span class="lineNum">     271 </span>            :         public:
+<span class="lineNum">     272 </span>            :                 virtual ~ValueHolder() = default;
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span>            :                 virtual const std::type_info &amp; type() const = 0;
+<span class="lineNum">     275 </span>            :                 virtual void clone(Placeholder&lt;ValueHolder&gt;*) const = 0;
+<span class="lineNum">     276 </span>            :         };
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span>            :         template&lt;typename ValueType&gt;
+<span class="lineNum">     279 </span>            :         class Holder : public ValueHolder
+<span class="lineNum">     280 </span>            :         {
+<span class="lineNum">     281 </span>            :         public:
+<span class="lineNum">     282 </span>            :                 Holder(const ValueType &amp; value) : _held(value)
+<span class="lineNum">     283 </span>            :                 {
+<span class="lineNum">     284 </span>            :                 }
+<span class="lineNum">     285 </span>            : 
+<span class="lineNum">     286 </span>            :                 virtual const std::type_info &amp; type() const
+<span class="lineNum">     287 </span>            :                 {
+<span class="lineNum">     288 </span>            :                         return typeid(ValueType);
+<span class="lineNum">     289 </span>            :                 }
+<span class="lineNum">     290 </span>            : 
+<span class="lineNum">     291 </span>            :                 virtual void clone(Placeholder&lt;ValueHolder&gt;* pPlaceholder) const
+<span class="lineNum">     292 </span>            :                 {
+<span class="lineNum">     293 </span>            :                         if ((sizeof(Holder&lt;ValueType&gt;) &lt;= POCO_SMALL_OBJECT_SIZE))
+<span class="lineNum">     294 </span>            :                         {
+<span class="lineNum">     295 </span>            :                                 new ((ValueHolder*) pPlaceholder-&gt;holder) Holder(_held);
+<span class="lineNum">     296 </span>            :                                 pPlaceholder-&gt;setLocal(true);
+<span class="lineNum">     297 </span>            :                         }
+<span class="lineNum">     298 </span>            :                         else
+<span class="lineNum">     299 </span>            :                         {
+<span class="lineNum">     300 </span>            :                                 pPlaceholder-&gt;pHolder = new Holder(_held);
+<span class="lineNum">     301 </span>            :                                 pPlaceholder-&gt;setLocal(false);
+<span class="lineNum">     302 </span>            :                         }
+<span class="lineNum">     303 </span>            :                 }
+<span class="lineNum">     304 </span>            : 
+<span class="lineNum">     305 </span>            :                 ValueType _held;
+<span class="lineNum">     306 </span>            : 
+<span class="lineNum">     307 </span>            :         private:
+<span class="lineNum">     308 </span>            :                 Holder &amp; operator = (const Holder &amp;);
+<span class="lineNum">     309 </span>            :         };
+<span class="lineNum">     310 </span>            : 
+<span class="lineNum">     311 </span>            :         ValueHolder* content() const
+<span class="lineNum">     312 </span>            :         {
+<span class="lineNum">     313 </span>            :                 return _valueHolder.content();
+<span class="lineNum">     314 </span>            :         }
+<span class="lineNum">     315 </span>            : 
+<span class="lineNum">     316 </span>            :         template&lt;typename ValueType&gt;
+<span class="lineNum">     317 </span>            :         void construct(const ValueType&amp; value)
+<span class="lineNum">     318 </span>            :         {
+<span class="lineNum">     319 </span>            :                 if (sizeof(Holder&lt;ValueType&gt;) &lt;= Placeholder&lt;ValueType&gt;::Size::value)
+<span class="lineNum">     320 </span>            :                 {
+<span class="lineNum">     321 </span>            :                         new (reinterpret_cast&lt;ValueHolder*&gt;(_valueHolder.holder)) Holder&lt;ValueType&gt;(value);
+<span class="lineNum">     322 </span>            :                         _valueHolder.setLocal(true);
+<span class="lineNum">     323 </span>            :                 }
+<span class="lineNum">     324 </span>            :                 else
+<span class="lineNum">     325 </span>            :                 {
+<span class="lineNum">     326 </span>            :                         _valueHolder.pHolder = new Holder&lt;ValueType&gt;(value);
+<span class="lineNum">     327 </span>            :                         _valueHolder.setLocal(false);
+<span class="lineNum">     328 </span>            :                 }
+<span class="lineNum">     329 </span>            :         }
+<span class="lineNum">     330 </span>            : 
+<span class="lineNum">     331 </span>            :         void construct(const Any&amp; other)
+<span class="lineNum">     332 </span>            :         {
+<span class="lineNum">     333 </span>            :                 if (!other.empty())
+<span class="lineNum">     334 </span>            :                         other.content()-&gt;clone(&amp;_valueHolder);
+<span class="lineNum">     335 </span>            :                 else
+<span class="lineNum">     336 </span>            :                         _valueHolder.erase();
+<span class="lineNum">     337 </span>            :         }
+<span class="lineNum">     338 </span>            : 
+<span class="lineNum">     339 </span>            :         void destruct()
+<span class="lineNum">     340 </span>            :         {
+<span class="lineNum">     341 </span>            :                 content()-&gt;~ValueHolder();
+<span class="lineNum">     342 </span>            :         }
+<span class="lineNum">     343 </span>            : 
+<span class="lineNum">     344 </span>            :         Placeholder&lt;ValueHolder&gt; _valueHolder;
+<span class="lineNum">     345 </span>            : 
+<span class="lineNum">     346 </span>            : 
+<span class="lineNum">     347 </span>            : #else // if POCO_NO_SOO
+<span class="lineNum">     348 </span>            : 
+<span class="lineNum">     349 </span>            : 
+<span class="lineNum">     350 </span>            :         Any(): _pHolder(0)
+<span class="lineNum">     351 </span>            :                 /// Creates an empty any type.
+<span class="lineNum">     352 </span>            :         {
+<span class="lineNum">     353 </span>            :         }
+<a name="354"><span class="lineNum">     354 </span>            : </a>
+<span class="lineNum">     355 </span>            :         template &lt;typename ValueType&gt;
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :         Any(const ValueType&amp; value):</span>
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :                 _pHolder(new Holder&lt;ValueType&gt;(value))</span>
+<span class="lineNum">     358 </span>            :                 /// Creates an any which stores the init parameter inside.
+<span class="lineNum">     359 </span>            :                 ///
+<span class="lineNum">     360 </span>            :                 /// Example:
+<span class="lineNum">     361 </span>            :                 ///      Any a(13);
+<span class="lineNum">     362 </span>            :                 ///      Any a(string(&quot;12345&quot;));
+<span class="lineNum">     363 </span>            :         {
+<a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 :         }</span></a>
+<span class="lineNum">     365 </span>            : 
+<span class="lineNum">     366 </span><span class="lineNoCov">          0 :         Any(const Any&amp; other):</span>
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :                 _pHolder(other._pHolder ? other._pHolder-&gt;clone() : 0)</span>
+<span class="lineNum">     368 </span>            :                 /// Copy constructor, works with both empty and initialized Any values.
+<span class="lineNum">     369 </span>            :         {
+<a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 :         }</span></a>
+<span class="lineNum">     371 </span>            : 
+<span class="lineNum">     372 </span><span class="lineNoCov">          0 :         ~Any()</span>
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :         {</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :                 delete _pHolder;</span>
+<a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :         }</span></a>
+<span class="lineNum">     376 </span>            : 
+<span class="lineNum">     377 </span><span class="lineNoCov">          0 :         Any&amp; swap(Any&amp; rhs)</span>
+<span class="lineNum">     378 </span>            :                 /// Swaps the content of the two Anys.
+<span class="lineNum">     379 </span>            :         {
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :                 std::swap(_pHolder, rhs._pHolder);</span>
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :                 return *this;</span>
+<span class="lineNum">     382 </span>            :         }
+<span class="lineNum">     383 </span>            : 
+<span class="lineNum">     384 </span>            :         template &lt;typename ValueType&gt;
+<span class="lineNum">     385 </span>            :         Any&amp; operator = (const ValueType&amp; rhs)
+<span class="lineNum">     386 </span>            :                 /// Assignment operator for all types != Any.
+<span class="lineNum">     387 </span>            :                 ///
+<span class="lineNum">     388 </span>            :                 /// Example:
+<span class="lineNum">     389 </span>            :                 ///   Any a = 13;
+<span class="lineNum">     390 </span>            :                 ///   Any a = string(&quot;12345&quot;);
+<span class="lineNum">     391 </span>            :         {
+<span class="lineNum">     392 </span>            :                 Any(rhs).swap(*this);
+<span class="lineNum">     393 </span>            :                 return *this;
+<a name="394"><span class="lineNum">     394 </span>            :         }</a>
+<span class="lineNum">     395 </span>            : 
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :         Any&amp; operator = (const Any&amp; rhs)</span>
+<span class="lineNum">     397 </span>            :                 /// Assignment operator for Any.
+<span class="lineNum">     398 </span>            :         {
+<span class="lineNum">     399 </span><span class="lineNoCov">          0 :                 Any(rhs).swap(*this);</span>
+<span class="lineNum">     400 </span><span class="lineNoCov">          0 :                 return *this;</span>
+<span class="lineNum">     401 </span>            :         }
+<span class="lineNum">     402 </span>            : 
+<span class="lineNum">     403 </span>            :         bool empty() const
+<span class="lineNum">     404 </span>            :                 /// Returns true if the Any is empty.
+<span class="lineNum">     405 </span>            :         {
+<span class="lineNum">     406 </span>            :                 return !_pHolder;
+<a name="407"><span class="lineNum">     407 </span>            :         }</a>
+<span class="lineNum">     408 </span>            : 
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :         const std::type_info&amp; type() const</span>
+<span class="lineNum">     410 </span>            :                 /// Returns the type information of the stored content.
+<span class="lineNum">     411 </span>            :                 /// If the Any is empty typeid(void) is returned.
+<span class="lineNum">     412 </span>            :                 /// It is recommended to always query an Any for its type info before
+<span class="lineNum">     413 </span>            :                 /// trying to extract data via an AnyCast/RefAnyCast.
+<span class="lineNum">     414 </span>            :         {
+<span class="lineNum">     415 </span><span class="lineNoCov">          0 :                 return _pHolder ? _pHolder-&gt;type() : typeid(void);</span>
+<span class="lineNum">     416 </span>            :         }
+<a name="417"><span class="lineNum">     417 </span>            : </a>
+<span class="lineNum">     418 </span>            : private:
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :         class ValueHolder</span>
+<a name="420"><span class="lineNum">     420 </span>            :         {</a>
+<span class="lineNum">     421 </span>            :         public:
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :                 virtual ~ValueHolder() = default;</span>
+<span class="lineNum">     423 </span>            : 
+<span class="lineNum">     424 </span>            :                 virtual const std::type_info&amp; type() const = 0;
+<span class="lineNum">     425 </span>            :                 virtual ValueHolder* clone() const = 0;
+<span class="lineNum">     426 </span>            :         };
+<a name="427"><span class="lineNum">     427 </span>            : </a>
+<span class="lineNum">     428 </span>            :         template &lt;typename ValueType&gt;
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :         class Holder: public ValueHolder</span>
+<a name="430"><span class="lineNum">     430 </span>            :         {</a>
+<span class="lineNum">     431 </span>            :         public:
+<span class="lineNum">     432 </span><span class="lineNoCov">          0 :                 Holder(const ValueType&amp; value):</span>
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :                         _held(value)</span>
+<span class="lineNum">     434 </span>            :                 {
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :                 }</span></a>
+<span class="lineNum">     436 </span>            : 
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :                 virtual const std::type_info&amp; type() const</span>
+<span class="lineNum">     438 </span>            :                 {
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :                         return typeid(ValueType);</span>
+<a name="440"><span class="lineNum">     440 </span>            :                 }</a>
+<span class="lineNum">     441 </span>            : 
+<span class="lineNum">     442 </span><span class="lineNoCov">          0 :                 virtual ValueHolder* clone() const</span>
+<span class="lineNum">     443 </span>            :                 {
+<span class="lineNum">     444 </span><span class="lineNoCov">          0 :                         return new Holder(_held);</span>
+<span class="lineNum">     445 </span>            :                 }
+<span class="lineNum">     446 </span>            : 
+<span class="lineNum">     447 </span>            :                 ValueType _held;
+<span class="lineNum">     448 </span>            : 
+<span class="lineNum">     449 </span>            :         private:
+<span class="lineNum">     450 </span>            :                 Holder &amp; operator = (const Holder &amp;);
+<a name="451"><span class="lineNum">     451 </span>            :         };</a>
+<span class="lineNum">     452 </span>            : 
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :         ValueHolder* content() const</span>
+<span class="lineNum">     454 </span>            :         {
+<span class="lineNum">     455 </span><span class="lineNoCov">          0 :                 return _pHolder;</span>
+<span class="lineNum">     456 </span>            :         }
+<span class="lineNum">     457 </span>            : 
+<span class="lineNum">     458 </span>            : private:
+<span class="lineNum">     459 </span>            :         ValueHolder* _pHolder;
+<span class="lineNum">     460 </span>            : 
+<span class="lineNum">     461 </span>            : #endif // POCO_NO_SOO
+<span class="lineNum">     462 </span>            : 
+<span class="lineNum">     463 </span>            :         template &lt;typename ValueType&gt;
+<span class="lineNum">     464 </span>            :         friend ValueType* AnyCast(Any*);
+<span class="lineNum">     465 </span>            : 
+<span class="lineNum">     466 </span>            :         template &lt;typename ValueType&gt;
+<span class="lineNum">     467 </span>            :         friend ValueType* UnsafeAnyCast(Any*);
+<span class="lineNum">     468 </span>            : 
+<span class="lineNum">     469 </span>            :         template &lt;typename ValueType&gt;
+<span class="lineNum">     470 </span>            :         friend const ValueType&amp; RefAnyCast(const Any&amp;);
+<span class="lineNum">     471 </span>            : 
+<span class="lineNum">     472 </span>            :         template &lt;typename ValueType&gt;
+<span class="lineNum">     473 </span>            :         friend ValueType&amp; RefAnyCast(Any&amp;);
+<span class="lineNum">     474 </span>            : 
+<span class="lineNum">     475 </span>            :         template &lt;typename ValueType&gt;
+<span class="lineNum">     476 </span>            :         friend ValueType AnyCast(Any&amp;);
+<span class="lineNum">     477 </span>            : };
+<span class="lineNum">     478 </span>            : 
+<a name="479"><span class="lineNum">     479 </span>            : </a>
+<span class="lineNum">     480 </span>            : template &lt;typename ValueType&gt;
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 : ValueType* AnyCast(Any* operand)</span>
+<span class="lineNum">     482 </span>            :         /// AnyCast operator used to extract the ValueType from an Any*. Will return a pointer
+<span class="lineNum">     483 </span>            :         /// to the stored value.
+<span class="lineNum">     484 </span>            :         ///
+<span class="lineNum">     485 </span>            :         /// Example Usage:
+<span class="lineNum">     486 </span>            :         ///      MyType* pTmp = AnyCast&lt;MyType*&gt;(pAny).
+<span class="lineNum">     487 </span>            :         /// Will return NULL if the cast fails, i.e. types don't match.
+<span class="lineNum">     488 </span>            : {
+<span class="lineNum">     489 </span><span class="lineNoCov">          0 :         return operand &amp;&amp; operand-&gt;type() == typeid(ValueType)</span>
+<span class="lineNum">     490 </span><span class="lineNoCov">          0 :                                 ? &amp;static_cast&lt;Any::Holder&lt;ValueType&gt;*&gt;(operand-&gt;content())-&gt;_held</span>
+<span class="lineNum">     491 </span><span class="lineNoCov">          0 :                                 : 0;</span>
+<span class="lineNum">     492 </span>            : }
+<span class="lineNum">     493 </span>            : 
+<span class="lineNum">     494 </span>            : 
+<span class="lineNum">     495 </span>            : template &lt;typename ValueType&gt;
+<span class="lineNum">     496 </span>            : const ValueType* AnyCast(const Any* operand)
+<span class="lineNum">     497 </span>            :         /// AnyCast operator used to extract a const ValueType pointer from an const Any*. Will return a const pointer
+<span class="lineNum">     498 </span>            :         /// to the stored value.
+<span class="lineNum">     499 </span>            :         ///
+<span class="lineNum">     500 </span>            :         /// Example Usage:
+<span class="lineNum">     501 </span>            :         ///      const MyType* pTmp = AnyCast&lt;MyType*&gt;(pAny).
+<span class="lineNum">     502 </span>            :         /// Will return NULL if the cast fails, i.e. types don't match.
+<span class="lineNum">     503 </span>            : {
+<span class="lineNum">     504 </span>            :         return AnyCast&lt;ValueType&gt;(const_cast&lt;Any*&gt;(operand));
+<span class="lineNum">     505 </span>            : }
+<span class="lineNum">     506 </span>            : 
+<a name="507"><span class="lineNum">     507 </span>            : </a>
+<span class="lineNum">     508 </span>            : template &lt;typename ValueType&gt;
+<span class="lineNum">     509 </span><span class="lineNoCov">          0 : ValueType AnyCast(Any&amp; operand)</span>
+<span class="lineNum">     510 </span>            :         /// AnyCast operator used to extract a copy of the ValueType from an Any&amp;.
+<span class="lineNum">     511 </span>            :         ///
+<span class="lineNum">     512 </span>            :         /// Example Usage:
+<span class="lineNum">     513 </span>            :         ///      MyType tmp = AnyCast&lt;MyType&gt;(anAny).
+<span class="lineNum">     514 </span>            :         /// Will throw a BadCastException if the cast fails.
+<span class="lineNum">     515 </span>            :         /// Do not use an AnyCast in combination with references, i.e. MyType&amp; tmp = ... or const MyType&amp; tmp = ...
+<span class="lineNum">     516 </span>            :         /// Some compilers will accept this code although a copy is returned. Use the RefAnyCast in
+<span class="lineNum">     517 </span>            :         /// these cases.
+<span class="lineNum">     518 </span>            : {
+<span class="lineNum">     519 </span>            :         typedef typename TypeWrapper&lt;ValueType&gt;::TYPE NonRef;
+<span class="lineNum">     520 </span>            : 
+<span class="lineNum">     521 </span><span class="lineNoCov">          0 :         NonRef* result = AnyCast&lt;NonRef&gt;(&amp;operand);</span>
+<span class="lineNum">     522 </span><span class="lineNoCov">          0 :         if (!result)</span>
+<span class="lineNum">     523 </span>            :         {
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :                 std::string s = &quot;RefAnyCast: Failed to convert between Any types &quot;;</span>
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :                 if (operand._pHolder)</span>
+<span class="lineNum">     526 </span>            :                 {
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :                         s.append(1, '(');</span>
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :                         s.append(operand._pHolder-&gt;type().name());</span>
+<span class="lineNum">     529 </span><span class="lineNoCov">          0 :                         s.append(&quot; =&gt; &quot;);</span>
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :                         s.append(typeid(ValueType).name());</span>
+<span class="lineNum">     531 </span><span class="lineNoCov">          0 :                         s.append(1, ')');</span>
+<span class="lineNum">     532 </span>            :                 }
+<span class="lineNum">     533 </span><span class="lineNoCov">          0 :                 throw BadCastException(s);</span>
+<span class="lineNum">     534 </span>            :         }
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :         return *result;</span>
+<span class="lineNum">     536 </span>            : }
+<span class="lineNum">     537 </span>            : 
+<a name="538"><span class="lineNum">     538 </span>            : </a>
+<span class="lineNum">     539 </span>            : template &lt;typename ValueType&gt;
+<span class="lineNum">     540 </span><span class="lineNoCov">          0 : ValueType AnyCast(const Any&amp; operand)</span>
+<span class="lineNum">     541 </span>            :         /// AnyCast operator used to extract a copy of the ValueType from an const Any&amp;.
+<span class="lineNum">     542 </span>            :         ///
+<span class="lineNum">     543 </span>            :         /// Example Usage:
+<span class="lineNum">     544 </span>            :         ///      MyType tmp = AnyCast&lt;MyType&gt;(anAny).
+<span class="lineNum">     545 </span>            :         /// Will throw a BadCastException if the cast fails.
+<span class="lineNum">     546 </span>            :         /// Do not use an AnyCast in combination with references, i.e. MyType&amp; tmp = ... or const MyType&amp; = ...
+<span class="lineNum">     547 </span>            :         /// Some compilers will accept this code although a copy is returned. Use the RefAnyCast in
+<span class="lineNum">     548 </span>            :         /// these cases.
+<span class="lineNum">     549 </span>            : {
+<span class="lineNum">     550 </span>            :         typedef typename TypeWrapper&lt;ValueType&gt;::TYPE NonRef;
+<span class="lineNum">     551 </span>            : 
+<span class="lineNum">     552 </span><span class="lineNoCov">          0 :         return AnyCast&lt;NonRef&amp;&gt;(const_cast&lt;Any&amp;&gt;(operand));</span>
+<span class="lineNum">     553 </span>            : }
+<span class="lineNum">     554 </span>            : 
+<a name="555"><span class="lineNum">     555 </span>            : </a>
+<span class="lineNum">     556 </span>            : template &lt;typename ValueType&gt;
+<span class="lineNum">     557 </span><span class="lineNoCov">          0 : const ValueType&amp; RefAnyCast(const Any &amp; operand)</span>
+<span class="lineNum">     558 </span>            :         /// AnyCast operator used to return a const reference to the internal data.
+<span class="lineNum">     559 </span>            :         ///
+<span class="lineNum">     560 </span>            :         /// Example Usage:
+<span class="lineNum">     561 </span>            :         ///      const MyType&amp; tmp = RefAnyCast&lt;MyType&gt;(anAny);
+<span class="lineNum">     562 </span>            : {
+<span class="lineNum">     563 </span><span class="lineNoCov">          0 :         ValueType* result = AnyCast&lt;ValueType&gt;(const_cast&lt;Any*&gt;(&amp;operand));</span>
+<span class="lineNum">     564 </span><span class="lineNoCov">          0 :         if (!result)</span>
+<span class="lineNum">     565 </span>            :         {
+<span class="lineNum">     566 </span><span class="lineNoCov">          0 :                 std::string s = &quot;RefAnyCast: Failed to convert between Any types &quot;;</span>
+<span class="lineNum">     567 </span><span class="lineNoCov">          0 :                 if (operand._pHolder)</span>
+<span class="lineNum">     568 </span>            :                 {
+<span class="lineNum">     569 </span><span class="lineNoCov">          0 :                         s.append(1, '(');</span>
+<span class="lineNum">     570 </span><span class="lineNoCov">          0 :                         s.append(operand._pHolder-&gt;type().name());</span>
+<span class="lineNum">     571 </span><span class="lineNoCov">          0 :                         s.append(&quot; =&gt; &quot;);</span>
+<span class="lineNum">     572 </span><span class="lineNoCov">          0 :                         s.append(typeid(ValueType).name());</span>
+<span class="lineNum">     573 </span><span class="lineNoCov">          0 :                         s.append(1, ')');</span>
+<span class="lineNum">     574 </span>            :                 }
+<span class="lineNum">     575 </span><span class="lineNoCov">          0 :                 throw BadCastException(s);</span>
+<span class="lineNum">     576 </span>            :         }
+<span class="lineNum">     577 </span><span class="lineNoCov">          0 :         return *result;</span>
+<span class="lineNum">     578 </span>            : }
+<span class="lineNum">     579 </span>            : 
+<span class="lineNum">     580 </span>            : 
+<span class="lineNum">     581 </span>            : template &lt;typename ValueType&gt;
+<span class="lineNum">     582 </span>            : ValueType&amp; RefAnyCast(Any&amp; operand)
+<span class="lineNum">     583 </span>            :         /// AnyCast operator used to return a reference to the internal data.
+<span class="lineNum">     584 </span>            :         ///
+<span class="lineNum">     585 </span>            :         /// Example Usage:
+<span class="lineNum">     586 </span>            :         ///      MyType&amp; tmp = RefAnyCast&lt;MyType&gt;(anAny);
+<span class="lineNum">     587 </span>            : {
+<span class="lineNum">     588 </span>            :         ValueType* result = AnyCast&lt;ValueType&gt;(&amp;operand);
+<span class="lineNum">     589 </span>            :         if (!result)
+<span class="lineNum">     590 </span>            :         {
+<span class="lineNum">     591 </span>            :                 std::string s = &quot;RefAnyCast: Failed to convert between Any types &quot;;
+<span class="lineNum">     592 </span>            :                 if (operand._pHolder)
+<span class="lineNum">     593 </span>            :                 {
+<span class="lineNum">     594 </span>            :                         s.append(1, '(');
+<span class="lineNum">     595 </span>            :                         s.append(operand._pHolder-&gt;type().name());
+<span class="lineNum">     596 </span>            :                         s.append(&quot; =&gt; &quot;);
+<span class="lineNum">     597 </span>            :                         s.append(typeid(ValueType).name());
+<span class="lineNum">     598 </span>            :                         s.append(1, ')');
+<span class="lineNum">     599 </span>            :                 }
+<span class="lineNum">     600 </span>            :                 throw BadCastException(s);
+<span class="lineNum">     601 </span>            :         }
+<span class="lineNum">     602 </span>            :         return *result;
+<span class="lineNum">     603 </span>            : }
+<span class="lineNum">     604 </span>            : 
+<span class="lineNum">     605 </span>            : 
+<span class="lineNum">     606 </span>            : template &lt;typename ValueType&gt;
+<span class="lineNum">     607 </span>            : ValueType* UnsafeAnyCast(Any* operand)
+<span class="lineNum">     608 </span>            :         /// The &quot;unsafe&quot; versions of AnyCast are not part of the
+<span class="lineNum">     609 </span>            :         /// public interface and may be removed at any time. They are
+<span class="lineNum">     610 </span>            :         /// required where we know what type is stored in the any and can't
+<span class="lineNum">     611 </span>            :         /// use typeid() comparison, e.g., when our types may travel across
+<span class="lineNum">     612 </span>            :         /// different shared libraries.
+<span class="lineNum">     613 </span>            : {
+<span class="lineNum">     614 </span>            :         return &amp;static_cast&lt;Any::Holder&lt;ValueType&gt;*&gt;(operand-&gt;content())-&gt;_held;
+<span class="lineNum">     615 </span>            : }
+<span class="lineNum">     616 </span>            : 
+<span class="lineNum">     617 </span>            : 
+<span class="lineNum">     618 </span>            : template &lt;typename ValueType&gt;
+<span class="lineNum">     619 </span>            : const ValueType* UnsafeAnyCast(const Any* operand)
+<span class="lineNum">     620 </span>            :         /// The &quot;unsafe&quot; versions of AnyCast are not part of the
+<span class="lineNum">     621 </span>            :         /// public interface and may be removed at any time. They are
+<span class="lineNum">     622 </span>            :         /// required where we know what type is stored in the any and can't
+<span class="lineNum">     623 </span>            :         /// use typeid() comparison, e.g., when our types may travel across
+<span class="lineNum">     624 </span>            :         /// different shared libraries.
+<span class="lineNum">     625 </span>            : {
+<span class="lineNum">     626 </span>            :         return AnyCast&lt;ValueType&gt;(const_cast&lt;Any*&gt;(operand));
+<span class="lineNum">     627 </span>            : }
+<span class="lineNum">     628 </span>            : 
+<span class="lineNum">     629 </span>            : 
+<span class="lineNum">     630 </span>            : } // namespace Poco
+<span class="lineNum">     631 </span>            : 
+<span class="lineNum">     632 </span>            : 
+<span class="lineNum">     633 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/strtod.cc</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - strtod.cc<span style="font-size: 80%;"> (source / <a href="strtod.cc.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">220</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Copyright 2010 the V8 project authors. All rights reserved.</a>
+<span class="lineNum">       2 </span>            : // Redistribution and use in source and binary forms, with or without
+<span class="lineNum">       3 </span>            : // modification, are permitted provided that the following conditions are
+<span class="lineNum">       4 </span>            : // met:
+<span class="lineNum">       5 </span>            : //
+<span class="lineNum">       6 </span>            : //     * Redistributions of source code must retain the above copyright
+<span class="lineNum">       7 </span>            : //       notice, this list of conditions and the following disclaimer.
+<span class="lineNum">       8 </span>            : //     * Redistributions in binary form must reproduce the above
+<span class="lineNum">       9 </span>            : //       copyright notice, this list of conditions and the following
+<span class="lineNum">      10 </span>            : //       disclaimer in the documentation and/or other materials provided
+<span class="lineNum">      11 </span>            : //       with the distribution.
+<span class="lineNum">      12 </span>            : //     * Neither the name of Google Inc. nor the names of its
+<span class="lineNum">      13 </span>            : //       contributors may be used to endorse or promote products derived
+<span class="lineNum">      14 </span>            : //       from this software without specific prior written permission.
+<span class="lineNum">      15 </span>            : //
+<span class="lineNum">      16 </span>            : // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+<span class="lineNum">      17 </span>            : // &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+<span class="lineNum">      18 </span>            : // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+<span class="lineNum">      19 </span>            : // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+<span class="lineNum">      20 </span>            : // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+<span class="lineNum">      21 </span>            : // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+<span class="lineNum">      22 </span>            : // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+<span class="lineNum">      23 </span>            : // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+<span class="lineNum">      24 </span>            : // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+<span class="lineNum">      25 </span>            : // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+<span class="lineNum">      26 </span>            : // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : #include &lt;stdarg.h&gt;
+<span class="lineNum">      29 </span>            : #include &lt;limits.h&gt;
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : #include &quot;strtod.h&quot;
+<span class="lineNum">      32 </span>            : #include &quot;bignum.h&quot;
+<span class="lineNum">      33 </span>            : #include &quot;cached-powers.h&quot;
+<span class="lineNum">      34 </span>            : #include &quot;ieee.h&quot;
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : namespace double_conversion {
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : // 2^53 = 9007199254740992.
+<span class="lineNum">      39 </span>            : // Any integer with at most 15 decimal digits will hence fit into a double
+<span class="lineNum">      40 </span>            : // (which has a 53bit significand) without loss of precision.
+<span class="lineNum">      41 </span>            : static const int kMaxExactDoubleIntegerDecimalDigits = 15;
+<span class="lineNum">      42 </span>            : // 2^64 = 18446744073709551616 &gt; 10^19
+<span class="lineNum">      43 </span>            : static const int kMaxUint64DecimalDigits = 19;
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : // Max double: 1.7976931348623157 x 10^308
+<span class="lineNum">      46 </span>            : // Min non-zero double: 4.9406564584124654 x 10^-324
+<span class="lineNum">      47 </span>            : // Any x &gt;= 10^309 is interpreted as +infinity.
+<span class="lineNum">      48 </span>            : // Any x &lt;= 10^-324 is interpreted as 0.
+<span class="lineNum">      49 </span>            : // Note that 2.5e-324 (despite being smaller than the min double) will be read
+<span class="lineNum">      50 </span>            : // as non-zero (equal to the min non-zero double).
+<span class="lineNum">      51 </span>            : static const int kMaxDecimalPower = 309;
+<span class="lineNum">      52 </span>            : static const int kMinDecimalPower = -324;
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : // 2^64 = 18446744073709551616
+<span class="lineNum">      55 </span>            : static const uint64_t kMaxUint64 = UINT64_2PART_C(0xFFFFFFFF, FFFFFFFF);
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            : static const double exact_powers_of_ten[] = {
+<span class="lineNum">      59 </span>            :   1.0,  // 10^0
+<span class="lineNum">      60 </span>            :   10.0,
+<span class="lineNum">      61 </span>            :   100.0,
+<span class="lineNum">      62 </span>            :   1000.0,
+<span class="lineNum">      63 </span>            :   10000.0,
+<span class="lineNum">      64 </span>            :   100000.0,
+<span class="lineNum">      65 </span>            :   1000000.0,
+<span class="lineNum">      66 </span>            :   10000000.0,
+<span class="lineNum">      67 </span>            :   100000000.0,
+<span class="lineNum">      68 </span>            :   1000000000.0,
+<span class="lineNum">      69 </span>            :   10000000000.0,  // 10^10
+<span class="lineNum">      70 </span>            :   100000000000.0,
+<span class="lineNum">      71 </span>            :   1000000000000.0,
+<span class="lineNum">      72 </span>            :   10000000000000.0,
+<span class="lineNum">      73 </span>            :   100000000000000.0,
+<span class="lineNum">      74 </span>            :   1000000000000000.0,
+<span class="lineNum">      75 </span>            :   10000000000000000.0,
+<span class="lineNum">      76 </span>            :   100000000000000000.0,
+<span class="lineNum">      77 </span>            :   1000000000000000000.0,
+<span class="lineNum">      78 </span>            :   10000000000000000000.0,
+<span class="lineNum">      79 </span>            :   100000000000000000000.0,  // 10^20
+<span class="lineNum">      80 </span>            :   1000000000000000000000.0,
+<span class="lineNum">      81 </span>            :   // 10^22 = 0x21e19e0c9bab2400000 = 0x878678326eac9 * 2^22
+<span class="lineNum">      82 </span>            :   10000000000000000000000.0
+<span class="lineNum">      83 </span>            : };
+<span class="lineNum">      84 </span>            : static const int kExactPowersOfTenSize = ARRAY_SIZE(exact_powers_of_ten);
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            : // Maximum number of significant digits in the decimal representation.
+<span class="lineNum">      87 </span>            : // In fact the value is 772 (see conversions.cc), but to give us some margin
+<span class="lineNum">      88 </span>            : // we round up to 780.
+<a name="89"><span class="lineNum">      89 </span>            : static const int kMaxSignificantDecimalDigits = 780;</a>
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 : static Vector&lt;const char&gt; TrimLeadingZeros(Vector&lt;const char&gt; buffer) {</span>
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :   for (int i = 0; i &lt; buffer.length(); i++) {</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :     if (buffer[i] != '0') {</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :       return buffer.SubVector(i, buffer.length());</span>
+<span class="lineNum">      95 </span>            :     }
+<span class="lineNum">      96 </span>            :   }
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :   return Vector&lt;const char&gt;(buffer.start(), 0);</span>
+<span class="lineNum">      98 </span>            : }
+<a name="99"><span class="lineNum">      99 </span>            : </a>
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 : static Vector&lt;const char&gt; TrimTrailingZeros(Vector&lt;const char&gt; buffer) {</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :   for (int i = buffer.length() - 1; i &gt;= 0; --i) {</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :     if (buffer[i] != '0') {</span>
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :       return buffer.SubVector(0, i + 1);</span>
+<span class="lineNum">     105 </span>            :     }
+<span class="lineNum">     106 </span>            :   }
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :   return Vector&lt;const char&gt;(buffer.start(), 0);</span>
+<span class="lineNum">     108 </span>            : }
+<a name="109"><span class="lineNum">     109 </span>            : </a>
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 : static void CutToMaxSignificantDigits(Vector&lt;const char&gt; buffer,</span>
+<span class="lineNum">     112 </span>            :                                        int exponent,
+<span class="lineNum">     113 </span>            :                                        char* significant_buffer,
+<span class="lineNum">     114 </span>            :                                        int* significant_exponent) {
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :   for (int i = 0; i &lt; kMaxSignificantDecimalDigits - 1; ++i) {</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :     significant_buffer[i] = buffer[i];</span>
+<span class="lineNum">     117 </span>            :   }
+<span class="lineNum">     118 </span>            :   // The input buffer has been trimmed. Therefore the last digit must be
+<span class="lineNum">     119 </span>            :   // different from '0'.
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :   ASSERT(buffer[buffer.length() - 1] != '0');</span>
+<span class="lineNum">     121 </span>            :   // Set the last digit to be non-zero. This is sufficient to guarantee
+<span class="lineNum">     122 </span>            :   // correct rounding.
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :   significant_buffer[kMaxSignificantDecimalDigits - 1] = '1';</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :   *significant_exponent =</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :       exponent + (buffer.length() - kMaxSignificantDecimalDigits);</span>
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span>            : 
+<span class="lineNum">     129 </span>            : // Trims the buffer and cuts it to at most kMaxSignificantDecimalDigits.
+<span class="lineNum">     130 </span>            : // If possible the input-buffer is reused, but if the buffer needs to be
+<a name="131"><span class="lineNum">     131 </span>            : // modified (due to cutting), then the input needs to be copied into the</a>
+<span class="lineNum">     132 </span>            : // buffer_copy_space.
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 : static void TrimAndCut(Vector&lt;const char&gt; buffer, int exponent,</span>
+<span class="lineNum">     134 </span>            :                        char* buffer_copy_space, int space_size,
+<span class="lineNum">     135 </span>            :                        Vector&lt;const char&gt;* trimmed, int* updated_exponent) {
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :   Vector&lt;const char&gt; left_trimmed = TrimLeadingZeros(buffer);</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :   Vector&lt;const char&gt; right_trimmed = TrimTrailingZeros(left_trimmed);</span>
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :   exponent += left_trimmed.length() - right_trimmed.length();</span>
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :   if (right_trimmed.length() &gt; kMaxSignificantDecimalDigits) {</span>
+<span class="lineNum">     140 </span>            :     (void) space_size;  // Mark variable as used.
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :     ASSERT(space_size &gt;= kMaxSignificantDecimalDigits);</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :     CutToMaxSignificantDigits(right_trimmed, exponent,</span>
+<span class="lineNum">     143 </span>            :                               buffer_copy_space, updated_exponent);
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :     *trimmed = Vector&lt;const char&gt;(buffer_copy_space,</span>
+<span class="lineNum">     145 </span>            :                                  kMaxSignificantDecimalDigits);
+<span class="lineNum">     146 </span>            :   } else {
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :     *trimmed = right_trimmed;</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :     *updated_exponent = exponent;</span>
+<span class="lineNum">     149 </span>            :   }
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            : // Reads digits from the buffer and converts them to a uint64.
+<span class="lineNum">     154 </span>            : // Reads in as many digits as fit into a uint64.
+<span class="lineNum">     155 </span>            : // When the string starts with &quot;1844674407370955161&quot; no further digit is read.
+<a name="156"><span class="lineNum">     156 </span>            : // Since 2^64 = 18446744073709551616 it would still be possible read another</a>
+<span class="lineNum">     157 </span>            : // digit if it was less or equal than 6, but this would complicate the code.
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 : static uint64_t ReadUint64(Vector&lt;const char&gt; buffer,</span>
+<span class="lineNum">     159 </span>            :                            int* number_of_read_digits) {
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :   uint64_t result = 0;</span>
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :   int i = 0;</span>
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :   while (i &lt; buffer.length() &amp;&amp; result &lt;= (kMaxUint64 / 10 - 1)) {</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :     int digit = buffer[i++] - '0';</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :     ASSERT(0 &lt;= digit &amp;&amp; digit &lt;= 9);</span>
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :     result = 10 * result + digit;</span>
+<span class="lineNum">     166 </span>            :   }
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :   *number_of_read_digits = i;</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :   return result;</span>
+<span class="lineNum">     169 </span>            : }
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            : // Reads a DiyFp from the buffer.
+<span class="lineNum">     173 </span>            : // The returned DiyFp is not necessarily normalized.
+<a name="174"><span class="lineNum">     174 </span>            : // If remaining_decimals is zero then the returned DiyFp is accurate.</a>
+<span class="lineNum">     175 </span>            : // Otherwise it has been rounded and has error of at most 1/2 ulp.
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 : static void ReadDiyFp(Vector&lt;const char&gt; buffer,</span>
+<span class="lineNum">     177 </span>            :                       DiyFp* result,
+<span class="lineNum">     178 </span>            :                       int* remaining_decimals) {
+<span class="lineNum">     179 </span>            :   int read_digits;
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :   uint64_t significand = ReadUint64(buffer, &amp;read_digits);</span>
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :   if (buffer.length() == read_digits) {</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :     *result = DiyFp(significand, 0);</span>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :     *remaining_decimals = 0;</span>
+<span class="lineNum">     184 </span>            :   } else {
+<span class="lineNum">     185 </span>            :     // Round the significand.
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :     if (buffer[read_digits] &gt;= '5') {</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :       significand++;</span>
+<span class="lineNum">     188 </span>            :     }
+<span class="lineNum">     189 </span>            :     // Compute the binary exponent.
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :     int exponent = 0;</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :     *result = DiyFp(significand, exponent);</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :     *remaining_decimals = buffer.length() - read_digits;</span>
+<span class="lineNum">     193 </span>            :   }
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 : }</span>
+<a name="195"><span class="lineNum">     195 </span>            : </a>
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 : static bool DoubleStrtod(Vector&lt;const char&gt; trimmed,</span>
+<span class="lineNum">     198 </span>            :                          int exponent,
+<span class="lineNum">     199 </span>            :                          double* result) {
+<span class="lineNum">     200 </span>            : #if !defined(DOUBLE_CONVERSION_CORRECT_DOUBLE_OPERATIONS)
+<span class="lineNum">     201 </span>            :   // On x86 the floating-point stack can be 64 or 80 bits wide. If it is
+<span class="lineNum">     202 </span>            :   // 80 bits wide (as is the case on Linux) then double-rounding occurs and the
+<span class="lineNum">     203 </span>            :   // result is not accurate.
+<span class="lineNum">     204 </span>            :   // We know that Windows32 uses 64 bits and is therefore accurate.
+<span class="lineNum">     205 </span>            :   // Note that the ARM simulator is compiled for 32bits. It therefore exhibits
+<span class="lineNum">     206 </span>            :   // the same problem.
+<span class="lineNum">     207 </span>            :   return false;
+<span class="lineNum">     208 </span>            : #endif
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :   if (trimmed.length() &lt;= kMaxExactDoubleIntegerDecimalDigits) {</span>
+<span class="lineNum">     210 </span>            :     int read_digits;
+<span class="lineNum">     211 </span>            :     // The trimmed input fits into a double.
+<span class="lineNum">     212 </span>            :     // If the 10^exponent (resp. 10^-exponent) fits into a double too then we
+<span class="lineNum">     213 </span>            :     // can compute the result-double simply by multiplying (resp. dividing) the
+<span class="lineNum">     214 </span>            :     // two numbers.
+<span class="lineNum">     215 </span>            :     // This is possible because IEEE guarantees that floating-point operations
+<span class="lineNum">     216 </span>            :     // return the best possible approximation.
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :     if (exponent &lt; 0 &amp;&amp; -exponent &lt; kExactPowersOfTenSize) {</span>
+<span class="lineNum">     218 </span>            :       // 10^-exponent fits into a double.
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :       *result = static_cast&lt;double&gt;(ReadUint64(trimmed, &amp;read_digits));</span>
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :       ASSERT(read_digits == trimmed.length());</span>
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :       *result /= exact_powers_of_ten[-exponent];</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :       return true;</span>
+<span class="lineNum">     223 </span>            :     }
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :     if (0 &lt;= exponent &amp;&amp; exponent &lt; kExactPowersOfTenSize) {</span>
+<span class="lineNum">     225 </span>            :       // 10^exponent fits into a double.
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :       *result = static_cast&lt;double&gt;(ReadUint64(trimmed, &amp;read_digits));</span>
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :       ASSERT(read_digits == trimmed.length());</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :       *result *= exact_powers_of_ten[exponent];</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :       return true;</span>
+<span class="lineNum">     230 </span>            :     }
+<span class="lineNum">     231 </span>            :     int remaining_digits =
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :         kMaxExactDoubleIntegerDecimalDigits - trimmed.length();</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :     if ((0 &lt;= exponent) &amp;&amp;</span>
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :         (exponent - remaining_digits &lt; kExactPowersOfTenSize)) {</span>
+<span class="lineNum">     235 </span>            :       // The trimmed string was short and we can multiply it with
+<span class="lineNum">     236 </span>            :       // 10^remaining_digits. As a result the remaining exponent now fits
+<span class="lineNum">     237 </span>            :       // into a double too.
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :       *result = static_cast&lt;double&gt;(ReadUint64(trimmed, &amp;read_digits));</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :       ASSERT(read_digits == trimmed.length());</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :       *result *= exact_powers_of_ten[remaining_digits];</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :       *result *= exact_powers_of_ten[exponent - remaining_digits];</span>
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :       return true;</span>
+<span class="lineNum">     243 </span>            :     }
+<span class="lineNum">     244 </span>            :   }
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :   return false;</span>
+<span class="lineNum">     246 </span>            : }
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            : 
+<a name="249"><span class="lineNum">     249 </span>            : // Returns 10^exponent as an exact DiyFp.</a>
+<span class="lineNum">     250 </span>            : // The given exponent must be in the range [1; kDecimalExponentDistance[.
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 : static DiyFp AdjustmentPowerOfTen(int exponent) {</span>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :   ASSERT(0 &lt; exponent);</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :   ASSERT(exponent &lt; PowersOfTenCache::kDecimalExponentDistance);</span>
+<span class="lineNum">     254 </span>            :   // Simply hardcode the remaining powers for the given decimal exponent
+<span class="lineNum">     255 </span>            :   // distance.
+<span class="lineNum">     256 </span>            :   ASSERT(PowersOfTenCache::kDecimalExponentDistance == 8);
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :   switch (exponent) {</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :     case 1: return DiyFp(UINT64_2PART_C(0xa0000000, 00000000), -60);</span>
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 :     case 2: return DiyFp(UINT64_2PART_C(0xc8000000, 00000000), -57);</span>
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :     case 3: return DiyFp(UINT64_2PART_C(0xfa000000, 00000000), -54);</span>
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :     case 4: return DiyFp(UINT64_2PART_C(0x9c400000, 00000000), -50);</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :     case 5: return DiyFp(UINT64_2PART_C(0xc3500000, 00000000), -47);</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :     case 6: return DiyFp(UINT64_2PART_C(0xf4240000, 00000000), -44);</span>
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :     case 7: return DiyFp(UINT64_2PART_C(0x98968000, 00000000), -40);</span>
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :     default:</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :       UNREACHABLE();</span>
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :       return DiyFp(0, 0);</span>
+<span class="lineNum">     268 </span>            :   }
+<span class="lineNum">     269 </span>            : }
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span>            : // If the function returns true then the result is the correct double.
+<a name="273"><span class="lineNum">     273 </span>            : // Otherwise it is either the correct double or the double that is just below</a>
+<span class="lineNum">     274 </span>            : // the correct double.
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 : static bool DiyFpStrtod(Vector&lt;const char&gt; buffer,</span>
+<span class="lineNum">     276 </span>            :                         int exponent,
+<span class="lineNum">     277 </span>            :                         double* result) {
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :   DiyFp input;</span>
+<span class="lineNum">     279 </span>            :   int remaining_decimals;
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :   ReadDiyFp(buffer, &amp;input, &amp;remaining_decimals);</span>
+<span class="lineNum">     281 </span>            :   // Since we may have dropped some digits the input is not accurate.
+<span class="lineNum">     282 </span>            :   // If remaining_decimals is different than 0 than the error is at most
+<span class="lineNum">     283 </span>            :   // .5 ulp (unit in the last place).
+<span class="lineNum">     284 </span>            :   // We don't want to deal with fractions and therefore keep a common
+<span class="lineNum">     285 </span>            :   // denominator.
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :   const int kDenominatorLog = 3;</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :   const int kDenominator = 1 &lt;&lt; kDenominatorLog;</span>
+<span class="lineNum">     288 </span>            :   // Move the remaining decimals into the exponent.
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :   exponent += remaining_decimals;</span>
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :   int error = (remaining_decimals == 0 ? 0 : kDenominator / 2);</span>
+<span class="lineNum">     291 </span>            : 
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :   int old_e = input.e();</span>
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :   input.Normalize();</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :   error &lt;&lt;= old_e - input.e();</span>
+<span class="lineNum">     295 </span>            : 
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :   ASSERT(exponent &lt;= PowersOfTenCache::kMaxDecimalExponent);</span>
+<span class="lineNum">     297 </span><span class="lineNoCov">          0 :   if (exponent &lt; PowersOfTenCache::kMinDecimalExponent) {</span>
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :     *result = 0.0;</span>
+<span class="lineNum">     299 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     300 </span>            :   }
+<span class="lineNum">     301 </span><span class="lineNoCov">          0 :   DiyFp cached_power;</span>
+<span class="lineNum">     302 </span>            :   int cached_decimal_exponent;
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 :   PowersOfTenCache::GetCachedPowerForDecimalExponent(exponent,</span>
+<span class="lineNum">     304 </span>            :                                                      &amp;cached_power,
+<span class="lineNum">     305 </span>            :                                                      &amp;cached_decimal_exponent);
+<span class="lineNum">     306 </span>            : 
+<span class="lineNum">     307 </span><span class="lineNoCov">          0 :   if (cached_decimal_exponent != exponent) {</span>
+<span class="lineNum">     308 </span><span class="lineNoCov">          0 :     int adjustment_exponent = exponent - cached_decimal_exponent;</span>
+<span class="lineNum">     309 </span><span class="lineNoCov">          0 :     DiyFp adjustment_power = AdjustmentPowerOfTen(adjustment_exponent);</span>
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 :     input.Multiply(adjustment_power);</span>
+<span class="lineNum">     311 </span><span class="lineNoCov">          0 :     if (kMaxUint64DecimalDigits - buffer.length() &gt;= adjustment_exponent) {</span>
+<span class="lineNum">     312 </span>            :       // The product of input with the adjustment power fits into a 64 bit
+<span class="lineNum">     313 </span>            :       // integer.
+<span class="lineNum">     314 </span>            :       ASSERT(DiyFp::kSignificandSize == 64);
+<span class="lineNum">     315 </span>            :     } else {
+<span class="lineNum">     316 </span>            :       // The adjustment power is exact. There is hence only an error of 0.5.
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 :       error += kDenominator / 2;</span>
+<span class="lineNum">     318 </span>            :     }
+<span class="lineNum">     319 </span>            :   }
+<span class="lineNum">     320 </span>            : 
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :   input.Multiply(cached_power);</span>
+<span class="lineNum">     322 </span>            :   // The error introduced by a multiplication of a*b equals
+<span class="lineNum">     323 </span>            :   //   error_a + error_b + error_a*error_b/2^64 + 0.5
+<span class="lineNum">     324 </span>            :   // Substituting a with 'input' and b with 'cached_power' we have
+<span class="lineNum">     325 </span>            :   //   error_b = 0.5  (all cached powers have an error of less than 0.5 ulp),
+<span class="lineNum">     326 </span>            :   //   error_ab = 0 or 1 / kDenominator &gt; error_a*error_b/ 2^64
+<span class="lineNum">     327 </span><span class="lineNoCov">          0 :   int error_b = kDenominator / 2;</span>
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :   int error_ab = (error == 0 ? 0 : 1);  // We round up to 1.</span>
+<span class="lineNum">     329 </span><span class="lineNoCov">          0 :   int fixed_error = kDenominator / 2;</span>
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :   error += error_b + error_ab + fixed_error;</span>
+<span class="lineNum">     331 </span>            : 
+<span class="lineNum">     332 </span><span class="lineNoCov">          0 :   old_e = input.e();</span>
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :   input.Normalize();</span>
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :   error &lt;&lt;= old_e - input.e();</span>
+<span class="lineNum">     335 </span>            : 
+<span class="lineNum">     336 </span>            :   // See if the double's significand changes if we add/subtract the error.
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :   int order_of_magnitude = DiyFp::kSignificandSize + input.e();</span>
+<span class="lineNum">     338 </span>            :   int effective_significand_size =
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :       Double::SignificandSizeForOrderOfMagnitude(order_of_magnitude);</span>
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :   int precision_digits_count =</span>
+<span class="lineNum">     341 </span>            :       DiyFp::kSignificandSize - effective_significand_size;
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :   if (precision_digits_count + kDenominatorLog &gt;= DiyFp::kSignificandSize) {</span>
+<span class="lineNum">     343 </span>            :     // This can only happen for very small denormals. In this case the
+<span class="lineNum">     344 </span>            :     // half-way multiplied by the denominator exceeds the range of an uint64.
+<span class="lineNum">     345 </span>            :     // Simply shift everything to the right.
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :     int shift_amount = (precision_digits_count + kDenominatorLog) -</span>
+<span class="lineNum">     347 </span>            :         DiyFp::kSignificandSize + 1;
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :     input.set_f(input.f() &gt;&gt; shift_amount);</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :     input.set_e(input.e() + shift_amount);</span>
+<span class="lineNum">     350 </span>            :     // We add 1 for the lost precision of error, and kDenominator for
+<span class="lineNum">     351 </span>            :     // the lost precision of input.f().
+<span class="lineNum">     352 </span><span class="lineNoCov">          0 :     error = (error &gt;&gt; shift_amount) + 1 + kDenominator;</span>
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :     precision_digits_count -= shift_amount;</span>
+<span class="lineNum">     354 </span>            :   }
+<span class="lineNum">     355 </span>            :   // We use uint64_ts now. This only works if the DiyFp uses uint64_ts too.
+<span class="lineNum">     356 </span>            :   ASSERT(DiyFp::kSignificandSize == 64);
+<span class="lineNum">     357 </span><span class="lineNoCov">          0 :   ASSERT(precision_digits_count &lt; 64);</span>
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :   uint64_t one64 = 1;</span>
+<span class="lineNum">     359 </span><span class="lineNoCov">          0 :   uint64_t precision_bits_mask = (one64 &lt;&lt; precision_digits_count) - 1;</span>
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :   uint64_t precision_bits = input.f() &amp; precision_bits_mask;</span>
+<span class="lineNum">     361 </span><span class="lineNoCov">          0 :   uint64_t half_way = one64 &lt;&lt; (precision_digits_count - 1);</span>
+<span class="lineNum">     362 </span><span class="lineNoCov">          0 :   precision_bits *= kDenominator;</span>
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 :   half_way *= kDenominator;</span>
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 :   DiyFp rounded_input(input.f() &gt;&gt; precision_digits_count,</span>
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 :                       input.e() + precision_digits_count);</span>
+<span class="lineNum">     366 </span><span class="lineNoCov">          0 :   if (precision_bits &gt;= half_way + error) {</span>
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :     rounded_input.set_f(rounded_input.f() + 1);</span>
+<span class="lineNum">     368 </span>            :   }
+<span class="lineNum">     369 </span>            :   // If the last_bits are too close to the half-way case than we are too
+<span class="lineNum">     370 </span>            :   // inaccurate and round down. In this case we return false so that we can
+<span class="lineNum">     371 </span>            :   // fall back to a more precise algorithm.
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :   *result = Double(rounded_input).value();</span>
+<span class="lineNum">     374 </span><span class="lineNoCov">          0 :   if (half_way - error &lt; precision_bits &amp;&amp; precision_bits &lt; half_way + error) {</span>
+<span class="lineNum">     375 </span>            :     // Too imprecise. The caller will have to fall back to a slower version.
+<span class="lineNum">     376 </span>            :     // However the returned number is guaranteed to be either the correct
+<span class="lineNum">     377 </span>            :     // double, or the next-lower double.
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :     return false;</span>
+<span class="lineNum">     379 </span>            :   } else {
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     381 </span>            :   }
+<span class="lineNum">     382 </span>            : }
+<span class="lineNum">     383 </span>            : 
+<span class="lineNum">     384 </span>            : 
+<span class="lineNum">     385 </span>            : // Returns
+<span class="lineNum">     386 </span>            : //   - -1 if buffer*10^exponent &lt; diy_fp.
+<span class="lineNum">     387 </span>            : //   -  0 if buffer*10^exponent == diy_fp.
+<span class="lineNum">     388 </span>            : //   - +1 if buffer*10^exponent &gt; diy_fp.
+<span class="lineNum">     389 </span>            : // Preconditions:
+<span class="lineNum">     390 </span>            : //   buffer.length() + exponent &lt;= kMaxDecimalPower + 1
+<a name="391"><span class="lineNum">     391 </span>            : //   buffer.length() + exponent &gt; kMinDecimalPower</a>
+<span class="lineNum">     392 </span>            : //   buffer.length() &lt;= kMaxDecimalSignificantDigits
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 : static int CompareBufferWithDiyFp(Vector&lt;const char&gt; buffer,</span>
+<span class="lineNum">     394 </span>            :                                   int exponent,
+<span class="lineNum">     395 </span>            :                                   DiyFp diy_fp) {
+<span class="lineNum">     396 </span><span class="lineNoCov">          0 :   ASSERT(buffer.length() + exponent &lt;= kMaxDecimalPower + 1);</span>
+<span class="lineNum">     397 </span><span class="lineNoCov">          0 :   ASSERT(buffer.length() + exponent &gt; kMinDecimalPower);</span>
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :   ASSERT(buffer.length() &lt;= kMaxSignificantDecimalDigits);</span>
+<span class="lineNum">     399 </span>            :   // Make sure that the Bignum will be able to hold all our numbers.
+<span class="lineNum">     400 </span>            :   // Our Bignum implementation has a separate field for exponents. Shifts will
+<span class="lineNum">     401 </span>            :   // consume at most one bigit (&lt; 64 bits).
+<span class="lineNum">     402 </span>            :   // ln(10) == 3.3219...
+<span class="lineNum">     403 </span>            :   ASSERT(((kMaxDecimalPower + 1) * 333 / 100) &lt; Bignum::kMaxSignificantBits);
+<span class="lineNum">     404 </span><span class="lineNoCov">          0 :   Bignum buffer_bignum;</span>
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :   Bignum diy_fp_bignum;</span>
+<span class="lineNum">     406 </span><span class="lineNoCov">          0 :   buffer_bignum.AssignDecimalString(buffer);</span>
+<span class="lineNum">     407 </span><span class="lineNoCov">          0 :   diy_fp_bignum.AssignUInt64(diy_fp.f());</span>
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :   if (exponent &gt;= 0) {</span>
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :     buffer_bignum.MultiplyByPowerOfTen(exponent);</span>
+<span class="lineNum">     410 </span>            :   } else {
+<span class="lineNum">     411 </span><span class="lineNoCov">          0 :     diy_fp_bignum.MultiplyByPowerOfTen(-exponent);</span>
+<span class="lineNum">     412 </span>            :   }
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :   if (diy_fp.e() &gt; 0) {</span>
+<span class="lineNum">     414 </span><span class="lineNoCov">          0 :     diy_fp_bignum.ShiftLeft(diy_fp.e());</span>
+<span class="lineNum">     415 </span>            :   } else {
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :     buffer_bignum.ShiftLeft(-diy_fp.e());</span>
+<span class="lineNum">     417 </span>            :   }
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :   return Bignum::Compare(buffer_bignum, diy_fp_bignum);</span>
+<span class="lineNum">     419 </span>            : }
+<span class="lineNum">     420 </span>            : 
+<span class="lineNum">     421 </span>            : 
+<a name="422"><span class="lineNum">     422 </span>            : // Returns true if the guess is the correct double.</a>
+<span class="lineNum">     423 </span>            : // Returns false, when guess is either correct or the next-lower double.
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 : static bool ComputeGuess(Vector&lt;const char&gt; trimmed, int exponent,</span>
+<span class="lineNum">     425 </span>            :                          double* guess) {
+<span class="lineNum">     426 </span><span class="lineNoCov">          0 :   if (trimmed.length() == 0) {</span>
+<span class="lineNum">     427 </span><span class="lineNoCov">          0 :     *guess = 0.0;</span>
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     429 </span>            :   }
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :   if (exponent + trimmed.length() - 1 &gt;= kMaxDecimalPower) {</span>
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :     *guess = Double::Infinity();</span>
+<span class="lineNum">     432 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     433 </span>            :   }
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :   if (exponent + trimmed.length() &lt;= kMinDecimalPower) {</span>
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :     *guess = 0.0;</span>
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     437 </span>            :   }
+<span class="lineNum">     438 </span>            : 
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :   if (DoubleStrtod(trimmed, exponent, guess) ||</span>
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :       DiyFpStrtod(trimmed, exponent, guess)) {</span>
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     442 </span>            :   }
+<span class="lineNum">     443 </span><span class="lineNoCov">          0 :   if (*guess == Double::Infinity()) {</span>
+<span class="lineNum">     444 </span><span class="lineNoCov">          0 :     return true;</span>
+<span class="lineNum">     445 </span>            :   }
+<span class="lineNum">     446 </span><span class="lineNoCov">          0 :   return false;</span>
+<a name="447"><span class="lineNum">     447 </span>            : }</a>
+<span class="lineNum">     448 </span>            : 
+<span class="lineNum">     449 </span><span class="lineNoCov">          0 : double Strtod(Vector&lt;const char&gt; buffer, int exponent) {</span>
+<span class="lineNum">     450 </span>            :   char copy_buffer[kMaxSignificantDecimalDigits];
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 :   Vector&lt;const char&gt; trimmed;</span>
+<span class="lineNum">     452 </span>            :   int updated_exponent;
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :   TrimAndCut(buffer, exponent, copy_buffer, kMaxSignificantDecimalDigits,</span>
+<span class="lineNum">     454 </span>            :              &amp;trimmed, &amp;updated_exponent);
+<span class="lineNum">     455 </span><span class="lineNoCov">          0 :   exponent = updated_exponent;</span>
+<span class="lineNum">     456 </span>            : 
+<span class="lineNum">     457 </span>            :   double guess;
+<span class="lineNum">     458 </span><span class="lineNoCov">          0 :   bool is_correct = ComputeGuess(trimmed, exponent, &amp;guess);</span>
+<span class="lineNum">     459 </span><span class="lineNoCov">          0 :   if (is_correct) return guess;</span>
+<span class="lineNum">     460 </span>            : 
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :   DiyFp upper_boundary = Double(guess).UpperBoundary();</span>
+<span class="lineNum">     462 </span><span class="lineNoCov">          0 :   int comparison = CompareBufferWithDiyFp(trimmed, exponent, upper_boundary);</span>
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :   if (comparison &lt; 0) {</span>
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :     return guess;</span>
+<span class="lineNum">     465 </span><span class="lineNoCov">          0 :   } else if (comparison &gt; 0) {</span>
+<span class="lineNum">     466 </span><span class="lineNoCov">          0 :     return Double(guess).NextDouble();</span>
+<span class="lineNum">     467 </span><span class="lineNoCov">          0 :   } else if ((Double(guess).Significand() &amp; 1) == 0) {</span>
+<span class="lineNum">     468 </span>            :     // Round towards even.
+<span class="lineNum">     469 </span><span class="lineNoCov">          0 :     return guess;</span>
+<span class="lineNum">     470 </span>            :   } else {
+<span class="lineNum">     471 </span><span class="lineNoCov">          0 :     return Double(guess).NextDouble();</span>
+<span class="lineNum">     472 </span>            :   }
+<a name="473"><span class="lineNum">     473 </span>            : }</a>
+<span class="lineNum">     474 </span>            : 
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 : float Strtof(Vector&lt;const char&gt; buffer, int exponent) {</span>
+<span class="lineNum">     476 </span>            :   char copy_buffer[kMaxSignificantDecimalDigits];
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :   Vector&lt;const char&gt; trimmed;</span>
+<span class="lineNum">     478 </span>            :   int updated_exponent;
+<span class="lineNum">     479 </span><span class="lineNoCov">          0 :   TrimAndCut(buffer, exponent, copy_buffer, kMaxSignificantDecimalDigits,</span>
+<span class="lineNum">     480 </span>            :              &amp;trimmed, &amp;updated_exponent);
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 :   exponent = updated_exponent;</span>
+<span class="lineNum">     482 </span>            : 
+<span class="lineNum">     483 </span>            :   double double_guess;
+<span class="lineNum">     484 </span><span class="lineNoCov">          0 :   bool is_correct = ComputeGuess(trimmed, exponent, &amp;double_guess);</span>
+<span class="lineNum">     485 </span>            : 
+<span class="lineNum">     486 </span><span class="lineNoCov">          0 :   float float_guess = static_cast&lt;float&gt;(double_guess);</span>
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :   if (float_guess == double_guess) {</span>
+<span class="lineNum">     488 </span>            :     // This shortcut triggers for integer values.
+<span class="lineNum">     489 </span><span class="lineNoCov">          0 :     return float_guess;</span>
+<span class="lineNum">     490 </span>            :   }
+<span class="lineNum">     491 </span>            : 
+<span class="lineNum">     492 </span>            :   // We must catch double-rounding. Say the double has been rounded up, and is
+<span class="lineNum">     493 </span>            :   // now a boundary of a float, and rounds up again. This is why we have to
+<span class="lineNum">     494 </span>            :   // look at previous too.
+<span class="lineNum">     495 </span>            :   // Example (in decimal numbers):
+<span class="lineNum">     496 </span>            :   //    input: 12349
+<span class="lineNum">     497 </span>            :   //    high-precision (4 digits): 1235
+<span class="lineNum">     498 </span>            :   //    low-precision (3 digits):
+<span class="lineNum">     499 </span>            :   //       when read from input: 123
+<span class="lineNum">     500 </span>            :   //       when rounded from high precision: 124.
+<span class="lineNum">     501 </span>            :   // To do this we simply look at the neigbors of the correct result and see
+<span class="lineNum">     502 </span>            :   // if they would round to the same float. If the guess is not correct we have
+<span class="lineNum">     503 </span>            :   // to look at four values (since two different doubles could be the correct
+<span class="lineNum">     504 </span>            :   // double).
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span><span class="lineNoCov">          0 :   double double_next = Double(double_guess).NextDouble();</span>
+<span class="lineNum">     507 </span><span class="lineNoCov">          0 :   double double_previous = Double(double_guess).PreviousDouble();</span>
+<span class="lineNum">     508 </span>            : 
+<span class="lineNum">     509 </span><span class="lineNoCov">          0 :   float f1 = static_cast&lt;float&gt;(double_previous);</span>
+<span class="lineNum">     510 </span><span class="lineNoCov">          0 :   float f2 = float_guess;</span>
+<span class="lineNum">     511 </span><span class="lineNoCov">          0 :   float f3 = static_cast&lt;float&gt;(double_next);</span>
+<span class="lineNum">     512 </span>            :   float f4;
+<span class="lineNum">     513 </span><span class="lineNoCov">          0 :   if (is_correct) {</span>
+<span class="lineNum">     514 </span><span class="lineNoCov">          0 :     f4 = f3;</span>
+<span class="lineNum">     515 </span>            :   } else {
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :     double double_next2 = Double(double_next).NextDouble();</span>
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 :     f4 = static_cast&lt;float&gt;(double_next2);</span>
+<span class="lineNum">     518 </span>            :   }
+<span class="lineNum">     519 </span>            :   (void) f2;  // Mark variable as used.
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :   ASSERT(f1 &lt;= f2 &amp;&amp; f2 &lt;= f3 &amp;&amp; f3 &lt;= f4);</span>
+<span class="lineNum">     521 </span>            : 
+<span class="lineNum">     522 </span>            :   // If the guess doesn't lie near a single-precision boundary we can simply
+<span class="lineNum">     523 </span>            :   // return its float-value.
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 :   if (f1 == f4) {</span>
+<span class="lineNum">     525 </span><span class="lineNoCov">          0 :     return float_guess;</span>
+<span class="lineNum">     526 </span>            :   }
+<span class="lineNum">     527 </span>            : 
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :   ASSERT((f1 != f2 &amp;&amp; f2 == f3 &amp;&amp; f3 == f4) ||</span>
+<span class="lineNum">     529 </span>            :          (f1 == f2 &amp;&amp; f2 != f3 &amp;&amp; f3 == f4) ||
+<span class="lineNum">     530 </span>            :          (f1 == f2 &amp;&amp; f2 == f3 &amp;&amp; f3 != f4));
+<span class="lineNum">     531 </span>            : 
+<span class="lineNum">     532 </span>            :   // guess and next are the two possible canditates (in the same way that
+<span class="lineNum">     533 </span>            :   // double_guess was the lower candidate for a double-precision guess).
+<span class="lineNum">     534 </span><span class="lineNoCov">          0 :   float guess = f1;</span>
+<span class="lineNum">     535 </span><span class="lineNoCov">          0 :   float next = f4;</span>
+<span class="lineNum">     536 </span><span class="lineNoCov">          0 :   DiyFp upper_boundary;</span>
+<span class="lineNum">     537 </span><span class="lineNoCov">          0 :   if (guess == 0.0f) {</span>
+<span class="lineNum">     538 </span><span class="lineNoCov">          0 :     float min_float = 1e-45f;</span>
+<span class="lineNum">     539 </span><span class="lineNoCov">          0 :     upper_boundary = Double(static_cast&lt;double&gt;(min_float) / 2).AsDiyFp();</span>
+<span class="lineNum">     540 </span>            :   } else {
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :     upper_boundary = Single(guess).UpperBoundary();</span>
+<span class="lineNum">     542 </span>            :   }
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :   int comparison = CompareBufferWithDiyFp(trimmed, exponent, upper_boundary);</span>
+<span class="lineNum">     544 </span><span class="lineNoCov">          0 :   if (comparison &lt; 0) {</span>
+<span class="lineNum">     545 </span><span class="lineNoCov">          0 :     return guess;</span>
+<span class="lineNum">     546 </span><span class="lineNoCov">          0 :   } else if (comparison &gt; 0) {</span>
+<span class="lineNum">     547 </span><span class="lineNoCov">          0 :     return next;</span>
+<span class="lineNum">     548 </span><span class="lineNoCov">          0 :   } else if ((Single(guess).Significand() &amp; 1) == 0) {</span>
+<span class="lineNum">     549 </span>            :     // Round towards even.
+<span class="lineNum">     550 </span><span class="lineNoCov">          0 :     return guess;</span>
+<span class="lineNum">     551 </span>            :   } else {
+<span class="lineNum">     552 </span><span class="lineNoCov">          0 :     return next;</span>
+<span class="lineNum">     553 </span>            :   }
+<span class="lineNum">     554 </span>            : }
+<span class="lineNum">     555 </span>            : 
+<span class="lineNum">     556 </span>            : }  // namespace double_conversion
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/Base64Decoder.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - Base64Decoder.cpp<span style="font-size: 80%;"> (source / <a href="Base64Decoder.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">75</td>
+            <td class="headerCovTableEntryLo">2.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntryLo">11.1 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Base64Decoder.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Streams
+<span class="lineNum">       6 </span>            : // Module:  Base64
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/Base64Decoder.h&quot;
+<span class="lineNum">      16 </span>            : #include &quot;Poco/Base64Encoder.h&quot;
+<span class="lineNum">      17 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      18 </span>            : #include &quot;Poco/Mutex.h&quot;
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : namespace Poco {
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : unsigned char Base64DecoderBuf::IN_ENCODING[256];
+<span class="lineNum">      25 </span>            : bool Base64DecoderBuf::IN_ENCODING_INIT = false;
+<span class="lineNum">      26 </span>            : unsigned char Base64DecoderBuf::IN_ENCODING_URL[256];
+<span class="lineNum">      27 </span>            : bool Base64DecoderBuf::IN_ENCODING_URL_INIT = false;
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : namespace
+<span class="lineNum">      31 </span>            : {
+<span class="lineNum">      32 </span><span class="lineCov">          1 :         static FastMutex mutex;</span>
+<span class="lineNum">      33 </span>            : }
+<a name="34"><span class="lineNum">      34 </span>            : </a>
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span><span class="lineNoCov">          0 : Base64DecoderBuf::Base64DecoderBuf(std::istream&amp; istr, int options):</span>
+<span class="lineNum">      37 </span>            :         _options(options),
+<span class="lineNum">      38 </span>            :         _groupLength(0),
+<span class="lineNum">      39 </span>            :         _groupIndex(0),
+<span class="lineNum">      40 </span><span class="lineNoCov">          0 :         _buf(*istr.rdbuf()),</span>
+<span class="lineNum">      41 </span><span class="lineNoCov">          0 :         _pInEncoding((options &amp; BASE64_URL_ENCODING) ? IN_ENCODING_URL : IN_ENCODING)</span>
+<span class="lineNum">      42 </span>            : {
+<span class="lineNum">      43 </span><span class="lineNoCov">          0 :         FastMutex::ScopedLock lock(mutex);</span>
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 :         if (options &amp; BASE64_URL_ENCODING)</span>
+<span class="lineNum">      45 </span>            :         {
+<span class="lineNum">      46 </span><span class="lineNoCov">          0 :                 if (!IN_ENCODING_URL_INIT)</span>
+<span class="lineNum">      47 </span>            :                 {
+<span class="lineNum">      48 </span><span class="lineNoCov">          0 :                         for (unsigned i = 0; i &lt; sizeof(IN_ENCODING_URL); i++)</span>
+<span class="lineNum">      49 </span>            :                         {
+<span class="lineNum">      50 </span><span class="lineNoCov">          0 :                                 IN_ENCODING_URL[i] = 0xFF;</span>
+<span class="lineNum">      51 </span>            :                         }
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :                         for (unsigned i = 0; i &lt; sizeof(Base64EncoderBuf::OUT_ENCODING_URL); i++)</span>
+<span class="lineNum">      53 </span>            :                         {
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :                                 IN_ENCODING_URL[Base64EncoderBuf::OUT_ENCODING_URL[i]] = static_cast&lt;UInt8&gt;(i);</span>
+<span class="lineNum">      55 </span>            :                         }
+<span class="lineNum">      56 </span><span class="lineNoCov">          0 :                         IN_ENCODING_URL[static_cast&lt;unsigned char&gt;('=')] = '\0';</span>
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 :                         IN_ENCODING_URL_INIT = true;</span>
+<span class="lineNum">      58 </span>            :                 }
+<span class="lineNum">      59 </span>            :         }
+<span class="lineNum">      60 </span>            :         else
+<span class="lineNum">      61 </span>            :         {
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :                 if (!IN_ENCODING_INIT)</span>
+<span class="lineNum">      63 </span>            :                 {
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :                         for (unsigned i = 0; i &lt; sizeof(IN_ENCODING); i++)</span>
+<span class="lineNum">      65 </span>            :                         {
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :                                 IN_ENCODING[i] = 0xFF;</span>
+<span class="lineNum">      67 </span>            :                         }
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :                         for (unsigned i = 0; i &lt; sizeof(Base64EncoderBuf::OUT_ENCODING); i++)</span>
+<span class="lineNum">      69 </span>            :                         {
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :                                 IN_ENCODING[Base64EncoderBuf::OUT_ENCODING[i]] = static_cast&lt;UInt8&gt;(i);</span>
+<span class="lineNum">      71 </span>            :                         }
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :                         IN_ENCODING[static_cast&lt;unsigned char&gt;('=')] = '\0';</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :                         IN_ENCODING_INIT = true;</span>
+<span class="lineNum">      74 </span>            :                 }
+<span class="lineNum">      75 </span>            :         }
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 : }</span>
+<a name="77"><span class="lineNum">      77 </span>            : </a>
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 : Base64DecoderBuf::~Base64DecoderBuf()</span>
+<span class="lineNum">      80 </span>            : {
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 : }</span>
+<a name="82"><span class="lineNum">      82 </span>            : </a>
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 : int Base64DecoderBuf::readFromDevice()</span>
+<span class="lineNum">      85 </span>            : {
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :         if (_groupIndex &lt; _groupLength)</span>
+<span class="lineNum">      87 </span>            :         {
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :                 return _group[_groupIndex++];</span>
+<span class="lineNum">      89 </span>            :         }
+<span class="lineNum">      90 </span>            :         else
+<span class="lineNum">      91 </span>            :         {
+<span class="lineNum">      92 </span>            :                 unsigned char buffer[4];
+<span class="lineNum">      93 </span>            :                 int c;
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :                 if ((c = readOne()) == -1) return -1;</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :                 buffer[0] = static_cast&lt;UInt8&gt;(c);</span>
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :                 if (_pInEncoding[buffer[0]] == 0xFF) throw DataFormatException();</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :                 if ((c = readOne()) == -1) return -1;</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :                 buffer[1] = static_cast&lt;UInt8&gt;(c);</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :                 if (_pInEncoding[buffer[1]] == 0xFF) throw DataFormatException();</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :                 if (_options &amp; BASE64_NO_PADDING)</span>
+<span class="lineNum">     101 </span>            :                 {
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :                         if ((c = readOne()) != -1)</span>
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :                                 buffer[2] = static_cast&lt;UInt8&gt;(c);</span>
+<span class="lineNum">     104 </span>            :                         else
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :                                 buffer[2] = '=';</span>
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :                         if (_pInEncoding[buffer[2]] == 0xFF) throw DataFormatException();</span>
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :                         if ((c = readOne()) != -1)</span>
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :                                 buffer[3] = static_cast&lt;UInt8&gt;(c);</span>
+<span class="lineNum">     109 </span>            :                         else
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :                                 buffer[3] = '=';</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :                         if (_pInEncoding[buffer[3]] == 0xFF) throw DataFormatException();</span>
+<span class="lineNum">     112 </span>            :                 }
+<span class="lineNum">     113 </span>            :                 else
+<span class="lineNum">     114 </span>            :                 {
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :                         if ((c = readOne()) == -1) throw DataFormatException();</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :                         buffer[2] = static_cast&lt;UInt8&gt;(c);</span>
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :                         if (_pInEncoding[buffer[2]] == 0xFF) throw DataFormatException();</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :                         if ((c = readOne()) == -1) throw DataFormatException();</span>
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :                         buffer[3] = static_cast&lt;UInt8&gt;(c);</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :                         if (_pInEncoding[buffer[3]] == 0xFF) throw DataFormatException();</span>
+<span class="lineNum">     121 </span>            :                 }
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :                 _group[0] = (_pInEncoding[buffer[0]] &lt;&lt; 2) | (_pInEncoding[buffer[1]] &gt;&gt; 4);</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :                 _group[1] = ((_pInEncoding[buffer[1]] &amp; 0x0F) &lt;&lt; 4) | (_pInEncoding[buffer[2]] &gt;&gt; 2);</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :                 _group[2] = (_pInEncoding[buffer[2]] &lt;&lt; 6) | _pInEncoding[buffer[3]];</span>
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :                 if (buffer[2] == '=')</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :                         _groupLength = 1;</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :                 else if (buffer[3] == '=')</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :                         _groupLength = 2;</span>
+<span class="lineNum">     131 </span>            :                 else
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :                         _groupLength = 3;</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :                 _groupIndex = 1;</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :                 return _group[0];</span>
+<span class="lineNum">     135 </span>            :         }
+<span class="lineNum">     136 </span>            : }
+<a name="137"><span class="lineNum">     137 </span>            : </a>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 : int Base64DecoderBuf::readOne()</span>
+<span class="lineNum">     140 </span>            : {
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :         int ch = _buf.sbumpc();</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :         if (!(_options &amp; BASE64_URL_ENCODING))</span>
+<span class="lineNum">     143 </span>            :         {
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :                 while (ch == ' ' || ch == '\r' || ch == '\t' || ch == '\n')</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :                         ch = _buf.sbumpc();</span>
+<span class="lineNum">     146 </span>            :         }
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :         return ch;</span>
+<span class="lineNum">     148 </span>            : }
+<a name="149"><span class="lineNum">     149 </span>            : </a>
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 : Base64DecoderIOS::Base64DecoderIOS(std::istream&amp; istr, int options): _buf(istr, options)</span>
+<span class="lineNum">     152 </span>            : {
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :         poco_ios_init(&amp;_buf);</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 : }</span>
+<a name="155"><span class="lineNum">     155 </span>            : </a>
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 : Base64DecoderIOS::~Base64DecoderIOS()</span>
+<span class="lineNum">     158 </span>            : {
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 : }</span>
+<a name="160"><span class="lineNum">     160 </span>            : </a>
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 : Base64DecoderBuf* Base64DecoderIOS::rdbuf()</span>
+<span class="lineNum">     163 </span>            : {
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :         return &amp;_buf;</span>
+<span class="lineNum">     165 </span>            : }
+<a name="166"><span class="lineNum">     166 </span>            : </a>
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 : Base64Decoder::Base64Decoder(std::istream&amp; istr, int options): Base64DecoderIOS(istr, options), std::istream(&amp;_buf)</span>
+<span class="lineNum">     169 </span>            : {
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 : }</span>
+<a name="171"><span class="lineNum">     171 </span>            : </a>
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 : Base64Decoder::~Base64Decoder()</span>
+<span class="lineNum">     174 </span>            : {
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 : }</span>
+<a name="176"><span class="lineNum">     176 </span>            : </a>
+<span class="lineNum">     177 </span>            : 
+<span class="lineNum">     178 </span><span class="lineCov">          3 : } // namespace Poco</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

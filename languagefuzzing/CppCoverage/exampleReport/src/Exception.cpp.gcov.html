@@ -1,0 +1,257 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/Exception.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - Exception.cpp<span style="font-size: 80%;"> (source / <a href="Exception.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">96</td>
+            <td class="headerCovTableEntryLo">1.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">593</td>
+            <td class="headerCovTableEntryLo">0.3 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Exception.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Core
+<span class="lineNum">       6 </span>            : // Module:  Exception
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      16 </span>            : #include &lt;typeinfo&gt;
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            : namespace Poco {
+<a name="20"><span class="lineNum">      20 </span>            : </a>
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span><span class="lineNoCov">          0 : Exception::Exception(int code): _pNested(0), _code(code)</span>
+<span class="lineNum">      23 </span>            : {
+<span class="lineNum">      24 </span><span class="lineNoCov">          0 : }</span>
+<a name="25"><span class="lineNum">      25 </span>            : </a>
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span><span class="lineNoCov">          0 : Exception::Exception(const std::string&amp; msg, int code): _msg(msg), _pNested(0), _code(code)</span>
+<span class="lineNum">      28 </span>            : {
+<span class="lineNum">      29 </span><span class="lineNoCov">          0 : }</span>
+<a name="30"><span class="lineNum">      30 </span>            : </a>
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span><span class="lineNoCov">          0 : Exception::Exception(const std::string&amp; msg, const std::string&amp; arg, int code): _msg(msg), _pNested(0), _code(code)</span>
+<span class="lineNum">      33 </span>            : {
+<span class="lineNum">      34 </span><span class="lineNoCov">          0 :         if (!arg.empty())</span>
+<span class="lineNum">      35 </span>            :         {
+<span class="lineNum">      36 </span><span class="lineNoCov">          0 :                 _msg.append(&quot;: &quot;);</span>
+<span class="lineNum">      37 </span><span class="lineNoCov">          0 :                 _msg.append(arg);</span>
+<span class="lineNum">      38 </span>            :         }
+<span class="lineNum">      39 </span><span class="lineNoCov">          0 : }</span>
+<a name="40"><span class="lineNum">      40 </span>            : </a>
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span><span class="lineNoCov">          0 : Exception::Exception(const std::string&amp; msg, const Exception&amp; nested, int code): _msg(msg), _pNested(nested.clone()), _code(code)</span>
+<span class="lineNum">      43 </span>            : {
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 : }</span>
+<a name="45"><span class="lineNum">      45 </span>            : </a>
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span><span class="lineNoCov">          0 : Exception::Exception(const Exception&amp; exc):</span>
+<span class="lineNum">      48 </span>            :         std::exception(exc),
+<span class="lineNum">      49 </span>            :         _msg(exc._msg),
+<span class="lineNum">      50 </span><span class="lineNoCov">          0 :         _code(exc._code)</span>
+<span class="lineNum">      51 </span>            : {
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :         _pNested = exc._pNested ? exc._pNested-&gt;clone() : 0;</span>
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 : }</span>
+<a name="54"><span class="lineNum">      54 </span>            : </a>
+<span class="lineNum">      55 </span>            :         
+<span class="lineNum">      56 </span><span class="lineNoCov">          0 : Exception::~Exception() noexcept</span>
+<span class="lineNum">      57 </span>            : {
+<span class="lineNum">      58 </span><span class="lineNoCov">          0 :         delete _pNested;</span>
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 : }</span>
+<a name="60"><span class="lineNum">      60 </span>            : </a>
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 : Exception&amp; Exception::operator = (const Exception&amp; exc)</span>
+<span class="lineNum">      63 </span>            : {
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :         if (&amp;exc != this)</span>
+<span class="lineNum">      65 </span>            :         {
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :                 Exception* newPNested = exc._pNested ? exc._pNested-&gt;clone() : 0;</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :                 delete _pNested;</span>
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :                 _msg     = exc._msg;</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :                 _pNested = newPNested;</span>
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :                 _code    = exc._code;</span>
+<span class="lineNum">      71 </span>            :         }
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">      73 </span>            : }
+<a name="74"><span class="lineNum">      74 </span>            : </a>
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 : const char* Exception::name() const noexcept</span>
+<span class="lineNum">      77 </span>            : {
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :         return &quot;Exception&quot;;</span>
+<span class="lineNum">      79 </span>            : }
+<a name="80"><span class="lineNum">      80 </span>            : </a>
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 : const char* Exception::className() const noexcept</span>
+<span class="lineNum">      83 </span>            : {
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :         return typeid(*this).name();</span>
+<span class="lineNum">      85 </span>            : }
+<a name="86"><span class="lineNum">      86 </span>            : </a>
+<span class="lineNum">      87 </span>            :         
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 : const char* Exception::what() const noexcept</span>
+<span class="lineNum">      89 </span>            : {
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :         return name();</span>
+<span class="lineNum">      91 </span>            : }
+<a name="92"><span class="lineNum">      92 </span>            : </a>
+<span class="lineNum">      93 </span>            :         
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 : std::string Exception::displayText() const</span>
+<span class="lineNum">      95 </span>            : {
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :         std::string txt = name();</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :         if (!_msg.empty())</span>
+<span class="lineNum">      98 </span>            :         {
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :                 txt.append(&quot;: &quot;);</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :                 txt.append(_msg);</span>
+<span class="lineNum">     101 </span>            :         }
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :         return txt;</span>
+<span class="lineNum">     103 </span>            : }
+<a name="104"><span class="lineNum">     104 </span>            : </a>
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 : void Exception::extendedMessage(const std::string&amp; arg)</span>
+<span class="lineNum">     107 </span>            : {
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :         if (!arg.empty())</span>
+<span class="lineNum">     109 </span>            :         {
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :                 if (!_msg.empty()) _msg.append(&quot;: &quot;);</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :                 _msg.append(arg);</span>
+<span class="lineNum">     112 </span>            :         }
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 : }</span>
+<a name="114"><span class="lineNum">     114 </span>            : </a>
+<span class="lineNum">     115 </span>            : 
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 : Exception* Exception::clone() const</span>
+<span class="lineNum">     117 </span>            : {
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :         return new Exception(*this);</span>
+<span class="lineNum">     119 </span>            : }
+<a name="120"><span class="lineNum">     120 </span>            : </a>
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 : void Exception::rethrow() const</span>
+<span class="lineNum">     123 </span>            : {
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :         throw *this;</span>
+<span class="lineNum">     125 </span>            : }
+<a name="126"><span class="lineNum">     126 </span>            : </a>
+<a name="127"><span class="lineNum">     127 </span>            : </a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(LogicException, Exception, &quot;Logic exception&quot;)</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(AssertionViolationException, LogicException, &quot;Assertion violation&quot;)</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(NullPointerException, LogicException, &quot;Null pointer&quot;)</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(NullValueException, LogicException, &quot;Null value&quot;)</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(BugcheckException, LogicException, &quot;Bugcheck&quot;)</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(InvalidArgumentException, LogicException, &quot;Invalid argument&quot;)</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(NotImplementedException, LogicException, &quot;Not implemented&quot;)</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(RangeException, LogicException, &quot;Out of range&quot;)</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(IllegalStateException, LogicException, &quot;Illegal state&quot;)</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(InvalidAccessException, LogicException, &quot;Invalid access&quot;)</span></a>
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(SignalException, LogicException, &quot;Signal received&quot;)</span>
+<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(UnhandledException, LogicException, &quot;Unhandled exception&quot;)</span></a>
+<a name="140"><span class="lineNum">     140 </span>            : </a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(RuntimeException, Exception, &quot;Runtime exception&quot;)</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(NotFoundException, RuntimeException, &quot;Not found&quot;)</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(ExistsException, RuntimeException, &quot;Exists&quot;)</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(TimeoutException, RuntimeException, &quot;Timeout&quot;)</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(SystemException, RuntimeException, &quot;System exception&quot;)</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(RegularExpressionException, RuntimeException, &quot;Error in regular expression&quot;)</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(LibraryLoadException, RuntimeException, &quot;Cannot load library&quot;)</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(LibraryAlreadyLoadedException, RuntimeException, &quot;Library already loaded&quot;)</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(NoThreadAvailableException, RuntimeException, &quot;No thread available&quot;)</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(PropertyNotSupportedException, RuntimeException, &quot;Property not supported&quot;)</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(PoolOverflowException, RuntimeException, &quot;Pool overflow&quot;)</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(NoPermissionException, RuntimeException, &quot;No permission&quot;)</span></a>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(OutOfMemoryException, RuntimeException, &quot;Out of memory&quot;)</span>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(DataException, RuntimeException, &quot;Data error&quot;)</span></a>
+<a name="155"><span class="lineNum">     155 </span>            : </a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(DataFormatException, DataException, &quot;Bad data format&quot;)</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(SyntaxException, DataException, &quot;Syntax error&quot;)</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(CircularReferenceException, DataException, &quot;Circular reference&quot;)</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(PathSyntaxException, SyntaxException, &quot;Bad path syntax&quot;)</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(IOException, RuntimeException, &quot;I/O error&quot;)</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(ProtocolException, IOException, &quot;Protocol error&quot;)</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(FileException, IOException, &quot;File access error&quot;)</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(FileExistsException, FileException, &quot;File exists&quot;)</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(FileNotFoundException, FileException, &quot;File not found&quot;)</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(PathNotFoundException, FileException, &quot;Path not found&quot;)</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(FileReadOnlyException, FileException, &quot;File is read-only&quot;)</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(FileAccessDeniedException, FileException, &quot;Access to file denied&quot;)</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(CreateFileException, FileException, &quot;Cannot create file&quot;)</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(OpenFileException, FileException, &quot;Cannot open file&quot;)</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(WriteFileException, FileException, &quot;Cannot write file&quot;)</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(ReadFileException, FileException, &quot;Cannot read file&quot;)</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(DirectoryNotEmptyException, FileException, &quot;Directory not empty&quot;)</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(UnknownURISchemeException, RuntimeException, &quot;Unknown URI scheme&quot;)</span></a>
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(TooManyURIRedirectsException, RuntimeException, &quot;Too many URI redirects&quot;)</span>
+<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(URISyntaxException, SyntaxException, &quot;Bad URI syntax&quot;)</span></a>
+<a name="176"><span class="lineNum">     176 </span>            : </a>
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(ApplicationException, Exception, &quot;Application exception&quot;)</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 : POCO_IMPLEMENT_EXCEPTION(BadCastException, RuntimeException, &quot;Bad cast exception&quot;)</span>
+<a name="179"><span class="lineNum">     179 </span>            : </a>
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span><span class="lineCov">          3 : } // namespace Poco</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

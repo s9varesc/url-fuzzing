@@ -1,0 +1,637 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/AbstractEvent.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - AbstractEvent.h<span style="font-size: 80%;"> (source / <a href="AbstractEvent.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // AbstractEvent.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Events
+<span class="lineNum">       6 </span>            : // Module:  AbstractEvent
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the AbstractEvent class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2006-2011, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_AbstractFoundation_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_AbstractFoundation_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : #include &quot;Poco/SingletonHolder.h&quot;
+<span class="lineNum">      23 </span>            : #include &quot;Poco/SharedPtr.h&quot;
+<span class="lineNum">      24 </span>            : #include &quot;Poco/ActiveResult.h&quot;
+<span class="lineNum">      25 </span>            : #include &quot;Poco/ActiveMethod.h&quot;
+<span class="lineNum">      26 </span>            : #include &quot;Poco/Mutex.h&quot;
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : namespace Poco {
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : template &lt;class TArgs, class TStrategy, class TDelegate, class TMutex = FastMutex&gt;
+<span class="lineNum">      33 </span>            : class AbstractEvent
+<span class="lineNum">      34 </span>            :         /// An AbstractEvent is the base class of all events.
+<span class="lineNum">      35 </span>            :         /// It works similar to the way C# handles notifications (aka events in C#).
+<span class="lineNum">      36 </span>            :         ///
+<span class="lineNum">      37 </span>            :         /// Events can be used to send information to a set of delegates
+<span class="lineNum">      38 </span>            :         /// which are registered with the event. The type of the data is specified with
+<span class="lineNum">      39 </span>            :         /// the template parameter TArgs. The TStrategy parameter must be a subclass
+<span class="lineNum">      40 </span>            :         /// of NotificationStrategy. The parameter TDelegate can either be a subclass of AbstractDelegate
+<span class="lineNum">      41 </span>            :         /// or of AbstractPriorityDelegate.
+<span class="lineNum">      42 </span>            :         ///
+<span class="lineNum">      43 </span>            :         /// Note that AbstractEvent should never be used directly. One ought to use
+<span class="lineNum">      44 </span>            :         /// one of its subclasses which set the TStrategy and TDelegate template parameters
+<span class="lineNum">      45 </span>            :         /// to fixed values. For most use-cases the BasicEvent template will be sufficient:
+<span class="lineNum">      46 </span>            :         ///
+<span class="lineNum">      47 </span>            :         ///     #include &quot;Poco/BasicEvent.h&quot;
+<span class="lineNum">      48 </span>            :         ///     #include &quot;Poco/Delegate.h&quot;
+<span class="lineNum">      49 </span>            :         ///
+<span class="lineNum">      50 </span>            :         /// Note that as of release 1.4.2, the behavior of BasicEvent equals that of FIFOEvent,
+<span class="lineNum">      51 </span>            :         /// so the FIFOEvent class is no longer necessary and provided for backwards compatibility
+<span class="lineNum">      52 </span>            :         /// only.
+<span class="lineNum">      53 </span>            :         ///
+<span class="lineNum">      54 </span>            :         /// BasicEvent works with a standard delegate. They allow one object to register
+<span class="lineNum">      55 </span>            :         /// one or more delegates with an event. In contrast, a PriorityDelegate comes with an attached priority value
+<span class="lineNum">      56 </span>            :         /// and allows one object to register for one priority value one or more delegates. Note that PriorityDelegates
+<span class="lineNum">      57 </span>            :         /// only work with PriorityEvents:
+<span class="lineNum">      58 </span>            :         ///
+<span class="lineNum">      59 </span>            :         ///     #include &quot;Poco/PriorityEvent.h&quot;
+<span class="lineNum">      60 </span>            :         ///     #include &quot;Poco/PriorityDelegate.h&quot;
+<span class="lineNum">      61 </span>            :         ///
+<span class="lineNum">      62 </span>            :         /// Use events by adding them as public members to the object which is throwing notifications:
+<span class="lineNum">      63 </span>            :         ///
+<span class="lineNum">      64 </span>            :         ///     class MyData
+<span class="lineNum">      65 </span>            :         ///     {
+<span class="lineNum">      66 </span>            :         ///     public:
+<span class="lineNum">      67 </span>            :         ///         Poco::BasicEvent&lt;int&gt; dataChanged;
+<span class="lineNum">      68 </span>            :         ///
+<span class="lineNum">      69 </span>            :         ///         MyData();
+<span class="lineNum">      70 </span>            :         ///         ...
+<span class="lineNum">      71 </span>            :         ///         void setData(int i);
+<span class="lineNum">      72 </span>            :         ///         ...
+<span class="lineNum">      73 </span>            :         ///     private:
+<span class="lineNum">      74 </span>            :         ///         int _data;
+<span class="lineNum">      75 </span>            :         ///     };
+<span class="lineNum">      76 </span>            :         ///
+<span class="lineNum">      77 </span>            :         /// Firing the event is done either by calling the event's notify() or notifyAsync() method:
+<span class="lineNum">      78 </span>            :         ///
+<span class="lineNum">      79 </span>            :         ///     void MyData::setData(int i)
+<span class="lineNum">      80 </span>            :         ///     {
+<span class="lineNum">      81 </span>            :         ///         this-&gt;_data = i;
+<span class="lineNum">      82 </span>            :         ///         dataChanged.notify(this, this-&gt;_data);
+<span class="lineNum">      83 </span>            :         ///     }
+<span class="lineNum">      84 </span>            :         ///
+<span class="lineNum">      85 </span>            :         /// Alternatively, instead of notify(), operator () can be used.
+<span class="lineNum">      86 </span>            :         ///
+<span class="lineNum">      87 </span>            :         ///     void MyData::setData(int i)
+<span class="lineNum">      88 </span>            :         ///     {
+<span class="lineNum">      89 </span>            :         ///         this-&gt;_data = i;
+<span class="lineNum">      90 </span>            :         ///         dataChanged(this, this-&gt;_data);
+<span class="lineNum">      91 </span>            :         ///     }
+<span class="lineNum">      92 </span>            :         ///
+<span class="lineNum">      93 </span>            :         /// Note that operator (), notify() and notifyAsync() do not catch exceptions, i.e. in case a
+<span class="lineNum">      94 </span>            :         /// delegate throws an exception, notifying is immediately aborted and the exception is propagated
+<span class="lineNum">      95 </span>            :         /// back to the caller.
+<span class="lineNum">      96 </span>            :         ///
+<span class="lineNum">      97 </span>            :         /// Delegates can register methods at the event. In the case of a BasicEvent
+<span class="lineNum">      98 </span>            :         /// the Delegate template is used, in case of an PriorityEvent a PriorityDelegate is used.
+<span class="lineNum">      99 </span>            :         /// Mixing of delegates, e.g. using a PriorityDelegate with a BasicEvent is not allowed and
+<span class="lineNum">     100 </span>            :         /// can lead to compile-time and/or run-time errors. The standalone delegate() functions
+<span class="lineNum">     101 </span>            :         /// can be used to construct Delegate objects.
+<span class="lineNum">     102 </span>            :         ///
+<span class="lineNum">     103 </span>            :         /// Events require the observers to have one of the following method signatures:
+<span class="lineNum">     104 </span>            :         ///
+<span class="lineNum">     105 </span>            :         ///     void onEvent(const void* pSender, TArgs&amp; args);
+<span class="lineNum">     106 </span>            :         ///     void onEvent(TArgs&amp; args);
+<span class="lineNum">     107 </span>            :         ///     static void onEvent(const void* pSender, TArgs&amp; args);
+<span class="lineNum">     108 </span>            :         ///     static void onEvent(void* pSender, TArgs&amp; args);
+<span class="lineNum">     109 </span>            :         ///     static void onEvent(TArgs&amp; args);
+<span class="lineNum">     110 </span>            :         ///
+<span class="lineNum">     111 </span>            :         /// For performance reasons arguments are always sent by reference. This also allows observers
+<span class="lineNum">     112 </span>            :         /// to modify the event argument. To prevent that, use &lt;[const TArg]&gt; as template
+<span class="lineNum">     113 </span>            :         /// parameter. A non-conformant method signature leads to compile errors.
+<span class="lineNum">     114 </span>            :         ///
+<span class="lineNum">     115 </span>            :         /// Assuming that the observer meets the method signature requirement, it can register
+<span class="lineNum">     116 </span>            :         /// this method with the += operator:
+<span class="lineNum">     117 </span>            :         ///
+<span class="lineNum">     118 </span>            :         ///     class MyController
+<span class="lineNum">     119 </span>            :         ///     {
+<span class="lineNum">     120 </span>            :         ///     protected:
+<span class="lineNum">     121 </span>            :         ///         MyData _data;
+<span class="lineNum">     122 </span>            :         ///
+<span class="lineNum">     123 </span>            :         ///         void onDataChanged(void* pSender, int&amp; data);
+<span class="lineNum">     124 </span>            :         ///         ...
+<span class="lineNum">     125 </span>            :         ///     };
+<span class="lineNum">     126 </span>            :         ///
+<span class="lineNum">     127 </span>            :         ///     MyController::MyController()
+<span class="lineNum">     128 </span>            :         ///     {
+<span class="lineNum">     129 </span>            :         ///         _data.dataChanged += delegate(this, &amp;MyController::onDataChanged);
+<span class="lineNum">     130 </span>            :         ///     }
+<span class="lineNum">     131 </span>            :         ///
+<span class="lineNum">     132 </span>            :         /// In some cases it might be desirable to work with automatically expiring registrations. Simply add
+<span class="lineNum">     133 </span>            :         /// to delegate as 3rd parameter a expireValue (in milliseconds):
+<span class="lineNum">     134 </span>            :         ///
+<span class="lineNum">     135 </span>            :         ///     _data.dataChanged += delegate(this, &amp;MyController::onDataChanged, 1000);
+<span class="lineNum">     136 </span>            :         ///
+<span class="lineNum">     137 </span>            :         /// This will add a delegate to the event which will automatically be removed in 1000 millisecs.
+<span class="lineNum">     138 </span>            :         ///
+<span class="lineNum">     139 </span>            :         /// Unregistering happens via the -= operator. Forgetting to unregister a method will lead to
+<span class="lineNum">     140 </span>            :         /// segmentation faults later, when one tries to send a notify to a no longer existing object.
+<span class="lineNum">     141 </span>            :         ///
+<span class="lineNum">     142 </span>            :         ///     MyController::~MyController()
+<span class="lineNum">     143 </span>            :         ///     {
+<span class="lineNum">     144 </span>            :         ///         _data.dataChanged -= delegate(this, &amp;MyController::onDataChanged);
+<span class="lineNum">     145 </span>            :         ///     }
+<span class="lineNum">     146 </span>            :         ///
+<span class="lineNum">     147 </span>            :         /// Working with PriorityDelegate's as similar to working with BasicEvent.
+<span class="lineNum">     148 </span>            :         /// Instead of delegate(), the priorityDelegate() function must be used
+<span class="lineNum">     149 </span>            :         /// to create the PriorityDelegate.
+<span class="lineNum">     150 </span>            : {
+<span class="lineNum">     151 </span>            : public:
+<span class="lineNum">     152 </span>            :         typedef TDelegate* DelegateHandle;
+<a name="153"><span class="lineNum">     153 </span>            :         typedef TArgs Args;</a>
+<span class="lineNum">     154 </span>            : 
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :         AbstractEvent():</span>
+<span class="lineNum">     156 </span>            :                 _executeAsync(this, &amp;AbstractEvent::executeAsyncImpl),
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :                 _enabled(true)</span>
+<span class="lineNum">     158 </span>            :         {
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span>            :         AbstractEvent(const TStrategy&amp; strat):
+<span class="lineNum">     162 </span>            :                 _executeAsync(this, &amp;AbstractEvent::executeAsyncImpl),
+<span class="lineNum">     163 </span>            :                 _strategy(strat),
+<span class="lineNum">     164 </span>            :                 _enabled(true)
+<span class="lineNum">     165 </span>            :         {
+<a name="166"><span class="lineNum">     166 </span>            :         }</a>
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :         virtual ~AbstractEvent()</span>
+<span class="lineNum">     169 </span>            :         {
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            :         void operator += (const TDelegate&amp; aDelegate)
+<span class="lineNum">     173 </span>            :                 /// Adds a delegate to the event.
+<span class="lineNum">     174 </span>            :                 ///
+<span class="lineNum">     175 </span>            :                 /// Exact behavior is determined by the TStrategy.
+<span class="lineNum">     176 </span>            :         {
+<span class="lineNum">     177 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     178 </span>            :                 _strategy.add(aDelegate);
+<span class="lineNum">     179 </span>            :         }
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span>            :         void operator -= (const TDelegate&amp; aDelegate)
+<span class="lineNum">     182 </span>            :                 /// Removes a delegate from the event.
+<span class="lineNum">     183 </span>            :                 ///
+<span class="lineNum">     184 </span>            :                 /// If the delegate is not found, this function does nothing.
+<span class="lineNum">     185 </span>            :         {
+<span class="lineNum">     186 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     187 </span>            :                 _strategy.remove(aDelegate);
+<span class="lineNum">     188 </span>            :         }
+<span class="lineNum">     189 </span>            : 
+<span class="lineNum">     190 </span>            :         DelegateHandle add(const TDelegate&amp; aDelegate)
+<span class="lineNum">     191 </span>            :                 /// Adds a delegate to the event.
+<span class="lineNum">     192 </span>            :                 ///
+<span class="lineNum">     193 </span>            :                 /// Exact behavior is determined by the TStrategy.
+<span class="lineNum">     194 </span>            :                 ///
+<span class="lineNum">     195 </span>            :                 /// Returns a DelegateHandle which can be used in call to
+<span class="lineNum">     196 </span>            :                 /// remove() to remove the delegate.
+<span class="lineNum">     197 </span>            :         {
+<span class="lineNum">     198 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     199 </span>            :                 return _strategy.add(aDelegate);
+<span class="lineNum">     200 </span>            :         }
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span>            :         void remove(DelegateHandle delegateHandle)
+<span class="lineNum">     203 </span>            :                 /// Removes a delegate from the event using a DelegateHandle
+<span class="lineNum">     204 </span>            :                 /// returned by add().
+<span class="lineNum">     205 </span>            :                 ///
+<span class="lineNum">     206 </span>            :                 /// If the delegate is not found, this function does nothing.
+<span class="lineNum">     207 </span>            :         {
+<span class="lineNum">     208 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     209 </span>            :                 _strategy.remove(delegateHandle);
+<a name="210"><span class="lineNum">     210 </span>            :         }</a>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :         void operator () (const void* pSender, TArgs&amp; args)</span>
+<span class="lineNum">     213 </span>            :                 /// Shortcut for notify(pSender, args);
+<span class="lineNum">     214 </span>            :         {
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :                 notify(pSender, args);</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     217 </span>            : 
+<span class="lineNum">     218 </span>            :         void operator () (TArgs&amp; args)
+<span class="lineNum">     219 </span>            :                 /// Shortcut for notify(args).
+<span class="lineNum">     220 </span>            :         {
+<span class="lineNum">     221 </span>            :                 notify(0, args);
+<a name="222"><span class="lineNum">     222 </span>            :         }</a>
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :         void notify(const void* pSender, TArgs&amp; args)</span>
+<span class="lineNum">     225 </span>            :                 /// Sends a notification to all registered delegates. The order is
+<span class="lineNum">     226 </span>            :                 /// determined by the TStrategy. This method is blocking. While executing,
+<span class="lineNum">     227 </span>            :                 /// the list of delegates may be modified. These changes don't
+<span class="lineNum">     228 </span>            :                 /// influence the current active notifications but are activated with
+<span class="lineNum">     229 </span>            :                 /// the next notify. If a delegate is removed during a notify(), the
+<span class="lineNum">     230 </span>            :                 /// delegate will no longer be invoked (unless it has already been
+<span class="lineNum">     231 </span>            :                 /// invoked prior to removal). If one of the delegates throws an exception,
+<span class="lineNum">     232 </span>            :                 /// the notify method is immediately aborted and the exception is propagated
+<span class="lineNum">     233 </span>            :                 /// to the caller.
+<span class="lineNum">     234 </span>            :         {
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :                 Poco::ScopedLockWithUnlock&lt;TMutex&gt; lock(_mutex);</span>
+<span class="lineNum">     236 </span>            : 
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :                 if (!_enabled) return;</span>
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span>            :                 // thread-safeness:
+<span class="lineNum">     240 </span>            :                 // copy should be faster and safer than blocking until
+<span class="lineNum">     241 </span>            :                 // execution ends
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :                 TStrategy strategy(_strategy);</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :                 lock.unlock();</span>
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 :                 strategy.notify(pSender, args);</span>
+<span class="lineNum">     245 </span>            :         }
+<span class="lineNum">     246 </span>            : 
+<span class="lineNum">     247 </span>            :         bool hasDelegates() const
+<span class="lineNum">     248 </span>            :                 /// Returns true if there are registered delegates.
+<span class="lineNum">     249 </span>            :         {
+<span class="lineNum">     250 </span>            :                 return !empty();
+<span class="lineNum">     251 </span>            :         }
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span>            :         ActiveResult&lt;TArgs&gt; notifyAsync(const void* pSender, const TArgs&amp; args)
+<span class="lineNum">     254 </span>            :                 /// Sends a notification to all registered delegates. The order is
+<span class="lineNum">     255 </span>            :                 /// determined by the TStrategy. This method is not blocking and will
+<span class="lineNum">     256 </span>            :                 /// immediately return. The delegates are invoked in a separate thread.
+<span class="lineNum">     257 </span>            :                 /// Call activeResult.wait() to wait until the notification has ended.
+<span class="lineNum">     258 </span>            :                 /// While executing, other objects can change the delegate list. These changes don't
+<span class="lineNum">     259 </span>            :                 /// influence the current active notifications but are activated with
+<span class="lineNum">     260 </span>            :                 /// the next notify. If a delegate is removed during a notify(), the
+<span class="lineNum">     261 </span>            :                 /// delegate will no longer be invoked (unless it has already been
+<span class="lineNum">     262 </span>            :                 /// invoked prior to removal). If one of the delegates throws an exception,
+<span class="lineNum">     263 </span>            :                 /// the execution is aborted and the exception is propagated to the caller.
+<span class="lineNum">     264 </span>            :         {
+<span class="lineNum">     265 </span>            :                 NotifyAsyncParams params(pSender, args);
+<span class="lineNum">     266 </span>            :                 {
+<span class="lineNum">     267 </span>            :                         typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     268 </span>            : 
+<span class="lineNum">     269 </span>            :                         // thread-safeness:
+<span class="lineNum">     270 </span>            :                         // copy should be faster and safer than blocking until
+<span class="lineNum">     271 </span>            :                         // execution ends
+<span class="lineNum">     272 </span>            :                         // make a copy of the strategy here to guarantee that
+<span class="lineNum">     273 </span>            :                         // between notifyAsync and the execution of the method no changes can occur
+<span class="lineNum">     274 </span>            : 
+<span class="lineNum">     275 </span>            :                         params.ptrStrat = SharedPtr&lt;TStrategy&gt;(new TStrategy(_strategy));
+<span class="lineNum">     276 </span>            :                         params.enabled  = _enabled;
+<span class="lineNum">     277 </span>            :                 }
+<span class="lineNum">     278 </span>            :                 ActiveResult&lt;TArgs&gt; result = _executeAsync(params);
+<span class="lineNum">     279 </span>            :                 return result;
+<span class="lineNum">     280 </span>            :         }
+<span class="lineNum">     281 </span>            : 
+<span class="lineNum">     282 </span>            :         void enable()
+<span class="lineNum">     283 </span>            :                 /// Enables the event.
+<span class="lineNum">     284 </span>            :         {
+<span class="lineNum">     285 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     286 </span>            :                 _enabled = true;
+<span class="lineNum">     287 </span>            :         }
+<span class="lineNum">     288 </span>            : 
+<span class="lineNum">     289 </span>            :         void disable()
+<span class="lineNum">     290 </span>            :                 /// Disables the event. notify and notifyAsnyc will be ignored,
+<span class="lineNum">     291 </span>            :                 /// but adding/removing delegates is still allowed.
+<span class="lineNum">     292 </span>            :         {
+<span class="lineNum">     293 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     294 </span>            :                 _enabled = false;
+<span class="lineNum">     295 </span>            :         }
+<span class="lineNum">     296 </span>            : 
+<span class="lineNum">     297 </span>            :         bool isEnabled() const
+<span class="lineNum">     298 </span>            :                 /// Returns true if event is enabled.
+<span class="lineNum">     299 </span>            :         {
+<span class="lineNum">     300 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     301 </span>            :                 return _enabled;
+<span class="lineNum">     302 </span>            :         }
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span>            :         void clear()
+<span class="lineNum">     305 </span>            :                 /// Removes all delegates.
+<span class="lineNum">     306 </span>            :         {
+<span class="lineNum">     307 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     308 </span>            :                 _strategy.clear();
+<span class="lineNum">     309 </span>            :         }
+<span class="lineNum">     310 </span>            : 
+<span class="lineNum">     311 </span>            :         bool empty() const
+<span class="lineNum">     312 </span>            :                 /// Checks if any delegates are registered at the delegate.
+<span class="lineNum">     313 </span>            :         {
+<span class="lineNum">     314 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     315 </span>            :                 return _strategy.empty();
+<span class="lineNum">     316 </span>            :         }
+<a name="317"><span class="lineNum">     317 </span>            : </a>
+<span class="lineNum">     318 </span>            : protected:
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :         struct NotifyAsyncParams</span>
+<span class="lineNum">     320 </span>            :         {
+<span class="lineNum">     321 </span>            :                 SharedPtr&lt;TStrategy&gt; ptrStrat;
+<span class="lineNum">     322 </span>            :                 const void* pSender;
+<span class="lineNum">     323 </span>            :                 TArgs       args;
+<span class="lineNum">     324 </span>            :                 bool        enabled;
+<span class="lineNum">     325 </span>            : 
+<span class="lineNum">     326 </span>            :                 NotifyAsyncParams(const void* pSend, const TArgs&amp; a):ptrStrat(), pSender(pSend), args(a), enabled(true)
+<span class="lineNum">     327 </span>            :                         /// Default constructor reduces the need for TArgs to have an empty constructor, only copy constructor is needed.
+<span class="lineNum">     328 </span>            :                 {
+<span class="lineNum">     329 </span>            :                 }
+<span class="lineNum">     330 </span>            :         };
+<span class="lineNum">     331 </span>            : 
+<a name="332"><span class="lineNum">     332 </span>            :         ActiveMethod&lt;TArgs, NotifyAsyncParams, AbstractEvent&gt; _executeAsync;</a>
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :         TArgs executeAsyncImpl(const NotifyAsyncParams&amp; par)</span>
+<span class="lineNum">     335 </span>            :         {
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :                 if (!par.enabled)</span>
+<span class="lineNum">     337 </span>            :                 {
+<span class="lineNum">     338 </span><span class="lineNoCov">          0 :                         return par.args;</span>
+<span class="lineNum">     339 </span>            :                 }
+<span class="lineNum">     340 </span>            : 
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :                 NotifyAsyncParams params = par;</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :                 TArgs retArgs(params.args);</span>
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 :                 params.ptrStrat-&gt;notify(params.pSender, retArgs);</span>
+<span class="lineNum">     344 </span><span class="lineNoCov">          0 :                 return retArgs;</span>
+<span class="lineNum">     345 </span>            :         }
+<span class="lineNum">     346 </span>            : 
+<span class="lineNum">     347 </span>            :         TStrategy _strategy; /// The strategy used to notify observers.
+<span class="lineNum">     348 </span>            :         bool      _enabled;  /// Stores if an event is enabled. Notifies on disabled events have no effect
+<span class="lineNum">     349 </span>            :                              /// but it is possible to change the observers.
+<span class="lineNum">     350 </span>            :         mutable TMutex _mutex;
+<span class="lineNum">     351 </span>            : 
+<span class="lineNum">     352 </span>            : private:
+<span class="lineNum">     353 </span>            :         AbstractEvent(const AbstractEvent&amp; other);
+<span class="lineNum">     354 </span>            :         AbstractEvent&amp; operator = (const AbstractEvent&amp; other);
+<span class="lineNum">     355 </span>            : };
+<span class="lineNum">     356 </span>            : 
+<span class="lineNum">     357 </span>            : 
+<span class="lineNum">     358 </span>            : template &lt;class TStrategy, class TDelegate, class TMutex&gt;
+<span class="lineNum">     359 </span>            : class AbstractEvent&lt;void, TStrategy, TDelegate, TMutex&gt;
+<span class="lineNum">     360 </span>            : {
+<span class="lineNum">     361 </span>            : public:
+<span class="lineNum">     362 </span>            :         typedef TDelegate* DelegateHandle;
+<span class="lineNum">     363 </span>            : 
+<span class="lineNum">     364 </span>            :         AbstractEvent():
+<span class="lineNum">     365 </span>            :                 _executeAsync(this, &amp;AbstractEvent::executeAsyncImpl),
+<span class="lineNum">     366 </span>            :                 _enabled(true)
+<span class="lineNum">     367 </span>            :         {
+<span class="lineNum">     368 </span>            :         }
+<span class="lineNum">     369 </span>            : 
+<span class="lineNum">     370 </span>            :         AbstractEvent(const TStrategy&amp; strat):
+<span class="lineNum">     371 </span>            :                 _executeAsync(this, &amp;AbstractEvent::executeAsyncImpl),
+<span class="lineNum">     372 </span>            :                 _strategy(strat),
+<span class="lineNum">     373 </span>            :                 _enabled(true)
+<span class="lineNum">     374 </span>            :         {
+<span class="lineNum">     375 </span>            :         }
+<span class="lineNum">     376 </span>            : 
+<span class="lineNum">     377 </span>            :         virtual ~AbstractEvent()
+<span class="lineNum">     378 </span>            :         {
+<span class="lineNum">     379 </span>            :         }
+<span class="lineNum">     380 </span>            : 
+<span class="lineNum">     381 </span>            :         void operator += (const TDelegate&amp; aDelegate)
+<span class="lineNum">     382 </span>            :                 /// Adds a delegate to the event.
+<span class="lineNum">     383 </span>            :                 ///
+<span class="lineNum">     384 </span>            :                 /// Exact behavior is determined by the TStrategy.
+<span class="lineNum">     385 </span>            :         {
+<span class="lineNum">     386 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     387 </span>            :                 _strategy.add(aDelegate);
+<span class="lineNum">     388 </span>            :         }
+<span class="lineNum">     389 </span>            : 
+<span class="lineNum">     390 </span>            :         void operator -= (const TDelegate&amp; aDelegate)
+<span class="lineNum">     391 </span>            :                 /// Removes a delegate from the event.
+<span class="lineNum">     392 </span>            :                 ///
+<span class="lineNum">     393 </span>            :                 /// If the delegate is not found, this function does nothing.
+<span class="lineNum">     394 </span>            :         {
+<span class="lineNum">     395 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     396 </span>            :                 _strategy.remove(aDelegate);
+<span class="lineNum">     397 </span>            :         }
+<span class="lineNum">     398 </span>            : 
+<span class="lineNum">     399 </span>            :         DelegateHandle add(const TDelegate&amp; aDelegate)
+<span class="lineNum">     400 </span>            :                 /// Adds a delegate to the event.
+<span class="lineNum">     401 </span>            :                 ///
+<span class="lineNum">     402 </span>            :                 /// Exact behavior is determined by the TStrategy.
+<span class="lineNum">     403 </span>            :                 ///
+<span class="lineNum">     404 </span>            :                 /// Returns a DelegateHandle which can be used in call to
+<span class="lineNum">     405 </span>            :                 /// remove() to remove the delegate.
+<span class="lineNum">     406 </span>            :         {
+<span class="lineNum">     407 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     408 </span>            :                 return _strategy.add(aDelegate);
+<span class="lineNum">     409 </span>            :         }
+<span class="lineNum">     410 </span>            : 
+<span class="lineNum">     411 </span>            :         void remove(DelegateHandle delegateHandle)
+<span class="lineNum">     412 </span>            :                 /// Removes a delegate from the event using a DelegateHandle
+<span class="lineNum">     413 </span>            :                 /// returned by add().
+<span class="lineNum">     414 </span>            :                 ///
+<span class="lineNum">     415 </span>            :                 /// If the delegate is not found, this function does nothing.
+<span class="lineNum">     416 </span>            :         {
+<span class="lineNum">     417 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     418 </span>            :                 _strategy.remove(delegateHandle);
+<span class="lineNum">     419 </span>            :         }
+<span class="lineNum">     420 </span>            : 
+<span class="lineNum">     421 </span>            :         void operator () (const void* pSender)
+<span class="lineNum">     422 </span>            :                 /// Shortcut for notify(pSender, args);
+<span class="lineNum">     423 </span>            :         {
+<span class="lineNum">     424 </span>            :                 notify(pSender);
+<span class="lineNum">     425 </span>            :         }
+<span class="lineNum">     426 </span>            : 
+<span class="lineNum">     427 </span>            :         void operator () ()
+<span class="lineNum">     428 </span>            :                 /// Shortcut for notify(args).
+<span class="lineNum">     429 </span>            :         {
+<span class="lineNum">     430 </span>            :                 notify(0);
+<span class="lineNum">     431 </span>            :         }
+<span class="lineNum">     432 </span>            : 
+<span class="lineNum">     433 </span>            :         void notify(const void* pSender)
+<span class="lineNum">     434 </span>            :                 /// Sends a notification to all registered delegates. The order is
+<span class="lineNum">     435 </span>            :                 /// determined by the TStrategy. This method is blocking. While executing,
+<span class="lineNum">     436 </span>            :                 /// the list of delegates may be modified. These changes don't
+<span class="lineNum">     437 </span>            :                 /// influence the current active notifications but are activated with
+<span class="lineNum">     438 </span>            :                 /// the next notify. If a delegate is removed during a notify(), the
+<span class="lineNum">     439 </span>            :                 /// delegate will no longer be invoked (unless it has already been
+<span class="lineNum">     440 </span>            :                 /// invoked prior to removal). If one of the delegates throws an exception,
+<span class="lineNum">     441 </span>            :                 /// the notify method is immediately aborted and the exception is propagated
+<span class="lineNum">     442 </span>            :                 /// to the caller.
+<span class="lineNum">     443 </span>            :         {
+<span class="lineNum">     444 </span>            :                 Poco::ScopedLockWithUnlock&lt;TMutex&gt; lock(_mutex);
+<span class="lineNum">     445 </span>            : 
+<span class="lineNum">     446 </span>            :                 if (!_enabled) return;
+<span class="lineNum">     447 </span>            : 
+<span class="lineNum">     448 </span>            :                 // thread-safeness:
+<span class="lineNum">     449 </span>            :                 // copy should be faster and safer than blocking until
+<span class="lineNum">     450 </span>            :                 // execution ends
+<span class="lineNum">     451 </span>            :                 TStrategy strategy(_strategy);
+<span class="lineNum">     452 </span>            :                 lock.unlock();
+<span class="lineNum">     453 </span>            :                 strategy.notify(pSender);
+<span class="lineNum">     454 </span>            :         }
+<span class="lineNum">     455 </span>            : 
+<span class="lineNum">     456 </span>            :         ActiveResult&lt;void&gt; notifyAsync(const void* pSender)
+<span class="lineNum">     457 </span>            :                 /// Sends a notification to all registered delegates. The order is
+<span class="lineNum">     458 </span>            :                 /// determined by the TStrategy. This method is not blocking and will
+<span class="lineNum">     459 </span>            :                 /// immediately return. The delegates are invoked in a separate thread.
+<span class="lineNum">     460 </span>            :                 /// Call activeResult.wait() to wait until the notification has ended.
+<span class="lineNum">     461 </span>            :                 /// While executing, other objects can change the delegate list. These changes don't
+<span class="lineNum">     462 </span>            :                 /// influence the current active notifications but are activated with
+<span class="lineNum">     463 </span>            :                 /// the next notify. If a delegate is removed during a notify(), the
+<span class="lineNum">     464 </span>            :                 /// delegate will no longer be invoked (unless it has already been
+<span class="lineNum">     465 </span>            :                 /// invoked prior to removal). If one of the delegates throws an exception,
+<span class="lineNum">     466 </span>            :                 /// the execution is aborted and the exception is propagated to the caller.
+<span class="lineNum">     467 </span>            :         {
+<span class="lineNum">     468 </span>            :                 NotifyAsyncParams params(pSender);
+<span class="lineNum">     469 </span>            :                 {
+<span class="lineNum">     470 </span>            :                         typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     471 </span>            : 
+<span class="lineNum">     472 </span>            :                         // thread-safeness:
+<span class="lineNum">     473 </span>            :                         // copy should be faster and safer than blocking until
+<span class="lineNum">     474 </span>            :                         // execution ends
+<span class="lineNum">     475 </span>            :                         // make a copy of the strategy here to guarantee that
+<span class="lineNum">     476 </span>            :                         // between notifyAsync and the execution of the method no changes can occur
+<span class="lineNum">     477 </span>            : 
+<span class="lineNum">     478 </span>            :                         params.ptrStrat = SharedPtr&lt;TStrategy&gt;(new TStrategy(_strategy));
+<span class="lineNum">     479 </span>            :                         params.enabled  = _enabled;
+<span class="lineNum">     480 </span>            :                 }
+<span class="lineNum">     481 </span>            :                 ActiveResult&lt;void&gt; result = _executeAsync(params);
+<span class="lineNum">     482 </span>            :                 return result;
+<span class="lineNum">     483 </span>            :         }
+<span class="lineNum">     484 </span>            : 
+<span class="lineNum">     485 </span>            :         void enable()
+<span class="lineNum">     486 </span>            :                 /// Enables the event.
+<span class="lineNum">     487 </span>            :         {
+<span class="lineNum">     488 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     489 </span>            :                 _enabled = true;
+<span class="lineNum">     490 </span>            :         }
+<span class="lineNum">     491 </span>            : 
+<span class="lineNum">     492 </span>            :         void disable()
+<span class="lineNum">     493 </span>            :                 /// Disables the event. notify and notifyAsnyc will be ignored,
+<span class="lineNum">     494 </span>            :                 /// but adding/removing delegates is still allowed.
+<span class="lineNum">     495 </span>            :         {
+<span class="lineNum">     496 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     497 </span>            :                 _enabled = false;
+<span class="lineNum">     498 </span>            :         }
+<span class="lineNum">     499 </span>            : 
+<span class="lineNum">     500 </span>            :         bool isEnabled() const
+<span class="lineNum">     501 </span>            :         {
+<span class="lineNum">     502 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     503 </span>            :                 return _enabled;
+<span class="lineNum">     504 </span>            :         }
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span>            :         void clear()
+<span class="lineNum">     507 </span>            :                 /// Removes all delegates.
+<span class="lineNum">     508 </span>            :         {
+<span class="lineNum">     509 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     510 </span>            :                 _strategy.clear();
+<span class="lineNum">     511 </span>            :         }
+<span class="lineNum">     512 </span>            : 
+<span class="lineNum">     513 </span>            :         bool empty() const
+<span class="lineNum">     514 </span>            :                 /// Checks if any delegates are registered at the delegate.
+<span class="lineNum">     515 </span>            :         {
+<span class="lineNum">     516 </span>            :                 typename TMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     517 </span>            :                 return _strategy.empty();
+<span class="lineNum">     518 </span>            :         }
+<span class="lineNum">     519 </span>            : 
+<span class="lineNum">     520 </span>            : protected:
+<span class="lineNum">     521 </span>            :         struct NotifyAsyncParams
+<span class="lineNum">     522 </span>            :         {
+<span class="lineNum">     523 </span>            :                 SharedPtr&lt;TStrategy&gt; ptrStrat;
+<span class="lineNum">     524 </span>            :                 const void* pSender;
+<span class="lineNum">     525 </span>            :                 bool        enabled;
+<span class="lineNum">     526 </span>            : 
+<span class="lineNum">     527 </span>            :                 NotifyAsyncParams(const void* pSend):ptrStrat(), pSender(pSend), enabled(true)
+<span class="lineNum">     528 </span>            :                         /// Default constructor reduces the need for TArgs to have an empty constructor, only copy constructor is needed.
+<span class="lineNum">     529 </span>            :                 {
+<span class="lineNum">     530 </span>            :                 }
+<span class="lineNum">     531 </span>            :         };
+<span class="lineNum">     532 </span>            : 
+<span class="lineNum">     533 </span>            :         ActiveMethod&lt;void, NotifyAsyncParams, AbstractEvent&gt; _executeAsync;
+<span class="lineNum">     534 </span>            : 
+<span class="lineNum">     535 </span>            :         void executeAsyncImpl(const NotifyAsyncParams&amp; par)
+<span class="lineNum">     536 </span>            :         {
+<span class="lineNum">     537 </span>            :                 if (!par.enabled)
+<span class="lineNum">     538 </span>            :                 {
+<span class="lineNum">     539 </span>            :                         return;
+<span class="lineNum">     540 </span>            :                 }
+<span class="lineNum">     541 </span>            : 
+<span class="lineNum">     542 </span>            :                 NotifyAsyncParams params = par;
+<span class="lineNum">     543 </span>            :                 params.ptrStrat-&gt;notify(params.pSender);
+<span class="lineNum">     544 </span>            :                 return;
+<span class="lineNum">     545 </span>            :         }
+<span class="lineNum">     546 </span>            : 
+<span class="lineNum">     547 </span>            :         TStrategy _strategy; /// The strategy used to notify observers.
+<span class="lineNum">     548 </span>            :         bool      _enabled;  /// Stores if an event is enabled. Notifies on disabled events have no effect
+<span class="lineNum">     549 </span>            :                              /// but it is possible to change the observers.
+<span class="lineNum">     550 </span>            :         mutable TMutex _mutex;
+<span class="lineNum">     551 </span>            : 
+<span class="lineNum">     552 </span>            : private:
+<span class="lineNum">     553 </span>            :         AbstractEvent(const AbstractEvent&amp; other);
+<span class="lineNum">     554 </span>            :         AbstractEvent&amp; operator = (const AbstractEvent&amp; other);
+<span class="lineNum">     555 </span>            : };
+<span class="lineNum">     556 </span>            : 
+<span class="lineNum">     557 </span>            : 
+<span class="lineNum">     558 </span>            : } // namespace Poco
+<span class="lineNum">     559 </span>            : 
+<span class="lineNum">     560 </span>            : 
+<span class="lineNum">     561 </span>            : #endif // Foundation_AbstractFoundation_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

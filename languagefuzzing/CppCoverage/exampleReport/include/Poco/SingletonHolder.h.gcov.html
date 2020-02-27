@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/SingletonHolder.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - SingletonHolder.h<span style="font-size: 80%;"> (source / <a href="SingletonHolder.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntry">30</td>
+            <td class="headerCovTableEntryLo">70.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // SingletonHolder.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Core
+<span class="lineNum">       6 </span>            : // Module:  SingletonHolder
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the SingletonHolder template.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_SingletonHolder_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_SingletonHolder_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : #include &quot;Poco/Mutex.h&quot;
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : namespace Poco {
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : template &lt;class S&gt;
+<span class="lineNum">      29 </span>            : class SingletonHolder
+<span class="lineNum">      30 </span>            :         /// This is a helper template class for managing
+<span class="lineNum">      31 </span>            :         /// singleton objects allocated on the heap.
+<span class="lineNum">      32 </span>            :         /// The class ensures proper deletion (including
+<span class="lineNum">      33 </span>            :         /// calling of the destructor) of singleton objects
+<span class="lineNum">      34 </span>            :         /// when the application that created them terminates.
+<a name="35"><span class="lineNum">      35 </span>            : {</a>
+<span class="lineNum">      36 </span>            : public:
+<span class="lineNum">      37 </span><span class="lineCov">         10 :         SingletonHolder():</span>
+<span class="lineNum">      38 </span><span class="lineCov">         10 :                 _pS(0)</span>
+<span class="lineNum">      39 </span>            :                 /// Creates the SingletonHolder.
+<span class="lineNum">      40 </span>            :         {
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">         10 :         }</span></a>
+<span class="lineNum">      42 </span>            :         
+<span class="lineNum">      43 </span><span class="lineCov">         10 :         ~SingletonHolder()</span>
+<span class="lineNum">      44 </span>            :                 /// Destroys the SingletonHolder and the singleton
+<span class="lineNum">      45 </span>            :                 /// object that it holds.
+<span class="lineNum">      46 </span>            :         {
+<span class="lineNum">      47 </span><span class="lineCov">         10 :                 delete _pS;</span>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">         10 :         }</span></a>
+<span class="lineNum">      49 </span>            :         
+<span class="lineNum">      50 </span><span class="lineCov">          1 :         S* get()</span>
+<span class="lineNum">      51 </span>            :                 /// Returns a pointer to the singleton object
+<span class="lineNum">      52 </span>            :                 /// hold by the SingletonHolder. The first call
+<span class="lineNum">      53 </span>            :                 /// to get will create the singleton.
+<span class="lineNum">      54 </span>            :         {
+<span class="lineNum">      55 </span><span class="lineCov">          2 :                 FastMutex::ScopedLock lock(_m);</span>
+<span class="lineNum">      56 </span><span class="lineCov">          1 :                 if (!_pS) _pS = new S;</span>
+<span class="lineNum">      57 </span><span class="lineCov">          2 :                 return _pS;</span>
+<span class="lineNum">      58 </span>            :         }
+<span class="lineNum">      59 </span>            :         
+<span class="lineNum">      60 </span>            :         void reset()
+<span class="lineNum">      61 </span>            :                 /// Deletes the singleton object.
+<span class="lineNum">      62 </span>            :         {
+<span class="lineNum">      63 </span>            :                 FastMutex::ScopedLock lock(_m);
+<span class="lineNum">      64 </span>            :                 delete _pS;
+<span class="lineNum">      65 </span>            :                 _pS = 0;
+<span class="lineNum">      66 </span>            :         }
+<span class="lineNum">      67 </span>            :         
+<span class="lineNum">      68 </span>            : private:
+<span class="lineNum">      69 </span>            :         S* _pS;
+<span class="lineNum">      70 </span>            :         FastMutex _m;
+<span class="lineNum">      71 </span>            : };
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            : } // namespace Poco
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            : #endif // Foundation_SingletonHolder_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/Clock.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - Clock.h<span style="font-size: 80%;"> (source / <a href="Clock.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Clock.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: DateTime
+<span class="lineNum">       6 </span>            : // Module:  Clock
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the Clock class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2013, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_Clock_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_Clock_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : namespace Poco {
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : class Foundation_API Clock
+<span class="lineNum">      28 </span>            :         /// A Clock stores a monotonic* clock value
+<span class="lineNum">      29 </span>            :         /// with (theoretical) microseconds resolution.
+<span class="lineNum">      30 </span>            :         /// Clocks can be compared with each other
+<span class="lineNum">      31 </span>            :         /// and simple arithmetic is supported.
+<span class="lineNum">      32 </span>            :         ///
+<span class="lineNum">      33 </span>            :         /// [*] Note that Clock values are only monotonic if
+<span class="lineNum">      34 </span>            :         /// the operating system provides a monotonic clock.
+<span class="lineNum">      35 </span>            :         /// The monotonic() function can be used to check whether
+<span class="lineNum">      36 </span>            :         /// the system's clock is monotonic.
+<span class="lineNum">      37 </span>            :         ///
+<span class="lineNum">      38 </span>            :         /// Monotonic Clock is available on Windows, Linux, OS X 
+<span class="lineNum">      39 </span>            :         /// and on POSIX platforms supporting clock_gettime() with CLOCK_MONOTONIC.       
+<span class="lineNum">      40 </span>            :         ///
+<span class="lineNum">      41 </span>            :         /// Clock values are relative to a system-dependent epoch time
+<span class="lineNum">      42 </span>            :         /// (usually the system's startup time) and have no relation
+<span class="lineNum">      43 </span>            :         /// to the time of day.
+<span class="lineNum">      44 </span>            : {
+<span class="lineNum">      45 </span>            : public:
+<span class="lineNum">      46 </span>            :         typedef Int64 ClockVal;
+<span class="lineNum">      47 </span>            :                 /// Monotonic clock value in microsecond resolution.
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            :         typedef Int64 ClockDiff;
+<span class="lineNum">      50 </span>            :                 /// Difference between two ClockVal values in microseconds.
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            :         static const ClockVal CLOCKVAL_MIN; /// Minimum clock value.
+<span class="lineNum">      53 </span>            :         static const ClockVal CLOCKVAL_MAX; /// Maximum clock value.
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            :         Clock();
+<span class="lineNum">      56 </span>            :                 /// Creates a Clock with the current system clock value.
+<span class="lineNum">      57 </span>            :                 
+<span class="lineNum">      58 </span>            :         Clock(ClockVal tv);
+<span class="lineNum">      59 </span>            :                 /// Creates a Clock from the given clock value.
+<span class="lineNum">      60 </span>            :                 
+<span class="lineNum">      61 </span>            :         Clock(const Clock&amp; other);
+<span class="lineNum">      62 </span>            :                 /// Copy constructor.
+<span class="lineNum">      63 </span>            :                 
+<span class="lineNum">      64 </span>            :         ~Clock();
+<span class="lineNum">      65 </span>            :                 /// Destroys the Clock.
+<span class="lineNum">      66 </span>            :                 
+<span class="lineNum">      67 </span>            :         Clock&amp; operator = (const Clock&amp; other);
+<span class="lineNum">      68 </span>            :         Clock&amp; operator = (ClockVal tv);
+<span class="lineNum">      69 </span>            :         
+<span class="lineNum">      70 </span>            :         void swap(Clock&amp; clock);
+<span class="lineNum">      71 </span>            :                 /// Swaps the Clock with another one.
+<span class="lineNum">      72 </span>            :         
+<span class="lineNum">      73 </span>            :         void update();
+<span class="lineNum">      74 </span>            :                 /// Updates the Clock with the current system clock.
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            :         bool operator == (const Clock&amp; ts) const;
+<span class="lineNum">      77 </span>            :         bool operator != (const Clock&amp; ts) const;
+<span class="lineNum">      78 </span>            :         bool operator &gt;  (const Clock&amp; ts) const;
+<span class="lineNum">      79 </span>            :         bool operator &gt;= (const Clock&amp; ts) const;
+<span class="lineNum">      80 </span>            :         bool operator &lt;  (const Clock&amp; ts) const;
+<span class="lineNum">      81 </span>            :         bool operator &lt;= (const Clock&amp; ts) const;
+<span class="lineNum">      82 </span>            :         
+<span class="lineNum">      83 </span>            :         Clock  operator +  (ClockDiff d) const;
+<span class="lineNum">      84 </span>            :         Clock  operator -  (ClockDiff d) const;
+<span class="lineNum">      85 </span>            :         ClockDiff operator - (const Clock&amp; ts) const;
+<span class="lineNum">      86 </span>            :         Clock&amp; operator += (ClockDiff d);
+<span class="lineNum">      87 </span>            :         Clock&amp; operator -= (ClockDiff d);
+<span class="lineNum">      88 </span>            :         
+<span class="lineNum">      89 </span>            :         ClockVal microseconds() const;
+<span class="lineNum">      90 </span>            :                 /// Returns the clock value expressed in microseconds
+<span class="lineNum">      91 </span>            :                 /// since the system-specific epoch time (usually system
+<span class="lineNum">      92 </span>            :                 /// startup).
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            :         ClockVal raw() const;
+<span class="lineNum">      95 </span>            :                 /// Returns the clock value expressed in microseconds
+<span class="lineNum">      96 </span>            :                 /// since the system-specific epoch time (usually system
+<span class="lineNum">      97 </span>            :                 /// startup).
+<span class="lineNum">      98 </span>            :                 ///
+<span class="lineNum">      99 </span>            :                 /// Same as microseconds().
+<span class="lineNum">     100 </span>            :         
+<span class="lineNum">     101 </span>            :         ClockDiff elapsed() const;
+<span class="lineNum">     102 </span>            :                 /// Returns the time elapsed since the time denoted by
+<span class="lineNum">     103 </span>            :                 /// the Clock instance. Equivalent to Clock() - *this.
+<span class="lineNum">     104 </span>            :         
+<span class="lineNum">     105 </span>            :         bool isElapsed(ClockDiff interval) const;
+<span class="lineNum">     106 </span>            :                 /// Returns true iff the given interval has passed
+<span class="lineNum">     107 </span>            :                 /// since the time denoted by the Clock instance.
+<span class="lineNum">     108 </span>            :         
+<span class="lineNum">     109 </span>            :         static ClockDiff resolution();
+<span class="lineNum">     110 </span>            :                 /// Returns the resolution in units per second.
+<span class="lineNum">     111 </span>            :                 /// Since the Clock class has microsecond resolution,
+<span class="lineNum">     112 </span>            :                 /// the returned value is always 1000000.
+<span class="lineNum">     113 </span>            :                 
+<span class="lineNum">     114 </span>            :         static ClockDiff accuracy();
+<span class="lineNum">     115 </span>            :                 /// Returns the system's clock accuracy in microseconds.
+<span class="lineNum">     116 </span>            :                 
+<span class="lineNum">     117 </span>            :         static bool monotonic();
+<span class="lineNum">     118 </span>            :                 /// Returns true iff the system's clock is monotonic.
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span>            : private:
+<span class="lineNum">     121 </span>            :         ClockVal _clock;
+<span class="lineNum">     122 </span>            : };
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span>            : //
+<span class="lineNum">     126 </span>            : // inlines
+<span class="lineNum">     127 </span>            : //
+<span class="lineNum">     128 </span>            : inline bool Clock::operator == (const Clock&amp; ts) const
+<span class="lineNum">     129 </span>            : {
+<span class="lineNum">     130 </span>            :         return _clock == ts._clock;
+<span class="lineNum">     131 </span>            : }
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span>            : inline bool Clock::operator != (const Clock&amp; ts) const
+<span class="lineNum">     135 </span>            : {
+<span class="lineNum">     136 </span>            :         return _clock != ts._clock;
+<span class="lineNum">     137 </span>            : }
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span>            : inline bool Clock::operator &gt;  (const Clock&amp; ts) const
+<span class="lineNum">     141 </span>            : {
+<span class="lineNum">     142 </span>            :         return _clock &gt; ts._clock;
+<span class="lineNum">     143 </span>            : }
+<span class="lineNum">     144 </span>            : 
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span>            : inline bool Clock::operator &gt;= (const Clock&amp; ts) const
+<span class="lineNum">     147 </span>            : {
+<span class="lineNum">     148 </span>            :         return _clock &gt;= ts._clock;
+<span class="lineNum">     149 </span>            : }
+<a name="150"><span class="lineNum">     150 </span>            : </a>
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 : inline bool Clock::operator &lt;  (const Clock&amp; ts) const</span>
+<span class="lineNum">     153 </span>            : {
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :         return _clock &lt; ts._clock;</span>
+<span class="lineNum">     155 </span>            : }
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span>            : inline bool Clock::operator &lt;= (const Clock&amp; ts) const
+<span class="lineNum">     159 </span>            : {
+<span class="lineNum">     160 </span>            :         return _clock &lt;= ts._clock;
+<span class="lineNum">     161 </span>            : }
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span>            : inline Clock Clock::operator + (Clock::ClockDiff d) const
+<span class="lineNum">     165 </span>            : {
+<span class="lineNum">     166 </span>            :         return Clock(_clock + d);
+<span class="lineNum">     167 </span>            : }
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span>            : inline Clock Clock::operator - (Clock::ClockDiff d) const
+<span class="lineNum">     171 </span>            : {
+<span class="lineNum">     172 </span>            :         return Clock(_clock - d);
+<span class="lineNum">     173 </span>            : }
+<a name="174"><span class="lineNum">     174 </span>            : </a>
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 : inline Clock::ClockDiff Clock::operator - (const Clock&amp; ts) const</span>
+<span class="lineNum">     177 </span>            : {
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :         return _clock - ts._clock;</span>
+<span class="lineNum">     179 </span>            : }
+<a name="180"><span class="lineNum">     180 </span>            : </a>
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 : inline Clock&amp; Clock::operator += (Clock::ClockDiff d)</span>
+<span class="lineNum">     183 </span>            : {
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :         _clock += d;</span>
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     186 </span>            : }
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span>            : inline Clock&amp; Clock::operator -= (Clock::ClockDiff d)
+<span class="lineNum">     190 </span>            : {
+<span class="lineNum">     191 </span>            :         _clock -= d;
+<span class="lineNum">     192 </span>            :         return *this;
+<span class="lineNum">     193 </span>            : }
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span>            : inline Clock::ClockVal Clock::microseconds() const
+<span class="lineNum">     197 </span>            : {
+<span class="lineNum">     198 </span>            :         return _clock;
+<span class="lineNum">     199 </span>            : }
+<a name="200"><span class="lineNum">     200 </span>            : </a>
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 : inline Clock::ClockDiff Clock::elapsed() const</span>
+<span class="lineNum">     203 </span>            : {
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :         Clock now;</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :         return now - *this;</span>
+<span class="lineNum">     206 </span>            : }
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span>            : 
+<span class="lineNum">     209 </span>            : inline bool Clock::isElapsed(Clock::ClockDiff interval) const
+<span class="lineNum">     210 </span>            : {
+<span class="lineNum">     211 </span>            :         Clock now;
+<span class="lineNum">     212 </span>            :         Clock::ClockDiff diff = now - *this;
+<span class="lineNum">     213 </span>            :         return diff &gt;= interval;
+<span class="lineNum">     214 </span>            : }
+<a name="215"><span class="lineNum">     215 </span>            : </a>
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 : inline Clock::ClockDiff Clock::resolution()</span>
+<span class="lineNum">     218 </span>            : {
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :         return 1000000;</span>
+<span class="lineNum">     220 </span>            : }
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span>            : inline void swap(Clock&amp; s1, Clock&amp; s2)
+<span class="lineNum">     224 </span>            : {
+<span class="lineNum">     225 </span>            :         s1.swap(s2);
+<span class="lineNum">     226 </span>            : }
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span>            : 
+<span class="lineNum">     229 </span>            : inline Clock::ClockVal Clock::raw() const
+<span class="lineNum">     230 </span>            : {
+<span class="lineNum">     231 </span>            :         return _clock;
+<span class="lineNum">     232 </span>            : }
+<span class="lineNum">     233 </span>            : 
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span>            : } // namespace Poco
+<span class="lineNum">     236 </span>            : 
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            : #endif // Foundation_Clock_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

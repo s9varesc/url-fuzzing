@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/SimpleFileChannel.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - SimpleFileChannel.cpp<span style="font-size: 80%;"> (source / <a href="SimpleFileChannel.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">112</td>
+            <td class="headerCovTableEntryLo">4.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntryLo">11.1 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // SimpleFileChannel.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Logging
+<span class="lineNum">       6 </span>            : // Module:  SimpleFileChannel
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2005-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/SimpleFileChannel.h&quot;
+<span class="lineNum">      16 </span>            : #include &quot;Poco/LogFile.h&quot;
+<span class="lineNum">      17 </span>            : #include &quot;Poco/File.h&quot;
+<span class="lineNum">      18 </span>            : #include &quot;Poco/Message.h&quot;
+<span class="lineNum">      19 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      20 </span>            : #include &quot;Poco/Ascii.h&quot;
+<span class="lineNum">      21 </span>            : #include &quot;Poco/String.h&quot;
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : namespace Poco {
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span><span class="lineCov">          1 : const std::string SimpleFileChannel::PROP_PATH          = &quot;path&quot;;</span>
+<span class="lineNum">      28 </span><span class="lineCov">          1 : const std::string SimpleFileChannel::PROP_SECONDARYPATH = &quot;secondaryPath&quot;;</span>
+<span class="lineNum">      29 </span><span class="lineCov">          1 : const std::string SimpleFileChannel::PROP_ROTATION      = &quot;rotation&quot;;</span>
+<span class="lineNum">      30 </span><span class="lineCov">          1 : const std::string SimpleFileChannel::PROP_FLUSH         = &quot;flush&quot;;</span>
+<a name="31"><span class="lineNum">      31 </span>            : </a>
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span><span class="lineNoCov">          0 : SimpleFileChannel::SimpleFileChannel(): </span>
+<span class="lineNum">      34 </span>            :         _limit(0),
+<span class="lineNum">      35 </span>            :         _flush(true),
+<span class="lineNum">      36 </span><span class="lineNoCov">          0 :         _pFile(0)</span>
+<span class="lineNum">      37 </span>            : {
+<span class="lineNum">      38 </span><span class="lineNoCov">          0 : }</span>
+<a name="39"><span class="lineNum">      39 </span>            : </a>
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span><span class="lineNoCov">          0 : SimpleFileChannel::SimpleFileChannel(const std::string&amp; path):</span>
+<span class="lineNum">      42 </span>            :         _path(path),
+<span class="lineNum">      43 </span>            :         _secondaryPath(path + &quot;.0&quot;),
+<span class="lineNum">      44 </span>            :         _limit(0),
+<span class="lineNum">      45 </span>            :         _flush(true),
+<span class="lineNum">      46 </span><span class="lineNoCov">          0 :         _pFile(0)</span>
+<span class="lineNum">      47 </span>            : {
+<span class="lineNum">      48 </span><span class="lineNoCov">          0 : }</span>
+<a name="49"><span class="lineNum">      49 </span>            : </a>
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 : SimpleFileChannel::~SimpleFileChannel()</span>
+<span class="lineNum">      52 </span>            : {
+<span class="lineNum">      53 </span>            :         try
+<span class="lineNum">      54 </span>            :         {
+<span class="lineNum">      55 </span><span class="lineNoCov">          0 :                 close();</span>
+<span class="lineNum">      56 </span>            :         }
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 :         catch (...)</span>
+<span class="lineNum">      58 </span>            :         {
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 :                 poco_unexpected();</span>
+<span class="lineNum">      60 </span>            :         }
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 : }</span>
+<a name="62"><span class="lineNum">      62 </span>            : </a>
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 : void SimpleFileChannel::open()</span>
+<span class="lineNum">      65 </span>            : {
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :         FastMutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">      67 </span>            :         
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :         if (!_pFile)</span>
+<span class="lineNum">      69 </span>            :         {
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :                 File primary(_path);</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :                 File secondary(_secondaryPath);</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :                 Timestamp pt = primary.exists() ? primary.getLastModified() : 0;</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :                 Timestamp st = secondary.exists() ? secondary.getLastModified() : 0;</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :                 std::string path;</span>
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 :                 if (pt &gt;= st)</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :                         path = _path;</span>
+<span class="lineNum">      77 </span>            :                 else
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :                         path = _secondaryPath;</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :                 _pFile = new LogFile(path);</span>
+<span class="lineNum">      80 </span>            :         }
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 : }</span>
+<a name="82"><span class="lineNum">      82 </span>            : </a>
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 : void SimpleFileChannel::close()</span>
+<span class="lineNum">      85 </span>            : {
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :         FastMutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :         delete _pFile;</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :         _pFile = 0;</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 : }</span>
+<a name="91"><span class="lineNum">      91 </span>            : </a>
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 : void SimpleFileChannel::log(const Message&amp; msg)</span>
+<span class="lineNum">      94 </span>            : {
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :         open();</span>
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :         FastMutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">      98 </span>            : 
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :         if (_limit &gt; 0 &amp;&amp; _pFile-&gt;size() &gt;= _limit)</span>
+<span class="lineNum">     100 </span>            :         {
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :                 rotate();</span>
+<span class="lineNum">     102 </span>            :         }
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :         _pFile-&gt;write(msg.getText(), _flush);</span>
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 : }</span>
+<a name="105"><span class="lineNum">     105 </span>            : </a>
+<span class="lineNum">     106 </span>            :         
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 : void SimpleFileChannel::setProperty(const std::string&amp; name, const std::string&amp; value)</span>
+<span class="lineNum">     108 </span>            : {
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :         FastMutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :         if (name == PROP_PATH)</span>
+<span class="lineNum">     112 </span>            :         {
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :                 _path = value;</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :                 if (_secondaryPath.empty())</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :                         _secondaryPath = _path + &quot;.0&quot;;</span>
+<span class="lineNum">     116 </span>            :         }
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :         else if (name == PROP_SECONDARYPATH)</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :                 _secondaryPath = value;</span>
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :         else if (name == PROP_ROTATION)</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :                 setRotation(value);</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :         else if (name == PROP_FLUSH)</span>
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :                 setFlush(value);</span>
+<span class="lineNum">     123 </span>            :         else
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :                 Channel::setProperty(name, value);</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 : }</span>
+<a name="126"><span class="lineNum">     126 </span>            : </a>
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 : std::string SimpleFileChannel::getProperty(const std::string&amp; name) const</span>
+<span class="lineNum">     129 </span>            : {
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :         if (name == PROP_PATH)</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :                 return _path;</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :         else if (name == PROP_SECONDARYPATH)</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :                 return _secondaryPath;</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :         else if (name == PROP_ROTATION)</span>
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :                 return _rotation;</span>
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :         else if (name == PROP_FLUSH)</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :                 return std::string(_flush ? &quot;true&quot; : &quot;false&quot;);</span>
+<span class="lineNum">     138 </span>            :         else
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :                 return Channel::getProperty(name);</span>
+<span class="lineNum">     140 </span>            : }
+<a name="141"><span class="lineNum">     141 </span>            : </a>
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 : Timestamp SimpleFileChannel::creationDate() const</span>
+<span class="lineNum">     144 </span>            : {
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :         if (_pFile)</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :                 return _pFile-&gt;creationDate();</span>
+<span class="lineNum">     147 </span>            :         else
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :                 return 0;</span>
+<span class="lineNum">     149 </span>            : }
+<a name="150"><span class="lineNum">     150 </span>            : </a>
+<span class="lineNum">     151 </span>            :         
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 : UInt64 SimpleFileChannel::size() const</span>
+<span class="lineNum">     153 </span>            : {
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :         if (_pFile)</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :                 return _pFile-&gt;size();</span>
+<span class="lineNum">     156 </span>            :         else
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :                 return 0;</span>
+<span class="lineNum">     158 </span>            : }
+<a name="159"><span class="lineNum">     159 </span>            : </a>
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 : const std::string&amp; SimpleFileChannel::path() const</span>
+<span class="lineNum">     162 </span>            : {
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :         return _path;</span>
+<span class="lineNum">     164 </span>            : }
+<a name="165"><span class="lineNum">     165 </span>            : </a>
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 : const std::string&amp; SimpleFileChannel::secondaryPath() const</span>
+<span class="lineNum">     168 </span>            : {
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :         return _secondaryPath;</span>
+<span class="lineNum">     170 </span>            : }
+<a name="171"><span class="lineNum">     171 </span>            : </a>
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 : void SimpleFileChannel::setRotation(const std::string&amp; rotation)</span>
+<span class="lineNum">     174 </span>            : {
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :         std::string::const_iterator it  = rotation.begin();</span>
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :         std::string::const_iterator end = rotation.end();</span>
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :         UInt64 n = 0;</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :         while (it != end &amp;&amp; Ascii::isSpace(*it)) ++it;</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :         while (it != end &amp;&amp; Ascii::isDigit(*it)) { n *= 10; n += *it++ - '0'; }</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :         while (it != end &amp;&amp; Ascii::isSpace(*it)) ++it;</span>
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :         std::string unit;</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :         while (it != end &amp;&amp; Ascii::isAlpha(*it)) unit += *it++;</span>
+<span class="lineNum">     183 </span>            :         
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :         if (unit == &quot;K&quot;)</span>
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :                 _limit = n*1024;</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :         else if (unit == &quot;M&quot;)</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :                 _limit = n*1024*1024;</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :         else if (unit.empty())</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :                 _limit = n;</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :         else if (unit == &quot;never&quot;)</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :                 _limit = 0;</span>
+<span class="lineNum">     192 </span>            :         else
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :                 throw InvalidArgumentException(&quot;rotation&quot;, rotation);</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :         _rotation = rotation;</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 : }</span>
+<a name="196"><span class="lineNum">     196 </span>            : </a>
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 : void SimpleFileChannel::setFlush(const std::string&amp; flush)</span>
+<span class="lineNum">     199 </span>            : {
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :         _flush = icompare(flush, &quot;true&quot;) == 0;</span>
+<span class="lineNum">     201 </span><span class="lineNoCov">          0 : }</span>
+<a name="202"><span class="lineNum">     202 </span>            : </a>
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 : void SimpleFileChannel::rotate()</span>
+<span class="lineNum">     205 </span>            : {
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :         std::string newPath;</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :         if (_pFile-&gt;path() == _path)</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :                 newPath = _secondaryPath;</span>
+<span class="lineNum">     209 </span>            :         else
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :                 newPath = _path;</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :         File f(newPath);</span>
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :         if (f.exists())</span>
+<span class="lineNum">     213 </span>            :         {
+<span class="lineNum">     214 </span>            :                 try
+<span class="lineNum">     215 </span>            :                 {
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :                         f.remove();</span>
+<span class="lineNum">     217 </span>            :                 }
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :                 catch (...)</span>
+<span class="lineNum">     219 </span>            :                 {
+<span class="lineNum">     220 </span>            :                 }
+<span class="lineNum">     221 </span>            :         }
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :         delete _pFile;</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :         _pFile = new LogFile(newPath);</span>
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 : }</span>
+<a name="225"><span class="lineNum">     225 </span>            : </a>
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span><span class="lineCov">          3 : } // namespace Poco</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,14 +1,14 @@
-	
+
+#include "Poco/URI.h"	
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 
-#include "Poco/URI.h"
 
 
 
-using Poco::URI;
+
  
 
 bool getFileContent(std::string fileName, std::vector<std::string> & vecOfStrs)
@@ -40,6 +40,7 @@ bool getFileContent(std::string fileName, std::vector<std::string> & vecOfStrs)
  
 int main()
 {
+	
 	std::vector<std::string> vecOfStr;
  
 	// Get the contents of file in a vector
@@ -48,9 +49,12 @@ int main()
 	if(result)
 	{
 		// Print the vector contents
-		for(std::string & line : vecOfStr)
-			std::cout<<line<<std::endl;
+		for(std::string & line : vecOfStr){
+			//const char *c = line.c_str();
 			//parse urls
-			URI uri1(line);
+			Poco::URI uri1(line);
+			
+			//std::cout<<uri1<<std::endl;
+		}
 	}
 }
