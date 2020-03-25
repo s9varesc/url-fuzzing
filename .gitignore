@@ -63,6 +63,11 @@ TestCppMain
 *.o
 *.obj
 
+## Ruby
+testuri/*
+RubyCoverage/coverage
+Gemfile.lock
+
 #old stuff
 
 #JaCoCo
