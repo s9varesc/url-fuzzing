@@ -64,8 +64,8 @@ TestCppMain
 *.obj
 
 ## Ruby
-testuri/*
-RubyCoverage/coverage
+testuri/
+RubyCoverage/coverage/
 Gemfile.lock
 
 #old stuff
