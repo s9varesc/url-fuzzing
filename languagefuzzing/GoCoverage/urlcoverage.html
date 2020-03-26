@@ -1,0 +1,1206 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">net/url/url.go (94.2%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">// Copyright 2009 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+// Package url parses URLs and implements query escaping.
+package url
+
+// See RFC 3986. This package generally follows RFC 3986, except where
+// it deviates for compatibility reasons. When sending changes, first
+// search old issues for history on decisions. Unit tests should also
+// contain references to issue numbers with details.
+
+import (
+        "bytes"
+        "errors"
+        "fmt"
+        "sort"
+        "strconv"
+        "strings"
+)
+
+// Error reports an error and the operation and URL that caused it.
+type Error struct {
+        Op  string
+        URL string
+        Err error
+}
+
+func (e *Error) Error() string <span class="cov8" title="1">{ return e.Op + " " + e.URL + ": " + e.Err.Error() }</span>
+
+type timeout interface {
+        Timeout() bool
+}
+
+func (e *Error) Timeout() bool <span class="cov8" title="1">{
+        t, ok := e.Err.(timeout)
+        return ok &amp;&amp; t.Timeout()
+}</span>
+
+type temporary interface {
+        Temporary() bool
+}
+
+func (e *Error) Temporary() bool <span class="cov8" title="1">{
+        t, ok := e.Err.(temporary)
+        return ok &amp;&amp; t.Temporary()
+}</span>
+
+func ishex(c byte) bool <span class="cov8" title="1">{
+        switch </span>{
+        case '0' &lt;= c &amp;&amp; c &lt;= '9':<span class="cov8" title="1">
+                return true</span>
+        case 'a' &lt;= c &amp;&amp; c &lt;= 'f':<span class="cov8" title="1">
+                return true</span>
+        case 'A' &lt;= c &amp;&amp; c &lt;= 'F':<span class="cov8" title="1">
+                return true</span>
+        }
+        <span class="cov8" title="1">return false</span>
+}
+
+func unhex(c byte) byte <span class="cov8" title="1">{
+        switch </span>{
+        case '0' &lt;= c &amp;&amp; c &lt;= '9':<span class="cov8" title="1">
+                return c - '0'</span>
+        case 'a' &lt;= c &amp;&amp; c &lt;= 'f':<span class="cov8" title="1">
+                return c - 'a' + 10</span>
+        case 'A' &lt;= c &amp;&amp; c &lt;= 'F':<span class="cov8" title="1">
+                return c - 'A' + 10</span>
+        }
+        <span class="cov0" title="0">return 0</span>
+}
+
+type encoding int
+
+const (
+        encodePath encoding = 1 + iota
+        encodePathSegment
+        encodeHost
+        encodeZone
+        encodeUserPassword
+        encodeQueryComponent
+        encodeFragment
+)
+
+type EscapeError string
+
+func (e EscapeError) Error() string <span class="cov8" title="1">{
+        return "invalid URL escape " + strconv.Quote(string(e))
+}</span>
+
+type InvalidHostError string
+
+func (e InvalidHostError) Error() string <span class="cov0" title="0">{
+        return "invalid character " + strconv.Quote(string(e)) + " in host name"
+}</span>
+
+// Return true if the specified character should be escaped when
+// appearing in a URL string, according to RFC 3986.
+//
+// Please be informed that for now shouldEscape does not check all
+// reserved characters correctly. See golang.org/issue/5684.
+func shouldEscape(c byte, mode encoding) bool <span class="cov8" title="1">{
+        // §2.3 Unreserved characters (alphanum)
+        if 'A' &lt;= c &amp;&amp; c &lt;= 'Z' || 'a' &lt;= c &amp;&amp; c &lt;= 'z' || '0' &lt;= c &amp;&amp; c &lt;= '9' </span><span class="cov8" title="1">{
+                return false
+        }</span>
+
+        <span class="cov8" title="1">if mode == encodeHost || mode == encodeZone </span><span class="cov8" title="1">{
+                // §3.2.2 Host allows
+                //        sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+                // as part of reg-name.
+                // We add : because we include :port as part of host.
+                // We add [ ] because we include [ipv6]:port as part of host.
+                // We add &lt; &gt; because they're the only characters left that
+                // we could possibly allow, and Parse will reject them if we
+                // escape them (because hosts can't use %-encoding for
+                // ASCII bytes).
+                switch c </span>{
+                case '!', '$', '&amp;', '\'', '(', ')', '*', '+', ',', ';', '=', ':', '[', ']', '&lt;', '&gt;', '"':<span class="cov8" title="1">
+                        return false</span>
+                }
+        }
+
+        <span class="cov8" title="1">switch c </span>{
+        case '-', '_', '.', '~':<span class="cov8" title="1"> // §2.3 Unreserved characters (mark)
+                return false</span>
+
+        case '$', '&amp;', '+', ',', '/', ':', ';', '=', '?', '@':<span class="cov8" title="1"> // §2.2 Reserved characters (reserved)
+                // Different sections of the URL allow a few of
+                // the reserved characters to appear unescaped.
+                switch mode </span>{
+                case encodePath:<span class="cov8" title="1"> // §3.3
+                        // The RFC allows : @ &amp; = + $ but saves / ; , for assigning
+                        // meaning to individual path segments. This package
+                        // only manipulates the path as a whole, so we allow those
+                        // last three as well. That leaves only ? to escape.
+                        return c == '?'</span>
+
+                case encodePathSegment:<span class="cov8" title="1"> // §3.3
+                        // The RFC allows : @ &amp; = + $ but saves / ; , for assigning
+                        // meaning to individual path segments.
+                        return c == '/' || c == ';' || c == ',' || c == '?'</span>
+
+                case encodeUserPassword:<span class="cov8" title="1"> // §3.2.1
+                        // The RFC allows ';', ':', '&amp;', '=', '+', '$', and ',' in
+                        // userinfo, so we must escape only '@', '/', and '?'.
+                        // The parsing of userinfo treats ':' as special so we must escape
+                        // that too.
+                        return c == '@' || c == '/' || c == '?' || c == ':'</span>
+
+                case encodeQueryComponent:<span class="cov8" title="1"> // §3.4
+                        // The RFC reserves (so we must escape) everything.
+                        return true</span>
+
+                case encodeFragment:<span class="cov8" title="1"> // §4.1
+                        // The RFC text is silent but the grammar allows
+                        // everything, so escape nothing.
+                        return false</span>
+                }
+        }
+
+        // Everything else must be escaped.
+        <span class="cov8" title="1">return true</span>
+}
+
+// QueryUnescape does the inverse transformation of QueryEscape,
+// converting each 3-byte encoded substring of the form "%AB" into the
+// hex-decoded byte 0xAB. It also converts '+' into ' ' (space).
+// It returns an error if any % is not followed by two hexadecimal
+// digits.
+func QueryUnescape(s string) (string, error) <span class="cov8" title="1">{
+        return unescape(s, encodeQueryComponent)
+}</span>
+
+// PathUnescape does the inverse transformation of PathEscape,
+// converting each 3-byte encoded substring of the form "%AB" into the
+// hex-decoded byte 0xAB. It also converts '+' into ' ' (space).
+// It returns an error if any % is not followed by two hexadecimal
+// digits.
+//
+// PathUnescape is identical to QueryUnescape except that it does not
+// unescape '+' to ' ' (space).
+func PathUnescape(s string) (string, error) <span class="cov8" title="1">{
+        return unescape(s, encodePathSegment)
+}</span>
+
+// unescape unescapes a string; the mode specifies
+// which section of the URL string is being unescaped.
+func unescape(s string, mode encoding) (string, error) <span class="cov8" title="1">{
+        // Count %, check that they're well-formed.
+        n := 0
+        hasPlus := false
+        for i := 0; i &lt; len(s); </span><span class="cov8" title="1">{
+                switch s[i] </span>{
+                case '%':<span class="cov8" title="1">
+                        n++
+                        if i+2 &gt;= len(s) || !ishex(s[i+1]) || !ishex(s[i+2]) </span><span class="cov8" title="1">{
+                                s = s[i:]
+                                if len(s) &gt; 3 </span><span class="cov8" title="1">{
+                                        s = s[:3]
+                                }</span>
+                                <span class="cov8" title="1">return "", EscapeError(s)</span>
+                        }
+                        // Per https://tools.ietf.org/html/rfc3986#page-21
+                        // in the host component %-encoding can only be used
+                        // for non-ASCII bytes.
+                        // But https://tools.ietf.org/html/rfc6874#section-2
+                        // introduces %25 being allowed to escape a percent sign
+                        // in IPv6 scoped-address literals. Yay.
+                        <span class="cov8" title="1">if mode == encodeHost &amp;&amp; unhex(s[i+1]) &lt; 8 &amp;&amp; s[i:i+3] != "%25" </span><span class="cov8" title="1">{
+                                return "", EscapeError(s[i : i+3])
+                        }</span>
+                        <span class="cov8" title="1">if mode == encodeZone </span><span class="cov8" title="1">{
+                                // RFC 6874 says basically "anything goes" for zone identifiers
+                                // and that even non-ASCII can be redundantly escaped,
+                                // but it seems prudent to restrict %-escaped bytes here to those
+                                // that are valid host name bytes in their unescaped form.
+                                // That is, you can use escaping in the zone identifier but not
+                                // to introduce bytes you couldn't just write directly.
+                                // But Windows puts spaces here! Yay.
+                                v := unhex(s[i+1])&lt;&lt;4 | unhex(s[i+2])
+                                if s[i:i+3] != "%25" &amp;&amp; v != ' ' &amp;&amp; shouldEscape(v, encodeHost) </span><span class="cov0" title="0">{
+                                        return "", EscapeError(s[i : i+3])
+                                }</span>
+                        }
+                        <span class="cov8" title="1">i += 3</span>
+                case '+':<span class="cov8" title="1">
+                        hasPlus = mode == encodeQueryComponent
+                        i++</span>
+                default:<span class="cov8" title="1">
+                        if (mode == encodeHost || mode == encodeZone) &amp;&amp; s[i] &lt; 0x80 &amp;&amp; shouldEscape(s[i], mode) </span><span class="cov8" title="1">{
+                                return "", InvalidHostError(s[i : i+1])
+                        }</span>
+                        <span class="cov8" title="1">i++</span>
+                }
+        }
+
+        <span class="cov8" title="1">if n == 0 &amp;&amp; !hasPlus </span><span class="cov8" title="1">{
+                return s, nil
+        }</span>
+
+        <span class="cov8" title="1">t := make([]byte, len(s)-2*n)
+        j := 0
+        for i := 0; i &lt; len(s); </span><span class="cov8" title="1">{
+                switch s[i] </span>{
+                case '%':<span class="cov8" title="1">
+                        t[j] = unhex(s[i+1])&lt;&lt;4 | unhex(s[i+2])
+                        j++
+                        i += 3</span>
+                case '+':<span class="cov8" title="1">
+                        if mode == encodeQueryComponent </span><span class="cov8" title="1">{
+                                t[j] = ' '
+                        }</span> else<span class="cov8" title="1"> {
+                                t[j] = '+'
+                        }</span>
+                        <span class="cov8" title="1">j++
+                        i++</span>
+                default:<span class="cov8" title="1">
+                        t[j] = s[i]
+                        j++
+                        i++</span>
+                }
+        }
+        <span class="cov8" title="1">return string(t), nil</span>
+}
+
+// QueryEscape escapes the string so it can be safely placed
+// inside a URL query.
+func QueryEscape(s string) string <span class="cov8" title="1">{
+        return escape(s, encodeQueryComponent)
+}</span>
+
+// PathEscape escapes the string so it can be safely placed
+// inside a URL path segment.
+func PathEscape(s string) string <span class="cov8" title="1">{
+        return escape(s, encodePathSegment)
+}</span>
+
+func escape(s string, mode encoding) string <span class="cov8" title="1">{
+        spaceCount, hexCount := 0, 0
+        for i := 0; i &lt; len(s); i++ </span><span class="cov8" title="1">{
+                c := s[i]
+                if shouldEscape(c, mode) </span><span class="cov8" title="1">{
+                        if c == ' ' &amp;&amp; mode == encodeQueryComponent </span><span class="cov8" title="1">{
+                                spaceCount++
+                        }</span> else<span class="cov8" title="1"> {
+                                hexCount++
+                        }</span>
+                }
+        }
+
+        <span class="cov8" title="1">if spaceCount == 0 &amp;&amp; hexCount == 0 </span><span class="cov8" title="1">{
+                return s
+        }</span>
+
+        <span class="cov8" title="1">t := make([]byte, len(s)+2*hexCount)
+        j := 0
+        for i := 0; i &lt; len(s); i++ </span><span class="cov8" title="1">{
+                switch c := s[i]; </span>{
+                case c == ' ' &amp;&amp; mode == encodeQueryComponent:<span class="cov8" title="1">
+                        t[j] = '+'
+                        j++</span>
+                case shouldEscape(c, mode):<span class="cov8" title="1">
+                        t[j] = '%'
+                        t[j+1] = "0123456789ABCDEF"[c&gt;&gt;4]
+                        t[j+2] = "0123456789ABCDEF"[c&amp;15]
+                        j += 3</span>
+                default:<span class="cov8" title="1">
+                        t[j] = s[i]
+                        j++</span>
+                }
+        }
+        <span class="cov8" title="1">return string(t)</span>
+}
+
+// A URL represents a parsed URL (technically, a URI reference).
+//
+// The general form represented is:
+//
+//        [scheme:][//[userinfo@]host][/]path[?query][#fragment]
+//
+// URLs that do not start with a slash after the scheme are interpreted as:
+//
+//        scheme:opaque[?query][#fragment]
+//
+// Note that the Path field is stored in decoded form: /%47%6f%2f becomes /Go/.
+// A consequence is that it is impossible to tell which slashes in the Path were
+// slashes in the raw URL and which were %2f. This distinction is rarely important,
+// but when it is, code must not use Path directly.
+// The Parse function sets both Path and RawPath in the URL it returns,
+// and URL's String method uses RawPath if it is a valid encoding of Path,
+// by calling the EscapedPath method.
+type URL struct {
+        Scheme     string
+        Opaque     string    // encoded opaque data
+        User       *Userinfo // username and password information
+        Host       string    // host or host:port
+        Path       string    // path (relative paths may omit leading slash)
+        RawPath    string    // encoded path hint (see EscapedPath method)
+        ForceQuery bool      // append a query ('?') even if RawQuery is empty
+        RawQuery   string    // encoded query values, without '?'
+        Fragment   string    // fragment for references, without '#'
+}
+
+// User returns a Userinfo containing the provided username
+// and no password set.
+func User(username string) *Userinfo <span class="cov8" title="1">{
+        return &amp;Userinfo{username, "", false}
+}</span>
+
+// UserPassword returns a Userinfo containing the provided username
+// and password.
+//
+// This functionality should only be used with legacy web sites.
+// RFC 2396 warns that interpreting Userinfo this way
+// ``is NOT RECOMMENDED, because the passing of authentication
+// information in clear text (such as URI) has proven to be a
+// security risk in almost every case where it has been used.''
+func UserPassword(username, password string) *Userinfo <span class="cov8" title="1">{
+        return &amp;Userinfo{username, password, true}
+}</span>
+
+// The Userinfo type is an immutable encapsulation of username and
+// password details for a URL. An existing Userinfo value is guaranteed
+// to have a username set (potentially empty, as allowed by RFC 2396),
+// and optionally a password.
+type Userinfo struct {
+        username    string
+        password    string
+        passwordSet bool
+}
+
+// Username returns the username.
+func (u *Userinfo) Username() string <span class="cov8" title="1">{
+        if u == nil </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov0" title="0">return u.username</span>
+}
+
+// Password returns the password in case it is set, and whether it is set.
+func (u *Userinfo) Password() (string, bool) <span class="cov8" title="1">{
+        if u == nil </span><span class="cov8" title="1">{
+                return "", false
+        }</span>
+        <span class="cov0" title="0">return u.password, u.passwordSet</span>
+}
+
+// String returns the encoded userinfo information in the standard form
+// of "username[:password]".
+func (u *Userinfo) String() string <span class="cov8" title="1">{
+        if u == nil </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">s := escape(u.username, encodeUserPassword)
+        if u.passwordSet </span><span class="cov8" title="1">{
+                s += ":" + escape(u.password, encodeUserPassword)
+        }</span>
+        <span class="cov8" title="1">return s</span>
+}
+
+// Maybe rawurl is of the form scheme:path.
+// (Scheme must be [a-zA-Z][a-zA-Z0-9+-.]*)
+// If so, return scheme, path; else return "", rawurl.
+func getscheme(rawurl string) (scheme, path string, err error) <span class="cov8" title="1">{
+        for i := 0; i &lt; len(rawurl); i++ </span><span class="cov8" title="1">{
+                c := rawurl[i]
+                switch </span>{
+                case 'a' &lt;= c &amp;&amp; c &lt;= 'z' || 'A' &lt;= c &amp;&amp; c &lt;= 'Z':</span><span class="cov8" title="1">
+                // do nothing
+                case '0' &lt;= c &amp;&amp; c &lt;= '9' || c == '+' || c == '-' || c == '.':<span class="cov8" title="1">
+                        if i == 0 </span><span class="cov8" title="1">{
+                                return "", rawurl, nil
+                        }</span>
+                case c == ':':<span class="cov8" title="1">
+                        if i == 0 </span><span class="cov8" title="1">{
+                                return "", "", errors.New("missing protocol scheme")
+                        }</span>
+                        <span class="cov8" title="1">return rawurl[:i], rawurl[i+1:], nil</span>
+                default:<span class="cov8" title="1">
+                        // we have encountered an invalid character,
+                        // so there is no valid scheme
+                        return "", rawurl, nil</span>
+                }
+        }
+        <span class="cov8" title="1">return "", rawurl, nil</span>
+}
+
+// Maybe s is of the form t c u.
+// If so, return t, c u (or t, u if cutc == true).
+// If not, return s, "".
+func split(s string, c string, cutc bool) (string, string) <span class="cov8" title="1">{
+        i := strings.Index(s, c)
+        if i &lt; 0 </span><span class="cov8" title="1">{
+                return s, ""
+        }</span>
+        <span class="cov8" title="1">if cutc </span><span class="cov8" title="1">{
+                return s[:i], s[i+len(c):]
+        }</span>
+        <span class="cov8" title="1">return s[:i], s[i:]</span>
+}
+
+// Parse parses rawurl into a URL structure.
+//
+// The rawurl may be relative (a path, without a host) or absolute
+// (starting with a scheme). Trying to parse a hostname and path
+// without a scheme is invalid but may not necessarily return an
+// error, due to parsing ambiguities.
+func Parse(rawurl string) (*URL, error) <span class="cov8" title="1">{
+        // Cut off #frag
+        u, frag := split(rawurl, "#", true)
+        url, err := parse(u, false)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, &amp;Error{"parse", u, err}
+        }</span>
+        <span class="cov8" title="1">if frag == "" </span><span class="cov8" title="1">{
+                return url, nil
+        }</span>
+        <span class="cov8" title="1">if url.Fragment, err = unescape(frag, encodeFragment); err != nil </span><span class="cov0" title="0">{
+                return nil, &amp;Error{"parse", rawurl, err}
+        }</span>
+        <span class="cov8" title="1">return url, nil</span>
+}
+
+// ParseRequestURI parses rawurl into a URL structure. It assumes that
+// rawurl was received in an HTTP request, so the rawurl is interpreted
+// only as an absolute URI or an absolute path.
+// The string rawurl is assumed not to have a #fragment suffix.
+// (Web browsers strip #fragment before sending the URL to a web server.)
+func ParseRequestURI(rawurl string) (*URL, error) <span class="cov8" title="1">{
+        url, err := parse(rawurl, true)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, &amp;Error{"parse", rawurl, err}
+        }</span>
+        <span class="cov8" title="1">return url, nil</span>
+}
+
+// parse parses a URL from a string in one of two contexts. If
+// viaRequest is true, the URL is assumed to have arrived via an HTTP request,
+// in which case only absolute URLs or path-absolute relative URLs are allowed.
+// If viaRequest is false, all forms of relative URLs are allowed.
+func parse(rawurl string, viaRequest bool) (*URL, error) <span class="cov8" title="1">{
+        var rest string
+        var err error
+
+        if rawurl == "" &amp;&amp; viaRequest </span><span class="cov0" title="0">{
+                return nil, errors.New("empty url")
+        }</span>
+        <span class="cov8" title="1">url := new(URL)
+
+        if rawurl == "*" </span><span class="cov8" title="1">{
+                url.Path = "*"
+                return url, nil
+        }</span>
+
+        // Split off possible leading "http:", "mailto:", etc.
+        // Cannot contain escaped characters.
+        <span class="cov8" title="1">if url.Scheme, rest, err = getscheme(rawurl); err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">url.Scheme = strings.ToLower(url.Scheme)
+
+        if strings.HasSuffix(rest, "?") &amp;&amp; strings.Count(rest, "?") == 1 </span><span class="cov8" title="1">{
+                url.ForceQuery = true
+                rest = rest[:len(rest)-1]
+        }</span> else<span class="cov8" title="1"> {
+                rest, url.RawQuery = split(rest, "?", true)
+        }</span>
+
+        <span class="cov8" title="1">if !strings.HasPrefix(rest, "/") </span><span class="cov8" title="1">{
+                if url.Scheme != "" </span><span class="cov8" title="1">{
+                        // We consider rootless paths per RFC 3986 as opaque.
+                        url.Opaque = rest
+                        return url, nil
+                }</span>
+                <span class="cov8" title="1">if viaRequest </span><span class="cov8" title="1">{
+                        return nil, errors.New("invalid URI for request")
+                }</span>
+
+                // Avoid confusion with malformed schemes, like cache_object:foo/bar.
+                // See golang.org/issue/16822.
+                //
+                // RFC 3986, §3.3:
+                // In addition, a URI reference (Section 4.1) may be a relative-path reference,
+                // in which case the first path segment cannot contain a colon (":") character.
+                <span class="cov8" title="1">colon := strings.Index(rest, ":")
+                slash := strings.Index(rest, "/")
+                if colon &gt;= 0 &amp;&amp; (slash &lt; 0 || colon &lt; slash) </span><span class="cov8" title="1">{
+                        // First path segment has colon. Not allowed in relative URL.
+                        return nil, errors.New("first path segment in URL cannot contain colon")
+                }</span>
+        }
+
+        <span class="cov8" title="1">if (url.Scheme != "" || !viaRequest &amp;&amp; !strings.HasPrefix(rest, "///")) &amp;&amp; strings.HasPrefix(rest, "//") </span><span class="cov8" title="1">{
+                var authority string
+                authority, rest = split(rest[2:], "/", false)
+                url.User, url.Host, err = parseAuthority(authority)
+                if err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+        }
+        // Set Path and, optionally, RawPath.
+        // RawPath is a hint of the encoding of Path. We don't want to set it if
+        // the default escaping of Path is equivalent, to help make sure that people
+        // don't rely on it in general.
+        <span class="cov8" title="1">if err := url.setPath(rest); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">return url, nil</span>
+}
+
+func parseAuthority(authority string) (user *Userinfo, host string, err error) <span class="cov8" title="1">{
+        i := strings.LastIndex(authority, "@")
+        if i &lt; 0 </span><span class="cov8" title="1">{
+                host, err = parseHost(authority)
+        }</span> else<span class="cov8" title="1"> {
+                host, err = parseHost(authority[i+1:])
+        }</span>
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
+                return nil, "", err
+        }</span>
+        <span class="cov8" title="1">if i &lt; 0 </span><span class="cov8" title="1">{
+                return nil, host, nil
+        }</span>
+        <span class="cov8" title="1">userinfo := authority[:i]
+        if !validUserinfo(userinfo) </span><span class="cov8" title="1">{
+                return nil, "", errors.New("net/url: invalid userinfo")
+        }</span>
+        <span class="cov8" title="1">if !strings.Contains(userinfo, ":") </span><span class="cov8" title="1">{
+                if userinfo, err = unescape(userinfo, encodeUserPassword); err != nil </span><span class="cov0" title="0">{
+                        return nil, "", err
+                }</span>
+                <span class="cov8" title="1">user = User(userinfo)</span>
+        } else<span class="cov8" title="1"> {
+                username, password := split(userinfo, ":", true)
+                if username, err = unescape(username, encodeUserPassword); err != nil </span><span class="cov0" title="0">{
+                        return nil, "", err
+                }</span>
+                <span class="cov8" title="1">if password, err = unescape(password, encodeUserPassword); err != nil </span><span class="cov0" title="0">{
+                        return nil, "", err
+                }</span>
+                <span class="cov8" title="1">user = UserPassword(username, password)</span>
+        }
+        <span class="cov8" title="1">return user, host, nil</span>
+}
+
+// parseHost parses host as an authority without user
+// information. That is, as host[:port].
+func parseHost(host string) (string, error) <span class="cov8" title="1">{
+        if strings.HasPrefix(host, "[") </span><span class="cov8" title="1">{
+                // Parse an IP-Literal in RFC 3986 and RFC 6874.
+                // E.g., "[fe80::1]", "[fe80::1%25en0]", "[fe80::1]:80".
+                i := strings.LastIndex(host, "]")
+                if i &lt; 0 </span><span class="cov0" title="0">{
+                        return "", errors.New("missing ']' in host")
+                }</span>
+                <span class="cov8" title="1">colonPort := host[i+1:]
+                if !validOptionalPort(colonPort) </span><span class="cov8" title="1">{
+                        return "", fmt.Errorf("invalid port %q after host", colonPort)
+                }</span>
+
+                // RFC 6874 defines that %25 (%-encoded percent) introduces
+                // the zone identifier, and the zone identifier can use basically
+                // any %-encoding it likes. That's different from the host, which
+                // can only %-encode non-ASCII bytes.
+                // We do impose some restrictions on the zone, to avoid stupidity
+                // like newlines.
+                <span class="cov8" title="1">zone := strings.Index(host[:i], "%25")
+                if zone &gt;= 0 </span><span class="cov8" title="1">{
+                        host1, err := unescape(host[:zone], encodeHost)
+                        if err != nil </span><span class="cov8" title="1">{
+                                return "", err
+                        }</span>
+                        <span class="cov8" title="1">host2, err := unescape(host[zone:i], encodeZone)
+                        if err != nil </span><span class="cov0" title="0">{
+                                return "", err
+                        }</span>
+                        <span class="cov8" title="1">host3, err := unescape(host[i:], encodeHost)
+                        if err != nil </span><span class="cov0" title="0">{
+                                return "", err
+                        }</span>
+                        <span class="cov8" title="1">return host1 + host2 + host3, nil</span>
+                }
+        }
+
+        <span class="cov8" title="1">var err error
+        if host, err = unescape(host, encodeHost); err != nil </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+        <span class="cov8" title="1">return host, nil</span>
+}
+
+// setPath sets the Path and RawPath fields of the URL based on the provided
+// escaped path p. It maintains the invariant that RawPath is only specified
+// when it differs from the default encoding of the path.
+// For example:
+// - setPath("/foo/bar")   will set Path="/foo/bar" and RawPath=""
+// - setPath("/foo%2fbar") will set Path="/foo/bar" and RawPath="/foo%2fbar"
+// setPath will return an error only if the provided path contains an invalid
+// escaping.
+func (u *URL) setPath(p string) error <span class="cov8" title="1">{
+        path, err := unescape(p, encodePath)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">u.Path = path
+        if escp := escape(path, encodePath); p == escp </span><span class="cov8" title="1">{
+                // Default encoding is fine.
+                u.RawPath = ""
+        }</span> else<span class="cov8" title="1"> {
+                u.RawPath = p
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+// EscapedPath returns the escaped form of u.Path.
+// In general there are multiple possible escaped forms of any path.
+// EscapedPath returns u.RawPath when it is a valid escaping of u.Path.
+// Otherwise EscapedPath ignores u.RawPath and computes an escaped
+// form on its own.
+// The String and RequestURI methods use EscapedPath to construct
+// their results.
+// In general, code should call EscapedPath instead of
+// reading u.RawPath directly.
+func (u *URL) EscapedPath() string <span class="cov8" title="1">{
+        if u.RawPath != "" &amp;&amp; validEncodedPath(u.RawPath) </span><span class="cov8" title="1">{
+                p, err := unescape(u.RawPath, encodePath)
+                if err == nil &amp;&amp; p == u.Path </span><span class="cov8" title="1">{
+                        return u.RawPath
+                }</span>
+        }
+        <span class="cov8" title="1">if u.Path == "*" </span><span class="cov8" title="1">{
+                return "*" // don't escape (Issue 11202)
+        }</span>
+        <span class="cov8" title="1">return escape(u.Path, encodePath)</span>
+}
+
+// validEncodedPath reports whether s is a valid encoded path.
+// It must not contain any bytes that require escaping during path encoding.
+func validEncodedPath(s string) bool <span class="cov8" title="1">{
+        for i := 0; i &lt; len(s); i++ </span><span class="cov8" title="1">{
+                // RFC 3986, Appendix A.
+                // pchar = unreserved / pct-encoded / sub-delims / ":" / "@".
+                // shouldEscape is not quite compliant with the RFC,
+                // so we check the sub-delims ourselves and let
+                // shouldEscape handle the others.
+                switch s[i] </span>{
+                case '!', '$', '&amp;', '\'', '(', ')', '*', '+', ',', ';', '=', ':', '@':</span><span class="cov8" title="1">
+                        // ok
+                case '[', ']':</span><span class="cov8" title="1">
+                        // ok - not specified in RFC 3986 but left alone by modern browsers
+                case '%':</span><span class="cov8" title="1">
+                        // ok - percent encoded, will decode
+                default:<span class="cov8" title="1">
+                        if shouldEscape(s[i], encodePath) </span><span class="cov8" title="1">{
+                                return false
+                        }</span>
+                }
+        }
+        <span class="cov8" title="1">return true</span>
+}
+
+// validOptionalPort reports whether port is either an empty string
+// or matches /^:\d*$/
+func validOptionalPort(port string) bool <span class="cov8" title="1">{
+        if port == "" </span><span class="cov8" title="1">{
+                return true
+        }</span>
+        <span class="cov8" title="1">if port[0] != ':' </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">for _, b := range port[1:] </span><span class="cov8" title="1">{
+                if b &lt; '0' || b &gt; '9' </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        }
+        <span class="cov8" title="1">return true</span>
+}
+
+// String reassembles the URL into a valid URL string.
+// The general form of the result is one of:
+//
+//        scheme:opaque?query#fragment
+//        scheme://userinfo@host/path?query#fragment
+//
+// If u.Opaque is non-empty, String uses the first form;
+// otherwise it uses the second form.
+// To obtain the path, String uses u.EscapedPath().
+//
+// In the second form, the following rules apply:
+//        - if u.Scheme is empty, scheme: is omitted.
+//        - if u.User is nil, userinfo@ is omitted.
+//        - if u.Host is empty, host/ is omitted.
+//        - if u.Scheme and u.Host are empty and u.User is nil,
+//           the entire scheme://userinfo@host/ is omitted.
+//        - if u.Host is non-empty and u.Path begins with a /,
+//           the form host/path does not add its own /.
+//        - if u.RawQuery is empty, ?query is omitted.
+//        - if u.Fragment is empty, #fragment is omitted.
+func (u *URL) String() string <span class="cov8" title="1">{
+        var buf bytes.Buffer
+        if u.Scheme != "" </span><span class="cov8" title="1">{
+                buf.WriteString(u.Scheme)
+                buf.WriteByte(':')
+        }</span>
+        <span class="cov8" title="1">if u.Opaque != "" </span><span class="cov8" title="1">{
+                buf.WriteString(u.Opaque)
+        }</span> else<span class="cov8" title="1"> {
+                if u.Scheme != "" || u.Host != "" || u.User != nil </span><span class="cov8" title="1">{
+                        if u.Host != "" || u.Path != "" || u.User != nil </span><span class="cov8" title="1">{
+                                buf.WriteString("//")
+                        }</span>
+                        <span class="cov8" title="1">if ui := u.User; ui != nil </span><span class="cov8" title="1">{
+                                buf.WriteString(ui.String())
+                                buf.WriteByte('@')
+                        }</span>
+                        <span class="cov8" title="1">if h := u.Host; h != "" </span><span class="cov8" title="1">{
+                                buf.WriteString(escape(h, encodeHost))
+                        }</span>
+                }
+                <span class="cov8" title="1">path := u.EscapedPath()
+                if path != "" &amp;&amp; path[0] != '/' &amp;&amp; u.Host != "" </span><span class="cov8" title="1">{
+                        buf.WriteByte('/')
+                }</span>
+                <span class="cov8" title="1">if buf.Len() == 0 </span><span class="cov8" title="1">{
+                        // RFC 3986 §4.2
+                        // A path segment that contains a colon character (e.g., "this:that")
+                        // cannot be used as the first segment of a relative-path reference, as
+                        // it would be mistaken for a scheme name. Such a segment must be
+                        // preceded by a dot-segment (e.g., "./this:that") to make a relative-
+                        // path reference.
+                        if i := strings.IndexByte(path, ':'); i &gt; -1 &amp;&amp; strings.IndexByte(path[:i], '/') == -1 </span><span class="cov8" title="1">{
+                                buf.WriteString("./")
+                        }</span>
+                }
+                <span class="cov8" title="1">buf.WriteString(path)</span>
+        }
+        <span class="cov8" title="1">if u.ForceQuery || u.RawQuery != "" </span><span class="cov8" title="1">{
+                buf.WriteByte('?')
+                buf.WriteString(u.RawQuery)
+        }</span>
+        <span class="cov8" title="1">if u.Fragment != "" </span><span class="cov8" title="1">{
+                buf.WriteByte('#')
+                buf.WriteString(escape(u.Fragment, encodeFragment))
+        }</span>
+        <span class="cov8" title="1">return buf.String()</span>
+}
+
+// Values maps a string key to a list of values.
+// It is typically used for query parameters and form values.
+// Unlike in the http.Header map, the keys in a Values map
+// are case-sensitive.
+type Values map[string][]string
+
+// Get gets the first value associated with the given key.
+// If there are no values associated with the key, Get returns
+// the empty string. To access multiple values, use the map
+// directly.
+func (v Values) Get(key string) string <span class="cov8" title="1">{
+        if v == nil </span><span class="cov0" title="0">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">vs := v[key]
+        if len(vs) == 0 </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">return vs[0]</span>
+}
+
+// Set sets the key to value. It replaces any existing
+// values.
+func (v Values) Set(key, value string) <span class="cov8" title="1">{
+        v[key] = []string{value}
+}</span>
+
+// Add adds the value to key. It appends to any existing
+// values associated with key.
+func (v Values) Add(key, value string) <span class="cov8" title="1">{
+        v[key] = append(v[key], value)
+}</span>
+
+// Del deletes the values associated with key.
+func (v Values) Del(key string) <span class="cov8" title="1">{
+        delete(v, key)
+}</span>
+
+// ParseQuery parses the URL-encoded query string and returns
+// a map listing the values specified for each key.
+// ParseQuery always returns a non-nil map containing all the
+// valid query parameters found; err describes the first decoding error
+// encountered, if any.
+//
+// Query is expected to be a list of key=value settings separated by
+// ampersands or semicolons. A setting without an equals sign is
+// interpreted as a key set to an empty value.
+func ParseQuery(query string) (Values, error) <span class="cov8" title="1">{
+        m := make(Values)
+        err := parseQuery(m, query)
+        return m, err
+}</span>
+
+func parseQuery(m Values, query string) (err error) <span class="cov8" title="1">{
+        for query != "" </span><span class="cov8" title="1">{
+                key := query
+                if i := strings.IndexAny(key, "&amp;;"); i &gt;= 0 </span><span class="cov8" title="1">{
+                        key, query = key[:i], key[i+1:]
+                }</span> else<span class="cov8" title="1"> {
+                        query = ""
+                }</span>
+                <span class="cov8" title="1">if key == "" </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+                <span class="cov8" title="1">value := ""
+                if i := strings.Index(key, "="); i &gt;= 0 </span><span class="cov8" title="1">{
+                        key, value = key[:i], key[i+1:]
+                }</span>
+                <span class="cov8" title="1">key, err1 := QueryUnescape(key)
+                if err1 != nil </span><span class="cov8" title="1">{
+                        if err == nil </span><span class="cov8" title="1">{
+                                err = err1
+                        }</span>
+                        <span class="cov8" title="1">continue</span>
+                }
+                <span class="cov8" title="1">value, err1 = QueryUnescape(value)
+                if err1 != nil </span><span class="cov0" title="0">{
+                        if err == nil </span><span class="cov0" title="0">{
+                                err = err1
+                        }</span>
+                        <span class="cov0" title="0">continue</span>
+                }
+                <span class="cov8" title="1">m[key] = append(m[key], value)</span>
+        }
+        <span class="cov8" title="1">return err</span>
+}
+
+// Encode encodes the values into ``URL encoded'' form
+// ("bar=baz&amp;foo=quux") sorted by key.
+func (v Values) Encode() string <span class="cov8" title="1">{
+        if v == nil </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">var buf bytes.Buffer
+        keys := make([]string, 0, len(v))
+        for k := range v </span><span class="cov8" title="1">{
+                keys = append(keys, k)
+        }</span>
+        <span class="cov8" title="1">sort.Strings(keys)
+        for _, k := range keys </span><span class="cov8" title="1">{
+                vs := v[k]
+                prefix := QueryEscape(k) + "="
+                for _, v := range vs </span><span class="cov8" title="1">{
+                        if buf.Len() &gt; 0 </span><span class="cov8" title="1">{
+                                buf.WriteByte('&amp;')
+                        }</span>
+                        <span class="cov8" title="1">buf.WriteString(prefix)
+                        buf.WriteString(QueryEscape(v))</span>
+                }
+        }
+        <span class="cov8" title="1">return buf.String()</span>
+}
+
+// resolvePath applies special path segments from refs and applies
+// them to base, per RFC 3986.
+func resolvePath(base, ref string) string <span class="cov8" title="1">{
+        var full string
+        if ref == "" </span><span class="cov8" title="1">{
+                full = base
+        }</span> else<span class="cov8" title="1"> if ref[0] != '/' </span><span class="cov8" title="1">{
+                i := strings.LastIndex(base, "/")
+                full = base[:i+1] + ref
+        }</span> else<span class="cov8" title="1"> {
+                full = ref
+        }</span>
+        <span class="cov8" title="1">if full == "" </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">var dst []string
+        src := strings.Split(full, "/")
+        for _, elem := range src </span><span class="cov8" title="1">{
+                switch elem </span>{
+                case ".":</span><span class="cov8" title="1">
+                        // drop
+                case "..":<span class="cov8" title="1">
+                        if len(dst) &gt; 0 </span><span class="cov8" title="1">{
+                                dst = dst[:len(dst)-1]
+                        }</span>
+                default:<span class="cov8" title="1">
+                        dst = append(dst, elem)</span>
+                }
+        }
+        <span class="cov8" title="1">if last := src[len(src)-1]; last == "." || last == ".." </span><span class="cov8" title="1">{
+                // Add final slash to the joined path.
+                dst = append(dst, "")
+        }</span>
+        <span class="cov8" title="1">return "/" + strings.TrimPrefix(strings.Join(dst, "/"), "/")</span>
+}
+
+// IsAbs reports whether the URL is absolute.
+// Absolute means that it has a non-empty scheme.
+func (u *URL) IsAbs() bool <span class="cov8" title="1">{
+        return u.Scheme != ""
+}</span>
+
+// Parse parses a URL in the context of the receiver. The provided URL
+// may be relative or absolute. Parse returns nil, err on parse
+// failure, otherwise its return value is the same as ResolveReference.
+func (u *URL) Parse(ref string) (*URL, error) <span class="cov8" title="1">{
+        refurl, err := Parse(ref)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">return u.ResolveReference(refurl), nil</span>
+}
+
+// ResolveReference resolves a URI reference to an absolute URI from
+// an absolute base URI, per RFC 3986 Section 5.2.  The URI reference
+// may be relative or absolute. ResolveReference always returns a new
+// URL instance, even if the returned URL is identical to either the
+// base or reference. If ref is an absolute URL, then ResolveReference
+// ignores base and returns a copy of ref.
+func (u *URL) ResolveReference(ref *URL) *URL <span class="cov8" title="1">{
+        url := *ref
+        if ref.Scheme == "" </span><span class="cov8" title="1">{
+                url.Scheme = u.Scheme
+        }</span>
+        <span class="cov8" title="1">if ref.Scheme != "" || ref.Host != "" || ref.User != nil </span><span class="cov8" title="1">{
+                // The "absoluteURI" or "net_path" cases.
+                // We can ignore the error from setPath since we know we provided a
+                // validly-escaped path.
+                url.setPath(resolvePath(ref.EscapedPath(), ""))
+                return &amp;url
+        }</span>
+        <span class="cov8" title="1">if ref.Opaque != "" </span><span class="cov0" title="0">{
+                url.User = nil
+                url.Host = ""
+                url.Path = ""
+                return &amp;url
+        }</span>
+        <span class="cov8" title="1">if ref.Path == "" &amp;&amp; ref.RawQuery == "" </span><span class="cov8" title="1">{
+                url.RawQuery = u.RawQuery
+                if ref.Fragment == "" </span><span class="cov8" title="1">{
+                        url.Fragment = u.Fragment
+                }</span>
+        }
+        // The "abs_path" or "rel_path" cases.
+        <span class="cov8" title="1">url.Host = u.Host
+        url.User = u.User
+        url.setPath(resolvePath(u.EscapedPath(), ref.EscapedPath()))
+        return &amp;url</span>
+}
+
+// Query parses RawQuery and returns the corresponding values.
+// It silently discards malformed value pairs.
+// To check errors use ParseQuery.
+func (u *URL) Query() Values <span class="cov8" title="1">{
+        v, _ := ParseQuery(u.RawQuery)
+        return v
+}</span>
+
+// RequestURI returns the encoded path?query or opaque?query
+// string that would be used in an HTTP request for u.
+func (u *URL) RequestURI() string <span class="cov8" title="1">{
+        result := u.Opaque
+        if result == "" </span><span class="cov8" title="1">{
+                result = u.EscapedPath()
+                if result == "" </span><span class="cov8" title="1">{
+                        result = "/"
+                }</span>
+        } else<span class="cov8" title="1"> {
+                if strings.HasPrefix(result, "//") </span><span class="cov8" title="1">{
+                        result = u.Scheme + ":" + result
+                }</span>
+        }
+        <span class="cov8" title="1">if u.ForceQuery || u.RawQuery != "" </span><span class="cov8" title="1">{
+                result += "?" + u.RawQuery
+        }</span>
+        <span class="cov8" title="1">return result</span>
+}
+
+// Hostname returns u.Host, without any port number.
+//
+// If Host is an IPv6 literal with a port number, Hostname returns the
+// IPv6 literal without the square brackets. IPv6 literals may include
+// a zone identifier.
+func (u *URL) Hostname() string <span class="cov8" title="1">{
+        return stripPort(u.Host)
+}</span>
+
+// Port returns the port part of u.Host, without the leading colon.
+// If u.Host doesn't contain a port, Port returns an empty string.
+func (u *URL) Port() string <span class="cov8" title="1">{
+        return portOnly(u.Host)
+}</span>
+
+func stripPort(hostport string) string <span class="cov8" title="1">{
+        colon := strings.IndexByte(hostport, ':')
+        if colon == -1 </span><span class="cov8" title="1">{
+                return hostport
+        }</span>
+        <span class="cov8" title="1">if i := strings.IndexByte(hostport, ']'); i != -1 </span><span class="cov8" title="1">{
+                return strings.TrimPrefix(hostport[:i], "[")
+        }</span>
+        <span class="cov8" title="1">return hostport[:colon]</span>
+}
+
+func portOnly(hostport string) string <span class="cov8" title="1">{
+        colon := strings.IndexByte(hostport, ':')
+        if colon == -1 </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">if i := strings.Index(hostport, "]:"); i != -1 </span><span class="cov8" title="1">{
+                return hostport[i+len("]:"):]
+        }</span>
+        <span class="cov8" title="1">if strings.Contains(hostport, "]") </span><span class="cov8" title="1">{
+                return ""
+        }</span>
+        <span class="cov8" title="1">return hostport[colon+len(":"):]</span>
+}
+
+// Marshaling interface implementations.
+// Would like to implement MarshalText/UnmarshalText but that will change the JSON representation of URLs.
+
+func (u *URL) MarshalBinary() (text []byte, err error) <span class="cov8" title="1">{
+        return []byte(u.String()), nil
+}</span>
+
+func (u *URL) UnmarshalBinary(text []byte) error <span class="cov8" title="1">{
+        u1, err := Parse(string(text))
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">*u = *u1
+        return nil</span>
+}
+
+// validUserinfo reports whether s is a valid userinfo string per RFC 3986
+// Section 3.2.1:
+//     userinfo    = *( unreserved / pct-encoded / sub-delims / ":" )
+//     unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
+//     sub-delims  = "!" / "$" / "&amp;" / "'" / "(" / ")"
+//                   / "*" / "+" / "," / ";" / "="
+//
+// It doesn't validate pct-encoded. The caller does that via func unescape.
+func validUserinfo(s string) bool <span class="cov8" title="1">{
+        for _, r := range s </span><span class="cov8" title="1">{
+                if 'A' &lt;= r &amp;&amp; r &lt;= 'Z' </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+                <span class="cov8" title="1">if 'a' &lt;= r &amp;&amp; r &lt;= 'z' </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+                <span class="cov8" title="1">if '0' &lt;= r &amp;&amp; r &lt;= '9' </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+                <span class="cov8" title="1">switch r </span>{
+                case '-', '.', '_', ':', '~', '!', '$', '&amp;', '\'',
+                        '(', ')', '*', '+', ',', ';', '=', '%', '@':<span class="cov8" title="1">
+                        continue</span>
+                default:<span class="cov8" title="1">
+                        return false</span>
+                }
+        }
+        <span class="cov8" title="1">return true</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
