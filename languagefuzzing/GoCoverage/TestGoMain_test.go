@@ -8,6 +8,7 @@ import (
 	"testing"
 )
 func TestURLs(t *testing.T) {
+	//file reading from https://webdamn.com/read-file-line-by-line-using-golang/
 	readFile, err := os.Open("../exampleURLs/plainURLs")
  
 	if err != nil {
