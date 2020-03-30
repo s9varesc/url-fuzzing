@@ -68,6 +68,11 @@ testuri/
 RubyCoverage/coverage/
 Gemfile.lock
 
+## PHP
+composer.json
+composer.lock
+vendor/
+
 #old stuff
 
 #JaCoCo
