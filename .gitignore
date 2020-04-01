@@ -73,6 +73,9 @@ composer.json
 composer.lock
 vendor/
 
+## JavaScript
+node_modules/
+
 #old stuff
 
 #JaCoCo
