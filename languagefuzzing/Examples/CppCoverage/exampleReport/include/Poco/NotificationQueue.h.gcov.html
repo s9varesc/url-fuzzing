@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/NotificationQueue.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - NotificationQueue.h<span style="font-size: 80%;"> (source / <a href="NotificationQueue.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // NotificationQueue.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Notifications
+<span class="lineNum">       6 </span>            : // Module:  NotificationQueue
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the NotificationQueue class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_NotificationQueue_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_NotificationQueue_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : #include &quot;Poco/Notification.h&quot;
+<span class="lineNum">      23 </span>            : #include &quot;Poco/Mutex.h&quot;
+<span class="lineNum">      24 </span>            : #include &quot;Poco/Event.h&quot;
+<span class="lineNum">      25 </span>            : #include &lt;deque&gt;
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : namespace Poco {
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : class NotificationCenter;
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : class Foundation_API NotificationQueue
+<span class="lineNum">      35 </span>            :         /// A NotificationQueue object provides a way to implement asynchronous
+<span class="lineNum">      36 </span>            :         /// notifications. This is especially useful for sending notifications
+<span class="lineNum">      37 </span>            :         /// from one thread to another, for example from a background thread to 
+<span class="lineNum">      38 </span>            :         /// the main (user interface) thread. 
+<span class="lineNum">      39 </span>            :         /// 
+<span class="lineNum">      40 </span>            :         /// The NotificationQueue can also be used to distribute work from
+<span class="lineNum">      41 </span>            :         /// a controlling thread to one or more worker threads. Each worker thread
+<span class="lineNum">      42 </span>            :         /// repeatedly calls waitDequeueNotification() and processes the
+<span class="lineNum">      43 </span>            :         /// returned notification. Special care must be taken when shutting
+<span class="lineNum">      44 </span>            :         /// down a queue with worker threads waiting for notifications.
+<span class="lineNum">      45 </span>            :         /// The recommended sequence to shut down and destroy the queue is to
+<span class="lineNum">      46 </span>            :         ///   1. set a termination flag for every worker thread
+<span class="lineNum">      47 </span>            :         ///   2. call the wakeUpAll() method
+<span class="lineNum">      48 </span>            :         ///   3. join each worker thread
+<span class="lineNum">      49 </span>            :         ///   4. destroy the notification queue.
+<span class="lineNum">      50 </span>            : {
+<span class="lineNum">      51 </span>            : public:
+<span class="lineNum">      52 </span>            :         NotificationQueue();
+<span class="lineNum">      53 </span>            :                 /// Creates the NotificationQueue.
+<span class="lineNum">      54 </span>            : 
+<span class="lineNum">      55 </span>            :         ~NotificationQueue();
+<span class="lineNum">      56 </span>            :                 /// Destroys the NotificationQueue.
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            :         void enqueueNotification(Notification::Ptr pNotification);
+<span class="lineNum">      59 </span>            :                 /// Enqueues the given notification by adding it to
+<span class="lineNum">      60 </span>            :                 /// the end of the queue (FIFO).
+<span class="lineNum">      61 </span>            :                 /// The queue takes ownership of the notification, thus
+<span class="lineNum">      62 </span>            :                 /// a call like
+<span class="lineNum">      63 </span>            :                 ///     notificationQueue.enqueueNotification(new MyNotification);
+<span class="lineNum">      64 </span>            :                 /// does not result in a memory leak.
+<span class="lineNum">      65 </span>            :                 
+<span class="lineNum">      66 </span>            :         void enqueueUrgentNotification(Notification::Ptr pNotification);
+<span class="lineNum">      67 </span>            :                 /// Enqueues the given notification by adding it to
+<span class="lineNum">      68 </span>            :                 /// the front of the queue (LIFO). The event therefore gets processed
+<span class="lineNum">      69 </span>            :                 /// before all other events already in the queue.
+<span class="lineNum">      70 </span>            :                 /// The queue takes ownership of the notification, thus
+<span class="lineNum">      71 </span>            :                 /// a call like
+<span class="lineNum">      72 </span>            :                 ///     notificationQueue.enqueueUrgentNotification(new MyNotification);
+<span class="lineNum">      73 </span>            :                 /// does not result in a memory leak.
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            :         Notification* dequeueNotification();
+<span class="lineNum">      76 </span>            :                 /// Dequeues the next pending notification.
+<span class="lineNum">      77 </span>            :                 /// Returns 0 (null) if no notification is available.
+<span class="lineNum">      78 </span>            :                 /// The caller gains ownership of the notification and
+<span class="lineNum">      79 </span>            :                 /// is expected to release it when done with it.
+<span class="lineNum">      80 </span>            :                 ///
+<span class="lineNum">      81 </span>            :                 /// It is highly recommended that the result is immediately
+<span class="lineNum">      82 </span>            :                 /// assigned to a Notification::Ptr, to avoid potential
+<span class="lineNum">      83 </span>            :                 /// memory management issues.
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            :         Notification* waitDequeueNotification();
+<span class="lineNum">      86 </span>            :                 /// Dequeues the next pending notification.
+<span class="lineNum">      87 </span>            :                 /// If no notification is available, waits for a notification
+<span class="lineNum">      88 </span>            :                 /// to be enqueued. 
+<span class="lineNum">      89 </span>            :                 /// The caller gains ownership of the notification and
+<span class="lineNum">      90 </span>            :                 /// is expected to release it when done with it.
+<span class="lineNum">      91 </span>            :                 /// This method returns 0 (null) if wakeUpWaitingThreads()
+<span class="lineNum">      92 </span>            :                 /// has been called by another thread.
+<span class="lineNum">      93 </span>            :                 ///
+<span class="lineNum">      94 </span>            :                 /// It is highly recommended that the result is immediately
+<span class="lineNum">      95 </span>            :                 /// assigned to a Notification::Ptr, to avoid potential
+<span class="lineNum">      96 </span>            :                 /// memory management issues.
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :         Notification* waitDequeueNotification(long milliseconds);
+<span class="lineNum">      99 </span>            :                 /// Dequeues the next pending notification.
+<span class="lineNum">     100 </span>            :                 /// If no notification is available, waits for a notification
+<span class="lineNum">     101 </span>            :                 /// to be enqueued up to the specified time.
+<span class="lineNum">     102 </span>            :                 /// Returns 0 (null) if no notification is available.
+<span class="lineNum">     103 </span>            :                 /// The caller gains ownership of the notification and
+<span class="lineNum">     104 </span>            :                 /// is expected to release it when done with it.
+<span class="lineNum">     105 </span>            :                 ///
+<span class="lineNum">     106 </span>            :                 /// It is highly recommended that the result is immediately
+<span class="lineNum">     107 </span>            :                 /// assigned to a Notification::Ptr, to avoid potential
+<span class="lineNum">     108 </span>            :                 /// memory management issues.
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span>            :         void dispatch(NotificationCenter&amp; notificationCenter);
+<span class="lineNum">     111 </span>            :                 /// Dispatches all queued notifications to the given
+<span class="lineNum">     112 </span>            :                 /// notification center.
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            :         void wakeUpAll();
+<span class="lineNum">     115 </span>            :                 /// Wakes up all threads that wait for a notification.
+<span class="lineNum">     116 </span>            :         
+<span class="lineNum">     117 </span>            :         bool empty() const;
+<span class="lineNum">     118 </span>            :                 /// Returns true iff the queue is empty.
+<span class="lineNum">     119 </span>            :                 
+<span class="lineNum">     120 </span>            :         int size() const;
+<span class="lineNum">     121 </span>            :                 /// Returns the number of notifications in the queue.
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :         void clear();
+<span class="lineNum">     124 </span>            :                 /// Removes all notifications from the queue.
+<span class="lineNum">     125 </span>            :                 
+<span class="lineNum">     126 </span>            :         bool remove(Notification::Ptr pNotification);
+<span class="lineNum">     127 </span>            :                 /// Removes a notification from the queue.
+<span class="lineNum">     128 </span>            :                 /// Returns true if remove succeeded, false otherwise
+<span class="lineNum">     129 </span>            : 
+<span class="lineNum">     130 </span>            :         bool hasIdleThreads() const;    
+<span class="lineNum">     131 </span>            :                 /// Returns true if the queue has at least one thread waiting 
+<span class="lineNum">     132 </span>            :                 /// for a notification.
+<span class="lineNum">     133 </span>            :                 
+<span class="lineNum">     134 </span>            :         static NotificationQueue&amp; defaultQueue();
+<span class="lineNum">     135 </span>            :                 /// Returns a reference to the default
+<span class="lineNum">     136 </span>            :                 /// NotificationQueue.
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span>            : protected:
+<span class="lineNum">     139 </span>            :         Notification::Ptr dequeueOne();
+<span class="lineNum">     140 </span>            :         
+<a name="141"><span class="lineNum">     141 </span>            : private:</a>
+<span class="lineNum">     142 </span>            :         typedef std::deque&lt;Notification::Ptr&gt; NfQueue;
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :         struct WaitInfo</span>
+<span class="lineNum">     144 </span>            :         {
+<span class="lineNum">     145 </span>            :                 Notification::Ptr pNf;
+<span class="lineNum">     146 </span>            :                 Event             nfAvailable;
+<span class="lineNum">     147 </span>            :         };
+<span class="lineNum">     148 </span>            :         typedef std::deque&lt;WaitInfo*&gt; WaitQueue;
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            :         NfQueue           _nfQueue;
+<span class="lineNum">     151 </span>            :         WaitQueue         _waitQueue;
+<span class="lineNum">     152 </span>            :         mutable FastMutex _mutex;
+<span class="lineNum">     153 </span>            : };
+<span class="lineNum">     154 </span>            : 
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span>            : } // namespace Poco
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            : #endif // Foundation_NotificationQueue_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

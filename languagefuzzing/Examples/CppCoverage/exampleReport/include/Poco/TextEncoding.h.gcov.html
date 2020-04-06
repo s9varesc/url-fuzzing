@@ -1,0 +1,261 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/TextEncoding.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - TextEncoding.h<span style="font-size: 80%;"> (source / <a href="TextEncoding.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // TextEncoding.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Text
+<span class="lineNum">       6 </span>            : // Module:  TextEncoding
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the abstract TextEncoding class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2004-2007, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_TextEncoding_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_TextEncoding_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : #include &quot;Poco/SharedPtr.h&quot;
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : namespace Poco {
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : class TextEncodingManager;
+<a name="29"><span class="lineNum">      29 </span>            : </a>
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span><span class="lineCov">          1 : class Foundation_API TextEncoding</span>
+<span class="lineNum">      32 </span>            :         /// An abstract base class for implementing text encodings
+<span class="lineNum">      33 </span>            :         /// like UTF-8 or ISO 8859-1.
+<span class="lineNum">      34 </span>            :         ///
+<span class="lineNum">      35 </span>            :         /// Subclasses must override the canonicalName(), isA(),
+<span class="lineNum">      36 </span>            :         /// characterMap() and convert() methods and need to be
+<span class="lineNum">      37 </span>            :         /// thread safe and stateless.
+<span class="lineNum">      38 </span>            :         ///
+<span class="lineNum">      39 </span>            :         /// TextEncoding also provides static member functions
+<span class="lineNum">      40 </span>            :         /// for managing mappings from encoding names to
+<span class="lineNum">      41 </span>            :         /// TextEncoding objects.
+<span class="lineNum">      42 </span>            : {
+<span class="lineNum">      43 </span>            : public:
+<span class="lineNum">      44 </span>            :         using Ptr = SharedPtr&lt;TextEncoding&gt;;
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            :         enum
+<span class="lineNum">      47 </span>            :         {
+<span class="lineNum">      48 </span>            :                 MAX_SEQUENCE_LENGTH = 4 /// The maximum character byte sequence length supported.
+<span class="lineNum">      49 </span>            :         };
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            :         typedef int CharacterMap[256];
+<span class="lineNum">      52 </span>            :                 /// The map[b] member gives information about byte sequences
+<span class="lineNum">      53 </span>            :                 /// whose first byte is b.
+<span class="lineNum">      54 </span>            :                 /// If map[b] is c where c is &gt;= 0, then b by itself encodes the Unicode scalar value c.
+<span class="lineNum">      55 </span>            :                 /// If map[b] is -1, then the byte sequence is malformed.
+<span class="lineNum">      56 </span>            :                 /// If map[b] is -n, where n &gt;= 2, then b is the first byte of an n-byte
+<span class="lineNum">      57 </span>            :                 /// sequence that encodes a single Unicode scalar value. Byte sequences up
+<span class="lineNum">      58 </span>            :                 /// to 4 bytes in length are supported.
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            :         virtual ~TextEncoding();
+<span class="lineNum">      61 </span>            :                 /// Destroys the encoding.
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            :         virtual const char* canonicalName() const = 0;
+<span class="lineNum">      64 </span>            :                 /// Returns the canonical name of this encoding,
+<span class="lineNum">      65 </span>            :                 /// e.g. &quot;ISO-8859-1&quot;. Encoding name comparisons are case
+<span class="lineNum">      66 </span>            :                 /// insensitive.
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            :         virtual bool isA(const std::string&amp; encodingName) const = 0;
+<span class="lineNum">      69 </span>            :                 /// Returns true if the given name is one of the names of this encoding.
+<span class="lineNum">      70 </span>            :                 /// For example, the &quot;ISO-8859-1&quot; encoding is also known as &quot;Latin-1&quot;.
+<span class="lineNum">      71 </span>            :                 ///
+<span class="lineNum">      72 </span>            :                 /// Encoding name comparisons are case insensitive.
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            :         virtual const CharacterMap&amp; characterMap() const = 0;
+<span class="lineNum">      75 </span>            :                 /// Returns the CharacterMap for the encoding.
+<span class="lineNum">      76 </span>            :                 /// The CharacterMap should be kept in a static member. As
+<span class="lineNum">      77 </span>            :                 /// characterMap() can be called frequently, it should be
+<span class="lineNum">      78 </span>            :                 /// implemented in such a way that it just returns a static
+<span class="lineNum">      79 </span>            :                 /// map. If the map is built at runtime, this should be
+<span class="lineNum">      80 </span>            :                 /// done in the constructor.
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            :         virtual int convert(const unsigned char* bytes) const;
+<span class="lineNum">      83 </span>            :                 /// The convert function is used to convert multibyte sequences;
+<span class="lineNum">      84 </span>            :                 /// bytes will point to a byte sequence of n bytes where
+<span class="lineNum">      85 </span>            :                 /// sequenceLength(bytes, length) == -n, with length &gt;= n.
+<span class="lineNum">      86 </span>            :                 ///
+<span class="lineNum">      87 </span>            :                 /// The convert function must return the Unicode scalar value
+<span class="lineNum">      88 </span>            :                 /// represented by this byte sequence or -1 if the byte sequence is malformed.
+<span class="lineNum">      89 </span>            :                 ///
+<span class="lineNum">      90 </span>            :                 /// The default implementation returns (int) bytes[0].
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            :         virtual int queryConvert(const unsigned char* bytes, int length) const;
+<span class="lineNum">      93 </span>            :                 /// The queryConvert function is used to convert single byte characters
+<span class="lineNum">      94 </span>            :                 /// or multibyte sequences;
+<span class="lineNum">      95 </span>            :                 /// bytes will point to a byte sequence of length bytes.
+<span class="lineNum">      96 </span>            :                 ///
+<span class="lineNum">      97 </span>            :                 /// The queryConvert function must return the Unicode scalar value
+<span class="lineNum">      98 </span>            :                 /// represented by this byte sequence or -1 if the byte sequence is malformed
+<span class="lineNum">      99 </span>            :                 /// or -n where n is number of bytes requested for the sequence, if length is
+<span class="lineNum">     100 </span>            :                 /// shorter than the sequence.
+<span class="lineNum">     101 </span>            :                 /// The length of the sequence might not be determined by the first byte,
+<span class="lineNum">     102 </span>            :                 /// in which case the conversion becomes an iterative process:
+<span class="lineNum">     103 </span>            :                 /// First call with length == 1 might return -2,
+<span class="lineNum">     104 </span>            :                 /// Then a second call with length == 2 might return -4
+<span class="lineNum">     105 </span>            :                 /// Eventually, the third call with length == 4 should return either a
+<span class="lineNum">     106 </span>            :                 /// Unicode scalar value, or -1 if the byte sequence is malformed.
+<span class="lineNum">     107 </span>            :                 ///
+<span class="lineNum">     108 </span>            :                 /// The default implementation returns (int) bytes[0].
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span>            :         virtual int sequenceLength(const unsigned char* bytes, int length) const;
+<span class="lineNum">     111 </span>            :                 /// The sequenceLength function is used to get the lenth of the sequence pointed
+<span class="lineNum">     112 </span>            :                 /// by bytes. The length parameter should be greater or equal to the length of
+<span class="lineNum">     113 </span>            :                 /// the sequence.
+<span class="lineNum">     114 </span>            :                 ///
+<span class="lineNum">     115 </span>            :                 /// The sequenceLength function must return the length of the sequence
+<span class="lineNum">     116 </span>            :                 /// represented by this byte sequence or a negative value -n if length is
+<span class="lineNum">     117 </span>            :                 /// shorter than the sequence, where n is the number of byte requested
+<span class="lineNum">     118 </span>            :                 /// to determine the length of the sequence.
+<span class="lineNum">     119 </span>            :                 /// The length of the sequence might not be determined by the first byte,
+<span class="lineNum">     120 </span>            :                 /// in which case the conversion becomes an iterative process as long as the
+<span class="lineNum">     121 </span>            :                 /// result is negative:
+<span class="lineNum">     122 </span>            :                 /// First call with length == 1 might return -2,
+<span class="lineNum">     123 </span>            :                 /// Then a second call with length == 2 might return -4
+<span class="lineNum">     124 </span>            :                 /// Eventually, the third call with length == 4 should return 4.
+<span class="lineNum">     125 </span>            :                 /// The default implementation returns 1.
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :         virtual int convert(int ch, unsigned char* bytes, int length) const;
+<span class="lineNum">     128 </span>            :                 /// Transform the Unicode character ch into the encoding's
+<span class="lineNum">     129 </span>            :                 /// byte sequence. The method returns the number of bytes
+<span class="lineNum">     130 </span>            :                 /// used. The method must not use more than length characters.
+<span class="lineNum">     131 </span>            :                 /// Bytes and length can also be null - in this case only the number
+<span class="lineNum">     132 </span>            :                 /// of bytes required to represent ch is returned.
+<span class="lineNum">     133 </span>            :                 /// If the character cannot be converted, 0 is returned and
+<span class="lineNum">     134 </span>            :                 /// the byte sequence remains unchanged.
+<span class="lineNum">     135 </span>            :                 /// The default implementation simply returns 0.
+<span class="lineNum">     136 </span>            : 
+<span class="lineNum">     137 </span>            :         static TextEncoding&amp; byName(const std::string&amp; encodingName);
+<span class="lineNum">     138 </span>            :                 /// Returns the TextEncoding object for the given encoding name.
+<span class="lineNum">     139 </span>            :                 ///
+<span class="lineNum">     140 </span>            :                 /// Throws a NotFoundException if the encoding with given name is not available.
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span>            :         static TextEncoding::Ptr find(const std::string&amp; encodingName);
+<span class="lineNum">     143 </span>            :                 /// Returns a pointer to the TextEncoding object for the given encodingName,
+<span class="lineNum">     144 </span>            :                 /// or NULL if no such TextEncoding object exists.
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span>            :         static void add(TextEncoding::Ptr encoding);
+<span class="lineNum">     147 </span>            :                 /// Adds the given TextEncoding to the table of text encodings,
+<span class="lineNum">     148 </span>            :                 /// under the encoding's canonical name.
+<span class="lineNum">     149 </span>            :                 ///
+<span class="lineNum">     150 </span>            :                 /// If an encoding with the given name is already registered,
+<span class="lineNum">     151 </span>            :                 /// it is replaced.
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            :         static void add(TextEncoding::Ptr encoding, const std::string&amp; name);
+<span class="lineNum">     154 </span>            :                 /// Adds the given TextEncoding to the table of text encodings,
+<span class="lineNum">     155 </span>            :                 /// under the given name.
+<span class="lineNum">     156 </span>            :                 ///
+<span class="lineNum">     157 </span>            :                 /// If an encoding with the given name is already registered,
+<span class="lineNum">     158 </span>            :                 /// it is replaced.
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            :         static void remove(const std::string&amp; encodingName);
+<span class="lineNum">     161 </span>            :                 /// Removes the encoding with the given name from the table
+<span class="lineNum">     162 </span>            :                 /// of text encodings.
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span>            :         static TextEncoding::Ptr global(TextEncoding::Ptr encoding);
+<span class="lineNum">     165 </span>            :                 /// Sets global TextEncoding object.
+<span class="lineNum">     166 </span>            :                 ///
+<span class="lineNum">     167 </span>            :                 /// This function sets the global encoding to the argument and returns a
+<span class="lineNum">     168 </span>            :                 /// reference of the previous global encoding.
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span>            :         static TextEncoding&amp; global();
+<span class="lineNum">     171 </span>            :                 /// Return the current global TextEncoding object
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            :         static const std::string GLOBAL;
+<span class="lineNum">     174 </span>            :                 /// Name of the global TextEncoding, which is the empty string.
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span>            : protected:
+<span class="lineNum">     177 </span>            :         static TextEncodingManager&amp; manager();
+<span class="lineNum">     178 </span>            :                 /// Returns the TextEncodingManager.
+<span class="lineNum">     179 </span>            : };
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span>            : } // namespace Poco
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span>            : #endif // Foundation_TextEncoding_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

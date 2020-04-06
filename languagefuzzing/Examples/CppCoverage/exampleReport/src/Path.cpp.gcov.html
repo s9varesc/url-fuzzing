@@ -1,0 +1,1161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/Path.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - Path.cpp<span style="font-size: 80%;"> (source / <a href="Path.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">523</td>
+            <td class="headerCovTableEntryLo">0.2 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">73</td>
+            <td class="headerCovTableEntryLo">2.7 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Path.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Filesystem
+<span class="lineNum">       6 </span>            : // Module:  Path
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/Path.h&quot;
+<span class="lineNum">      16 </span>            : #include &quot;Poco/File.h&quot;
+<span class="lineNum">      17 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      18 </span>            : #include &quot;Poco/StringTokenizer.h&quot;
+<span class="lineNum">      19 </span>            : #if defined(_WIN32)
+<span class="lineNum">      20 </span>            : #include &quot;Poco/UnicodeConverter.h&quot;
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Buffer.h&quot;
+<span class="lineNum">      22 </span>            : #endif
+<span class="lineNum">      23 </span>            : #include &lt;algorithm&gt;
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : #if defined(POCO_OS_FAMILY_UNIX)
+<span class="lineNum">      27 </span>            : #include &quot;Path_UNIX.cpp&quot;
+<span class="lineNum">      28 </span>            : #elif defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">      29 </span>            : #if defined(_WIN32_WCE)
+<span class="lineNum">      30 </span>            : #include &quot;Path_WINCE.cpp&quot;
+<span class="lineNum">      31 </span>            : #else
+<span class="lineNum">      32 </span>            : #include &quot;Path_WIN32U.cpp&quot;
+<span class="lineNum">      33 </span>            : #endif
+<span class="lineNum">      34 </span>            : #endif
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : namespace Poco {
+<a name="38"><span class="lineNum">      38 </span>            : </a>
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span><span class="lineNoCov">          0 : Path::Path(): _absolute(false)</span>
+<span class="lineNum">      41 </span>            : {
+<span class="lineNum">      42 </span><span class="lineNoCov">          0 : }</span>
+<a name="43"><span class="lineNum">      43 </span>            : </a>
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span><span class="lineNoCov">          0 : Path::Path(bool absolute): _absolute(absolute)</span>
+<span class="lineNum">      46 </span>            : {
+<span class="lineNum">      47 </span><span class="lineNoCov">          0 : }</span>
+<a name="48"><span class="lineNum">      48 </span>            : </a>
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span><span class="lineNoCov">          0 : Path::Path(const std::string&amp; path)</span>
+<span class="lineNum">      51 </span>            : {
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :         assign(path);</span>
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 : }</span>
+<a name="54"><span class="lineNum">      54 </span>            : </a>
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span><span class="lineNoCov">          0 : Path::Path(const std::string&amp; path, Style style)</span>
+<span class="lineNum">      57 </span>            : {
+<span class="lineNum">      58 </span><span class="lineNoCov">          0 :         assign(path, style);</span>
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 : }</span>
+<a name="60"><span class="lineNum">      60 </span>            : </a>
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 : Path::Path(const char* path)</span>
+<span class="lineNum">      63 </span>            : {
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :         poco_check_ptr(path);</span>
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 :         assign(path);</span>
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 : }</span>
+<a name="67"><span class="lineNum">      67 </span>            : </a>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 : Path::Path(const char* path, Style style)</span>
+<span class="lineNum">      70 </span>            : {
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :         poco_check_ptr(path);</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :         assign(path, style);</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 : }</span>
+<a name="74"><span class="lineNum">      74 </span>            : </a>
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 : Path::Path(const Path&amp; path):</span>
+<span class="lineNum">      77 </span>            :         _node(path._node),
+<span class="lineNum">      78 </span>            :         _device(path._device),
+<span class="lineNum">      79 </span>            :         _name(path._name),
+<span class="lineNum">      80 </span>            :         _version(path._version),
+<span class="lineNum">      81 </span>            :         _dirs(path._dirs),
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :         _absolute(path._absolute)</span>
+<span class="lineNum">      83 </span>            : {
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 : }</span>
+<a name="85"><span class="lineNum">      85 </span>            : </a>
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 : Path::Path(Path&amp;&amp; path) noexcept:</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :         _node(std::move(path._node)),</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :         _device(std::move(path._device)),</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :         _name(std::move(path._name)),</span>
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :         _version(std::move(path._version)),</span>
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :         _dirs(std::move(path._dirs)),</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :         _absolute(std::move(path._absolute))</span>
+<span class="lineNum">      94 </span>            : {
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 : }</span>
+<a name="96"><span class="lineNum">      96 </span>            : </a>
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 : Path::Path(const Path&amp; parent, const std::string&amp; fileName):</span>
+<span class="lineNum">      99 </span>            :         _node(parent._node),
+<span class="lineNum">     100 </span>            :         _device(parent._device),
+<span class="lineNum">     101 </span>            :         _name(parent._name),
+<span class="lineNum">     102 </span>            :         _version(parent._version),
+<span class="lineNum">     103 </span>            :         _dirs(parent._dirs),
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :         _absolute(parent._absolute)</span>
+<span class="lineNum">     105 </span>            : {
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :         makeDirectory();</span>
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :         _name = fileName;</span>
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 : }</span>
+<a name="109"><span class="lineNum">     109 </span>            : </a>
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 : Path::Path(const Path&amp; parent, const char* fileName):</span>
+<span class="lineNum">     112 </span>            :         _node(parent._node),
+<span class="lineNum">     113 </span>            :         _device(parent._device),
+<span class="lineNum">     114 </span>            :         _name(parent._name),
+<span class="lineNum">     115 </span>            :         _version(parent._version),
+<span class="lineNum">     116 </span>            :         _dirs(parent._dirs),
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :         _absolute(parent._absolute)</span>
+<span class="lineNum">     118 </span>            : {
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :         makeDirectory();</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :         _name = fileName;</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 : }</span>
+<a name="122"><span class="lineNum">     122 </span>            : </a>
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 : Path::Path(const Path&amp; parent, const Path&amp; relative):</span>
+<span class="lineNum">     125 </span>            :         _node(parent._node),
+<span class="lineNum">     126 </span>            :         _device(parent._device),
+<span class="lineNum">     127 </span>            :         _name(parent._name),
+<span class="lineNum">     128 </span>            :         _version(parent._version),
+<span class="lineNum">     129 </span>            :         _dirs(parent._dirs),
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :         _absolute(parent._absolute)</span>
+<span class="lineNum">     131 </span>            : {
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 :         resolve(relative);</span>
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 : }</span>
+<a name="134"><span class="lineNum">     134 </span>            : </a>
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 : Path::~Path()</span>
+<span class="lineNum">     137 </span>            : {
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 : }</span>
+<a name="139"><span class="lineNum">     139 </span>            : </a>
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 : Path&amp; Path::operator = (const Path&amp; path)</span>
+<span class="lineNum">     142 </span>            : {
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :         return assign(path);</span>
+<span class="lineNum">     144 </span>            : }
+<a name="145"><span class="lineNum">     145 </span>            : </a>
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 : Path&amp; Path::operator = (Path&amp;&amp; path) noexcept</span>
+<span class="lineNum">     148 </span>            : {
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :         _node     = std::move(path._node);</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :         _device   = std::move(path._device);</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :         _name     = std::move(path._name);</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :         _version  = std::move(path._version);</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :         _dirs     = std::move(path._dirs);</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :         _absolute = std::move(path._absolute);</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     156 </span>            : }
+<a name="157"><span class="lineNum">     157 </span>            : </a>
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 : Path&amp; Path::operator = (const std::string&amp; path)</span>
+<span class="lineNum">     160 </span>            : {
+<span class="lineNum">     161 </span><span class="lineNoCov">          0 :         return assign(path);</span>
+<span class="lineNum">     162 </span>            : }
+<a name="163"><span class="lineNum">     163 </span>            : </a>
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 : Path&amp; Path::operator = (const char* path)</span>
+<span class="lineNum">     166 </span>            : {
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :         poco_check_ptr(path);</span>
+<span class="lineNum">     168 </span><span class="lineNoCov">          0 :         return assign(path);</span>
+<span class="lineNum">     169 </span>            : }
+<a name="170"><span class="lineNum">     170 </span>            : </a>
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 : void Path::swap(Path&amp; path)</span>
+<span class="lineNum">     173 </span>            : {
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :         std::swap(_node, path._node);</span>
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :         std::swap(_device, path._device);</span>
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 :         std::swap(_name, path._name);</span>
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :         std::swap(_version, path._version);</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :         std::swap(_dirs, path._dirs);</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :         std::swap(_absolute, path._absolute);</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 : }</span>
+<a name="181"><span class="lineNum">     181 </span>            : </a>
+<span class="lineNum">     182 </span>            : 
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 : Path&amp; Path::assign(const Path&amp; path)</span>
+<span class="lineNum">     184 </span>            : {
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :         if (&amp;path != this)</span>
+<span class="lineNum">     186 </span>            :         {
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :                 _node     = path._node;</span>
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 :                 _device   = path._device;</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :                 _name     = path._name;</span>
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :                 _version  = path._version;</span>
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :                 _dirs     = path._dirs;</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :                 _absolute = path._absolute;</span>
+<span class="lineNum">     193 </span>            :         }
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     195 </span>            : }
+<a name="196"><span class="lineNum">     196 </span>            : </a>
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 : Path&amp; Path::assign(const std::string&amp; path)</span>
+<span class="lineNum">     199 </span>            : {
+<span class="lineNum">     200 </span>            : #if defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">     201 </span>            :         parseWindows(path);
+<span class="lineNum">     202 </span>            : #else
+<span class="lineNum">     203 </span><span class="lineNoCov">          0 :         parseUnix(path);</span>
+<span class="lineNum">     204 </span>            : #endif
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     206 </span>            : }
+<a name="207"><span class="lineNum">     207 </span>            : </a>
+<span class="lineNum">     208 </span>            : 
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 : Path&amp; Path::assign(const std::string&amp; path, Style style)</span>
+<span class="lineNum">     210 </span>            : {
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :         switch (style)</span>
+<span class="lineNum">     212 </span>            :         {
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :         case PATH_UNIX:</span>
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :                 parseUnix(path);</span>
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :         case PATH_WINDOWS:</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :                 parseWindows(path);</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :         case PATH_VMS:</span>
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :                 parseVMS(path);</span>
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :         case PATH_NATIVE:</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :                 assign(path);</span>
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :         case PATH_GUESS:</span>
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :                 parseGuess(path);</span>
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :                 break;</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     229 </span><span class="lineNoCov">          0 :                 poco_bugcheck();</span>
+<span class="lineNum">     230 </span>            :         }
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     232 </span>            : }
+<a name="233"><span class="lineNum">     233 </span>            : </a>
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 : Path&amp; Path::assign(const char* path)</span>
+<span class="lineNum">     236 </span>            : {
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :         return assign(std::string(path));</span>
+<span class="lineNum">     238 </span>            : }
+<a name="239"><span class="lineNum">     239 </span>            : </a>
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 : std::string Path::toString() const</span>
+<span class="lineNum">     242 </span>            : {
+<span class="lineNum">     243 </span>            : #if defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">     244 </span>            :         return buildWindows();
+<span class="lineNum">     245 </span>            : #else
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :         return buildUnix();</span>
+<span class="lineNum">     247 </span>            : #endif
+<span class="lineNum">     248 </span>            : }
+<a name="249"><span class="lineNum">     249 </span>            : </a>
+<span class="lineNum">     250 </span>            : 
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 : std::string Path::toString(Style style) const</span>
+<span class="lineNum">     252 </span>            : {
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :         switch (style)</span>
+<span class="lineNum">     254 </span>            :         {
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :         case PATH_UNIX:</span>
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :                 return buildUnix();</span>
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :         case PATH_WINDOWS:</span>
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 :                 return buildWindows();</span>
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 :         case PATH_VMS:</span>
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :                 return buildVMS();</span>
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :         case PATH_NATIVE:</span>
+<span class="lineNum">     262 </span>            :         case PATH_GUESS:
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :                 return toString();</span>
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :         default:</span>
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :                 poco_bugcheck();</span>
+<span class="lineNum">     266 </span>            :         }
+<span class="lineNum">     267 </span><span class="lineNoCov">          0 :         return std::string();</span>
+<span class="lineNum">     268 </span>            : }
+<a name="269"><span class="lineNum">     269 </span>            : </a>
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 : bool Path::tryParse(const std::string&amp; path)</span>
+<span class="lineNum">     272 </span>            : {
+<span class="lineNum">     273 </span>            :         try
+<span class="lineNum">     274 </span>            :         {
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :                 Path p;</span>
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :                 p.parse(path);</span>
+<span class="lineNum">     277 </span><span class="lineNoCov">          0 :                 assign(p);</span>
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :                 return true;</span>
+<span class="lineNum">     279 </span>            :         }
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :         catch (...)</span>
+<span class="lineNum">     281 </span>            :         {
+<span class="lineNum">     282 </span><span class="lineNoCov">          0 :                 return false;</span>
+<span class="lineNum">     283 </span>            :         }
+<span class="lineNum">     284 </span>            : }
+<a name="285"><span class="lineNum">     285 </span>            : </a>
+<span class="lineNum">     286 </span>            : 
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 : bool Path::tryParse(const std::string&amp; path, Style style)</span>
+<span class="lineNum">     288 </span>            : {
+<span class="lineNum">     289 </span>            :         try
+<span class="lineNum">     290 </span>            :         {
+<span class="lineNum">     291 </span><span class="lineNoCov">          0 :                 Path p;</span>
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :                 p.parse(path, style);</span>
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :                 assign(p);</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :                 return true;</span>
+<span class="lineNum">     295 </span>            :         }
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :         catch (...)</span>
+<span class="lineNum">     297 </span>            :         {
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 :                 return false;</span>
+<span class="lineNum">     299 </span>            :         }
+<span class="lineNum">     300 </span>            : }
+<a name="301"><span class="lineNum">     301 </span>            : </a>
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span><span class="lineNoCov">          0 : Path&amp; Path::parseDirectory(const std::string&amp; path)</span>
+<span class="lineNum">     304 </span>            : {
+<span class="lineNum">     305 </span><span class="lineNoCov">          0 :         assign(path);</span>
+<span class="lineNum">     306 </span><span class="lineNoCov">          0 :         return makeDirectory();</span>
+<span class="lineNum">     307 </span>            : }
+<a name="308"><span class="lineNum">     308 </span>            : </a>
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span><span class="lineNoCov">          0 : Path&amp; Path::parseDirectory(const std::string&amp; path, Style style)</span>
+<span class="lineNum">     311 </span>            : {
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :         assign(path, style);</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :         return makeDirectory();</span>
+<span class="lineNum">     314 </span>            : }
+<a name="315"><span class="lineNum">     315 </span>            : </a>
+<span class="lineNum">     316 </span>            : 
+<span class="lineNum">     317 </span><span class="lineNoCov">          0 : Path&amp; Path::makeDirectory()</span>
+<span class="lineNum">     318 </span>            : {
+<span class="lineNum">     319 </span><span class="lineNoCov">          0 :         pushDirectory(_name);</span>
+<span class="lineNum">     320 </span><span class="lineNoCov">          0 :         _name.clear();</span>
+<span class="lineNum">     321 </span><span class="lineNoCov">          0 :         _version.clear();</span>
+<span class="lineNum">     322 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     323 </span>            : }
+<a name="324"><span class="lineNum">     324 </span>            : </a>
+<span class="lineNum">     325 </span>            : 
+<span class="lineNum">     326 </span><span class="lineNoCov">          0 : Path&amp; Path::makeFile()</span>
+<span class="lineNum">     327 </span>            : {
+<span class="lineNum">     328 </span><span class="lineNoCov">          0 :         if (!_dirs.empty() &amp;&amp; _name.empty())</span>
+<span class="lineNum">     329 </span>            :         {
+<span class="lineNum">     330 </span><span class="lineNoCov">          0 :                 _name = _dirs.back();</span>
+<span class="lineNum">     331 </span><span class="lineNoCov">          0 :                 _dirs.pop_back();</span>
+<span class="lineNum">     332 </span>            :         }
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     334 </span>            : }
+<a name="335"><span class="lineNum">     335 </span>            : </a>
+<span class="lineNum">     336 </span>            : 
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 : Path&amp; Path::makeAbsolute()</span>
+<span class="lineNum">     338 </span>            : {
+<span class="lineNum">     339 </span><span class="lineNoCov">          0 :         return makeAbsolute(current());</span>
+<span class="lineNum">     340 </span>            : }
+<a name="341"><span class="lineNum">     341 </span>            : </a>
+<span class="lineNum">     342 </span>            : 
+<span class="lineNum">     343 </span><span class="lineNoCov">          0 : Path&amp; Path::makeAbsolute(const Path&amp; base)</span>
+<span class="lineNum">     344 </span>            : {
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :         if (!_absolute)</span>
+<span class="lineNum">     346 </span>            :         {
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :                 Path tmp = base;</span>
+<span class="lineNum">     348 </span><span class="lineNoCov">          0 :                 tmp.makeDirectory();</span>
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :                 for (const auto&amp; d: _dirs)</span>
+<span class="lineNum">     350 </span>            :                 {
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :                         tmp.pushDirectory(d);</span>
+<span class="lineNum">     352 </span>            :                 }
+<span class="lineNum">     353 </span><span class="lineNoCov">          0 :                 _node     = tmp._node;</span>
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :                 _device   = tmp._device;</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :                 _dirs     = tmp._dirs;</span>
+<span class="lineNum">     356 </span><span class="lineNoCov">          0 :                 _absolute = base._absolute;</span>
+<span class="lineNum">     357 </span>            :         }
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     359 </span>            : }
+<a name="360"><span class="lineNum">     360 </span>            : </a>
+<span class="lineNum">     361 </span>            : 
+<span class="lineNum">     362 </span><span class="lineNoCov">          0 : Path Path::absolute() const</span>
+<span class="lineNum">     363 </span>            : {
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 :         Path result(*this);</span>
+<span class="lineNum">     365 </span><span class="lineNoCov">          0 :         if (!result._absolute)</span>
+<span class="lineNum">     366 </span>            :         {
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :                 result.makeAbsolute();</span>
+<span class="lineNum">     368 </span>            :         }
+<span class="lineNum">     369 </span><span class="lineNoCov">          0 :         return result;</span>
+<span class="lineNum">     370 </span>            : }
+<a name="371"><span class="lineNum">     371 </span>            : </a>
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 : Path Path::absolute(const Path&amp; base) const</span>
+<span class="lineNum">     374 </span>            : {
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :         Path result(*this);</span>
+<span class="lineNum">     376 </span><span class="lineNoCov">          0 :         if (!result._absolute)</span>
+<span class="lineNum">     377 </span>            :         {
+<span class="lineNum">     378 </span><span class="lineNoCov">          0 :                 result.makeAbsolute(base);</span>
+<span class="lineNum">     379 </span>            :         }
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :         return result;</span>
+<span class="lineNum">     381 </span>            : }
+<a name="382"><span class="lineNum">     382 </span>            : </a>
+<span class="lineNum">     383 </span>            : 
+<span class="lineNum">     384 </span><span class="lineNoCov">          0 : Path Path::parent() const</span>
+<span class="lineNum">     385 </span>            : {
+<span class="lineNum">     386 </span><span class="lineNoCov">          0 :         Path p(*this);</span>
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :         return p.makeParent();</span>
+<span class="lineNum">     388 </span>            : }
+<a name="389"><span class="lineNum">     389 </span>            : </a>
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 : Path&amp; Path::makeParent()</span>
+<span class="lineNum">     392 </span>            : {
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :         if (_name.empty())</span>
+<span class="lineNum">     394 </span>            :         {
+<span class="lineNum">     395 </span><span class="lineNoCov">          0 :                 if (_dirs.empty())</span>
+<span class="lineNum">     396 </span>            :                 {
+<span class="lineNum">     397 </span><span class="lineNoCov">          0 :                         if (!_absolute)</span>
+<span class="lineNum">     398 </span><span class="lineNoCov">          0 :                                 _dirs.push_back(&quot;..&quot;);</span>
+<span class="lineNum">     399 </span>            :                 }
+<span class="lineNum">     400 </span>            :                 else
+<span class="lineNum">     401 </span>            :                 {
+<span class="lineNum">     402 </span><span class="lineNoCov">          0 :                         if (_dirs.back() == &quot;..&quot;)</span>
+<span class="lineNum">     403 </span><span class="lineNoCov">          0 :                                 _dirs.push_back(&quot;..&quot;);</span>
+<span class="lineNum">     404 </span>            :                         else
+<span class="lineNum">     405 </span><span class="lineNoCov">          0 :                                 _dirs.pop_back();</span>
+<span class="lineNum">     406 </span>            :                 }
+<span class="lineNum">     407 </span>            :         }
+<span class="lineNum">     408 </span>            :         else
+<span class="lineNum">     409 </span>            :         {
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :                 _name.clear();</span>
+<span class="lineNum">     411 </span><span class="lineNoCov">          0 :                 _version.clear();</span>
+<span class="lineNum">     412 </span>            :         }
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     414 </span>            : }
+<a name="415"><span class="lineNum">     415 </span>            : </a>
+<span class="lineNum">     416 </span>            : 
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 : Path&amp; Path::append(const Path&amp; path)</span>
+<span class="lineNum">     418 </span>            : {
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :         makeDirectory();</span>
+<span class="lineNum">     420 </span><span class="lineNoCov">          0 :         _dirs.insert(_dirs.end(), path._dirs.begin(), path._dirs.end());</span>
+<span class="lineNum">     421 </span><span class="lineNoCov">          0 :         _name = path._name;</span>
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :         _version = path._version;</span>
+<span class="lineNum">     423 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     424 </span>            : }
+<a name="425"><span class="lineNum">     425 </span>            : </a>
+<span class="lineNum">     426 </span>            : 
+<span class="lineNum">     427 </span><span class="lineNoCov">          0 : Path&amp; Path::resolve(const Path&amp; path)</span>
+<span class="lineNum">     428 </span>            : {
+<span class="lineNum">     429 </span><span class="lineNoCov">          0 :         if (path.isAbsolute())</span>
+<span class="lineNum">     430 </span>            :         {
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :                 assign(path);</span>
+<span class="lineNum">     432 </span>            :         }
+<span class="lineNum">     433 </span>            :         else
+<span class="lineNum">     434 </span>            :         {
+<span class="lineNum">     435 </span><span class="lineNoCov">          0 :                 for (int i = 0; i &lt; path.depth(); ++i)</span>
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :                         pushDirectory(path[i]);</span>
+<span class="lineNum">     437 </span><span class="lineNoCov">          0 :                 _name = path._name;</span>
+<span class="lineNum">     438 </span>            :         }
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     440 </span>            : }
+<a name="441"><span class="lineNum">     441 </span>            : </a>
+<span class="lineNum">     442 </span>            : 
+<span class="lineNum">     443 </span><span class="lineNoCov">          0 : Path&amp; Path::setNode(const std::string&amp; node)</span>
+<span class="lineNum">     444 </span>            : {
+<span class="lineNum">     445 </span><span class="lineNoCov">          0 :         _node     = node;</span>
+<span class="lineNum">     446 </span><span class="lineNoCov">          0 :         _absolute = _absolute || !node.empty();</span>
+<span class="lineNum">     447 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     448 </span>            : }
+<a name="449"><span class="lineNum">     449 </span>            : </a>
+<span class="lineNum">     450 </span>            : 
+<span class="lineNum">     451 </span><span class="lineNoCov">          0 : Path&amp; Path::setDevice(const std::string&amp; device)</span>
+<span class="lineNum">     452 </span>            : {
+<span class="lineNum">     453 </span><span class="lineNoCov">          0 :         _device   = device;</span>
+<span class="lineNum">     454 </span><span class="lineNoCov">          0 :         _absolute = _absolute || !device.empty();</span>
+<span class="lineNum">     455 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     456 </span>            : }
+<a name="457"><span class="lineNum">     457 </span>            : </a>
+<span class="lineNum">     458 </span>            : 
+<span class="lineNum">     459 </span><span class="lineNoCov">          0 : const std::string&amp; Path::directory(int n) const</span>
+<span class="lineNum">     460 </span>            : {
+<span class="lineNum">     461 </span><span class="lineNoCov">          0 :         poco_assert (0 &lt;= n &amp;&amp; n &lt;= _dirs.size());</span>
+<span class="lineNum">     462 </span>            : 
+<span class="lineNum">     463 </span><span class="lineNoCov">          0 :         if (n &lt; _dirs.size())</span>
+<span class="lineNum">     464 </span><span class="lineNoCov">          0 :                 return _dirs[n];</span>
+<span class="lineNum">     465 </span>            :         else
+<span class="lineNum">     466 </span><span class="lineNoCov">          0 :                 return _name;</span>
+<span class="lineNum">     467 </span>            : }
+<a name="468"><span class="lineNum">     468 </span>            : </a>
+<span class="lineNum">     469 </span>            : 
+<span class="lineNum">     470 </span><span class="lineNoCov">          0 : const std::string&amp; Path::operator [] (int n) const</span>
+<span class="lineNum">     471 </span>            : {
+<span class="lineNum">     472 </span><span class="lineNoCov">          0 :         poco_assert (0 &lt;= n &amp;&amp; n &lt;= _dirs.size());</span>
+<span class="lineNum">     473 </span>            : 
+<span class="lineNum">     474 </span><span class="lineNoCov">          0 :         if (n &lt; _dirs.size())</span>
+<span class="lineNum">     475 </span><span class="lineNoCov">          0 :                 return _dirs[n];</span>
+<span class="lineNum">     476 </span>            :         else
+<span class="lineNum">     477 </span><span class="lineNoCov">          0 :                 return _name;</span>
+<span class="lineNum">     478 </span>            : }
+<a name="479"><span class="lineNum">     479 </span>            : </a>
+<span class="lineNum">     480 </span>            : 
+<span class="lineNum">     481 </span><span class="lineNoCov">          0 : Path&amp; Path::pushDirectory(const std::string&amp; dir)</span>
+<span class="lineNum">     482 </span>            : {
+<span class="lineNum">     483 </span><span class="lineNoCov">          0 :         if (!dir.empty() &amp;&amp; dir != &quot;.&quot;)</span>
+<span class="lineNum">     484 </span>            :         {
+<span class="lineNum">     485 </span><span class="lineNoCov">          0 :                 if (dir == &quot;..&quot;)</span>
+<span class="lineNum">     486 </span>            :                 {
+<span class="lineNum">     487 </span><span class="lineNoCov">          0 :                         if (!_dirs.empty() &amp;&amp; _dirs.back() != &quot;..&quot;)</span>
+<span class="lineNum">     488 </span><span class="lineNoCov">          0 :                                 _dirs.pop_back();</span>
+<span class="lineNum">     489 </span><span class="lineNoCov">          0 :                         else if (!_absolute)</span>
+<span class="lineNum">     490 </span><span class="lineNoCov">          0 :                                 _dirs.push_back(dir);</span>
+<span class="lineNum">     491 </span>            :                 }
+<span class="lineNum">     492 </span><span class="lineNoCov">          0 :                 else _dirs.push_back(dir);</span>
+<span class="lineNum">     493 </span>            :         }
+<span class="lineNum">     494 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     495 </span>            : }
+<a name="496"><span class="lineNum">     496 </span>            : </a>
+<span class="lineNum">     497 </span>            : 
+<span class="lineNum">     498 </span><span class="lineNoCov">          0 : Path&amp; Path::popDirectory()</span>
+<span class="lineNum">     499 </span>            : {
+<span class="lineNum">     500 </span><span class="lineNoCov">          0 :         poco_assert (!_dirs.empty());</span>
+<span class="lineNum">     501 </span>            : 
+<span class="lineNum">     502 </span><span class="lineNoCov">          0 :         _dirs.pop_back();</span>
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     504 </span>            : }
+<a name="505"><span class="lineNum">     505 </span>            : </a>
+<span class="lineNum">     506 </span>            : 
+<span class="lineNum">     507 </span><span class="lineNoCov">          0 : Path&amp; Path::popFrontDirectory()</span>
+<span class="lineNum">     508 </span>            : {
+<span class="lineNum">     509 </span><span class="lineNoCov">          0 :         poco_assert (!_dirs.empty());</span>
+<span class="lineNum">     510 </span>            : 
+<span class="lineNum">     511 </span><span class="lineNoCov">          0 :         StringVec::iterator it = _dirs.begin();</span>
+<span class="lineNum">     512 </span><span class="lineNoCov">          0 :         _dirs.erase(it);</span>
+<span class="lineNum">     513 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     514 </span>            : }
+<a name="515"><span class="lineNum">     515 </span>            : </a>
+<span class="lineNum">     516 </span>            : 
+<span class="lineNum">     517 </span><span class="lineNoCov">          0 : Path&amp; Path::setFileName(const std::string&amp; name)</span>
+<span class="lineNum">     518 </span>            : {
+<span class="lineNum">     519 </span><span class="lineNoCov">          0 :         _name = name;</span>
+<span class="lineNum">     520 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     521 </span>            : }
+<a name="522"><span class="lineNum">     522 </span>            : </a>
+<span class="lineNum">     523 </span>            : 
+<span class="lineNum">     524 </span><span class="lineNoCov">          0 : Path&amp; Path::setBaseName(const std::string&amp; name)</span>
+<span class="lineNum">     525 </span>            : {
+<span class="lineNum">     526 </span><span class="lineNoCov">          0 :         std::string ext = getExtension();</span>
+<span class="lineNum">     527 </span><span class="lineNoCov">          0 :         _name = name;</span>
+<span class="lineNum">     528 </span><span class="lineNoCov">          0 :         if (!ext.empty())</span>
+<span class="lineNum">     529 </span>            :         {
+<span class="lineNum">     530 </span><span class="lineNoCov">          0 :                 _name.append(&quot;.&quot;);</span>
+<span class="lineNum">     531 </span><span class="lineNoCov">          0 :                 _name.append(ext);</span>
+<span class="lineNum">     532 </span>            :         }
+<span class="lineNum">     533 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     534 </span>            : }
+<a name="535"><span class="lineNum">     535 </span>            : </a>
+<span class="lineNum">     536 </span>            : 
+<span class="lineNum">     537 </span><span class="lineNoCov">          0 : std::string Path::getBaseName() const</span>
+<span class="lineNum">     538 </span>            : {
+<span class="lineNum">     539 </span><span class="lineNoCov">          0 :         std::string::size_type pos = _name.rfind('.');</span>
+<span class="lineNum">     540 </span><span class="lineNoCov">          0 :         if (pos != std::string::npos)</span>
+<span class="lineNum">     541 </span><span class="lineNoCov">          0 :                 return _name.substr(0, pos);</span>
+<span class="lineNum">     542 </span>            :         else
+<span class="lineNum">     543 </span><span class="lineNoCov">          0 :                 return _name;</span>
+<span class="lineNum">     544 </span>            : }
+<a name="545"><span class="lineNum">     545 </span>            : </a>
+<span class="lineNum">     546 </span>            : 
+<span class="lineNum">     547 </span><span class="lineNoCov">          0 : Path&amp; Path::setExtension(const std::string&amp; extension)</span>
+<span class="lineNum">     548 </span>            : {
+<span class="lineNum">     549 </span><span class="lineNoCov">          0 :         _name = getBaseName();</span>
+<span class="lineNum">     550 </span><span class="lineNoCov">          0 :         if (!extension.empty())</span>
+<span class="lineNum">     551 </span>            :         {
+<span class="lineNum">     552 </span><span class="lineNoCov">          0 :                 _name.append(&quot;.&quot;);</span>
+<span class="lineNum">     553 </span><span class="lineNoCov">          0 :                 _name.append(extension);</span>
+<span class="lineNum">     554 </span>            :         }
+<span class="lineNum">     555 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     556 </span>            : }
+<a name="557"><span class="lineNum">     557 </span>            : </a>
+<span class="lineNum">     558 </span>            : 
+<span class="lineNum">     559 </span><span class="lineNoCov">          0 : std::string Path::getExtension() const</span>
+<span class="lineNum">     560 </span>            : {
+<span class="lineNum">     561 </span><span class="lineNoCov">          0 :         std::string::size_type pos = _name.rfind('.');</span>
+<span class="lineNum">     562 </span><span class="lineNoCov">          0 :         if (pos != std::string::npos)</span>
+<span class="lineNum">     563 </span><span class="lineNoCov">          0 :                 return _name.substr(pos + 1);</span>
+<span class="lineNum">     564 </span>            :         else
+<span class="lineNum">     565 </span><span class="lineNoCov">          0 :                 return std::string();</span>
+<span class="lineNum">     566 </span>            : }
+<a name="567"><span class="lineNum">     567 </span>            : </a>
+<span class="lineNum">     568 </span>            : 
+<span class="lineNum">     569 </span><span class="lineNoCov">          0 : Path&amp; Path::clear()</span>
+<span class="lineNum">     570 </span>            : {
+<span class="lineNum">     571 </span><span class="lineNoCov">          0 :         _node.clear();</span>
+<span class="lineNum">     572 </span><span class="lineNoCov">          0 :         _device.clear();</span>
+<span class="lineNum">     573 </span><span class="lineNoCov">          0 :         _name.clear();</span>
+<span class="lineNum">     574 </span><span class="lineNoCov">          0 :         _dirs.clear();</span>
+<span class="lineNum">     575 </span><span class="lineNoCov">          0 :         _version.clear();</span>
+<span class="lineNum">     576 </span><span class="lineNoCov">          0 :         _absolute = false;</span>
+<span class="lineNum">     577 </span><span class="lineNoCov">          0 :         return *this;</span>
+<span class="lineNum">     578 </span>            : }
+<a name="579"><span class="lineNum">     579 </span>            : </a>
+<span class="lineNum">     580 </span>            : 
+<span class="lineNum">     581 </span><span class="lineNoCov">          0 : std::string Path::current()</span>
+<span class="lineNum">     582 </span>            : {
+<span class="lineNum">     583 </span><span class="lineNoCov">          0 :         return PathImpl::currentImpl();</span>
+<span class="lineNum">     584 </span>            : }
+<a name="585"><span class="lineNum">     585 </span>            : </a>
+<span class="lineNum">     586 </span>            : 
+<span class="lineNum">     587 </span><span class="lineNoCov">          0 : std::string Path::home()</span>
+<span class="lineNum">     588 </span>            : {
+<span class="lineNum">     589 </span><span class="lineNoCov">          0 :         return PathImpl::homeImpl();</span>
+<span class="lineNum">     590 </span>            : }
+<a name="591"><span class="lineNum">     591 </span>            : </a>
+<span class="lineNum">     592 </span>            : 
+<span class="lineNum">     593 </span><span class="lineNoCov">          0 : std::string Path::configHome()</span>
+<span class="lineNum">     594 </span>            : {
+<span class="lineNum">     595 </span>            : #if defined(POCO_OS_FAMILY_UNIX) || defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">     596 </span><span class="lineNoCov">          0 :         return PathImpl::configHomeImpl();</span>
+<span class="lineNum">     597 </span>            : #else
+<span class="lineNum">     598 </span>            :         return PathImpl::homeImpl();
+<span class="lineNum">     599 </span>            : #endif
+<span class="lineNum">     600 </span>            : }
+<a name="601"><span class="lineNum">     601 </span>            : </a>
+<span class="lineNum">     602 </span>            : 
+<span class="lineNum">     603 </span><span class="lineNoCov">          0 : std::string Path::dataHome()</span>
+<span class="lineNum">     604 </span>            : {
+<span class="lineNum">     605 </span>            : #if defined(POCO_OS_FAMILY_UNIX) || defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">     606 </span><span class="lineNoCov">          0 :         return PathImpl::dataHomeImpl();</span>
+<span class="lineNum">     607 </span>            : #else
+<span class="lineNum">     608 </span>            :         return PathImpl::homeImpl();
+<span class="lineNum">     609 </span>            : #endif
+<span class="lineNum">     610 </span>            : }
+<a name="611"><span class="lineNum">     611 </span>            : </a>
+<span class="lineNum">     612 </span>            : 
+<span class="lineNum">     613 </span><span class="lineNoCov">          0 : std::string Path::tempHome()</span>
+<span class="lineNum">     614 </span>            : {
+<span class="lineNum">     615 </span>            : #if defined(POCO_OS_FAMILY_UNIX) || defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">     616 </span><span class="lineNoCov">          0 :         return PathImpl::tempHomeImpl();</span>
+<span class="lineNum">     617 </span>            : #else
+<span class="lineNum">     618 </span>            :         return PathImpl::tempImpl();
+<span class="lineNum">     619 </span>            : #endif
+<span class="lineNum">     620 </span>            : }
+<a name="621"><span class="lineNum">     621 </span>            : </a>
+<span class="lineNum">     622 </span>            : 
+<span class="lineNum">     623 </span><span class="lineNoCov">          0 : std::string Path::cacheHome()</span>
+<span class="lineNum">     624 </span>            : {
+<span class="lineNum">     625 </span>            : #if defined(POCO_OS_FAMILY_UNIX) || defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">     626 </span><span class="lineNoCov">          0 :         return PathImpl::cacheHomeImpl();</span>
+<span class="lineNum">     627 </span>            : #else
+<span class="lineNum">     628 </span>            :         return PathImpl::homeImpl();
+<span class="lineNum">     629 </span>            : #endif
+<span class="lineNum">     630 </span>            : }
+<a name="631"><span class="lineNum">     631 </span>            : </a>
+<span class="lineNum">     632 </span>            : 
+<span class="lineNum">     633 </span><span class="lineNoCov">          0 : std::string Path::temp()</span>
+<span class="lineNum">     634 </span>            : {
+<span class="lineNum">     635 </span><span class="lineNoCov">          0 :         return PathImpl::tempImpl();</span>
+<span class="lineNum">     636 </span>            : }
+<a name="637"><span class="lineNum">     637 </span>            : </a>
+<span class="lineNum">     638 </span>            : 
+<span class="lineNum">     639 </span><span class="lineNoCov">          0 : std::string Path::config()</span>
+<span class="lineNum">     640 </span>            : {
+<span class="lineNum">     641 </span>            : #if defined(POCO_OS_FAMILY_UNIX) || defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">     642 </span><span class="lineNoCov">          0 :         return PathImpl::configImpl();</span>
+<span class="lineNum">     643 </span>            : #else
+<span class="lineNum">     644 </span>            :         return PathImpl::currentImpl();
+<span class="lineNum">     645 </span>            : #endif
+<span class="lineNum">     646 </span>            : }
+<a name="647"><span class="lineNum">     647 </span>            : </a>
+<span class="lineNum">     648 </span>            : 
+<span class="lineNum">     649 </span><span class="lineNoCov">          0 : std::string Path::null()</span>
+<span class="lineNum">     650 </span>            : {
+<span class="lineNum">     651 </span><span class="lineNoCov">          0 :         return PathImpl::nullImpl();</span>
+<span class="lineNum">     652 </span>            : }
+<a name="653"><span class="lineNum">     653 </span>            : </a>
+<span class="lineNum">     654 </span>            : 
+<span class="lineNum">     655 </span><span class="lineNoCov">          0 : std::string Path::expand(const std::string&amp; path)</span>
+<span class="lineNum">     656 </span>            : {
+<span class="lineNum">     657 </span><span class="lineNoCov">          0 :         return PathImpl::expandImpl(path);</span>
+<span class="lineNum">     658 </span>            : }
+<a name="659"><span class="lineNum">     659 </span>            : </a>
+<span class="lineNum">     660 </span>            : 
+<span class="lineNum">     661 </span><span class="lineNoCov">          0 : void Path::listRoots(std::vector&lt;std::string&gt;&amp; roots)</span>
+<span class="lineNum">     662 </span>            : {
+<span class="lineNum">     663 </span><span class="lineNoCov">          0 :         PathImpl::listRootsImpl(roots);</span>
+<span class="lineNum">     664 </span><span class="lineNoCov">          0 : }</span>
+<a name="665"><span class="lineNum">     665 </span>            : </a>
+<span class="lineNum">     666 </span>            : 
+<span class="lineNum">     667 </span><span class="lineNoCov">          0 : bool Path::find(StringVec::const_iterator it, StringVec::const_iterator end, const std::string&amp; name, Path&amp; path)</span>
+<span class="lineNum">     668 </span>            : {
+<span class="lineNum">     669 </span><span class="lineNoCov">          0 :         while (it != end)</span>
+<span class="lineNum">     670 </span>            :         {
+<span class="lineNum">     671 </span>            : #if defined(WIN32)
+<span class="lineNum">     672 </span>            :                 std::string cleanPath(*it);
+<span class="lineNum">     673 </span>            :                 if (cleanPath.size() &gt; 1 &amp;&amp; cleanPath[0] == '&quot;' &amp;&amp; cleanPath[cleanPath.size() - 1] == '&quot;')
+<span class="lineNum">     674 </span>            :                 {
+<span class="lineNum">     675 </span>            :                         cleanPath = cleanPath.substr(1, cleanPath.size() - 2);
+<span class="lineNum">     676 </span>            :                 }
+<span class="lineNum">     677 </span>            :                 Path p(cleanPath);
+<span class="lineNum">     678 </span>            : #else
+<span class="lineNum">     679 </span><span class="lineNoCov">          0 :                 Path p(*it);</span>
+<span class="lineNum">     680 </span>            : #endif
+<span class="lineNum">     681 </span><span class="lineNoCov">          0 :                 p.makeDirectory();</span>
+<span class="lineNum">     682 </span><span class="lineNoCov">          0 :                 p.resolve(Path(name));</span>
+<span class="lineNum">     683 </span><span class="lineNoCov">          0 :                 File f(p);</span>
+<span class="lineNum">     684 </span><span class="lineNoCov">          0 :                 if (f.exists())</span>
+<span class="lineNum">     685 </span>            :                 {
+<span class="lineNum">     686 </span><span class="lineNoCov">          0 :                         path = p;</span>
+<span class="lineNum">     687 </span><span class="lineNoCov">          0 :                         return true;</span>
+<span class="lineNum">     688 </span>            :                 }
+<span class="lineNum">     689 </span><span class="lineNoCov">          0 :                 ++it;</span>
+<span class="lineNum">     690 </span>            :         }
+<span class="lineNum">     691 </span><span class="lineNoCov">          0 :         return false;</span>
+<span class="lineNum">     692 </span>            : }
+<a name="693"><span class="lineNum">     693 </span>            : </a>
+<span class="lineNum">     694 </span>            : 
+<span class="lineNum">     695 </span><span class="lineNoCov">          0 : bool Path::find(const std::string&amp; pathList, const std::string&amp; name, Path&amp; path)</span>
+<span class="lineNum">     696 </span>            : {
+<span class="lineNum">     697 </span><span class="lineNoCov">          0 :         StringTokenizer st(pathList, std::string(1, pathSeparator()), StringTokenizer::TOK_IGNORE_EMPTY + StringTokenizer::TOK_TRIM);</span>
+<span class="lineNum">     698 </span><span class="lineNoCov">          0 :         return find(st.begin(), st.end(), name, path);</span>
+<span class="lineNum">     699 </span>            : }
+<a name="700"><span class="lineNum">     700 </span>            : </a>
+<span class="lineNum">     701 </span>            : 
+<span class="lineNum">     702 </span><span class="lineNoCov">          0 : void Path::parseUnix(const std::string&amp; path)</span>
+<span class="lineNum">     703 </span>            : {
+<span class="lineNum">     704 </span><span class="lineNoCov">          0 :         clear();</span>
+<span class="lineNum">     705 </span>            : 
+<span class="lineNum">     706 </span><span class="lineNoCov">          0 :         std::string::const_iterator it  = path.begin();</span>
+<span class="lineNum">     707 </span><span class="lineNoCov">          0 :         std::string::const_iterator end = path.end();</span>
+<span class="lineNum">     708 </span>            : 
+<span class="lineNum">     709 </span><span class="lineNoCov">          0 :         if (it != end)</span>
+<span class="lineNum">     710 </span>            :         {
+<span class="lineNum">     711 </span><span class="lineNoCov">          0 :                 if (*it == '/')</span>
+<span class="lineNum">     712 </span>            :                 {
+<span class="lineNum">     713 </span><span class="lineNoCov">          0 :                         _absolute = true; ++it;</span>
+<span class="lineNum">     714 </span>            :                 }
+<span class="lineNum">     715 </span><span class="lineNoCov">          0 :                 else if (*it == '~')</span>
+<span class="lineNum">     716 </span>            :                 {
+<span class="lineNum">     717 </span><span class="lineNoCov">          0 :                         ++it;</span>
+<span class="lineNum">     718 </span><span class="lineNoCov">          0 :                         if (it == end || *it == '/')</span>
+<span class="lineNum">     719 </span>            :                         {
+<span class="lineNum">     720 </span><span class="lineNoCov">          0 :                                 Path cwd(home());</span>
+<span class="lineNum">     721 </span><span class="lineNoCov">          0 :                                 _dirs = cwd._dirs;</span>
+<span class="lineNum">     722 </span><span class="lineNoCov">          0 :                                 _absolute = true;</span>
+<span class="lineNum">     723 </span>            :                         }
+<span class="lineNum">     724 </span><span class="lineNoCov">          0 :                         else --it;</span>
+<span class="lineNum">     725 </span>            :                 }
+<span class="lineNum">     726 </span>            : 
+<span class="lineNum">     727 </span><span class="lineNoCov">          0 :                 while (it != end)</span>
+<span class="lineNum">     728 </span>            :                 {
+<span class="lineNum">     729 </span><span class="lineNoCov">          0 :                         std::string name;</span>
+<span class="lineNum">     730 </span><span class="lineNoCov">          0 :                         while (it != end &amp;&amp; *it != '/') name += *it++;</span>
+<span class="lineNum">     731 </span><span class="lineNoCov">          0 :                         if (it != end)</span>
+<span class="lineNum">     732 </span>            :                         {
+<span class="lineNum">     733 </span><span class="lineNoCov">          0 :                                 if (_dirs.empty())</span>
+<span class="lineNum">     734 </span>            :                                 {
+<span class="lineNum">     735 </span><span class="lineNoCov">          0 :                                         if (!name.empty() &amp;&amp; *(name.rbegin()) == ':')</span>
+<span class="lineNum">     736 </span>            :                                         {
+<span class="lineNum">     737 </span><span class="lineNoCov">          0 :                                                 _absolute = true;</span>
+<span class="lineNum">     738 </span><span class="lineNoCov">          0 :                                                 _device.assign(name, 0, name.length() - 1);</span>
+<span class="lineNum">     739 </span>            :                                         }
+<span class="lineNum">     740 </span>            :                                         else
+<span class="lineNum">     741 </span>            :                                         {
+<span class="lineNum">     742 </span><span class="lineNoCov">          0 :                                                 pushDirectory(name);</span>
+<span class="lineNum">     743 </span>            :                                         }
+<span class="lineNum">     744 </span>            :                                 }
+<span class="lineNum">     745 </span><span class="lineNoCov">          0 :                                 else pushDirectory(name);</span>
+<span class="lineNum">     746 </span>            :                         }
+<span class="lineNum">     747 </span><span class="lineNoCov">          0 :                         else _name = name;</span>
+<span class="lineNum">     748 </span><span class="lineNoCov">          0 :                         if (it != end) ++it;</span>
+<span class="lineNum">     749 </span>            :                 }
+<span class="lineNum">     750 </span>            :         }
+<span class="lineNum">     751 </span><span class="lineNoCov">          0 : }</span>
+<a name="752"><span class="lineNum">     752 </span>            : </a>
+<span class="lineNum">     753 </span>            : 
+<span class="lineNum">     754 </span><span class="lineNoCov">          0 : void Path::parseWindows(const std::string&amp; path)</span>
+<span class="lineNum">     755 </span>            : {
+<span class="lineNum">     756 </span><span class="lineNoCov">          0 :         clear();</span>
+<span class="lineNum">     757 </span>            : 
+<span class="lineNum">     758 </span><span class="lineNoCov">          0 :         std::string::const_iterator it  = path.begin();</span>
+<span class="lineNum">     759 </span><span class="lineNoCov">          0 :         std::string::const_iterator end = path.end();</span>
+<span class="lineNum">     760 </span>            : 
+<span class="lineNum">     761 </span><span class="lineNoCov">          0 :         if (it != end)</span>
+<span class="lineNum">     762 </span>            :         {
+<span class="lineNum">     763 </span><span class="lineNoCov">          0 :                 if (*it == '\\' || *it == '/') { _absolute = true; ++it; }</span>
+<span class="lineNum">     764 </span><span class="lineNoCov">          0 :                 if (_absolute &amp;&amp; it != end &amp;&amp; (*it == '\\' || *it == '/')) // UNC</span>
+<span class="lineNum">     765 </span>            :                 {
+<span class="lineNum">     766 </span><span class="lineNoCov">          0 :                         ++it;</span>
+<span class="lineNum">     767 </span><span class="lineNoCov">          0 :                         while (it != end &amp;&amp; *it != '\\' &amp;&amp; *it != '/') _node += *it++;</span>
+<span class="lineNum">     768 </span><span class="lineNoCov">          0 :                         if (it != end) ++it;</span>
+<span class="lineNum">     769 </span>            :                 }
+<span class="lineNum">     770 </span><span class="lineNoCov">          0 :                 else if (it != end)</span>
+<span class="lineNum">     771 </span>            :                 {
+<span class="lineNum">     772 </span><span class="lineNoCov">          0 :                         char d = *it++;</span>
+<span class="lineNum">     773 </span><span class="lineNoCov">          0 :                         if (it != end &amp;&amp; *it == ':') // drive letter</span>
+<span class="lineNum">     774 </span>            :                         {
+<span class="lineNum">     775 </span><span class="lineNoCov">          0 :                                 if (_absolute || !((d &gt;= 'a' &amp;&amp; d &lt;= 'z') || (d &gt;= 'A' &amp;&amp; d &lt;= 'Z'))) throw PathSyntaxException(path);</span>
+<span class="lineNum">     776 </span><span class="lineNoCov">          0 :                                 _absolute = true;</span>
+<span class="lineNum">     777 </span><span class="lineNoCov">          0 :                                 _device += d;</span>
+<span class="lineNum">     778 </span><span class="lineNoCov">          0 :                                 ++it;</span>
+<span class="lineNum">     779 </span><span class="lineNoCov">          0 :                                 if (it == end || (*it != '\\' &amp;&amp; *it != '/')) throw PathSyntaxException(path);</span>
+<span class="lineNum">     780 </span><span class="lineNoCov">          0 :                                 ++it;</span>
+<span class="lineNum">     781 </span>            :                         }
+<span class="lineNum">     782 </span><span class="lineNoCov">          0 :                         else --it;</span>
+<span class="lineNum">     783 </span>            :                 }
+<span class="lineNum">     784 </span><span class="lineNoCov">          0 :                 while (it != end)</span>
+<span class="lineNum">     785 </span>            :                 {
+<span class="lineNum">     786 </span><span class="lineNoCov">          0 :                         std::string name;</span>
+<span class="lineNum">     787 </span><span class="lineNoCov">          0 :                         while (it != end &amp;&amp; *it != '\\' &amp;&amp; *it != '/') name += *it++;</span>
+<span class="lineNum">     788 </span><span class="lineNoCov">          0 :                         if (it != end)</span>
+<span class="lineNum">     789 </span><span class="lineNoCov">          0 :                                 pushDirectory(name);</span>
+<span class="lineNum">     790 </span>            :                         else
+<span class="lineNum">     791 </span><span class="lineNoCov">          0 :                                 _name = name;</span>
+<span class="lineNum">     792 </span><span class="lineNoCov">          0 :                         if (it != end) ++it;</span>
+<span class="lineNum">     793 </span>            :                 }
+<span class="lineNum">     794 </span>            :         }
+<span class="lineNum">     795 </span><span class="lineNoCov">          0 :         if (!_node.empty() &amp;&amp; _dirs.empty() &amp;&amp; !_name.empty())</span>
+<span class="lineNum">     796 </span><span class="lineNoCov">          0 :                 makeDirectory();</span>
+<span class="lineNum">     797 </span><span class="lineNoCov">          0 : }</span>
+<a name="798"><span class="lineNum">     798 </span>            : </a>
+<span class="lineNum">     799 </span>            : 
+<span class="lineNum">     800 </span><span class="lineNoCov">          0 : void Path::parseVMS(const std::string&amp; path)</span>
+<span class="lineNum">     801 </span>            : {
+<span class="lineNum">     802 </span><span class="lineNoCov">          0 :         clear();</span>
+<span class="lineNum">     803 </span>            : 
+<span class="lineNum">     804 </span><span class="lineNoCov">          0 :         std::string::const_iterator it  = path.begin();</span>
+<span class="lineNum">     805 </span><span class="lineNoCov">          0 :         std::string::const_iterator end = path.end();</span>
+<span class="lineNum">     806 </span>            : 
+<span class="lineNum">     807 </span><span class="lineNoCov">          0 :         if (it != end)</span>
+<span class="lineNum">     808 </span>            :         {
+<span class="lineNum">     809 </span><span class="lineNoCov">          0 :                 std::string name;</span>
+<span class="lineNum">     810 </span><span class="lineNoCov">          0 :                 while (it != end &amp;&amp; *it != ':' &amp;&amp; *it != '[' &amp;&amp; *it != ';') name += *it++;</span>
+<span class="lineNum">     811 </span><span class="lineNoCov">          0 :                 if (it != end)</span>
+<span class="lineNum">     812 </span>            :                 {
+<span class="lineNum">     813 </span><span class="lineNoCov">          0 :                         if (*it == ':')</span>
+<span class="lineNum">     814 </span>            :                         {
+<span class="lineNum">     815 </span><span class="lineNoCov">          0 :                                 ++it;</span>
+<span class="lineNum">     816 </span><span class="lineNoCov">          0 :                                 if (it != end &amp;&amp; *it == ':')</span>
+<span class="lineNum">     817 </span>            :                                 {
+<span class="lineNum">     818 </span><span class="lineNoCov">          0 :                                         _node = name;</span>
+<span class="lineNum">     819 </span><span class="lineNoCov">          0 :                                         ++it;</span>
+<span class="lineNum">     820 </span>            :                                 }
+<span class="lineNum">     821 </span><span class="lineNoCov">          0 :                                 else _device = name;</span>
+<span class="lineNum">     822 </span><span class="lineNoCov">          0 :                                 _absolute = true;</span>
+<span class="lineNum">     823 </span><span class="lineNoCov">          0 :                                 name.clear();</span>
+<span class="lineNum">     824 </span>            :                         }
+<span class="lineNum">     825 </span><span class="lineNoCov">          0 :                         if (it != end)</span>
+<span class="lineNum">     826 </span>            :                         {
+<span class="lineNum">     827 </span><span class="lineNoCov">          0 :                                 if (_device.empty() &amp;&amp; *it != '[')</span>
+<span class="lineNum">     828 </span>            :                                 {
+<span class="lineNum">     829 </span><span class="lineNoCov">          0 :                                         while (it != end &amp;&amp; *it != ':' &amp;&amp; *it != ';') name += *it++;</span>
+<span class="lineNum">     830 </span><span class="lineNoCov">          0 :                                         if (it != end)</span>
+<span class="lineNum">     831 </span>            :                                         {
+<span class="lineNum">     832 </span><span class="lineNoCov">          0 :                                                 if (*it == ':')</span>
+<span class="lineNum">     833 </span>            :                                                 {
+<span class="lineNum">     834 </span><span class="lineNoCov">          0 :                                                         _device = name;</span>
+<span class="lineNum">     835 </span><span class="lineNoCov">          0 :                                                         _absolute = true;</span>
+<span class="lineNum">     836 </span><span class="lineNoCov">          0 :                                                         name.clear();</span>
+<span class="lineNum">     837 </span><span class="lineNoCov">          0 :                                                         ++it;</span>
+<span class="lineNum">     838 </span>            :                                                 }
+<span class="lineNum">     839 </span>            :                                         }
+<span class="lineNum">     840 </span>            :                                 }
+<span class="lineNum">     841 </span>            :                         }
+<span class="lineNum">     842 </span><span class="lineNoCov">          0 :                         if (name.empty())</span>
+<span class="lineNum">     843 </span>            :                         {
+<span class="lineNum">     844 </span><span class="lineNoCov">          0 :                                 if (it != end &amp;&amp; *it == '[')</span>
+<span class="lineNum">     845 </span>            :                                 {
+<span class="lineNum">     846 </span><span class="lineNoCov">          0 :                                         ++it;</span>
+<span class="lineNum">     847 </span><span class="lineNoCov">          0 :                                         if (it != end)</span>
+<span class="lineNum">     848 </span>            :                                         {
+<span class="lineNum">     849 </span><span class="lineNoCov">          0 :                                                 _absolute = true;</span>
+<span class="lineNum">     850 </span><span class="lineNoCov">          0 :                                                 if (*it == '.')</span>
+<span class="lineNum">     851 </span><span class="lineNoCov">          0 :                                                         { _absolute = false; ++it; }</span>
+<span class="lineNum">     852 </span><span class="lineNoCov">          0 :                                                 else if (*it == ']' || *it == '-')</span>
+<span class="lineNum">     853 </span><span class="lineNoCov">          0 :                                                         _absolute = false;</span>
+<span class="lineNum">     854 </span><span class="lineNoCov">          0 :                                                 while (it != end &amp;&amp; *it != ']')</span>
+<span class="lineNum">     855 </span>            :                                                 {
+<span class="lineNum">     856 </span><span class="lineNoCov">          0 :                                                         name.clear();</span>
+<span class="lineNum">     857 </span><span class="lineNoCov">          0 :                                                         if (*it == '-')</span>
+<span class="lineNum">     858 </span><span class="lineNoCov">          0 :                                                                 name = &quot;-&quot;;</span>
+<span class="lineNum">     859 </span>            :                                                         else
+<span class="lineNum">     860 </span><span class="lineNoCov">          0 :                                                                 while (it != end &amp;&amp; *it != '.' &amp;&amp; *it != ']') name += *it++;</span>
+<span class="lineNum">     861 </span><span class="lineNoCov">          0 :                                                         if (!name.empty())</span>
+<span class="lineNum">     862 </span>            :                                                         {
+<span class="lineNum">     863 </span><span class="lineNoCov">          0 :                                                                 if (name == &quot;-&quot;)</span>
+<span class="lineNum">     864 </span>            :                                                                 {
+<span class="lineNum">     865 </span><span class="lineNoCov">          0 :                                                                         if (_dirs.empty() || _dirs.back() == &quot;..&quot;)</span>
+<span class="lineNum">     866 </span><span class="lineNoCov">          0 :                                                                                 _dirs.push_back(&quot;..&quot;);</span>
+<span class="lineNum">     867 </span>            :                                                                         else
+<span class="lineNum">     868 </span><span class="lineNoCov">          0 :                                                                                 _dirs.pop_back();</span>
+<span class="lineNum">     869 </span>            :                                                                 }
+<span class="lineNum">     870 </span><span class="lineNoCov">          0 :                                                                 else _dirs.push_back(name);</span>
+<span class="lineNum">     871 </span>            :                                                         }
+<span class="lineNum">     872 </span><span class="lineNoCov">          0 :                                                         if (it != end &amp;&amp; *it != ']') ++it;</span>
+<span class="lineNum">     873 </span>            :                                                 }
+<span class="lineNum">     874 </span><span class="lineNoCov">          0 :                                                 if (it == end) throw PathSyntaxException(path);</span>
+<span class="lineNum">     875 </span><span class="lineNoCov">          0 :                                                 ++it;</span>
+<span class="lineNum">     876 </span><span class="lineNoCov">          0 :                                                 if (it != end &amp;&amp; *it == '[')</span>
+<span class="lineNum">     877 </span>            :                                                 {
+<span class="lineNum">     878 </span><span class="lineNoCov">          0 :                                                         if (!_absolute) throw PathSyntaxException(path);</span>
+<span class="lineNum">     879 </span><span class="lineNoCov">          0 :                                                         ++it;</span>
+<span class="lineNum">     880 </span><span class="lineNoCov">          0 :                                                         if (it != end &amp;&amp; *it == '.') throw PathSyntaxException(path);</span>
+<span class="lineNum">     881 </span><span class="lineNoCov">          0 :                                                         int d = int(_dirs.size());</span>
+<span class="lineNum">     882 </span><span class="lineNoCov">          0 :                                                         while (it != end &amp;&amp; *it != ']')</span>
+<span class="lineNum">     883 </span>            :                                                         {
+<span class="lineNum">     884 </span><span class="lineNoCov">          0 :                                                                 name.clear();</span>
+<span class="lineNum">     885 </span><span class="lineNoCov">          0 :                                                                 if (*it == '-')</span>
+<span class="lineNum">     886 </span><span class="lineNoCov">          0 :                                                                         name = &quot;-&quot;;</span>
+<span class="lineNum">     887 </span>            :                                                                 else
+<span class="lineNum">     888 </span><span class="lineNoCov">          0 :                                                                         while (it != end &amp;&amp; *it != '.' &amp;&amp; *it != ']') name += *it++;</span>
+<span class="lineNum">     889 </span><span class="lineNoCov">          0 :                                                                 if (!name.empty())</span>
+<span class="lineNum">     890 </span>            :                                                                 {
+<span class="lineNum">     891 </span><span class="lineNoCov">          0 :                                                                         if (name == &quot;-&quot;)</span>
+<span class="lineNum">     892 </span>            :                                                                         {
+<span class="lineNum">     893 </span><span class="lineNoCov">          0 :                                                                                 if (_dirs.size() &gt; d)</span>
+<span class="lineNum">     894 </span><span class="lineNoCov">          0 :                                                                                         _dirs.pop_back();</span>
+<span class="lineNum">     895 </span>            :                                                                         }
+<span class="lineNum">     896 </span><span class="lineNoCov">          0 :                                                                         else _dirs.push_back(name);</span>
+<span class="lineNum">     897 </span>            :                                                                 }
+<span class="lineNum">     898 </span><span class="lineNoCov">          0 :                                                                 if (it != end &amp;&amp; *it != ']') ++it;</span>
+<span class="lineNum">     899 </span>            :                                                         }
+<span class="lineNum">     900 </span><span class="lineNoCov">          0 :                                                         if (it == end) throw PathSyntaxException(path);</span>
+<span class="lineNum">     901 </span><span class="lineNoCov">          0 :                                                         ++it;</span>
+<span class="lineNum">     902 </span>            :                                                 }
+<span class="lineNum">     903 </span>            :                                         }
+<span class="lineNum">     904 </span><span class="lineNoCov">          0 :                                         _name.clear();</span>
+<span class="lineNum">     905 </span>            :                                 }
+<span class="lineNum">     906 </span><span class="lineNoCov">          0 :                                 while (it != end &amp;&amp; *it != ';') _name += *it++;</span>
+<span class="lineNum">     907 </span>            :                         }
+<span class="lineNum">     908 </span><span class="lineNoCov">          0 :                         else _name = name;</span>
+<span class="lineNum">     909 </span><span class="lineNoCov">          0 :                         if (it != end &amp;&amp; *it == ';')</span>
+<span class="lineNum">     910 </span>            :                         {
+<span class="lineNum">     911 </span><span class="lineNoCov">          0 :                                 ++it;</span>
+<span class="lineNum">     912 </span><span class="lineNoCov">          0 :                                 while (it != end) _version += *it++;</span>
+<span class="lineNum">     913 </span>            :                         }
+<span class="lineNum">     914 </span>            :                 }
+<span class="lineNum">     915 </span><span class="lineNoCov">          0 :                 else _name = name;</span>
+<span class="lineNum">     916 </span>            :         }
+<span class="lineNum">     917 </span><span class="lineNoCov">          0 : }</span>
+<a name="918"><span class="lineNum">     918 </span>            : </a>
+<span class="lineNum">     919 </span>            : 
+<span class="lineNum">     920 </span><span class="lineNoCov">          0 : void Path::parseGuess(const std::string&amp; path)</span>
+<span class="lineNum">     921 </span>            : {
+<span class="lineNum">     922 </span><span class="lineNoCov">          0 :         bool hasBackslash   = false;</span>
+<span class="lineNum">     923 </span><span class="lineNoCov">          0 :         bool hasSlash       = false;</span>
+<span class="lineNum">     924 </span><span class="lineNoCov">          0 :         bool hasOpenBracket = false;</span>
+<span class="lineNum">     925 </span><span class="lineNoCov">          0 :         bool hasClosBracket = false;</span>
+<span class="lineNum">     926 </span><span class="lineNoCov">          0 :         bool isWindows      = path.length() &gt; 2 &amp;&amp; path[1] == ':' &amp;&amp; (path[2] == '/' || path[2] == '\\');</span>
+<span class="lineNum">     927 </span><span class="lineNoCov">          0 :         std::string::const_iterator end    = path.end();</span>
+<span class="lineNum">     928 </span><span class="lineNoCov">          0 :         std::string::const_iterator semiIt = end;</span>
+<span class="lineNum">     929 </span><span class="lineNoCov">          0 :         if (!isWindows)</span>
+<span class="lineNum">     930 </span>            :         {
+<span class="lineNum">     931 </span><span class="lineNoCov">          0 :                 for (std::string::const_iterator it = path.begin(); it != end; ++it)</span>
+<span class="lineNum">     932 </span>            :                 {
+<span class="lineNum">     933 </span><span class="lineNoCov">          0 :                         switch (*it)</span>
+<span class="lineNum">     934 </span>            :                         {
+<span class="lineNum">     935 </span><span class="lineNoCov">          0 :                         case '\\': hasBackslash = true; break;</span>
+<span class="lineNum">     936 </span><span class="lineNoCov">          0 :                         case '/':  hasSlash = true; break;</span>
+<span class="lineNum">     937 </span><span class="lineNoCov">          0 :                         case '[':  hasOpenBracket = true;</span>
+<span class="lineNum">     938 </span><span class="lineNoCov">          0 :                         case ']':  hasClosBracket = hasOpenBracket;</span>
+<span class="lineNum">     939 </span><span class="lineNoCov">          0 :                         case ';':  semiIt = it; break;</span>
+<span class="lineNum">     940 </span>            :                         }
+<span class="lineNum">     941 </span>            :                 }
+<span class="lineNum">     942 </span>            :         }
+<span class="lineNum">     943 </span><span class="lineNoCov">          0 :         if (hasBackslash || isWindows)</span>
+<span class="lineNum">     944 </span>            :         {
+<span class="lineNum">     945 </span><span class="lineNoCov">          0 :                 parseWindows(path);</span>
+<span class="lineNum">     946 </span>            :         }
+<span class="lineNum">     947 </span><span class="lineNoCov">          0 :         else if (hasSlash)</span>
+<span class="lineNum">     948 </span>            :         {
+<span class="lineNum">     949 </span><span class="lineNoCov">          0 :                 parseUnix(path);</span>
+<span class="lineNum">     950 </span>            :         }
+<span class="lineNum">     951 </span>            :         else
+<span class="lineNum">     952 </span>            :         {
+<span class="lineNum">     953 </span><span class="lineNoCov">          0 :                 bool isVMS = hasClosBracket;</span>
+<span class="lineNum">     954 </span><span class="lineNoCov">          0 :                 if (!isVMS &amp;&amp; semiIt != end)</span>
+<span class="lineNum">     955 </span>            :                 {
+<span class="lineNum">     956 </span><span class="lineNoCov">          0 :                         isVMS = true;</span>
+<span class="lineNum">     957 </span><span class="lineNoCov">          0 :                         ++semiIt;</span>
+<span class="lineNum">     958 </span><span class="lineNoCov">          0 :                         while (semiIt != end)</span>
+<span class="lineNum">     959 </span>            :                         {
+<span class="lineNum">     960 </span><span class="lineNoCov">          0 :                                 if (*semiIt &lt; '0' || *semiIt &gt; '9')</span>
+<span class="lineNum">     961 </span>            :                                 {
+<span class="lineNum">     962 </span><span class="lineNoCov">          0 :                                         isVMS = false; break;</span>
+<span class="lineNum">     963 </span>            :                                 }
+<span class="lineNum">     964 </span><span class="lineNoCov">          0 :                                 ++semiIt;</span>
+<span class="lineNum">     965 </span>            :                         }
+<span class="lineNum">     966 </span>            :                 }
+<span class="lineNum">     967 </span><span class="lineNoCov">          0 :                 if (isVMS)</span>
+<span class="lineNum">     968 </span><span class="lineNoCov">          0 :                         parseVMS(path);</span>
+<span class="lineNum">     969 </span>            :                 else
+<span class="lineNum">     970 </span><span class="lineNoCov">          0 :                         parseUnix(path);</span>
+<span class="lineNum">     971 </span>            :         }
+<span class="lineNum">     972 </span><span class="lineNoCov">          0 : }</span>
+<a name="973"><span class="lineNum">     973 </span>            : </a>
+<span class="lineNum">     974 </span>            : 
+<span class="lineNum">     975 </span><span class="lineNoCov">          0 : std::string Path::buildUnix() const</span>
+<span class="lineNum">     976 </span>            : {
+<span class="lineNum">     977 </span><span class="lineNoCov">          0 :         std::string result;</span>
+<span class="lineNum">     978 </span><span class="lineNoCov">          0 :         if (!_device.empty())</span>
+<span class="lineNum">     979 </span>            :         {
+<span class="lineNum">     980 </span><span class="lineNoCov">          0 :                 result.append(&quot;/&quot;);</span>
+<span class="lineNum">     981 </span><span class="lineNoCov">          0 :                 result.append(_device);</span>
+<span class="lineNum">     982 </span><span class="lineNoCov">          0 :                 result.append(&quot;:/&quot;);</span>
+<span class="lineNum">     983 </span>            :         }
+<span class="lineNum">     984 </span><span class="lineNoCov">          0 :         else if (_absolute)</span>
+<span class="lineNum">     985 </span>            :         {
+<span class="lineNum">     986 </span><span class="lineNoCov">          0 :                 result.append(&quot;/&quot;);</span>
+<span class="lineNum">     987 </span>            :         }
+<span class="lineNum">     988 </span><span class="lineNoCov">          0 :         for (const auto&amp; d: _dirs)</span>
+<span class="lineNum">     989 </span>            :         {
+<span class="lineNum">     990 </span><span class="lineNoCov">          0 :                 result.append(d);</span>
+<span class="lineNum">     991 </span><span class="lineNoCov">          0 :                 result.append(&quot;/&quot;);</span>
+<span class="lineNum">     992 </span>            :         }
+<span class="lineNum">     993 </span><span class="lineNoCov">          0 :         result.append(_name);</span>
+<span class="lineNum">     994 </span><span class="lineNoCov">          0 :         return result;</span>
+<span class="lineNum">     995 </span>            : }
+<a name="996"><span class="lineNum">     996 </span>            : </a>
+<span class="lineNum">     997 </span>            : 
+<span class="lineNum">     998 </span><span class="lineNoCov">          0 : std::string Path::buildWindows() const</span>
+<span class="lineNum">     999 </span>            : {
+<span class="lineNum">    1000 </span><span class="lineNoCov">          0 :         std::string result;</span>
+<span class="lineNum">    1001 </span><span class="lineNoCov">          0 :         if (!_node.empty())</span>
+<span class="lineNum">    1002 </span>            :         {
+<span class="lineNum">    1003 </span><span class="lineNoCov">          0 :                 result.append(&quot;\\\\&quot;);</span>
+<span class="lineNum">    1004 </span><span class="lineNoCov">          0 :                 result.append(_node);</span>
+<span class="lineNum">    1005 </span><span class="lineNoCov">          0 :                 result.append(&quot;\\&quot;);</span>
+<span class="lineNum">    1006 </span>            :         }
+<span class="lineNum">    1007 </span><span class="lineNoCov">          0 :         else if (!_device.empty())</span>
+<span class="lineNum">    1008 </span>            :         {
+<span class="lineNum">    1009 </span><span class="lineNoCov">          0 :                 result.append(_device);</span>
+<span class="lineNum">    1010 </span><span class="lineNoCov">          0 :                 result.append(&quot;:\\&quot;);</span>
+<span class="lineNum">    1011 </span>            :         }
+<span class="lineNum">    1012 </span><span class="lineNoCov">          0 :         else if (_absolute)</span>
+<span class="lineNum">    1013 </span>            :         {
+<span class="lineNum">    1014 </span><span class="lineNoCov">          0 :                 result.append(&quot;\\&quot;);</span>
+<span class="lineNum">    1015 </span>            :         }
+<span class="lineNum">    1016 </span><span class="lineNoCov">          0 :         for (const auto&amp; d: _dirs)</span>
+<span class="lineNum">    1017 </span>            :         {
+<span class="lineNum">    1018 </span><span class="lineNoCov">          0 :                 result.append(d);</span>
+<span class="lineNum">    1019 </span><span class="lineNoCov">          0 :                 result.append(&quot;\\&quot;);</span>
+<span class="lineNum">    1020 </span>            :         }
+<span class="lineNum">    1021 </span><span class="lineNoCov">          0 :         result.append(_name);</span>
+<span class="lineNum">    1022 </span><span class="lineNoCov">          0 :         return result;</span>
+<span class="lineNum">    1023 </span>            : }
+<a name="1024"><span class="lineNum">    1024 </span>            : </a>
+<span class="lineNum">    1025 </span>            : 
+<span class="lineNum">    1026 </span><span class="lineNoCov">          0 : std::string Path::buildVMS() const</span>
+<span class="lineNum">    1027 </span>            : {
+<span class="lineNum">    1028 </span><span class="lineNoCov">          0 :         std::string result;</span>
+<span class="lineNum">    1029 </span><span class="lineNoCov">          0 :         if (!_node.empty())</span>
+<span class="lineNum">    1030 </span>            :         {
+<span class="lineNum">    1031 </span><span class="lineNoCov">          0 :                 result.append(_node);</span>
+<span class="lineNum">    1032 </span><span class="lineNoCov">          0 :                 result.append(&quot;::&quot;);</span>
+<span class="lineNum">    1033 </span>            :         }
+<span class="lineNum">    1034 </span><span class="lineNoCov">          0 :         if (!_device.empty())</span>
+<span class="lineNum">    1035 </span>            :         {
+<span class="lineNum">    1036 </span><span class="lineNoCov">          0 :                 result.append(_device);</span>
+<span class="lineNum">    1037 </span><span class="lineNoCov">          0 :                 result.append(&quot;:&quot;);</span>
+<span class="lineNum">    1038 </span>            :         }
+<span class="lineNum">    1039 </span><span class="lineNoCov">          0 :         if (!_dirs.empty())</span>
+<span class="lineNum">    1040 </span>            :         {
+<span class="lineNum">    1041 </span><span class="lineNoCov">          0 :                 result.append(&quot;[&quot;);</span>
+<span class="lineNum">    1042 </span><span class="lineNoCov">          0 :                 if (!_absolute &amp;&amp; _dirs[0] != &quot;..&quot;)</span>
+<span class="lineNum">    1043 </span><span class="lineNoCov">          0 :                         result.append(&quot;.&quot;);</span>
+<span class="lineNum">    1044 </span><span class="lineNoCov">          0 :                 for (StringVec::const_iterator it = _dirs.begin(); it != _dirs.end(); ++it)</span>
+<span class="lineNum">    1045 </span>            :                 {
+<span class="lineNum">    1046 </span><span class="lineNoCov">          0 :                         if (it != _dirs.begin() &amp;&amp; *it != &quot;..&quot;)</span>
+<span class="lineNum">    1047 </span><span class="lineNoCov">          0 :                                 result.append(&quot;.&quot;);</span>
+<span class="lineNum">    1048 </span><span class="lineNoCov">          0 :                         if (*it == &quot;..&quot;)</span>
+<span class="lineNum">    1049 </span><span class="lineNoCov">          0 :                                 result.append(&quot;-&quot;);</span>
+<span class="lineNum">    1050 </span>            :                         else
+<span class="lineNum">    1051 </span><span class="lineNoCov">          0 :                                 result.append(*it);</span>
+<span class="lineNum">    1052 </span>            :                 }
+<span class="lineNum">    1053 </span><span class="lineNoCov">          0 :                 result.append(&quot;]&quot;);</span>
+<span class="lineNum">    1054 </span>            :         }
+<span class="lineNum">    1055 </span><span class="lineNoCov">          0 :         result.append(_name);</span>
+<span class="lineNum">    1056 </span><span class="lineNoCov">          0 :         if (!_version.empty())</span>
+<span class="lineNum">    1057 </span>            :         {
+<span class="lineNum">    1058 </span><span class="lineNoCov">          0 :                 result.append(&quot;;&quot;);</span>
+<span class="lineNum">    1059 </span><span class="lineNoCov">          0 :                 result.append(_version);</span>
+<span class="lineNum">    1060 </span>            :         }
+<span class="lineNum">    1061 </span><span class="lineNoCov">          0 :         return result;</span>
+<span class="lineNum">    1062 </span>            : }
+<a name="1063"><span class="lineNum">    1063 </span>            : </a>
+<span class="lineNum">    1064 </span>            : 
+<span class="lineNum">    1065 </span><span class="lineNoCov">          0 : std::string Path::transcode(const std::string&amp; path)</span>
+<span class="lineNum">    1066 </span>            : {
+<span class="lineNum">    1067 </span>            : #if defined(_WIN32)
+<span class="lineNum">    1068 </span>            :         std::wstring uniPath;
+<span class="lineNum">    1069 </span>            :         UnicodeConverter::toUTF16(path, uniPath);
+<span class="lineNum">    1070 </span>            :         DWORD len = WideCharToMultiByte(CP_ACP, WC_NO_BEST_FIT_CHARS, uniPath.c_str(), static_cast&lt;int&gt;(uniPath.length()), NULL, 0, NULL, NULL);
+<span class="lineNum">    1071 </span>            :         if (len &gt; 0)
+<span class="lineNum">    1072 </span>            :         {
+<span class="lineNum">    1073 </span>            :                 Buffer&lt;char&gt; buffer(len);
+<span class="lineNum">    1074 </span>            :                 DWORD rc = WideCharToMultiByte(CP_ACP, WC_NO_BEST_FIT_CHARS, uniPath.c_str(), static_cast&lt;int&gt;(uniPath.length()), buffer.begin(), static_cast&lt;int&gt;(buffer.size()), NULL, NULL);
+<span class="lineNum">    1075 </span>            :                 if (rc)
+<span class="lineNum">    1076 </span>            :                 {
+<span class="lineNum">    1077 </span>            :                         return std::string(buffer.begin(), buffer.size());
+<span class="lineNum">    1078 </span>            :                 }
+<span class="lineNum">    1079 </span>            :         }
+<span class="lineNum">    1080 </span>            : #endif
+<span class="lineNum">    1081 </span><span class="lineNoCov">          0 :         return path;</span>
+<span class="lineNum">    1082 </span>            : }
+<a name="1083"><span class="lineNum">    1083 </span>            : </a>
+<span class="lineNum">    1084 </span>            : 
+<span class="lineNum">    1085 </span><span class="lineCov">          3 : } // namespace Poco</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

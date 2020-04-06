@@ -1,0 +1,612 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/double-conversion.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - double-conversion.h<span style="font-size: 80%;"> (source / <a href="double-conversion.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Copyright 2012 the V8 project authors. All rights reserved.</a>
+<span class="lineNum">       2 </span>            : // Redistribution and use in source and binary forms, with or without
+<span class="lineNum">       3 </span>            : // modification, are permitted provided that the following conditions are
+<span class="lineNum">       4 </span>            : // met:
+<span class="lineNum">       5 </span>            : //
+<span class="lineNum">       6 </span>            : //     * Redistributions of source code must retain the above copyright
+<span class="lineNum">       7 </span>            : //       notice, this list of conditions and the following disclaimer.
+<span class="lineNum">       8 </span>            : //     * Redistributions in binary form must reproduce the above
+<span class="lineNum">       9 </span>            : //       copyright notice, this list of conditions and the following
+<span class="lineNum">      10 </span>            : //       disclaimer in the documentation and/or other materials provided
+<span class="lineNum">      11 </span>            : //       with the distribution.
+<span class="lineNum">      12 </span>            : //     * Neither the name of Google Inc. nor the names of its
+<span class="lineNum">      13 </span>            : //       contributors may be used to endorse or promote products derived
+<span class="lineNum">      14 </span>            : //       from this software without specific prior written permission.
+<span class="lineNum">      15 </span>            : //
+<span class="lineNum">      16 </span>            : // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+<span class="lineNum">      17 </span>            : // &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+<span class="lineNum">      18 </span>            : // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+<span class="lineNum">      19 </span>            : // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+<span class="lineNum">      20 </span>            : // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+<span class="lineNum">      21 </span>            : // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+<span class="lineNum">      22 </span>            : // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+<span class="lineNum">      23 </span>            : // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+<span class="lineNum">      24 </span>            : // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+<span class="lineNum">      25 </span>            : // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+<span class="lineNum">      26 </span>            : // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : #ifndef DOUBLE_CONVERSION_DOUBLE_CONVERSION_H_
+<span class="lineNum">      29 </span>            : #define DOUBLE_CONVERSION_DOUBLE_CONVERSION_H_
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : #include &quot;utils.h&quot;
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : namespace double_conversion {
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : class DoubleToStringConverter {
+<span class="lineNum">      36 </span>            :  public:
+<span class="lineNum">      37 </span>            :   // When calling ToFixed with a double &gt; 10^kMaxFixedDigitsBeforePoint
+<span class="lineNum">      38 </span>            :   // or a requested_digits parameter &gt; kMaxFixedDigitsAfterPoint then the
+<span class="lineNum">      39 </span>            :   // function returns false.
+<span class="lineNum">      40 </span>            :   static const int kMaxFixedDigitsBeforePoint = 60;
+<span class="lineNum">      41 </span>            :   static const int kMaxFixedDigitsAfterPoint = 60;
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            :   // When calling ToExponential with a requested_digits
+<span class="lineNum">      44 </span>            :   // parameter &gt; kMaxExponentialDigits then the function returns false.
+<span class="lineNum">      45 </span>            :   static const int kMaxExponentialDigits = 120;
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            :   // When calling ToPrecision with a requested_digits
+<span class="lineNum">      48 </span>            :   // parameter &lt; kMinPrecisionDigits or requested_digits &gt; kMaxPrecisionDigits
+<span class="lineNum">      49 </span>            :   // then the function returns false.
+<span class="lineNum">      50 </span>            :   static const int kMinPrecisionDigits = 1;
+<span class="lineNum">      51 </span>            :   static const int kMaxPrecisionDigits = 120;
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            :   enum Flags {
+<span class="lineNum">      54 </span>            :     NO_FLAGS = 0,
+<span class="lineNum">      55 </span>            :     EMIT_POSITIVE_EXPONENT_SIGN = 1,
+<span class="lineNum">      56 </span>            :     EMIT_TRAILING_DECIMAL_POINT = 2,
+<span class="lineNum">      57 </span>            :     EMIT_TRAILING_ZERO_AFTER_POINT = 4,
+<span class="lineNum">      58 </span>            :     UNIQUE_ZERO = 8
+<span class="lineNum">      59 </span>            :   };
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            :   // Flags should be a bit-or combination of the possible Flags-enum.
+<span class="lineNum">      62 </span>            :   //  - NO_FLAGS: no special flags.
+<span class="lineNum">      63 </span>            :   //  - EMIT_POSITIVE_EXPONENT_SIGN: when the number is converted into exponent
+<span class="lineNum">      64 </span>            :   //    form, emits a '+' for positive exponents. Example: 1.2e+2.
+<span class="lineNum">      65 </span>            :   //  - EMIT_TRAILING_DECIMAL_POINT: when the input number is an integer and is
+<span class="lineNum">      66 </span>            :   //    converted into decimal format then a trailing decimal point is appended.
+<span class="lineNum">      67 </span>            :   //    Example: 2345.0 is converted to &quot;2345.&quot;.
+<span class="lineNum">      68 </span>            :   //  - EMIT_TRAILING_ZERO_AFTER_POINT: in addition to a trailing decimal point
+<span class="lineNum">      69 </span>            :   //    emits a trailing '0'-character. This flag requires the
+<span class="lineNum">      70 </span>            :   //    EXMIT_TRAILING_DECIMAL_POINT flag.
+<span class="lineNum">      71 </span>            :   //    Example: 2345.0 is converted to &quot;2345.0&quot;.
+<span class="lineNum">      72 </span>            :   //  - UNIQUE_ZERO: &quot;-0.0&quot; is converted to &quot;0.0&quot;.
+<span class="lineNum">      73 </span>            :   //
+<span class="lineNum">      74 </span>            :   // Infinity symbol and nan_symbol provide the string representation for these
+<span class="lineNum">      75 </span>            :   // special values. If the string is NULL and the special value is encountered
+<span class="lineNum">      76 </span>            :   // then the conversion functions return false.
+<span class="lineNum">      77 </span>            :   //
+<span class="lineNum">      78 </span>            :   // The exponent_character is used in exponential representations. It is
+<span class="lineNum">      79 </span>            :   // usually 'e' or 'E'.
+<span class="lineNum">      80 </span>            :   //
+<span class="lineNum">      81 </span>            :   // When converting to the shortest representation the converter will
+<span class="lineNum">      82 </span>            :   // represent input numbers in decimal format if they are in the interval
+<span class="lineNum">      83 </span>            :   // [10^decimal_in_shortest_low; 10^decimal_in_shortest_high[
+<span class="lineNum">      84 </span>            :   //    (lower boundary included, greater boundary excluded).
+<span class="lineNum">      85 </span>            :   // Example: with decimal_in_shortest_low = -6 and
+<span class="lineNum">      86 </span>            :   //               decimal_in_shortest_high = 21:
+<span class="lineNum">      87 </span>            :   //   ToShortest(0.000001)  -&gt; &quot;0.000001&quot;
+<span class="lineNum">      88 </span>            :   //   ToShortest(0.0000001) -&gt; &quot;1e-7&quot;
+<span class="lineNum">      89 </span>            :   //   ToShortest(111111111111111111111.0)  -&gt; &quot;111111111111111110000&quot;
+<span class="lineNum">      90 </span>            :   //   ToShortest(100000000000000000000.0)  -&gt; &quot;100000000000000000000&quot;
+<span class="lineNum">      91 </span>            :   //   ToShortest(1111111111111111111111.0) -&gt; &quot;1.1111111111111111e+21&quot;
+<span class="lineNum">      92 </span>            :   //
+<span class="lineNum">      93 </span>            :   // When converting to precision mode the converter may add
+<span class="lineNum">      94 </span>            :   // max_leading_padding_zeroes before returning the number in exponential
+<span class="lineNum">      95 </span>            :   // format.
+<span class="lineNum">      96 </span>            :   // Example with max_leading_padding_zeroes_in_precision_mode = 6.
+<span class="lineNum">      97 </span>            :   //   ToPrecision(0.0000012345, 2) -&gt; &quot;0.0000012&quot;
+<span class="lineNum">      98 </span>            :   //   ToPrecision(0.00000012345, 2) -&gt; &quot;1.2e-7&quot;
+<span class="lineNum">      99 </span>            :   // Similarily the converter may add up to
+<span class="lineNum">     100 </span>            :   // max_trailing_padding_zeroes_in_precision_mode in precision mode to avoid
+<span class="lineNum">     101 </span>            :   // returning an exponential representation. A zero added by the
+<span class="lineNum">     102 </span>            :   // EMIT_TRAILING_ZERO_AFTER_POINT flag is counted for this limit.
+<span class="lineNum">     103 </span>            :   // Examples for max_trailing_padding_zeroes_in_precision_mode = 1:
+<span class="lineNum">     104 </span>            :   //   ToPrecision(230.0, 2) -&gt; &quot;230&quot;
+<a name="105"><span class="lineNum">     105 </span>            :   //   ToPrecision(230.0, 2) -&gt; &quot;230.&quot;  with EMIT_TRAILING_DECIMAL_POINT.</a>
+<span class="lineNum">     106 </span>            :   //   ToPrecision(230.0, 2) -&gt; &quot;2.3e2&quot; with EMIT_TRAILING_ZERO_AFTER_POINT.
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :   DoubleToStringConverter(int flags,</span>
+<span class="lineNum">     108 </span>            :                           const char* infinity_symbol,
+<span class="lineNum">     109 </span>            :                           const char* nan_symbol,
+<span class="lineNum">     110 </span>            :                           char exponent_character,
+<span class="lineNum">     111 </span>            :                           int decimal_in_shortest_low,
+<span class="lineNum">     112 </span>            :                           int decimal_in_shortest_high,
+<span class="lineNum">     113 </span>            :                           int max_leading_padding_zeroes_in_precision_mode,
+<span class="lineNum">     114 </span>            :                           int max_trailing_padding_zeroes_in_precision_mode)
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :       : flags_(flags),</span>
+<span class="lineNum">     116 </span>            :         infinity_symbol_(infinity_symbol),
+<span class="lineNum">     117 </span>            :         nan_symbol_(nan_symbol),
+<span class="lineNum">     118 </span>            :         exponent_character_(exponent_character),
+<span class="lineNum">     119 </span>            :         decimal_in_shortest_low_(decimal_in_shortest_low),
+<span class="lineNum">     120 </span>            :         decimal_in_shortest_high_(decimal_in_shortest_high),
+<span class="lineNum">     121 </span>            :         max_leading_padding_zeroes_in_precision_mode_(
+<span class="lineNum">     122 </span>            :             max_leading_padding_zeroes_in_precision_mode),
+<span class="lineNum">     123 </span>            :         max_trailing_padding_zeroes_in_precision_mode_(
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :             max_trailing_padding_zeroes_in_precision_mode) {</span>
+<span class="lineNum">     125 </span>            :     // When 'trailing zero after the point' is set, then 'trailing point'
+<span class="lineNum">     126 </span>            :     // must be set too.
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :     ASSERT(((flags &amp; EMIT_TRAILING_DECIMAL_POINT) != 0) ||</span>
+<span class="lineNum">     128 </span>            :         !((flags &amp; EMIT_TRAILING_ZERO_AFTER_POINT) != 0));
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :   }</span>
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span>            :   // Returns a converter following the EcmaScript specification.
+<span class="lineNum">     132 </span>            :   static const DoubleToStringConverter&amp; EcmaScriptConverter();
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span>            :   // Computes the shortest string of digits that correctly represent the input
+<span class="lineNum">     135 </span>            :   // number. Depending on decimal_in_shortest_low and decimal_in_shortest_high
+<span class="lineNum">     136 </span>            :   // (see constructor) it then either returns a decimal representation, or an
+<span class="lineNum">     137 </span>            :   // exponential representation.
+<span class="lineNum">     138 </span>            :   // Example with decimal_in_shortest_low = -6,
+<span class="lineNum">     139 </span>            :   //              decimal_in_shortest_high = 21,
+<span class="lineNum">     140 </span>            :   //              EMIT_POSITIVE_EXPONENT_SIGN activated, and
+<span class="lineNum">     141 </span>            :   //              EMIT_TRAILING_DECIMAL_POINT deactived:
+<span class="lineNum">     142 </span>            :   //   ToShortest(0.000001)  -&gt; &quot;0.000001&quot;
+<span class="lineNum">     143 </span>            :   //   ToShortest(0.0000001) -&gt; &quot;1e-7&quot;
+<span class="lineNum">     144 </span>            :   //   ToShortest(111111111111111111111.0)  -&gt; &quot;111111111111111110000&quot;
+<span class="lineNum">     145 </span>            :   //   ToShortest(100000000000000000000.0)  -&gt; &quot;100000000000000000000&quot;
+<span class="lineNum">     146 </span>            :   //   ToShortest(1111111111111111111111.0) -&gt; &quot;1.1111111111111111e+21&quot;
+<span class="lineNum">     147 </span>            :   //
+<span class="lineNum">     148 </span>            :   // Note: the conversion may round the output if the returned string
+<span class="lineNum">     149 </span>            :   // is accurate enough to uniquely identify the input-number.
+<span class="lineNum">     150 </span>            :   // For example the most precise representation of the double 9e59 equals
+<span class="lineNum">     151 </span>            :   // &quot;899999999999999918767229449717619953810131273674690656206848&quot;, but
+<span class="lineNum">     152 </span>            :   // the converter will return the shorter (but still correct) &quot;9e59&quot;.
+<span class="lineNum">     153 </span>            :   //
+<span class="lineNum">     154 </span>            :   // Returns true if the conversion succeeds. The conversion always succeeds
+<a name="155"><span class="lineNum">     155 </span>            :   // except when the input value is special and no infinity_symbol or</a>
+<span class="lineNum">     156 </span>            :   // nan_symbol has been given to the constructor.
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :   bool ToShortest(double value, StringBuilder* result_builder) const {</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :     return ToShortestIeeeNumber(value, result_builder, SHORTEST);</span>
+<span class="lineNum">     159 </span>            :   }
+<a name="160"><span class="lineNum">     160 </span>            : </a>
+<span class="lineNum">     161 </span>            :   // Same as ToShortest, but for single-precision floats.
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 :   bool ToShortestSingle(float value, StringBuilder* result_builder) const {</span>
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :     return ToShortestIeeeNumber(value, result_builder, SHORTEST_SINGLE);</span>
+<span class="lineNum">     164 </span>            :   }
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span>            :   // Computes a decimal representation with a fixed number of digits after the
+<span class="lineNum">     168 </span>            :   // decimal point. The last emitted digit is rounded.
+<span class="lineNum">     169 </span>            :   //
+<span class="lineNum">     170 </span>            :   // Examples:
+<span class="lineNum">     171 </span>            :   //   ToFixed(3.12, 1) -&gt; &quot;3.1&quot;
+<span class="lineNum">     172 </span>            :   //   ToFixed(3.1415, 3) -&gt; &quot;3.142&quot;
+<span class="lineNum">     173 </span>            :   //   ToFixed(1234.56789, 4) -&gt; &quot;1234.5679&quot;
+<span class="lineNum">     174 </span>            :   //   ToFixed(1.23, 5) -&gt; &quot;1.23000&quot;
+<span class="lineNum">     175 </span>            :   //   ToFixed(0.1, 4) -&gt; &quot;0.1000&quot;
+<span class="lineNum">     176 </span>            :   //   ToFixed(1e30, 2) -&gt; &quot;1000000000000000019884624838656.00&quot;
+<span class="lineNum">     177 </span>            :   //   ToFixed(0.1, 30) -&gt; &quot;0.100000000000000005551115123126&quot;
+<span class="lineNum">     178 </span>            :   //   ToFixed(0.1, 17) -&gt; &quot;0.10000000000000001&quot;
+<span class="lineNum">     179 </span>            :   //
+<span class="lineNum">     180 </span>            :   // If requested_digits equals 0, then the tail of the result depends on
+<span class="lineNum">     181 </span>            :   // the EMIT_TRAILING_DECIMAL_POINT and EMIT_TRAILING_ZERO_AFTER_POINT.
+<span class="lineNum">     182 </span>            :   // Examples, for requested_digits == 0,
+<span class="lineNum">     183 </span>            :   //   let EMIT_TRAILING_DECIMAL_POINT and EMIT_TRAILING_ZERO_AFTER_POINT be
+<span class="lineNum">     184 </span>            :   //    - false and false: then 123.45 -&gt; 123
+<span class="lineNum">     185 </span>            :   //                             0.678 -&gt; 1
+<span class="lineNum">     186 </span>            :   //    - true and false: then 123.45 -&gt; 123.
+<span class="lineNum">     187 </span>            :   //                            0.678 -&gt; 1.
+<span class="lineNum">     188 </span>            :   //    - true and true: then 123.45 -&gt; 123.0
+<span class="lineNum">     189 </span>            :   //                           0.678 -&gt; 1.0
+<span class="lineNum">     190 </span>            :   //
+<span class="lineNum">     191 </span>            :   // Returns true if the conversion succeeds. The conversion always succeeds
+<span class="lineNum">     192 </span>            :   // except for the following cases:
+<span class="lineNum">     193 </span>            :   //   - the input value is special and no infinity_symbol or nan_symbol has
+<span class="lineNum">     194 </span>            :   //     been provided to the constructor,
+<span class="lineNum">     195 </span>            :   //   - 'value' &gt; 10^kMaxFixedDigitsBeforePoint, or
+<span class="lineNum">     196 </span>            :   //   - 'requested_digits' &gt; kMaxFixedDigitsAfterPoint.
+<span class="lineNum">     197 </span>            :   // The last two conditions imply that the result will never contain more than
+<span class="lineNum">     198 </span>            :   // 1 + kMaxFixedDigitsBeforePoint + 1 + kMaxFixedDigitsAfterPoint characters
+<span class="lineNum">     199 </span>            :   // (one additional character for the sign, and one for the decimal point).
+<span class="lineNum">     200 </span>            :   bool ToFixed(double value,
+<span class="lineNum">     201 </span>            :                int requested_digits,
+<span class="lineNum">     202 </span>            :                StringBuilder* result_builder) const;
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span>            :   // Computes a representation in exponential format with requested_digits
+<span class="lineNum">     205 </span>            :   // after the decimal point. The last emitted digit is rounded.
+<span class="lineNum">     206 </span>            :   // If requested_digits equals -1, then the shortest exponential representation
+<span class="lineNum">     207 </span>            :   // is computed.
+<span class="lineNum">     208 </span>            :   //
+<span class="lineNum">     209 </span>            :   // Examples with EMIT_POSITIVE_EXPONENT_SIGN deactivated, and
+<span class="lineNum">     210 </span>            :   //               exponent_character set to 'e'.
+<span class="lineNum">     211 </span>            :   //   ToExponential(3.12, 1) -&gt; &quot;3.1e0&quot;
+<span class="lineNum">     212 </span>            :   //   ToExponential(5.0, 3) -&gt; &quot;5.000e0&quot;
+<span class="lineNum">     213 </span>            :   //   ToExponential(0.001, 2) -&gt; &quot;1.00e-3&quot;
+<span class="lineNum">     214 </span>            :   //   ToExponential(3.1415, -1) -&gt; &quot;3.1415e0&quot;
+<span class="lineNum">     215 </span>            :   //   ToExponential(3.1415, 4) -&gt; &quot;3.1415e0&quot;
+<span class="lineNum">     216 </span>            :   //   ToExponential(3.1415, 3) -&gt; &quot;3.142e0&quot;
+<span class="lineNum">     217 </span>            :   //   ToExponential(123456789000000, 3) -&gt; &quot;1.235e14&quot;
+<span class="lineNum">     218 </span>            :   //   ToExponential(1000000000000000019884624838656.0, -1) -&gt; &quot;1e30&quot;
+<span class="lineNum">     219 </span>            :   //   ToExponential(1000000000000000019884624838656.0, 32) -&gt;
+<span class="lineNum">     220 </span>            :   //                     &quot;1.00000000000000001988462483865600e30&quot;
+<span class="lineNum">     221 </span>            :   //   ToExponential(1234, 0) -&gt; &quot;1e3&quot;
+<span class="lineNum">     222 </span>            :   //
+<span class="lineNum">     223 </span>            :   // Returns true if the conversion succeeds. The conversion always succeeds
+<span class="lineNum">     224 </span>            :   // except for the following cases:
+<span class="lineNum">     225 </span>            :   //   - the input value is special and no infinity_symbol or nan_symbol has
+<span class="lineNum">     226 </span>            :   //     been provided to the constructor,
+<span class="lineNum">     227 </span>            :   //   - 'requested_digits' &gt; kMaxExponentialDigits.
+<span class="lineNum">     228 </span>            :   // The last condition implies that the result will never contain more than
+<span class="lineNum">     229 </span>            :   // kMaxExponentialDigits + 8 characters (the sign, the digit before the
+<span class="lineNum">     230 </span>            :   // decimal point, the decimal point, the exponent character, the
+<span class="lineNum">     231 </span>            :   // exponent's sign, and at most 3 exponent digits).
+<span class="lineNum">     232 </span>            :   bool ToExponential(double value,
+<span class="lineNum">     233 </span>            :                      int requested_digits,
+<span class="lineNum">     234 </span>            :                      StringBuilder* result_builder) const;
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span>            :   // Computes 'precision' leading digits of the given 'value' and returns them
+<span class="lineNum">     237 </span>            :   // either in exponential or decimal format, depending on
+<span class="lineNum">     238 </span>            :   // max_{leading|trailing}_padding_zeroes_in_precision_mode (given to the
+<span class="lineNum">     239 </span>            :   // constructor).
+<span class="lineNum">     240 </span>            :   // The last computed digit is rounded.
+<span class="lineNum">     241 </span>            :   //
+<span class="lineNum">     242 </span>            :   // Example with max_leading_padding_zeroes_in_precision_mode = 6.
+<span class="lineNum">     243 </span>            :   //   ToPrecision(0.0000012345, 2) -&gt; &quot;0.0000012&quot;
+<span class="lineNum">     244 </span>            :   //   ToPrecision(0.00000012345, 2) -&gt; &quot;1.2e-7&quot;
+<span class="lineNum">     245 </span>            :   // Similarily the converter may add up to
+<span class="lineNum">     246 </span>            :   // max_trailing_padding_zeroes_in_precision_mode in precision mode to avoid
+<span class="lineNum">     247 </span>            :   // returning an exponential representation. A zero added by the
+<span class="lineNum">     248 </span>            :   // EMIT_TRAILING_ZERO_AFTER_POINT flag is counted for this limit.
+<span class="lineNum">     249 </span>            :   // Examples for max_trailing_padding_zeroes_in_precision_mode = 1:
+<span class="lineNum">     250 </span>            :   //   ToPrecision(230.0, 2) -&gt; &quot;230&quot;
+<span class="lineNum">     251 </span>            :   //   ToPrecision(230.0, 2) -&gt; &quot;230.&quot;  with EMIT_TRAILING_DECIMAL_POINT.
+<span class="lineNum">     252 </span>            :   //   ToPrecision(230.0, 2) -&gt; &quot;2.3e2&quot; with EMIT_TRAILING_ZERO_AFTER_POINT.
+<span class="lineNum">     253 </span>            :   // Examples for max_trailing_padding_zeroes_in_precision_mode = 3, and no
+<span class="lineNum">     254 </span>            :   //    EMIT_TRAILING_ZERO_AFTER_POINT:
+<span class="lineNum">     255 </span>            :   //   ToPrecision(123450.0, 6) -&gt; &quot;123450&quot;
+<span class="lineNum">     256 </span>            :   //   ToPrecision(123450.0, 5) -&gt; &quot;123450&quot;
+<span class="lineNum">     257 </span>            :   //   ToPrecision(123450.0, 4) -&gt; &quot;123500&quot;
+<span class="lineNum">     258 </span>            :   //   ToPrecision(123450.0, 3) -&gt; &quot;123000&quot;
+<span class="lineNum">     259 </span>            :   //   ToPrecision(123450.0, 2) -&gt; &quot;1.2e5&quot;
+<span class="lineNum">     260 </span>            :   //
+<span class="lineNum">     261 </span>            :   // Returns true if the conversion succeeds. The conversion always succeeds
+<span class="lineNum">     262 </span>            :   // except for the following cases:
+<span class="lineNum">     263 </span>            :   //   - the input value is special and no infinity_symbol or nan_symbol has
+<span class="lineNum">     264 </span>            :   //     been provided to the constructor,
+<span class="lineNum">     265 </span>            :   //   - precision &lt; kMinPericisionDigits
+<span class="lineNum">     266 </span>            :   //   - precision &gt; kMaxPrecisionDigits
+<span class="lineNum">     267 </span>            :   // The last condition implies that the result will never contain more than
+<span class="lineNum">     268 </span>            :   // kMaxPrecisionDigits + 7 characters (the sign, the decimal point, the
+<span class="lineNum">     269 </span>            :   // exponent character, the exponent's sign, and at most 3 exponent digits).
+<span class="lineNum">     270 </span>            :   bool ToPrecision(double value,
+<span class="lineNum">     271 </span>            :                    int precision,
+<span class="lineNum">     272 </span>            :                    StringBuilder* result_builder) const;
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span>            :   enum DtoaMode {
+<span class="lineNum">     275 </span>            :     // Produce the shortest correct representation.
+<span class="lineNum">     276 </span>            :     // For example the output of 0.299999999999999988897 is (the less accurate
+<span class="lineNum">     277 </span>            :     // but correct) 0.3.
+<span class="lineNum">     278 </span>            :     SHORTEST,
+<span class="lineNum">     279 </span>            :     // Same as SHORTEST, but for single-precision floats.
+<span class="lineNum">     280 </span>            :     SHORTEST_SINGLE,
+<span class="lineNum">     281 </span>            :     // Produce a fixed number of digits after the decimal point.
+<span class="lineNum">     282 </span>            :     // For instance fixed(0.1, 4) becomes 0.1000
+<span class="lineNum">     283 </span>            :     // If the input number is big, the output will be big.
+<span class="lineNum">     284 </span>            :     FIXED,
+<span class="lineNum">     285 </span>            :     // Fixed number of digits (independent of the decimal point).
+<span class="lineNum">     286 </span>            :     PRECISION
+<span class="lineNum">     287 </span>            :   };
+<span class="lineNum">     288 </span>            : 
+<span class="lineNum">     289 </span>            :   // The maximal number of digits that are needed to emit a double in base 10.
+<span class="lineNum">     290 </span>            :   // A higher precision can be achieved by using more digits, but the shortest
+<span class="lineNum">     291 </span>            :   // accurate representation of any double will never use more digits than
+<span class="lineNum">     292 </span>            :   // kBase10MaximalLength.
+<span class="lineNum">     293 </span>            :   // Note that DoubleToAscii null-terminates its input. So the given buffer
+<span class="lineNum">     294 </span>            :   // should be at least kBase10MaximalLength + 1 characters long.
+<span class="lineNum">     295 </span>            :   static const int kBase10MaximalLength = 17;
+<span class="lineNum">     296 </span>            : 
+<span class="lineNum">     297 </span>            :   // Converts the given double 'v' to ascii. 'v' must not be NaN, +Infinity, or
+<span class="lineNum">     298 </span>            :   // -Infinity. In SHORTEST_SINGLE-mode this restriction also applies to 'v'
+<span class="lineNum">     299 </span>            :   // after it has been casted to a single-precision float. That is, in this
+<span class="lineNum">     300 </span>            :   // mode static_cast&lt;float&gt;(v) must not be NaN, +Infinity or -Infinity.
+<span class="lineNum">     301 </span>            :   //
+<span class="lineNum">     302 </span>            :   // The result should be interpreted as buffer * 10^(point-length).
+<span class="lineNum">     303 </span>            :   //
+<span class="lineNum">     304 </span>            :   // The output depends on the given mode:
+<span class="lineNum">     305 </span>            :   //  - SHORTEST: produce the least amount of digits for which the internal
+<span class="lineNum">     306 </span>            :   //   identity requirement is still satisfied. If the digits are printed
+<span class="lineNum">     307 </span>            :   //   (together with the correct exponent) then reading this number will give
+<span class="lineNum">     308 </span>            :   //   'v' again. The buffer will choose the representation that is closest to
+<span class="lineNum">     309 </span>            :   //   'v'. If there are two at the same distance, than the one farther away
+<span class="lineNum">     310 </span>            :   //   from 0 is chosen (halfway cases - ending with 5 - are rounded up).
+<span class="lineNum">     311 </span>            :   //   In this mode the 'requested_digits' parameter is ignored.
+<span class="lineNum">     312 </span>            :   //  - SHORTEST_SINGLE: same as SHORTEST but with single-precision.
+<span class="lineNum">     313 </span>            :   //  - FIXED: produces digits necessary to print a given number with
+<span class="lineNum">     314 </span>            :   //   'requested_digits' digits after the decimal point. The produced digits
+<span class="lineNum">     315 </span>            :   //   might be too short in which case the caller has to fill the remainder
+<span class="lineNum">     316 </span>            :   //   with '0's.
+<span class="lineNum">     317 </span>            :   //   Example: toFixed(0.001, 5) is allowed to return buffer=&quot;1&quot;, point=-2.
+<span class="lineNum">     318 </span>            :   //   Halfway cases are rounded towards +/-Infinity (away from 0). The call
+<span class="lineNum">     319 </span>            :   //   toFixed(0.15, 2) thus returns buffer=&quot;2&quot;, point=0.
+<span class="lineNum">     320 </span>            :   //   The returned buffer may contain digits that would be truncated from the
+<span class="lineNum">     321 </span>            :   //   shortest representation of the input.
+<span class="lineNum">     322 </span>            :   //  - PRECISION: produces 'requested_digits' where the first digit is not '0'.
+<span class="lineNum">     323 </span>            :   //   Even though the length of produced digits usually equals
+<span class="lineNum">     324 </span>            :   //   'requested_digits', the function is allowed to return fewer digits, in
+<span class="lineNum">     325 </span>            :   //   which case the caller has to fill the missing digits with '0's.
+<span class="lineNum">     326 </span>            :   //   Halfway cases are again rounded away from 0.
+<span class="lineNum">     327 </span>            :   // DoubleToAscii expects the given buffer to be big enough to hold all
+<span class="lineNum">     328 </span>            :   // digits and a terminating null-character. In SHORTEST-mode it expects a
+<span class="lineNum">     329 </span>            :   // buffer of at least kBase10MaximalLength + 1. In all other modes the
+<span class="lineNum">     330 </span>            :   // requested_digits parameter and the padding-zeroes limit the size of the
+<span class="lineNum">     331 </span>            :   // output. Don't forget the decimal point, the exponent character and the
+<span class="lineNum">     332 </span>            :   // terminating null-character when computing the maximal output size.
+<span class="lineNum">     333 </span>            :   // The given length is only used in debug mode to ensure the buffer is big
+<span class="lineNum">     334 </span>            :   // enough.
+<span class="lineNum">     335 </span>            :   static void DoubleToAscii(double v,
+<span class="lineNum">     336 </span>            :                             DtoaMode mode,
+<span class="lineNum">     337 </span>            :                             int requested_digits,
+<span class="lineNum">     338 </span>            :                             char* buffer,
+<span class="lineNum">     339 </span>            :                             int buffer_length,
+<span class="lineNum">     340 </span>            :                             bool* sign,
+<span class="lineNum">     341 </span>            :                             int* length,
+<span class="lineNum">     342 </span>            :                             int* point);
+<span class="lineNum">     343 </span>            : 
+<span class="lineNum">     344 </span>            :  private:
+<span class="lineNum">     345 </span>            :   // Implementation for ToShortest and ToShortestSingle.
+<span class="lineNum">     346 </span>            :   bool ToShortestIeeeNumber(double value,
+<span class="lineNum">     347 </span>            :                             StringBuilder* result_builder,
+<span class="lineNum">     348 </span>            :                             DtoaMode mode) const;
+<span class="lineNum">     349 </span>            : 
+<span class="lineNum">     350 </span>            :   // If the value is a special value (NaN or Infinity) constructs the
+<span class="lineNum">     351 </span>            :   // corresponding string using the configured infinity/nan-symbol.
+<span class="lineNum">     352 </span>            :   // If either of them is NULL or the value is not special then the
+<span class="lineNum">     353 </span>            :   // function returns false.
+<span class="lineNum">     354 </span>            :   bool HandleSpecialValues(double value, StringBuilder* result_builder) const;
+<span class="lineNum">     355 </span>            :   // Constructs an exponential representation (i.e. 1.234e56).
+<span class="lineNum">     356 </span>            :   // The given exponent assumes a decimal point after the first decimal digit.
+<span class="lineNum">     357 </span>            :   void CreateExponentialRepresentation(const char* decimal_digits,
+<span class="lineNum">     358 </span>            :                                        int length,
+<span class="lineNum">     359 </span>            :                                        int exponent,
+<span class="lineNum">     360 </span>            :                                        StringBuilder* result_builder) const;
+<span class="lineNum">     361 </span>            :   // Creates a decimal representation (i.e 1234.5678).
+<span class="lineNum">     362 </span>            :   void CreateDecimalRepresentation(const char* decimal_digits,
+<span class="lineNum">     363 </span>            :                                    int length,
+<span class="lineNum">     364 </span>            :                                    int decimal_point,
+<span class="lineNum">     365 </span>            :                                    int digits_after_point,
+<span class="lineNum">     366 </span>            :                                    StringBuilder* result_builder) const;
+<span class="lineNum">     367 </span>            : 
+<span class="lineNum">     368 </span>            :   const int flags_;
+<span class="lineNum">     369 </span>            :   const char* const infinity_symbol_;
+<span class="lineNum">     370 </span>            :   const char* const nan_symbol_;
+<span class="lineNum">     371 </span>            :   const char exponent_character_;
+<span class="lineNum">     372 </span>            :   const int decimal_in_shortest_low_;
+<span class="lineNum">     373 </span>            :   const int decimal_in_shortest_high_;
+<span class="lineNum">     374 </span>            :   const int max_leading_padding_zeroes_in_precision_mode_;
+<span class="lineNum">     375 </span>            :   const int max_trailing_padding_zeroes_in_precision_mode_;
+<span class="lineNum">     376 </span>            : 
+<span class="lineNum">     377 </span>            :   DISALLOW_IMPLICIT_CONSTRUCTORS(DoubleToStringConverter);
+<span class="lineNum">     378 </span>            : };
+<span class="lineNum">     379 </span>            : 
+<span class="lineNum">     380 </span>            : 
+<span class="lineNum">     381 </span>            : class StringToDoubleConverter {
+<span class="lineNum">     382 </span>            :  public:
+<span class="lineNum">     383 </span>            :   // Enumeration for allowing octals and ignoring junk when converting
+<span class="lineNum">     384 </span>            :   // strings to numbers.
+<span class="lineNum">     385 </span>            :   enum Flags {
+<span class="lineNum">     386 </span>            :     NO_FLAGS = 0,
+<span class="lineNum">     387 </span>            :     ALLOW_HEX = 1,
+<span class="lineNum">     388 </span>            :     ALLOW_OCTALS = 2,
+<span class="lineNum">     389 </span>            :     ALLOW_TRAILING_JUNK = 4,
+<span class="lineNum">     390 </span>            :     ALLOW_LEADING_SPACES = 8,
+<span class="lineNum">     391 </span>            :     ALLOW_TRAILING_SPACES = 16,
+<span class="lineNum">     392 </span>            :     ALLOW_SPACES_AFTER_SIGN = 32
+<span class="lineNum">     393 </span>            :   };
+<span class="lineNum">     394 </span>            : 
+<span class="lineNum">     395 </span>            :   // Flags should be a bit-or combination of the possible Flags-enum.
+<span class="lineNum">     396 </span>            :   //  - NO_FLAGS: no special flags.
+<span class="lineNum">     397 </span>            :   //  - ALLOW_HEX: recognizes the prefix &quot;0x&quot;. Hex numbers may only be integers.
+<span class="lineNum">     398 </span>            :   //      Ex: StringToDouble(&quot;0x1234&quot;) -&gt; 4660.0
+<span class="lineNum">     399 </span>            :   //          In StringToDouble(&quot;0x1234.56&quot;) the characters &quot;.56&quot; are trailing
+<span class="lineNum">     400 </span>            :   //          junk. The result of the call is hence dependent on
+<span class="lineNum">     401 </span>            :   //          the ALLOW_TRAILING_JUNK flag and/or the junk value.
+<span class="lineNum">     402 </span>            :   //      With this flag &quot;0x&quot; is a junk-string. Even with ALLOW_TRAILING_JUNK,
+<span class="lineNum">     403 </span>            :   //      the string will not be parsed as &quot;0&quot; followed by junk.
+<span class="lineNum">     404 </span>            :   //
+<span class="lineNum">     405 </span>            :   //  - ALLOW_OCTALS: recognizes the prefix &quot;0&quot; for octals:
+<span class="lineNum">     406 </span>            :   //      If a sequence of octal digits starts with '0', then the number is
+<span class="lineNum">     407 </span>            :   //      read as octal integer. Octal numbers may only be integers.
+<span class="lineNum">     408 </span>            :   //      Ex: StringToDouble(&quot;01234&quot;) -&gt; 668.0
+<span class="lineNum">     409 </span>            :   //          StringToDouble(&quot;012349&quot;) -&gt; 12349.0  // Not a sequence of octal
+<span class="lineNum">     410 </span>            :   //                                               // digits.
+<span class="lineNum">     411 </span>            :   //          In StringToDouble(&quot;01234.56&quot;) the characters &quot;.56&quot; are trailing
+<span class="lineNum">     412 </span>            :   //          junk. The result of the call is hence dependent on
+<span class="lineNum">     413 </span>            :   //          the ALLOW_TRAILING_JUNK flag and/or the junk value.
+<span class="lineNum">     414 </span>            :   //          In StringToDouble(&quot;01234e56&quot;) the characters &quot;e56&quot; are trailing
+<span class="lineNum">     415 </span>            :   //          junk, too.
+<span class="lineNum">     416 </span>            :   //  - ALLOW_TRAILING_JUNK: ignore trailing characters that are not part of
+<span class="lineNum">     417 </span>            :   //      a double literal.
+<span class="lineNum">     418 </span>            :   //  - ALLOW_LEADING_SPACES: skip over leading spaces.
+<span class="lineNum">     419 </span>            :   //  - ALLOW_TRAILING_SPACES: ignore trailing spaces.
+<span class="lineNum">     420 </span>            :   //  - ALLOW_SPACES_AFTER_SIGN: ignore spaces after the sign.
+<span class="lineNum">     421 </span>            :   //       Ex: StringToDouble(&quot;-   123.2&quot;) -&gt; -123.2.
+<span class="lineNum">     422 </span>            :   //           StringToDouble(&quot;+   123.2&quot;) -&gt; 123.2
+<span class="lineNum">     423 </span>            :   //
+<span class="lineNum">     424 </span>            :   // empty_string_value is returned when an empty string is given as input.
+<span class="lineNum">     425 </span>            :   // If ALLOW_LEADING_SPACES or ALLOW_TRAILING_SPACES are set, then a string
+<span class="lineNum">     426 </span>            :   // containing only spaces is converted to the 'empty_string_value', too.
+<span class="lineNum">     427 </span>            :   //
+<span class="lineNum">     428 </span>            :   // junk_string_value is returned when
+<span class="lineNum">     429 </span>            :   //  a) ALLOW_TRAILING_JUNK is not set, and a junk character (a character not
+<span class="lineNum">     430 </span>            :   //     part of a double-literal) is found.
+<span class="lineNum">     431 </span>            :   //  b) ALLOW_TRAILING_JUNK is set, but the string does not start with a
+<span class="lineNum">     432 </span>            :   //     double literal.
+<span class="lineNum">     433 </span>            :   //
+<span class="lineNum">     434 </span>            :   // infinity_symbol and nan_symbol are strings that are used to detect
+<span class="lineNum">     435 </span>            :   // inputs that represent infinity and NaN. They can be null, in which case
+<span class="lineNum">     436 </span>            :   // they are ignored.
+<span class="lineNum">     437 </span>            :   // The conversion routine first reads any possible signs. Then it compares the
+<span class="lineNum">     438 </span>            :   // following character of the input-string with the first character of
+<span class="lineNum">     439 </span>            :   // the infinity, and nan-symbol. If either matches, the function assumes, that
+<span class="lineNum">     440 </span>            :   // a match has been found, and expects the following input characters to match
+<span class="lineNum">     441 </span>            :   // the remaining characters of the special-value symbol.
+<span class="lineNum">     442 </span>            :   // This means that the following restrictions apply to special-value symbols:
+<span class="lineNum">     443 </span>            :   //  - they must not start with signs ('+', or '-'),
+<span class="lineNum">     444 </span>            :   //  - they must not have the same first character.
+<span class="lineNum">     445 </span>            :   //  - they must not start with digits.
+<span class="lineNum">     446 </span>            :   //
+<span class="lineNum">     447 </span>            :   // Examples:
+<span class="lineNum">     448 </span>            :   //  flags = ALLOW_HEX | ALLOW_TRAILING_JUNK,
+<span class="lineNum">     449 </span>            :   //  empty_string_value = 0.0,
+<span class="lineNum">     450 </span>            :   //  junk_string_value = NaN,
+<span class="lineNum">     451 </span>            :   //  infinity_symbol = &quot;infinity&quot;,
+<span class="lineNum">     452 </span>            :   //  nan_symbol = &quot;nan&quot;:
+<span class="lineNum">     453 </span>            :   //    StringToDouble(&quot;0x1234&quot;) -&gt; 4660.0.
+<span class="lineNum">     454 </span>            :   //    StringToDouble(&quot;0x1234K&quot;) -&gt; 4660.0.
+<span class="lineNum">     455 </span>            :   //    StringToDouble(&quot;&quot;) -&gt; 0.0  // empty_string_value.
+<span class="lineNum">     456 </span>            :   //    StringToDouble(&quot; &quot;) -&gt; NaN  // junk_string_value.
+<span class="lineNum">     457 </span>            :   //    StringToDouble(&quot; 1&quot;) -&gt; NaN  // junk_string_value.
+<span class="lineNum">     458 </span>            :   //    StringToDouble(&quot;0x&quot;) -&gt; NaN  // junk_string_value.
+<span class="lineNum">     459 </span>            :   //    StringToDouble(&quot;-123.45&quot;) -&gt; -123.45.
+<span class="lineNum">     460 </span>            :   //    StringToDouble(&quot;--123.45&quot;) -&gt; NaN  // junk_string_value.
+<span class="lineNum">     461 </span>            :   //    StringToDouble(&quot;123e45&quot;) -&gt; 123e45.
+<span class="lineNum">     462 </span>            :   //    StringToDouble(&quot;123E45&quot;) -&gt; 123e45.
+<span class="lineNum">     463 </span>            :   //    StringToDouble(&quot;123e+45&quot;) -&gt; 123e45.
+<span class="lineNum">     464 </span>            :   //    StringToDouble(&quot;123E-45&quot;) -&gt; 123e-45.
+<span class="lineNum">     465 </span>            :   //    StringToDouble(&quot;123e&quot;) -&gt; 123.0  // trailing junk ignored.
+<span class="lineNum">     466 </span>            :   //    StringToDouble(&quot;123e-&quot;) -&gt; 123.0  // trailing junk ignored.
+<span class="lineNum">     467 </span>            :   //    StringToDouble(&quot;+NaN&quot;) -&gt; NaN  // NaN string literal.
+<span class="lineNum">     468 </span>            :   //    StringToDouble(&quot;-infinity&quot;) -&gt; -inf.  // infinity literal.
+<span class="lineNum">     469 </span>            :   //    StringToDouble(&quot;Infinity&quot;) -&gt; NaN  // junk_string_value.
+<span class="lineNum">     470 </span>            :   //
+<span class="lineNum">     471 </span>            :   //  flags = ALLOW_OCTAL | ALLOW_LEADING_SPACES,
+<span class="lineNum">     472 </span>            :   //  empty_string_value = 0.0,
+<span class="lineNum">     473 </span>            :   //  junk_string_value = NaN,
+<span class="lineNum">     474 </span>            :   //  infinity_symbol = NULL,
+<span class="lineNum">     475 </span>            :   //  nan_symbol = NULL:
+<span class="lineNum">     476 </span>            :   //    StringToDouble(&quot;0x1234&quot;) -&gt; NaN  // junk_string_value.
+<span class="lineNum">     477 </span>            :   //    StringToDouble(&quot;01234&quot;) -&gt; 668.0.
+<span class="lineNum">     478 </span>            :   //    StringToDouble(&quot;&quot;) -&gt; 0.0  // empty_string_value.
+<span class="lineNum">     479 </span>            :   //    StringToDouble(&quot; &quot;) -&gt; 0.0  // empty_string_value.
+<span class="lineNum">     480 </span>            :   //    StringToDouble(&quot; 1&quot;) -&gt; 1.0
+<span class="lineNum">     481 </span>            :   //    StringToDouble(&quot;0x&quot;) -&gt; NaN  // junk_string_value.
+<span class="lineNum">     482 </span>            :   //    StringToDouble(&quot;0123e45&quot;) -&gt; NaN  // junk_string_value.
+<span class="lineNum">     483 </span>            :   //    StringToDouble(&quot;01239E45&quot;) -&gt; 1239e45.
+<a name="484"><span class="lineNum">     484 </span>            :   //    StringToDouble(&quot;-infinity&quot;) -&gt; NaN  // junk_string_value.</a>
+<span class="lineNum">     485 </span>            :   //    StringToDouble(&quot;NaN&quot;) -&gt; NaN  // junk_string_value.
+<span class="lineNum">     486 </span><span class="lineNoCov">          0 :   StringToDoubleConverter(int flags,</span>
+<span class="lineNum">     487 </span>            :                           double empty_string_value,
+<span class="lineNum">     488 </span>            :                           double junk_string_value,
+<span class="lineNum">     489 </span>            :                           const char* infinity_symbol,
+<span class="lineNum">     490 </span>            :                           const char* nan_symbol)
+<span class="lineNum">     491 </span><span class="lineNoCov">          0 :       : flags_(flags),</span>
+<span class="lineNum">     492 </span>            :         empty_string_value_(empty_string_value),
+<span class="lineNum">     493 </span>            :         junk_string_value_(junk_string_value),
+<span class="lineNum">     494 </span>            :         infinity_symbol_(infinity_symbol),
+<span class="lineNum">     495 </span><span class="lineNoCov">          0 :         nan_symbol_(nan_symbol) {</span>
+<span class="lineNum">     496 </span><span class="lineNoCov">          0 :   }</span>
+<span class="lineNum">     497 </span>            : 
+<span class="lineNum">     498 </span>            :   // Performs the conversion.
+<span class="lineNum">     499 </span>            :   // The output parameter 'processed_characters_count' is set to the number
+<span class="lineNum">     500 </span>            :   // of characters that have been processed to read the number.
+<a name="501"><span class="lineNum">     501 </span>            :   // Spaces than are processed with ALLOW_{LEADING|TRAILING}_SPACES are included</a>
+<span class="lineNum">     502 </span>            :   // in the 'processed_characters_count'. Trailing junk is never included.
+<span class="lineNum">     503 </span><span class="lineNoCov">          0 :   double StringToDouble(const char* buffer,</span>
+<span class="lineNum">     504 </span>            :                         int length,
+<span class="lineNum">     505 </span>            :                         int* processed_characters_count) const {
+<span class="lineNum">     506 </span><span class="lineNoCov">          0 :     return StringToIeee(buffer, length, processed_characters_count, true);</span>
+<span class="lineNum">     507 </span>            :   }
+<span class="lineNum">     508 </span>            : 
+<span class="lineNum">     509 </span>            :   // Same as StringToDouble but reads a float.
+<a name="510"><span class="lineNum">     510 </span>            :   // Note that this is not equivalent to static_cast&lt;float&gt;(StringToDouble(...))</a>
+<span class="lineNum">     511 </span>            :   // due to potential double-rounding.
+<span class="lineNum">     512 </span><span class="lineNoCov">          0 :   float StringToFloat(const char* buffer,</span>
+<span class="lineNum">     513 </span>            :                       int length,
+<span class="lineNum">     514 </span>            :                       int* processed_characters_count) const {
+<span class="lineNum">     515 </span><span class="lineNoCov">          0 :     return static_cast&lt;float&gt;(StringToIeee(buffer, length,</span>
+<span class="lineNum">     516 </span><span class="lineNoCov">          0 :                                            processed_characters_count, false));</span>
+<span class="lineNum">     517 </span>            :   }
+<span class="lineNum">     518 </span>            : 
+<span class="lineNum">     519 </span>            :  private:
+<span class="lineNum">     520 </span>            :   const int flags_;
+<span class="lineNum">     521 </span>            :   const double empty_string_value_;
+<span class="lineNum">     522 </span>            :   const double junk_string_value_;
+<span class="lineNum">     523 </span>            :   const char* const infinity_symbol_;
+<span class="lineNum">     524 </span>            :   const char* const nan_symbol_;
+<span class="lineNum">     525 </span>            : 
+<span class="lineNum">     526 </span>            :   double StringToIeee(const char* buffer,
+<span class="lineNum">     527 </span>            :                       int length,
+<span class="lineNum">     528 </span>            :                       int* processed_characters_count,
+<span class="lineNum">     529 </span>            :                       bool read_as_double) const;
+<span class="lineNum">     530 </span>            : 
+<span class="lineNum">     531 </span>            :   DISALLOW_IMPLICIT_CONSTRUCTORS(StringToDoubleConverter);
+<span class="lineNum">     532 </span>            : };
+<span class="lineNum">     533 </span>            : 
+<span class="lineNum">     534 </span>            : }  // namespace double_conversion
+<span class="lineNum">     535 </span>            : 
+<span class="lineNum">     536 </span>            : #endif  // DOUBLE_CONVERSION_DOUBLE_CONVERSION_H_
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

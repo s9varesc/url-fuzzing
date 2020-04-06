@@ -1,0 +1,9 @@
+
+
+javac src/TestJavaMain.java  -d ./classes
+
+java -Xmx128M -jar libs/jcov.jar JREInstr  -im java.net -implantrt libs/jcov.jar /usr/lib/jvm/java-8-openjdk-amd64/jre/
+
+java -javaagent:/home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jcov.jar=im=java.net -cp ./classes TestJavaMain
+
+java -cp /home/vera/url-fuzzing/languagefuzzing/JavaCoverage/libs/jcov.jar com.sun.tdk.jcov.RepGen -include java.net.* -src /usr/lib/jvm/openjdk-8/src -format html -output out result.xml

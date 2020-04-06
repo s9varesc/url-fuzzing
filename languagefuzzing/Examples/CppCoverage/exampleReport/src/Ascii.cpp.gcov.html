@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/Ascii.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - Ascii.cpp<span style="font-size: 80%;"> (source / <a href="Ascii.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Ascii.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Core
+<span class="lineNum">       6 </span>            : // Module:  Ascii
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2010, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/Ascii.h&quot;
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            : namespace Poco {
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : const int Ascii::CHARACTER_PROPERTIES[128] = 
+<span class="lineNum">      22 </span>            : {
+<span class="lineNum">      23 </span>            :         /* 00 . */ ACP_CONTROL,
+<span class="lineNum">      24 </span>            :         /* 01 . */ ACP_CONTROL,
+<span class="lineNum">      25 </span>            :         /* 02 . */ ACP_CONTROL,
+<span class="lineNum">      26 </span>            :         /* 03 . */ ACP_CONTROL,
+<span class="lineNum">      27 </span>            :         /* 04 . */ ACP_CONTROL,
+<span class="lineNum">      28 </span>            :         /* 05 . */ ACP_CONTROL,
+<span class="lineNum">      29 </span>            :         /* 06 . */ ACP_CONTROL,
+<span class="lineNum">      30 </span>            :         /* 07 . */ ACP_CONTROL,
+<span class="lineNum">      31 </span>            :         /* 08 . */ ACP_CONTROL,
+<span class="lineNum">      32 </span>            :         /* 09 . */ ACP_CONTROL | ACP_SPACE,
+<span class="lineNum">      33 </span>            :         /* 0a . */ ACP_CONTROL | ACP_SPACE,
+<span class="lineNum">      34 </span>            :         /* 0b . */ ACP_CONTROL | ACP_SPACE,
+<span class="lineNum">      35 </span>            :         /* 0c . */ ACP_CONTROL | ACP_SPACE,
+<span class="lineNum">      36 </span>            :         /* 0d . */ ACP_CONTROL | ACP_SPACE,
+<span class="lineNum">      37 </span>            :         /* 0e . */ ACP_CONTROL,
+<span class="lineNum">      38 </span>            :         /* 0f . */ ACP_CONTROL,
+<span class="lineNum">      39 </span>            :         /* 10 . */ ACP_CONTROL,
+<span class="lineNum">      40 </span>            :         /* 11 . */ ACP_CONTROL,
+<span class="lineNum">      41 </span>            :         /* 12 . */ ACP_CONTROL,
+<span class="lineNum">      42 </span>            :         /* 13 . */ ACP_CONTROL,
+<span class="lineNum">      43 </span>            :         /* 14 . */ ACP_CONTROL,
+<span class="lineNum">      44 </span>            :         /* 15 . */ ACP_CONTROL,
+<span class="lineNum">      45 </span>            :         /* 16 . */ ACP_CONTROL,
+<span class="lineNum">      46 </span>            :         /* 17 . */ ACP_CONTROL,
+<span class="lineNum">      47 </span>            :         /* 18 . */ ACP_CONTROL,
+<span class="lineNum">      48 </span>            :         /* 19 . */ ACP_CONTROL,
+<span class="lineNum">      49 </span>            :         /* 1a . */ ACP_CONTROL,
+<span class="lineNum">      50 </span>            :         /* 1b . */ ACP_CONTROL,
+<span class="lineNum">      51 </span>            :         /* 1c . */ ACP_CONTROL,
+<span class="lineNum">      52 </span>            :         /* 1d . */ ACP_CONTROL,
+<span class="lineNum">      53 </span>            :         /* 1e . */ ACP_CONTROL,
+<span class="lineNum">      54 </span>            :         /* 1f . */ ACP_CONTROL,
+<span class="lineNum">      55 </span>            :         /* 20   */ ACP_SPACE | ACP_PRINT,
+<span class="lineNum">      56 </span>            :         /* 21 ! */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      57 </span>            :         /* 22 &quot; */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      58 </span>            :         /* 23 # */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      59 </span>            :         /* 24 $ */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      60 </span>            :         /* 25 % */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      61 </span>            :         /* 26 &amp; */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      62 </span>            :         /* 27 ' */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      63 </span>            :         /* 28 ( */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      64 </span>            :         /* 29 ) */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      65 </span>            :         /* 2a * */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      66 </span>            :         /* 2b + */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      67 </span>            :         /* 2c , */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      68 </span>            :         /* 2d - */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      69 </span>            :         /* 2e . */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      70 </span>            :         /* 2f / */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      71 </span>            :         /* 30 0 */ ACP_DIGIT | ACP_HEXDIGIT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      72 </span>            :         /* 31 1 */ ACP_DIGIT | ACP_HEXDIGIT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      73 </span>            :         /* 32 2 */ ACP_DIGIT | ACP_HEXDIGIT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      74 </span>            :         /* 33 3 */ ACP_DIGIT | ACP_HEXDIGIT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      75 </span>            :         /* 34 4 */ ACP_DIGIT | ACP_HEXDIGIT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      76 </span>            :         /* 35 5 */ ACP_DIGIT | ACP_HEXDIGIT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      77 </span>            :         /* 36 6 */ ACP_DIGIT | ACP_HEXDIGIT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      78 </span>            :         /* 37 7 */ ACP_DIGIT | ACP_HEXDIGIT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      79 </span>            :         /* 38 8 */ ACP_DIGIT | ACP_HEXDIGIT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      80 </span>            :         /* 39 9 */ ACP_DIGIT | ACP_HEXDIGIT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      81 </span>            :         /* 3a : */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      82 </span>            :         /* 3b ; */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      83 </span>            :         /* 3c &lt; */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      84 </span>            :         /* 3d = */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      85 </span>            :         /* 3e &gt; */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      86 </span>            :         /* 3f ? */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      87 </span>            :         /* 40 @ */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      88 </span>            :         /* 41 A */ ACP_HEXDIGIT | ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      89 </span>            :         /* 42 B */ ACP_HEXDIGIT | ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      90 </span>            :         /* 43 C */ ACP_HEXDIGIT | ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      91 </span>            :         /* 44 D */ ACP_HEXDIGIT | ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      92 </span>            :         /* 45 E */ ACP_HEXDIGIT | ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      93 </span>            :         /* 46 F */ ACP_HEXDIGIT | ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      94 </span>            :         /* 47 G */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      95 </span>            :         /* 48 H */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      96 </span>            :         /* 49 I */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      97 </span>            :         /* 4a J */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      98 </span>            :         /* 4b K */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">      99 </span>            :         /* 4c L */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     100 </span>            :         /* 4d M */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     101 </span>            :         /* 4e N */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     102 </span>            :         /* 4f O */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     103 </span>            :         /* 50 P */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     104 </span>            :         /* 51 Q */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     105 </span>            :         /* 52 R */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     106 </span>            :         /* 53 S */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     107 </span>            :         /* 54 T */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     108 </span>            :         /* 55 U */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     109 </span>            :         /* 56 V */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     110 </span>            :         /* 57 W */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     111 </span>            :         /* 58 X */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     112 </span>            :         /* 59 Y */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     113 </span>            :         /* 5a Z */ ACP_ALPHA | ACP_UPPER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     114 </span>            :         /* 5b [ */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     115 </span>            :         /* 5c \ */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     116 </span>            :         /* 5d ] */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     117 </span>            :         /* 5e ^ */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     118 </span>            :         /* 5f _ */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     119 </span>            :         /* 60 ` */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     120 </span>            :         /* 61 a */ ACP_HEXDIGIT | ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     121 </span>            :         /* 62 b */ ACP_HEXDIGIT | ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     122 </span>            :         /* 63 c */ ACP_HEXDIGIT | ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     123 </span>            :         /* 64 d */ ACP_HEXDIGIT | ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     124 </span>            :         /* 65 e */ ACP_HEXDIGIT | ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     125 </span>            :         /* 66 f */ ACP_HEXDIGIT | ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     126 </span>            :         /* 67 g */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     127 </span>            :         /* 68 h */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     128 </span>            :         /* 69 i */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     129 </span>            :         /* 6a j */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     130 </span>            :         /* 6b k */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     131 </span>            :         /* 6c l */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     132 </span>            :         /* 6d m */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     133 </span>            :         /* 6e n */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     134 </span>            :         /* 6f o */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     135 </span>            :         /* 70 p */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     136 </span>            :         /* 71 q */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     137 </span>            :         /* 72 r */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     138 </span>            :         /* 73 s */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     139 </span>            :         /* 74 t */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     140 </span>            :         /* 75 u */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     141 </span>            :         /* 76 v */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     142 </span>            :         /* 77 w */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     143 </span>            :         /* 78 x */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     144 </span>            :         /* 79 y */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     145 </span>            :         /* 7a z */ ACP_ALPHA | ACP_LOWER | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     146 </span>            :         /* 7b { */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     147 </span>            :         /* 7c | */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     148 </span>            :         /* 7d } */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     149 </span>            :         /* 7e ~ */ ACP_PUNCT | ACP_GRAPH | ACP_PRINT,
+<span class="lineNum">     150 </span>            :         /* 7f . */ ACP_CONTROL
+<span class="lineNum">     151 </span>            : };
+<a name="152"><span class="lineNum">     152 </span>            : </a>
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span><span class="lineCov">          3 : } // namespace Poco</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

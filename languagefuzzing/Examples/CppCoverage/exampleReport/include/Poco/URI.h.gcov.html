@@ -1,0 +1,500 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/URI.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - URI.h<span style="font-size: 80%;"> (source / <a href="URI.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // URI.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: URI
+<span class="lineNum">       6 </span>            : // Module:  URI
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the URI class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_URI_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_URI_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      23 </span>            : #include &lt;utility&gt;
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : namespace Poco {
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : class Path;
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : class Foundation_API URI
+<span class="lineNum">      33 </span>            :         /// A Uniform Resource Identifier, as specified in RFC 3986.
+<span class="lineNum">      34 </span>            :         ///
+<span class="lineNum">      35 </span>            :         /// The URI class provides methods for building URIs from their
+<span class="lineNum">      36 </span>            :         /// parts, as well as for splitting URIs into their parts.
+<span class="lineNum">      37 </span>            :         /// Furthermore, the class provides methods for resolving
+<span class="lineNum">      38 </span>            :         /// relative URIs against base URIs.
+<span class="lineNum">      39 </span>            :         ///
+<span class="lineNum">      40 </span>            :         /// The class automatically performs a few normalizations on
+<span class="lineNum">      41 </span>            :         /// all URIs and URI parts passed to it:
+<span class="lineNum">      42 </span>            :         ///   * scheme identifiers are converted to lower case
+<span class="lineNum">      43 </span>            :         ///   * percent-encoded characters are decoded (except for the query string)
+<span class="lineNum">      44 </span>            :         ///   * optionally, dot segments are removed from paths (see normalize())
+<span class="lineNum">      45 </span>            :         ///
+<span class="lineNum">      46 </span>            :         /// Note that dealing with query strings requires some precautions, as, internally,
+<span class="lineNum">      47 </span>            :         /// query strings are stored in percent-encoded form, while all other parts of the URI
+<span class="lineNum">      48 </span>            :         /// are stored in decoded form. While parsing query strings from properly encoded URLs
+<span class="lineNum">      49 </span>            :         /// generally works, explicitly setting query strings with setQuery() or extracting
+<span class="lineNum">      50 </span>            :         /// query strings with getQuery() may lead to ambiguities. See the descriptions of
+<span class="lineNum">      51 </span>            :         /// setQuery(), setRawQuery(), getQuery() and getRawQuery() for more information.
+<span class="lineNum">      52 </span>            : {
+<span class="lineNum">      53 </span>            : public:
+<span class="lineNum">      54 </span>            :         using QueryParameters = std::vector&lt;std::pair&lt;std::string, std::string&gt;&gt;;
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            :         URI();
+<span class="lineNum">      57 </span>            :                 /// Creates an empty URI.
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            :         explicit URI(const std::string&amp; uri);
+<span class="lineNum">      60 </span>            :                 /// Parses an URI from the given string. Throws a
+<span class="lineNum">      61 </span>            :                 /// SyntaxException if the uri is not valid.
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            :         explicit URI(const char* uri);
+<span class="lineNum">      64 </span>            :                 /// Parses an URI from the given string. Throws a
+<span class="lineNum">      65 </span>            :                 /// SyntaxException if the uri is not valid.
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            :         URI(const std::string&amp; scheme, const std::string&amp; pathEtc);
+<span class="lineNum">      68 </span>            :                 /// Creates an URI from its parts.
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            :         URI(const std::string&amp; scheme, const std::string&amp; authority, const std::string&amp; pathEtc);
+<span class="lineNum">      71 </span>            :                 /// Creates an URI from its parts.
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span>            :         URI(const std::string&amp; scheme, const std::string&amp; authority, const std::string&amp; path, const std::string&amp; query);
+<span class="lineNum">      74 </span>            :                 /// Creates an URI from its parts.
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            :         URI(const std::string&amp; scheme, const std::string&amp; authority, const std::string&amp; path, const std::string&amp; query, const std::string&amp; fragment);
+<span class="lineNum">      77 </span>            :                 /// Creates an URI from its parts.
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span>            :         URI(const URI&amp; uri);
+<span class="lineNum">      80 </span>            :                 /// Copy constructor. Creates an URI from another one.
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            :         URI(URI&amp;&amp; uri) noexcept;
+<span class="lineNum">      83 </span>            :                 /// Move constructor.
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            :         URI(const URI&amp; baseURI, const std::string&amp; relativeURI);
+<span class="lineNum">      86 </span>            :                 /// Creates an URI from a base URI and a relative URI, according to
+<span class="lineNum">      87 </span>            :                 /// the algorithm in section 5.2 of RFC 3986.
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span>            :         explicit URI(const Path&amp; path);
+<span class="lineNum">      90 </span>            :                 /// Creates a URI from a path.
+<span class="lineNum">      91 </span>            :                 ///
+<span class="lineNum">      92 </span>            :                 /// The path will be made absolute, and a file:// URI
+<span class="lineNum">      93 </span>            :                 /// will be built from it.
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            :         ~URI();
+<span class="lineNum">      96 </span>            :                 /// Destroys the URI.
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :         URI&amp; operator = (const URI&amp; uri);
+<span class="lineNum">      99 </span>            :                 /// Assignment operator.
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span>            :         URI&amp; operator = (URI&amp;&amp; uri) noexcept;
+<span class="lineNum">     102 </span>            :                 /// Move assignment.
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            :         URI&amp; operator = (const std::string&amp; uri);
+<span class="lineNum">     105 </span>            :                 /// Parses and assigns an URI from the given string. Throws a
+<span class="lineNum">     106 </span>            :                 /// SyntaxException if the uri is not valid.
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span>            :         URI&amp; operator = (const char* uri);
+<span class="lineNum">     109 </span>            :                 /// Parses and assigns an URI from the given string. Throws a
+<span class="lineNum">     110 </span>            :                 /// SyntaxException if the uri is not valid.
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span>            :         void swap(URI&amp; uri);
+<span class="lineNum">     113 </span>            :                 /// Swaps the URI with another one.
+<span class="lineNum">     114 </span>            : 
+<span class="lineNum">     115 </span>            :         void clear();
+<span class="lineNum">     116 </span>            :                 /// Clears all parts of the URI.
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span>            :         std::string toString() const;
+<span class="lineNum">     119 </span>            :                 /// Returns a string representation of the URI.
+<span class="lineNum">     120 </span>            :                 ///
+<span class="lineNum">     121 </span>            :                 /// Characters in the path, query and fragment parts will be
+<span class="lineNum">     122 </span>            :                 /// percent-encoded as necessary.
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span>            :         const std::string&amp; getScheme() const;
+<span class="lineNum">     125 </span>            :                 /// Returns the scheme part of the URI.
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :         void setScheme(const std::string&amp; scheme);
+<span class="lineNum">     128 </span>            :                 /// Sets the scheme part of the URI. The given scheme
+<span class="lineNum">     129 </span>            :                 /// is converted to lower-case.
+<span class="lineNum">     130 </span>            :                 ///
+<span class="lineNum">     131 </span>            :                 /// A list of registered URI schemes can be found
+<span class="lineNum">     132 </span>            :                 /// at &lt;http://www.iana.org/assignments/uri-schemes&gt;.
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span>            :         const std::string&amp; getUserInfo() const;
+<span class="lineNum">     135 </span>            :                 /// Returns the user-info part of the URI.
+<span class="lineNum">     136 </span>            : 
+<span class="lineNum">     137 </span>            :         void setUserInfo(const std::string&amp; userInfo);
+<span class="lineNum">     138 </span>            :                 /// Sets the user-info part of the URI.
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span>            :         const std::string&amp; getHost() const;
+<span class="lineNum">     141 </span>            :                 /// Returns the host part of the URI.
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span>            :         void setHost(const std::string&amp; host);
+<span class="lineNum">     144 </span>            :                 /// Sets the host part of the URI.
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span>            :         unsigned short getPort() const;
+<span class="lineNum">     147 </span>            :                 /// Returns the port number part of the URI.
+<span class="lineNum">     148 </span>            :                 ///
+<span class="lineNum">     149 </span>            :                 /// If no port number (0) has been specified, the
+<span class="lineNum">     150 </span>            :                 /// well-known port number (e.g., 80 for http) for
+<span class="lineNum">     151 </span>            :                 /// the given scheme is returned if it is known.
+<span class="lineNum">     152 </span>            :                 /// Otherwise, 0 is returned.
+<span class="lineNum">     153 </span>            : 
+<span class="lineNum">     154 </span>            :         void setPort(unsigned short port);
+<span class="lineNum">     155 </span>            :                 /// Sets the port number part of the URI.
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span>            :         unsigned short getSpecifiedPort() const;
+<span class="lineNum">     158 </span>            :                 /// Returns the port number part of the URI.
+<span class="lineNum">     159 </span>            :                 ///
+<span class="lineNum">     160 </span>            :                 /// If no explicit port number has been specified,
+<span class="lineNum">     161 </span>            :                 /// returns 0.
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span>            :         std::string getAuthority() const;
+<span class="lineNum">     164 </span>            :                 /// Returns the authority part (userInfo, host and port)
+<span class="lineNum">     165 </span>            :                 /// of the URI.
+<span class="lineNum">     166 </span>            :                 ///
+<span class="lineNum">     167 </span>            :                 /// If the port number is a well-known port
+<span class="lineNum">     168 </span>            :                 /// number for the given scheme (e.g., 80 for http), it
+<span class="lineNum">     169 </span>            :                 /// is not included in the authority.
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span>            :         void setAuthority(const std::string&amp; authority);
+<span class="lineNum">     172 </span>            :                 /// Parses the given authority part for the URI and sets
+<span class="lineNum">     173 </span>            :                 /// the user-info, host, port components accordingly.
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span>            :         const std::string&amp; getPath() const;
+<span class="lineNum">     176 </span>            :                 /// Returns the decoded path part of the URI.
+<span class="lineNum">     177 </span>            : 
+<span class="lineNum">     178 </span>            :         void setPath(const std::string&amp; path);
+<span class="lineNum">     179 </span>            :                 /// Sets the path part of the URI.
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span>            :         std::string getQuery() const;
+<span class="lineNum">     182 </span>            :                 /// Returns the decoded query part of the URI.
+<span class="lineNum">     183 </span>            :                 ///
+<span class="lineNum">     184 </span>            :                 /// Note that encoded ampersand characters ('&amp;', &quot;%26&quot;)
+<span class="lineNum">     185 </span>            :                 /// will be decoded, which could cause ambiguities if the query
+<span class="lineNum">     186 </span>            :                 /// string contains multiple parameters and a parameter name
+<span class="lineNum">     187 </span>            :                 /// or value contains an ampersand as well.
+<span class="lineNum">     188 </span>            :                 /// In such a case it's better to use getRawQuery() or
+<span class="lineNum">     189 </span>            :                 /// getQueryParameters().
+<span class="lineNum">     190 </span>            : 
+<span class="lineNum">     191 </span>            :         void setQuery(const std::string&amp; query);
+<span class="lineNum">     192 </span>            :                 /// Sets the query part of the URI.
+<span class="lineNum">     193 </span>            :                 ///
+<span class="lineNum">     194 </span>            :                 /// The query string will be percent-encoded. If the query
+<span class="lineNum">     195 </span>            :                 /// already contains percent-encoded characters, these
+<span class="lineNum">     196 </span>            :                 /// will be double-encoded, which is probably not what's
+<span class="lineNum">     197 </span>            :                 /// intended by the caller. Furthermore, ampersand ('&amp;')
+<span class="lineNum">     198 </span>            :                 /// characters in the query will not be encoded. This could
+<span class="lineNum">     199 </span>            :                 /// lead to ambiguity issues if the query string contains multiple
+<span class="lineNum">     200 </span>            :                 /// name-value parameters separated by ampersand, and if any
+<span class="lineNum">     201 </span>            :                 /// name or value also contains an ampersand. In such a
+<span class="lineNum">     202 </span>            :                 /// case, it's better to use setRawQuery() with a properly
+<span class="lineNum">     203 </span>            :                 /// percent-encoded query string, or use addQueryParameter()
+<span class="lineNum">     204 </span>            :                 /// or setQueryParameters(), which take care of appropriate
+<span class="lineNum">     205 </span>            :                 /// percent encoding of parameter names and values.
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            :         void addQueryParameter(const std::string&amp; param, const std::string&amp; val = &quot;&quot;);
+<span class="lineNum">     208 </span>            :                 /// Adds &quot;param=val&quot; to the query; &quot;param&quot; may not be empty.
+<span class="lineNum">     209 </span>            :                 /// If val is empty, only '=' is appended to the parameter.
+<span class="lineNum">     210 </span>            :                 ///
+<span class="lineNum">     211 </span>            :                 /// In addition to regular encoding, function also encodes '&amp;' and '=',
+<span class="lineNum">     212 </span>            :                 /// if found in param or val.
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span>            :         const std::string&amp; getRawQuery() const;
+<span class="lineNum">     215 </span>            :                 /// Returns the query string in raw form, which usually
+<span class="lineNum">     216 </span>            :                 /// means percent encoded.
+<span class="lineNum">     217 </span>            : 
+<span class="lineNum">     218 </span>            :         void setRawQuery(const std::string&amp; query);
+<span class="lineNum">     219 </span>            :                 /// Sets the query part of the URI.
+<span class="lineNum">     220 </span>            :                 ///
+<span class="lineNum">     221 </span>            :                 /// The given query string must be properly percent-encoded.
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span>            :         QueryParameters getQueryParameters() const;
+<span class="lineNum">     224 </span>            :                 /// Returns the decoded query string parameters as a vector
+<span class="lineNum">     225 </span>            :                 /// of name-value pairs.
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :         void setQueryParameters(const QueryParameters&amp; params);
+<span class="lineNum">     228 </span>            :                 /// Sets the query part of the URI from a vector
+<span class="lineNum">     229 </span>            :                 /// of query parameters.
+<span class="lineNum">     230 </span>            :                 ///
+<span class="lineNum">     231 </span>            :                 /// Calls addQueryParameter() for each parameter name and value.
+<span class="lineNum">     232 </span>            : 
+<span class="lineNum">     233 </span>            :         const std::string&amp; getFragment() const;
+<span class="lineNum">     234 </span>            :                 /// Returns the fragment part of the URI.
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span>            :         void setFragment(const std::string&amp; fragment);
+<span class="lineNum">     237 </span>            :                 /// Sets the fragment part of the URI.
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span>            :         void setPathEtc(const std::string&amp; pathEtc);
+<span class="lineNum">     240 </span>            :                 /// Sets the path, query and fragment parts of the URI.
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span>            :         std::string getPathEtc() const;
+<span class="lineNum">     243 </span>            :                 /// Returns the encoded path, query and fragment parts of the URI.
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span>            :         std::string getPathAndQuery() const;
+<span class="lineNum">     246 </span>            :                 /// Returns the encoded path and query parts of the URI.
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            :         void resolve(const std::string&amp; relativeURI);
+<span class="lineNum">     249 </span>            :                 /// Resolves the given relative URI against the base URI.
+<span class="lineNum">     250 </span>            :                 /// See section 5.2 of RFC 3986 for the algorithm used.
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span>            :         void resolve(const URI&amp; relativeURI);
+<span class="lineNum">     253 </span>            :                 /// Resolves the given relative URI against the base URI.
+<span class="lineNum">     254 </span>            :                 /// See section 5.2 of RFC 3986 for the algorithm used.
+<span class="lineNum">     255 </span>            : 
+<span class="lineNum">     256 </span>            :         bool isRelative() const;
+<span class="lineNum">     257 </span>            :                 /// Returns true if the URI is a relative reference, false otherwise.
+<span class="lineNum">     258 </span>            :                 ///
+<span class="lineNum">     259 </span>            :                 /// A relative reference does not contain a scheme identifier.
+<span class="lineNum">     260 </span>            :                 /// Relative references are usually resolved against an absolute
+<span class="lineNum">     261 </span>            :                 /// base reference.
+<span class="lineNum">     262 </span>            : 
+<span class="lineNum">     263 </span>            :         bool empty() const;
+<span class="lineNum">     264 </span>            :                 /// Returns true if the URI is empty, false otherwise.
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span>            :         bool operator == (const URI&amp; uri) const;
+<span class="lineNum">     267 </span>            :                 /// Returns true if both URIs are identical, false otherwise.
+<span class="lineNum">     268 </span>            :                 ///
+<span class="lineNum">     269 </span>            :                 /// Two URIs are identical if their scheme, authority,
+<span class="lineNum">     270 </span>            :                 /// path, query and fragment part are identical.
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span>            :         bool operator == (const std::string&amp; uri) const;
+<span class="lineNum">     273 </span>            :                 /// Parses the given URI and returns true if both URIs are identical,
+<span class="lineNum">     274 </span>            :                 /// false otherwise.
+<span class="lineNum">     275 </span>            : 
+<span class="lineNum">     276 </span>            :         bool operator != (const URI&amp; uri) const;
+<span class="lineNum">     277 </span>            :                 /// Returns true if both URIs are identical, false otherwise.
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span>            :         bool operator != (const std::string&amp; uri) const;
+<span class="lineNum">     280 </span>            :                 /// Parses the given URI and returns true if both URIs are identical,
+<span class="lineNum">     281 </span>            :                 /// false otherwise.
+<span class="lineNum">     282 </span>            : 
+<span class="lineNum">     283 </span>            :         void normalize();
+<span class="lineNum">     284 </span>            :                 /// Normalizes the URI by removing all but leading . and .. segments from the path.
+<span class="lineNum">     285 </span>            :                 ///
+<span class="lineNum">     286 </span>            :                 /// If the first path segment in a relative path contains a colon (:),
+<span class="lineNum">     287 </span>            :                 /// such as in a Windows path containing a drive letter, a dot segment (./)
+<span class="lineNum">     288 </span>            :                 /// is prepended in accordance with section 3.3 of RFC 3986.
+<span class="lineNum">     289 </span>            : 
+<span class="lineNum">     290 </span>            :         void getPathSegments(std::vector&lt;std::string&gt;&amp; segments);
+<span class="lineNum">     291 </span>            :                 /// Places the single path segments (delimited by slashes) into the
+<span class="lineNum">     292 </span>            :                 /// given vector.
+<span class="lineNum">     293 </span>            : 
+<span class="lineNum">     294 </span>            :         static void encode(const std::string&amp; str, const std::string&amp; reserved, std::string&amp; encodedStr);
+<span class="lineNum">     295 </span>            :                 /// URI-encodes the given string by escaping reserved and non-ASCII
+<span class="lineNum">     296 </span>            :                 /// characters. The encoded string is appended to encodedStr.
+<span class="lineNum">     297 </span>            : 
+<span class="lineNum">     298 </span>            :         static void decode(const std::string&amp; str, std::string&amp; decodedStr, bool plusAsSpace = false);
+<span class="lineNum">     299 </span>            :                 /// URI-decodes the given string by replacing percent-encoded
+<span class="lineNum">     300 </span>            :                 /// characters with the actual character. The decoded string
+<span class="lineNum">     301 </span>            :                 /// is appended to decodedStr.
+<span class="lineNum">     302 </span>            :                 ///
+<span class="lineNum">     303 </span>            :                 /// When plusAsSpace is true, non-encoded plus signs in the query are decoded as spaces.
+<span class="lineNum">     304 </span>            :                 /// (http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1)
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span>            : protected:
+<span class="lineNum">     307 </span>            :         bool equals(const URI&amp; uri) const;
+<span class="lineNum">     308 </span>            :                 /// Returns true if both uri's are equivalent.
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span>            :         bool isWellKnownPort() const;
+<span class="lineNum">     311 </span>            :                 /// Returns true if the URI's port number is a well-known one
+<span class="lineNum">     312 </span>            :                 /// (for example, 80, if the scheme is http).
+<span class="lineNum">     313 </span>            : 
+<span class="lineNum">     314 </span>            :         unsigned short getWellKnownPort() const;
+<span class="lineNum">     315 </span>            :                 /// Returns the well-known port number for the URI's scheme,
+<span class="lineNum">     316 </span>            :                 /// or 0 if the port number is not known.
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span>            :         void parse(const std::string&amp; uri);
+<span class="lineNum">     319 </span>            :                 /// Parses and assigns an URI from the given string. Throws a
+<span class="lineNum">     320 </span>            :                 /// SyntaxException if the uri is not valid.
+<span class="lineNum">     321 </span>            : 
+<span class="lineNum">     322 </span>            :         void parseAuthority(std::string::const_iterator&amp; it, const std::string::const_iterator&amp; end);
+<span class="lineNum">     323 </span>            :                 /// Parses and sets the user-info, host and port from the given data.
+<span class="lineNum">     324 </span>            : 
+<span class="lineNum">     325 </span>            :         void parseHostAndPort(std::string::const_iterator&amp; it, const std::string::const_iterator&amp; end);
+<span class="lineNum">     326 </span>            :                 /// Parses and sets the host and port from the given data.
+<span class="lineNum">     327 </span>            : 
+<span class="lineNum">     328 </span>            :         void parsePath(std::string::const_iterator&amp; it, const std::string::const_iterator&amp; end);
+<span class="lineNum">     329 </span>            :                 /// Parses and sets the path from the given data.
+<span class="lineNum">     330 </span>            : 
+<span class="lineNum">     331 </span>            :         void parsePathEtc(std::string::const_iterator&amp; it, const std::string::const_iterator&amp; end);
+<span class="lineNum">     332 </span>            :                 /// Parses and sets the path, query and fragment from the given data.
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span>            :         void parseQuery(std::string::const_iterator&amp; it, const std::string::const_iterator&amp; end);
+<span class="lineNum">     335 </span>            :                 /// Parses and sets the query from the given data.
+<span class="lineNum">     336 </span>            : 
+<span class="lineNum">     337 </span>            :         void parseFragment(std::string::const_iterator&amp; it, const std::string::const_iterator&amp; end);
+<span class="lineNum">     338 </span>            :                 /// Parses and sets the fragment from the given data.
+<span class="lineNum">     339 </span>            : 
+<span class="lineNum">     340 </span>            :         void mergePath(const std::string&amp; path);
+<span class="lineNum">     341 </span>            :                 /// Appends a path to the URI's path.
+<span class="lineNum">     342 </span>            : 
+<span class="lineNum">     343 </span>            :         void removeDotSegments(bool removeLeading = true);
+<span class="lineNum">     344 </span>            :                 /// Removes all dot segments from the path.
+<span class="lineNum">     345 </span>            : 
+<span class="lineNum">     346 </span>            :         static void getPathSegments(const std::string&amp; path, std::vector&lt;std::string&gt;&amp; segments);
+<span class="lineNum">     347 </span>            :                 /// Places the single path segments (delimited by slashes) into the
+<span class="lineNum">     348 </span>            :                 /// given vector.
+<span class="lineNum">     349 </span>            : 
+<span class="lineNum">     350 </span>            :         void buildPath(const std::vector&lt;std::string&gt;&amp; segments, bool leadingSlash, bool trailingSlash);
+<span class="lineNum">     351 </span>            :                 /// Builds the path from the given segments.
+<span class="lineNum">     352 </span>            : 
+<span class="lineNum">     353 </span>            :         static const std::string RESERVED_PATH;
+<span class="lineNum">     354 </span>            :         static const std::string RESERVED_QUERY;
+<span class="lineNum">     355 </span>            :         static const std::string RESERVED_QUERY_PARAM;
+<span class="lineNum">     356 </span>            :         static const std::string RESERVED_FRAGMENT;
+<span class="lineNum">     357 </span>            :         static const std::string ILLEGAL;
+<span class="lineNum">     358 </span>            : 
+<span class="lineNum">     359 </span>            : private:
+<span class="lineNum">     360 </span>            :         std::string    _scheme;
+<span class="lineNum">     361 </span>            :         std::string    _userInfo;
+<span class="lineNum">     362 </span>            :         std::string    _host;
+<span class="lineNum">     363 </span>            :         unsigned short _port;
+<span class="lineNum">     364 </span>            :         std::string    _path;
+<span class="lineNum">     365 </span>            :         std::string    _query;
+<span class="lineNum">     366 </span>            :         std::string    _fragment;
+<span class="lineNum">     367 </span>            : };
+<span class="lineNum">     368 </span>            : 
+<span class="lineNum">     369 </span>            : 
+<span class="lineNum">     370 </span>            : //
+<a name="371"><span class="lineNum">     371 </span>            : // inlines</a>
+<span class="lineNum">     372 </span>            : //
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 : inline const std::string&amp; URI::getScheme() const</span>
+<span class="lineNum">     374 </span>            : {
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :         return _scheme;</span>
+<span class="lineNum">     376 </span>            : }
+<span class="lineNum">     377 </span>            : 
+<span class="lineNum">     378 </span>            : 
+<span class="lineNum">     379 </span>            : inline const std::string&amp; URI::getUserInfo() const
+<span class="lineNum">     380 </span>            : {
+<span class="lineNum">     381 </span>            :         return _userInfo;
+<span class="lineNum">     382 </span>            : }
+<a name="383"><span class="lineNum">     383 </span>            : </a>
+<span class="lineNum">     384 </span>            : 
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 : inline const std::string&amp; URI::getHost() const</span>
+<span class="lineNum">     386 </span>            : {
+<span class="lineNum">     387 </span><span class="lineNoCov">          0 :         return _host;</span>
+<span class="lineNum">     388 </span>            : }
+<a name="389"><span class="lineNum">     389 </span>            : </a>
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span><span class="lineNoCov">          0 : inline const std::string&amp; URI::getPath() const</span>
+<span class="lineNum">     392 </span>            : {
+<span class="lineNum">     393 </span><span class="lineNoCov">          0 :         return _path;</span>
+<span class="lineNum">     394 </span>            : }
+<span class="lineNum">     395 </span>            : 
+<span class="lineNum">     396 </span>            : 
+<span class="lineNum">     397 </span>            : inline const std::string&amp; URI::getRawQuery() const
+<span class="lineNum">     398 </span>            : {
+<span class="lineNum">     399 </span>            :         return _query;
+<span class="lineNum">     400 </span>            : }
+<span class="lineNum">     401 </span>            : 
+<span class="lineNum">     402 </span>            : 
+<span class="lineNum">     403 </span>            : inline const std::string&amp; URI::getFragment() const
+<span class="lineNum">     404 </span>            : {
+<span class="lineNum">     405 </span>            :         return _fragment;
+<span class="lineNum">     406 </span>            : }
+<span class="lineNum">     407 </span>            : 
+<span class="lineNum">     408 </span>            : 
+<span class="lineNum">     409 </span>            : inline unsigned short URI::getSpecifiedPort() const
+<span class="lineNum">     410 </span>            : {
+<span class="lineNum">     411 </span>            :         return _port;
+<span class="lineNum">     412 </span>            : }
+<span class="lineNum">     413 </span>            : 
+<span class="lineNum">     414 </span>            : 
+<span class="lineNum">     415 </span>            : inline void swap(URI&amp; u1, URI&amp; u2)
+<span class="lineNum">     416 </span>            : {
+<span class="lineNum">     417 </span>            :         u1.swap(u2);
+<span class="lineNum">     418 </span>            : }
+<span class="lineNum">     419 </span>            : 
+<span class="lineNum">     420 </span>            : 
+<span class="lineNum">     421 </span>            : } // namespace Poco
+<span class="lineNum">     422 </span>            : 
+<span class="lineNum">     423 </span>            : 
+<span class="lineNum">     424 </span>            : #endif // Foundation_URI_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

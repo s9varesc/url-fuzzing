@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/Task.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - Task.h<span style="font-size: 80%;"> (source / <a href="Task.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Task.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Tasks
+<span class="lineNum">       6 </span>            : // Module:  Tasks
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the Task class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_Task_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_Task_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : #include &quot;Poco/Runnable.h&quot;
+<span class="lineNum">      23 </span>            : #include &quot;Poco/RefCountedObject.h&quot;
+<span class="lineNum">      24 </span>            : #include &quot;Poco/Mutex.h&quot;
+<span class="lineNum">      25 </span>            : #include &quot;Poco/Event.h&quot;
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : namespace Poco {
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : class TaskManager;
+<span class="lineNum">      32 </span>            : class Notification;
+<span class="lineNum">      33 </span>            : class NotificationCenter;
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : class Foundation_API Task: public Runnable, public RefCountedObject
+<span class="lineNum">      37 </span>            :         /// A Task is a subclass of Runnable that has a name 
+<span class="lineNum">      38 </span>            :         /// and supports progress reporting and cancellation.
+<span class="lineNum">      39 </span>            :         ///
+<span class="lineNum">      40 </span>            :         /// A TaskManager object can be used to take care of the
+<span class="lineNum">      41 </span>            :         /// lifecycle of a Task.
+<span class="lineNum">      42 </span>            : {
+<span class="lineNum">      43 </span>            : public:
+<span class="lineNum">      44 </span>            :         enum TaskState
+<span class="lineNum">      45 </span>            :         {
+<span class="lineNum">      46 </span>            :                 TASK_IDLE,
+<span class="lineNum">      47 </span>            :                 TASK_STARTING,
+<span class="lineNum">      48 </span>            :                 TASK_RUNNING,
+<span class="lineNum">      49 </span>            :                 TASK_CANCELLING,
+<span class="lineNum">      50 </span>            :                 TASK_FINISHED
+<span class="lineNum">      51 </span>            :         };
+<span class="lineNum">      52 </span>            :         
+<span class="lineNum">      53 </span>            :         Task(const std::string&amp; name);
+<span class="lineNum">      54 </span>            :                 /// Creates the Task.
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            :         const std::string&amp; name() const;
+<span class="lineNum">      57 </span>            :                 /// Returns the task's name.    
+<span class="lineNum">      58 </span>            :                 
+<span class="lineNum">      59 </span>            :         float progress() const;
+<span class="lineNum">      60 </span>            :                 /// Returns the task's progress.
+<span class="lineNum">      61 </span>            :                 /// The value will be between 0.0 (just started)
+<span class="lineNum">      62 </span>            :                 /// and 1.0 (completed).
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span>            :         virtual void cancel();
+<span class="lineNum">      65 </span>            :                 /// Requests the task to cancel itself. For cancellation
+<span class="lineNum">      66 </span>            :                 /// to work, the task's runTask() method must periodically
+<span class="lineNum">      67 </span>            :                 /// call isCancelled() and react accordingly.
+<span class="lineNum">      68 </span>            :                 ///
+<span class="lineNum">      69 </span>            :                 /// Can be overridden to implement custom behavior,
+<span class="lineNum">      70 </span>            :                 /// but the base class implementation of cancel() should
+<span class="lineNum">      71 </span>            :                 /// be called to ensure proper behavior.
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span>            :         bool isCancelled() const;
+<span class="lineNum">      74 </span>            :                 /// Returns true if cancellation of the task has been
+<span class="lineNum">      75 </span>            :                 /// requested. 
+<span class="lineNum">      76 </span>            :                 ///
+<span class="lineNum">      77 </span>            :                 /// A Task's runTask() method should periodically
+<span class="lineNum">      78 </span>            :                 /// call this method and stop whatever it is doing in an
+<span class="lineNum">      79 </span>            :                 /// orderly way when this method returns true.
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            :         TaskState state() const;
+<span class="lineNum">      82 </span>            :                 /// Returns the task's current state.
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            :         void reset();
+<span class="lineNum">      85 </span>            :                 /// Sets the task's progress to zero and clears the
+<span class="lineNum">      86 </span>            :                 /// cancel flag.
+<span class="lineNum">      87 </span>            :                 
+<span class="lineNum">      88 </span>            :         virtual void runTask() = 0;
+<span class="lineNum">      89 </span>            :                 /// Do whatever the task needs to do. Must
+<span class="lineNum">      90 </span>            :                 /// be overridden by subclasses.
+<span class="lineNum">      91 </span>            :                 
+<span class="lineNum">      92 </span>            :         void run();
+<span class="lineNum">      93 </span>            :                 /// Calls the task's runTask() method and notifies the owner
+<span class="lineNum">      94 </span>            :                 /// of the task's start and completion.
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span>            : protected:
+<span class="lineNum">      97 </span>            :         bool sleep(long milliseconds);
+<span class="lineNum">      98 </span>            :                 /// Suspends the current thread for the specified
+<span class="lineNum">      99 </span>            :                 /// amount of time.
+<span class="lineNum">     100 </span>            :                 ///
+<span class="lineNum">     101 </span>            :                 /// If the task is cancelled while it is sleeping,
+<span class="lineNum">     102 </span>            :                 /// sleep() will return immediately and the return
+<span class="lineNum">     103 </span>            :                 /// value will be true. If the time interval
+<span class="lineNum">     104 </span>            :                 /// passes without the task being cancelled, the
+<span class="lineNum">     105 </span>            :                 /// return value is false.
+<span class="lineNum">     106 </span>            :                 ///
+<span class="lineNum">     107 </span>            :                 /// A Task should use this method in favor of Thread::sleep().
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            :         bool yield();
+<span class="lineNum">     110 </span>            :             /// Yields cpu to other threads
+<span class="lineNum">     111 </span>            :                 ///
+<span class="lineNum">     112 </span>            :                 /// If the task is cancelled while it is suspended,
+<span class="lineNum">     113 </span>            :                 /// yield() will return true. If the tasks resumes
+<span class="lineNum">     114 </span>            :                 /// without being cancelled, the
+<span class="lineNum">     115 </span>            :                 /// return value is false.
+<span class="lineNum">     116 </span>            :                 ///
+<span class="lineNum">     117 </span>            :                 /// A Task should use this method in favor of Thread::yield().
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :         void setProgress(float progress);
+<span class="lineNum">     120 </span>            :                 /// Sets the task's progress.
+<span class="lineNum">     121 </span>            :                 /// The value should be between 0.0 (just started)
+<span class="lineNum">     122 </span>            :                 /// and 1.0 (completed).
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span>            :         virtual void postNotification(Notification* pNf);
+<span class="lineNum">     125 </span>            :                 /// Posts a notification to the task manager's
+<span class="lineNum">     126 </span>            :                 /// notification center.
+<span class="lineNum">     127 </span>            :                 ///
+<span class="lineNum">     128 </span>            :                 /// A task can use this method to post custom
+<span class="lineNum">     129 </span>            :                 /// notifications about its progress.
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span>            :         void setOwner(TaskManager* pOwner);
+<span class="lineNum">     132 </span>            :                 /// Sets the (optional) owner of the task.
+<span class="lineNum">     133 </span>            :                 
+<span class="lineNum">     134 </span>            :         TaskManager* getOwner() const;
+<span class="lineNum">     135 </span>            :                 /// Returns the owner of the task, which may be NULL.
+<span class="lineNum">     136 </span>            : 
+<span class="lineNum">     137 </span>            :         void setState(TaskState state);
+<span class="lineNum">     138 </span>            :                 /// Sets the task's state.
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span>            :         virtual ~Task();
+<span class="lineNum">     141 </span>            :                 /// Destroys the Task.
+<span class="lineNum">     142 </span>            :                 
+<span class="lineNum">     143 </span>            : private:
+<span class="lineNum">     144 </span>            :         Task();
+<span class="lineNum">     145 </span>            :         Task(const Task&amp;);
+<span class="lineNum">     146 </span>            :         Task&amp; operator = (const Task&amp;);
+<span class="lineNum">     147 </span>            :         
+<span class="lineNum">     148 </span>            :         std::string       _name;
+<span class="lineNum">     149 </span>            :         TaskManager*      _pOwner;
+<span class="lineNum">     150 </span>            :         float             _progress;
+<span class="lineNum">     151 </span>            :         TaskState         _state;
+<span class="lineNum">     152 </span>            :         Event             _cancelEvent;
+<span class="lineNum">     153 </span>            :         mutable FastMutex _mutex;
+<span class="lineNum">     154 </span>            :         
+<span class="lineNum">     155 </span>            :         friend class TaskManager;
+<span class="lineNum">     156 </span>            : };
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            : //
+<a name="160"><span class="lineNum">     160 </span>            : // inlines</a>
+<span class="lineNum">     161 </span>            : //
+<span class="lineNum">     162 </span><span class="lineNoCov">          0 : inline const std::string&amp; Task::name() const</span>
+<span class="lineNum">     163 </span>            : {
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :         return _name;</span>
+<span class="lineNum">     165 </span>            : }
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span>            : inline float Task::progress() const
+<span class="lineNum">     169 </span>            : {
+<span class="lineNum">     170 </span>            :         FastMutex::ScopedLock lock(_mutex);
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            :         return _progress;
+<span class="lineNum">     173 </span>            : }
+<a name="174"><span class="lineNum">     174 </span>            : </a>
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span><span class="lineNoCov">          0 : inline bool Task::isCancelled() const</span>
+<span class="lineNum">     177 </span>            : {
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :         return _state == TASK_CANCELLING;</span>
+<span class="lineNum">     179 </span>            : }
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span>            : inline Task::TaskState Task::state() const
+<span class="lineNum">     183 </span>            : {
+<span class="lineNum">     184 </span>            :         return _state;
+<span class="lineNum">     185 </span>            : }
+<a name="186"><span class="lineNum">     186 </span>            : </a>
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span><span class="lineNoCov">          0 : inline TaskManager* Task::getOwner() const</span>
+<span class="lineNum">     189 </span>            : {
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :         FastMutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :         return _pOwner;</span>
+<span class="lineNum">     193 </span>            : }
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span>            : } // namespace Poco
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span>            : #endif // Foundation_Task_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

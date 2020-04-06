@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/pcre_ord2utf8.c</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - pcre_ord2utf8.c<span style="font-size: 80%;"> (source / <a href="pcre_ord2utf8.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*************************************************</a>
+<span class="lineNum">       2 </span>            : *      Perl-Compatible Regular Expressions       *
+<span class="lineNum">       3 </span>            : *************************************************/
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            : /* PCRE is a library of functions to support regular expressions whose syntax
+<span class="lineNum">       6 </span>            : and semantics are as close as possible to those of the Perl 5 language.
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            :                        Written by Philip Hazel
+<span class="lineNum">       9 </span>            :            Copyright (c) 1997-2012 University of Cambridge
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            : -----------------------------------------------------------------------------
+<span class="lineNum">      12 </span>            : Redistribution and use in source and binary forms, with or without
+<span class="lineNum">      13 </span>            : modification, are permitted provided that the following conditions are met:
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            :     * Redistributions of source code must retain the above copyright notice,
+<span class="lineNum">      16 </span>            :       this list of conditions and the following disclaimer.
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            :     * Redistributions in binary form must reproduce the above copyright
+<span class="lineNum">      19 </span>            :       notice, this list of conditions and the following disclaimer in the
+<span class="lineNum">      20 </span>            :       documentation and/or other materials provided with the distribution.
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            :     * Neither the name of the University of Cambridge nor the names of its
+<span class="lineNum">      23 </span>            :       contributors may be used to endorse or promote products derived from
+<span class="lineNum">      24 </span>            :       this software without specific prior written permission.
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
+<span class="lineNum">      27 </span>            : AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+<span class="lineNum">      28 </span>            : IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+<span class="lineNum">      29 </span>            : ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+<span class="lineNum">      30 </span>            : LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+<span class="lineNum">      31 </span>            : CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+<span class="lineNum">      32 </span>            : SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+<span class="lineNum">      33 </span>            : INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+<span class="lineNum">      34 </span>            : CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+<span class="lineNum">      35 </span>            : ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+<span class="lineNum">      36 </span>            : POSSIBILITY OF SUCH DAMAGE.
+<span class="lineNum">      37 </span>            : -----------------------------------------------------------------------------
+<span class="lineNum">      38 </span>            : */
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #pragma warning( disable : 4244)  // conversion from 'int' to 'unsigned short', possible loss of data
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : /* This file contains a private PCRE function that converts an ordinal
+<span class="lineNum">      43 </span>            : character value into a UTF8 string. */
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : #include &quot;pcre_config.h&quot;
+<span class="lineNum">      46 </span>            : #define COMPILE_PCRE8
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : #include &quot;pcre_internal.h&quot;
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            : /*************************************************
+<span class="lineNum">      51 </span>            : *       Convert character value to UTF-8         *
+<span class="lineNum">      52 </span>            : *************************************************/
+<span class="lineNum">      53 </span>            : 
+<span class="lineNum">      54 </span>            : /* This function takes an integer value in the range 0 - 0x10ffff
+<span class="lineNum">      55 </span>            : and encodes it as a UTF-8 character in 1 to 4 pcre_uchars.
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : Arguments:
+<span class="lineNum">      58 </span>            :   cvalue     the character value
+<span class="lineNum">      59 </span>            :   buffer     pointer to buffer for result - at least 6 pcre_uchars long
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span>            : Returns:     number of characters placed in the buffer
+<span class="lineNum">      62 </span>            : */
+<span class="lineNum">      63 </span>            : 
+<a name="64"><span class="lineNum">      64 </span>            : unsigned</a>
+<span class="lineNum">      65 </span>            : int
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 : PRIV(ord2utf)(pcre_uint32 cvalue, pcre_uchar *buffer)</span>
+<span class="lineNum">      67 </span>            : {
+<span class="lineNum">      68 </span>            : #ifdef SUPPORT_UTF
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            : register int i, j;
+<span class="lineNum">      71 </span>            : 
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 : for (i = 0; i &lt; PRIV(utf8_table1_size); i++)</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :   if ((int)cvalue &lt;= PRIV(utf8_table1)[i]) break;</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 : buffer += i;</span>
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 : for (j = i; j &gt; 0; j--)</span>
+<span class="lineNum">      76 </span>            :  {
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :  *buffer-- = 0x80 | (cvalue &amp; 0x3f);</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :  cvalue &gt;&gt;= 6;</span>
+<span class="lineNum">      79 </span>            :  }
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 : *buffer = PRIV(utf8_table2)[i] | cvalue;</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 : return i + 1;</span>
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span>            : #else
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            : (void)(cvalue);  /* Keep compiler happy; this function won't ever be */
+<span class="lineNum">      86 </span>            : (void)(buffer);  /* called when SUPPORT_UTF is not defined. */
+<span class="lineNum">      87 </span>            : return 0;
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span>            : #endif
+<span class="lineNum">      90 </span>            : }
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            : /* End of pcre_ord2utf8.c */
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

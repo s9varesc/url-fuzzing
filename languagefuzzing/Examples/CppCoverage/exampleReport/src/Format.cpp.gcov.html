@@ -1,0 +1,377 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/Format.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - Format.cpp<span style="font-size: 80%;"> (source / <a href="Format.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">168</td>
+            <td class="headerCovTableEntryLo">0.6 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntryLo">15.4 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Format.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Core
+<span class="lineNum">       6 </span>            : // Module:  Format
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/Format.h&quot;
+<span class="lineNum">      16 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      17 </span>            : #include &quot;Poco/Ascii.h&quot;
+<span class="lineNum">      18 </span>            : #include &lt;sstream&gt;
+<span class="lineNum">      19 </span>            : #if !defined(POCO_NO_LOCALE)
+<span class="lineNum">      20 </span>            : #include &lt;locale&gt;
+<span class="lineNum">      21 </span>            : #endif
+<span class="lineNum">      22 </span>            : #include &lt;cstddef&gt;
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : namespace Poco {
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : 
+<a name="28"><span class="lineNum">      28 </span>            : namespace</a>
+<span class="lineNum">      29 </span>            : {
+<span class="lineNum">      30 </span><span class="lineNoCov">          0 :         void parseFlags(std::ostream&amp; str, std::string::const_iterator&amp; itFmt, const std::string::const_iterator&amp; endFmt)</span>
+<span class="lineNum">      31 </span>            :         {
+<span class="lineNum">      32 </span><span class="lineNoCov">          0 :                 bool isFlag = true;</span>
+<span class="lineNum">      33 </span><span class="lineNoCov">          0 :                 while (isFlag &amp;&amp; itFmt != endFmt)</span>
+<span class="lineNum">      34 </span>            :                 {
+<span class="lineNum">      35 </span><span class="lineNoCov">          0 :                         switch (*itFmt)</span>
+<span class="lineNum">      36 </span>            :                         {
+<span class="lineNum">      37 </span><span class="lineNoCov">          0 :                         case '-': str.setf(std::ios::left); ++itFmt; break;</span>
+<span class="lineNum">      38 </span><span class="lineNoCov">          0 :                         case '+': str.setf(std::ios::showpos); ++itFmt; break;</span>
+<span class="lineNum">      39 </span><span class="lineNoCov">          0 :                         case '0': str.fill('0'); str.setf(std::ios::internal); ++itFmt; break;</span>
+<span class="lineNum">      40 </span><span class="lineNoCov">          0 :                         case '#': str.setf(std::ios::showpoint | std::ios::showbase); ++itFmt; break;</span>
+<span class="lineNum">      41 </span><span class="lineNoCov">          0 :                         default:  isFlag = false; break;</span>
+<span class="lineNum">      42 </span>            :                         }
+<span class="lineNum">      43 </span>            :                 }
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 :         }</span>
+<a name="45"><span class="lineNum">      45 </span>            : </a>
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span><span class="lineNoCov">          0 :         void parseWidth(std::ostream&amp; str, std::string::const_iterator&amp; itFmt, const std::string::const_iterator&amp; endFmt, std::vector&lt;Any&gt;::const_iterator&amp; itVal)</span>
+<span class="lineNum">      48 </span>            :         {
+<span class="lineNum">      49 </span><span class="lineNoCov">          0 :                 int width = 0;</span>
+<span class="lineNum">      50 </span><span class="lineNoCov">          0 :                 if (itFmt != endFmt &amp;&amp; *itFmt == '*')</span>
+<span class="lineNum">      51 </span>            :                 {
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :                         ++itFmt;</span>
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :                         width = AnyCast&lt;int&gt;(*itVal++);</span>
+<span class="lineNum">      54 </span>            :                 }
+<span class="lineNum">      55 </span>            :                 else
+<span class="lineNum">      56 </span>            :                 {
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 :                 while (itFmt != endFmt &amp;&amp; Ascii::isDigit(*itFmt))</span>
+<span class="lineNum">      58 </span>            :                 {
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 :                         width = 10*width + *itFmt - '0';</span>
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :                         ++itFmt;</span>
+<span class="lineNum">      61 </span>            :                 }
+<span class="lineNum">      62 </span>            :                 }
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 :                 if (width &gt; 0) str.width(width);</span>
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :         }</span>
+<a name="65"><span class="lineNum">      65 </span>            :         </a>
+<span class="lineNum">      66 </span>            :         
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :         void parsePrec(std::ostream&amp; str, std::string::const_iterator&amp; itFmt, const std::string::const_iterator&amp; endFmt, std::vector&lt;Any&gt;::const_iterator&amp; itVal)</span>
+<span class="lineNum">      68 </span>            :         {
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :                 if (itFmt != endFmt &amp;&amp; *itFmt == '.')</span>
+<span class="lineNum">      70 </span>            :                 {
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :                         ++itFmt;</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :                         int prec = 0;</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :                         if (itFmt != endFmt &amp;&amp; *itFmt == '*')</span>
+<span class="lineNum">      74 </span>            :                         {
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 :                                 ++itFmt;</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :                                 prec = AnyCast&lt;int&gt;(*itVal++);</span>
+<span class="lineNum">      77 </span>            :                         }
+<span class="lineNum">      78 </span>            :                         else
+<span class="lineNum">      79 </span>            :                         {
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :                                 while (itFmt != endFmt &amp;&amp; Ascii::isDigit(*itFmt))</span>
+<span class="lineNum">      81 </span>            :                                 {
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :                                         prec = 10*prec + *itFmt - '0';</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :                                         ++itFmt;</span>
+<span class="lineNum">      84 </span>            :                                 }
+<span class="lineNum">      85 </span>            :                         }
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :                         if (prec &gt;= 0) str.precision(prec);</span>
+<span class="lineNum">      87 </span>            :                 }
+<a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 :         }</span></a>
+<span class="lineNum">      89 </span>            :         
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :         char parseMod(std::string::const_iterator&amp; itFmt, const std::string::const_iterator&amp; endFmt)</span>
+<span class="lineNum">      91 </span>            :         {
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :                 char mod = 0;</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :                 if (itFmt != endFmt)</span>
+<span class="lineNum">      94 </span>            :                 {
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :                         switch (*itFmt)</span>
+<span class="lineNum">      96 </span>            :                         {
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :                         case 'l':</span>
+<span class="lineNum">      98 </span>            :                         case 'h':
+<span class="lineNum">      99 </span>            :                         case 'L': 
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :                         case '?': mod = *itFmt++; break;</span>
+<span class="lineNum">     101 </span>            :                         }
+<span class="lineNum">     102 </span>            :                 }
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :                 return mod;</span>
+<a name="104"><span class="lineNum">     104 </span>            :         }</a>
+<span class="lineNum">     105 </span>            :         
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :         std::size_t parseIndex(std::string::const_iterator&amp; itFmt, const std::string::const_iterator&amp; endFmt)</span>
+<span class="lineNum">     107 </span>            :         {
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :                 int index = 0;</span>
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :                 while (itFmt != endFmt &amp;&amp; Ascii::isDigit(*itFmt))</span>
+<span class="lineNum">     110 </span>            :                 {
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :                         index = 10*index + *itFmt - '0';</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :                         ++itFmt;</span>
+<span class="lineNum">     113 </span>            :                 }
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :                 if (itFmt != endFmt &amp;&amp; *itFmt == ']') ++itFmt;</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :                 return index;</span>
+<a name="116"><span class="lineNum">     116 </span>            :         }</a>
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :         void prepareFormat(std::ostream&amp; str, char type)</span>
+<span class="lineNum">     119 </span>            :         {
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :                 switch (type)</span>
+<span class="lineNum">     121 </span>            :                 {
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :                 case 'd':</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :                 case 'i': str &lt;&lt; std::dec; break;</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :                 case 'o': str &lt;&lt; std::oct; break;</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :                 case 'x': str &lt;&lt; std::hex; break;</span>
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :                 case 'X': str &lt;&lt; std::hex &lt;&lt; std::uppercase; break;</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :                 case 'e': str &lt;&lt; std::scientific; break;</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :                 case 'E': str &lt;&lt; std::scientific &lt;&lt; std::uppercase; break;</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :                 case 'f': str &lt;&lt; std::fixed; break;</span>
+<span class="lineNum">     130 </span>            :                 }
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :         }</span>
+<a name="132"><span class="lineNum">     132 </span>            :         </a>
+<span class="lineNum">     133 </span>            :         
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :         void writeAnyInt(std::ostream&amp; str, const Any&amp; any)</span>
+<span class="lineNum">     135 </span>            :         {
+<span class="lineNum">     136 </span><span class="lineNoCov">          0 :                 if (any.type() == typeid(char))</span>
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :                         str &lt;&lt; static_cast&lt;int&gt;(AnyCast&lt;char&gt;(any));</span>
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(signed char))</span>
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :                         str &lt;&lt; static_cast&lt;int&gt;(AnyCast&lt;signed char&gt;(any));</span>
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(unsigned char))</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :                         str &lt;&lt; static_cast&lt;unsigned&gt;(AnyCast&lt;unsigned char&gt;(any));</span>
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(short))</span>
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :                         str &lt;&lt; AnyCast&lt;short&gt;(any);</span>
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(unsigned short))</span>
+<span class="lineNum">     145 </span><span class="lineNoCov">          0 :                         str &lt;&lt; AnyCast&lt;unsigned short&gt;(any);</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(int))</span>
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :                         str &lt;&lt; AnyCast&lt;int&gt;(any);</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(unsigned int))</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :                         str &lt;&lt; AnyCast&lt;unsigned int&gt;(any);</span>
+<span class="lineNum">     150 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(long))</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :                         str &lt;&lt; AnyCast&lt;long&gt;(any);</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(unsigned long))</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :                         str &lt;&lt; AnyCast&lt;unsigned long&gt;(any);</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(Int64))</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :                         str &lt;&lt; AnyCast&lt;Int64&gt;(any);</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(UInt64))</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :                         str &lt;&lt; AnyCast&lt;UInt64&gt;(any);</span>
+<span class="lineNum">     158 </span><span class="lineNoCov">          0 :                 else if (any.type() == typeid(bool))</span>
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :                         str &lt;&lt; AnyCast&lt;bool&gt;(any);</span>
+<span class="lineNum">     160 </span><span class="lineNoCov">          0 :         }</span>
+<a name="161"><span class="lineNum">     161 </span>            : </a>
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span><span class="lineNoCov">          0 :         void formatOne(std::string&amp; result, std::string::const_iterator&amp; itFmt, const std::string::const_iterator&amp; endFmt, std::vector&lt;Any&gt;::const_iterator&amp; itVal)</span>
+<span class="lineNum">     164 </span>            :         {
+<span class="lineNum">     165 </span><span class="lineNoCov">          0 :                 std::ostringstream str;</span>
+<span class="lineNum">     166 </span>            : #if !defined(POCO_NO_LOCALE)
+<span class="lineNum">     167 </span><span class="lineNoCov">          0 :                 str.imbue(std::locale::classic());</span>
+<span class="lineNum">     168 </span>            : #endif
+<span class="lineNum">     169 </span>            :                 try
+<span class="lineNum">     170 </span>            :                 {
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :                         parseFlags(str, itFmt, endFmt);</span>
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :                         parseWidth(str, itFmt, endFmt, itVal);</span>
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 :                         parsePrec(str, itFmt, endFmt, itVal);</span>
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :                         char mod = parseMod(itFmt, endFmt);</span>
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :                         if (itFmt != endFmt)</span>
+<span class="lineNum">     176 </span>            :                         {
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :                                 char type = *itFmt++;</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :                                 prepareFormat(str, type);</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :                                 switch (type)</span>
+<span class="lineNum">     180 </span>            :                                 {
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :                                 case 'b':</span>
+<span class="lineNum">     182 </span><span class="lineNoCov">          0 :                                         str &lt;&lt; AnyCast&lt;bool&gt;(*itVal++);</span>
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :                                         break;</span>
+<span class="lineNum">     184 </span><span class="lineNoCov">          0 :                                 case 'c':</span>
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :                                         str &lt;&lt; AnyCast&lt;char&gt;(*itVal++);</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :                                         break;</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :                                 case 'd':</span>
+<span class="lineNum">     188 </span>            :                                 case 'i':
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :                                         switch (mod)</span>
+<span class="lineNum">     190 </span>            :                                         {
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :                                         case 'l': str &lt;&lt; AnyCast&lt;long&gt;(*itVal++); break;</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :                                         case 'L': str &lt;&lt; AnyCast&lt;Int64&gt;(*itVal++); break;</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :                                         case 'h': str &lt;&lt; AnyCast&lt;short&gt;(*itVal++); break;</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :                                         case '?': writeAnyInt(str, *itVal++); break;</span>
+<span class="lineNum">     195 </span><span class="lineNoCov">          0 :                                         default:  str &lt;&lt; AnyCast&lt;int&gt;(*itVal++); break;</span>
+<span class="lineNum">     196 </span>            :                                         }
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :                                         break;</span>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :                                 case 'o':</span>
+<span class="lineNum">     199 </span>            :                                 case 'u':
+<span class="lineNum">     200 </span>            :                                 case 'x':
+<span class="lineNum">     201 </span>            :                                 case 'X':
+<span class="lineNum">     202 </span><span class="lineNoCov">          0 :                                         switch (mod)</span>
+<span class="lineNum">     203 </span>            :                                         {
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :                                         case 'l': str &lt;&lt; AnyCast&lt;unsigned long&gt;(*itVal++); break;</span>
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :                                         case 'L': str &lt;&lt; AnyCast&lt;UInt64&gt;(*itVal++); break;</span>
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :                                         case 'h': str &lt;&lt; AnyCast&lt;unsigned short&gt;(*itVal++); break;</span>
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :                                         case '?': writeAnyInt(str, *itVal++); break;</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :                                         default:  str &lt;&lt; AnyCast&lt;unsigned&gt;(*itVal++); break;</span>
+<span class="lineNum">     209 </span>            :                                         }
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :                                         break;</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :                                 case 'e':</span>
+<span class="lineNum">     212 </span>            :                                 case 'E':
+<span class="lineNum">     213 </span>            :                                 case 'f':
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :                                         switch (mod)</span>
+<span class="lineNum">     215 </span>            :                                         {
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :                                         case 'l': str &lt;&lt; AnyCast&lt;long double&gt;(*itVal++); break;</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :                                         case 'L': str &lt;&lt; AnyCast&lt;long double&gt;(*itVal++); break;</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :                                         case 'h': str &lt;&lt; AnyCast&lt;float&gt;(*itVal++); break;</span>
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :                                         default:  str &lt;&lt; AnyCast&lt;double&gt;(*itVal++); break;</span>
+<span class="lineNum">     220 </span>            :                                         }
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :                                         break;</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :                                 case 's':</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :                                         str &lt;&lt; RefAnyCast&lt;std::string&gt;(*itVal++);</span>
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :                                         break;</span>
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :                                 case 'z':</span>
+<span class="lineNum">     226 </span><span class="lineNoCov">          0 :                                         str &lt;&lt; AnyCast&lt;std::size_t&gt;(*itVal++); </span>
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :                                         break;</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :                                 case 'I':</span>
+<span class="lineNum">     229 </span>            :                                 case 'D':
+<span class="lineNum">     230 </span>            :                                 default:
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :                                         str &lt;&lt; type;</span>
+<span class="lineNum">     232 </span>            :                                 }
+<span class="lineNum">     233 </span>            :                         }
+<span class="lineNum">     234 </span>            :                 }
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :                 catch (Poco::BadCastException&amp;)</span>
+<span class="lineNum">     236 </span>            :                 {
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :                         str &lt;&lt; &quot;[ERRFMT]&quot;;</span>
+<span class="lineNum">     238 </span>            :                 }
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :                 result.append(str.str());</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     241 </span>            : }
+<a name="242"><span class="lineNum">     242 </span>            : </a>
+<span class="lineNum">     243 </span>            : 
+<span class="lineNum">     244 </span><span class="lineNoCov">          0 : std::string format(const std::string&amp; fmt, const Any&amp; value) </span>
+<span class="lineNum">     245 </span>            : {
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :         std::string result;</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :         format(result, fmt, value);</span>
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 :         return result;</span>
+<span class="lineNum">     249 </span>            : }
+<a name="250"><span class="lineNum">     250 </span>            : </a>
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 : void format(std::string&amp; result, const char *fmt, const std::vector&lt;Any&gt;&amp; values)</span>
+<span class="lineNum">     253 </span>            : {
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :         format(result, std::string(fmt), values);</span>
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 : }</span>
+<a name="256"><span class="lineNum">     256 </span>            : </a>
+<span class="lineNum">     257 </span>            : 
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 : void format(std::string&amp; result, const std::string&amp; fmt, const std::vector&lt;Any&gt;&amp; values)</span>
+<span class="lineNum">     259 </span>            : {
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :         std::string::const_iterator itFmt  = fmt.begin();</span>
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :         std::string::const_iterator endFmt = fmt.end();</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :         std::vector&lt;Any&gt;::const_iterator itVal  = values.begin();</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :         std::vector&lt;Any&gt;::const_iterator endVal = values.end(); </span>
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :         while (itFmt != endFmt)</span>
+<span class="lineNum">     265 </span>            :         {
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :                 switch (*itFmt)</span>
+<span class="lineNum">     267 </span>            :                 {
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :                 case '%':</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :                         ++itFmt;</span>
+<span class="lineNum">     270 </span><span class="lineNoCov">          0 :                         if (itFmt != endFmt &amp;&amp; (itVal != endVal || *itFmt == '['))</span>
+<span class="lineNum">     271 </span>            :                         {
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 :                                 if (*itFmt == '[')</span>
+<span class="lineNum">     273 </span>            :                                 {
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :                                         ++itFmt;</span>
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :                                         std::size_t index = parseIndex(itFmt, endFmt);</span>
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :                                         if (index &lt; values.size())</span>
+<span class="lineNum">     277 </span>            :                                         {
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :                                                 std::vector&lt;Any&gt;::const_iterator it = values.begin() + index;</span>
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :                                                 formatOne(result, itFmt, endFmt, it);</span>
+<span class="lineNum">     280 </span>            :                                         }
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :                                         else throw InvalidArgumentException(&quot;format argument index out of range&quot;, fmt);</span>
+<span class="lineNum">     282 </span>            :                                 }
+<span class="lineNum">     283 </span>            :                                 else
+<span class="lineNum">     284 </span>            :                                 {
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :                                         formatOne(result, itFmt, endFmt, itVal);</span>
+<span class="lineNum">     286 </span>            :                                 }
+<span class="lineNum">     287 </span>            :                         }
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :                         else if (itFmt != endFmt)</span>
+<span class="lineNum">     289 </span>            :                         {
+<span class="lineNum">     290 </span><span class="lineNoCov">          0 :                                 result += *itFmt++;</span>
+<span class="lineNum">     291 </span>            :                         }
+<span class="lineNum">     292 </span><span class="lineNoCov">          0 :                         break;</span>
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :                 default:</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :                         result += *itFmt;</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :                         ++itFmt;</span>
+<span class="lineNum">     296 </span>            :                 }
+<span class="lineNum">     297 </span>            :         }
+<span class="lineNum">     298 </span><span class="lineNoCov">          0 : }</span>
+<a name="299"><span class="lineNum">     299 </span>            : </a>
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span><span class="lineCov">          3 : } // namespace Poco</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

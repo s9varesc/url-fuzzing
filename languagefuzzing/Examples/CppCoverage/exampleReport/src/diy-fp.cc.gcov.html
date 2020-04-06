@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/diy-fp.cc</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - diy-fp.cc<span style="font-size: 80%;"> (source / <a href="diy-fp.cc.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Copyright 2010 the V8 project authors. All rights reserved.</a>
+<span class="lineNum">       2 </span>            : // Redistribution and use in source and binary forms, with or without
+<span class="lineNum">       3 </span>            : // modification, are permitted provided that the following conditions are
+<span class="lineNum">       4 </span>            : // met:
+<span class="lineNum">       5 </span>            : //
+<span class="lineNum">       6 </span>            : //     * Redistributions of source code must retain the above copyright
+<span class="lineNum">       7 </span>            : //       notice, this list of conditions and the following disclaimer.
+<span class="lineNum">       8 </span>            : //     * Redistributions in binary form must reproduce the above
+<span class="lineNum">       9 </span>            : //       copyright notice, this list of conditions and the following
+<span class="lineNum">      10 </span>            : //       disclaimer in the documentation and/or other materials provided
+<span class="lineNum">      11 </span>            : //       with the distribution.
+<span class="lineNum">      12 </span>            : //     * Neither the name of Google Inc. nor the names of its
+<span class="lineNum">      13 </span>            : //       contributors may be used to endorse or promote products derived
+<span class="lineNum">      14 </span>            : //       from this software without specific prior written permission.
+<span class="lineNum">      15 </span>            : //
+<span class="lineNum">      16 </span>            : // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+<span class="lineNum">      17 </span>            : // &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+<span class="lineNum">      18 </span>            : // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+<span class="lineNum">      19 </span>            : // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+<span class="lineNum">      20 </span>            : // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+<span class="lineNum">      21 </span>            : // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+<span class="lineNum">      22 </span>            : // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+<span class="lineNum">      23 </span>            : // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+<span class="lineNum">      24 </span>            : // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+<span class="lineNum">      25 </span>            : // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+<span class="lineNum">      26 </span>            : // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : #include &quot;diy-fp.h&quot;
+<span class="lineNum">      30 </span>            : #include &quot;utils.h&quot;
+<span class="lineNum">      31 </span>            : 
+<a name="32"><span class="lineNum">      32 </span>            : namespace double_conversion {</a>
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span><span class="lineNoCov">          0 : void DiyFp::Multiply(const DiyFp&amp; other) {</span>
+<span class="lineNum">      35 </span>            :   // Simply &quot;emulates&quot; a 128 bit multiplication.
+<span class="lineNum">      36 </span>            :   // However: the resulting number only contains 64 bits. The least
+<span class="lineNum">      37 </span>            :   // significant 64 bits are only used for rounding the most significant 64
+<span class="lineNum">      38 </span>            :   // bits.
+<span class="lineNum">      39 </span><span class="lineNoCov">          0 :   const uint64_t kM32 = 0xFFFFFFFFU;</span>
+<span class="lineNum">      40 </span><span class="lineNoCov">          0 :   uint64_t a = f_ &gt;&gt; 32;</span>
+<span class="lineNum">      41 </span><span class="lineNoCov">          0 :   uint64_t b = f_ &amp; kM32;</span>
+<span class="lineNum">      42 </span><span class="lineNoCov">          0 :   uint64_t c = other.f_ &gt;&gt; 32;</span>
+<span class="lineNum">      43 </span><span class="lineNoCov">          0 :   uint64_t d = other.f_ &amp; kM32;</span>
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 :   uint64_t ac = a * c;</span>
+<span class="lineNum">      45 </span><span class="lineNoCov">          0 :   uint64_t bc = b * c;</span>
+<span class="lineNum">      46 </span><span class="lineNoCov">          0 :   uint64_t ad = a * d;</span>
+<span class="lineNum">      47 </span><span class="lineNoCov">          0 :   uint64_t bd = b * d;</span>
+<span class="lineNum">      48 </span><span class="lineNoCov">          0 :   uint64_t tmp = (bd &gt;&gt; 32) + (ad &amp; kM32) + (bc &amp; kM32);</span>
+<span class="lineNum">      49 </span>            :   // By adding 1U &lt;&lt; 31 to tmp we round the final result.
+<span class="lineNum">      50 </span>            :   // Halfway cases will be round up.
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 :   tmp += 1U &lt;&lt; 31;</span>
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :   uint64_t result_f = ac + (ad &gt;&gt; 32) + (bc &gt;&gt; 32) + (tmp &gt;&gt; 32);</span>
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :   e_ += other.e_ + 64;</span>
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :   f_ = result_f;</span>
+<span class="lineNum">      55 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : }  // namespace double_conversion
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

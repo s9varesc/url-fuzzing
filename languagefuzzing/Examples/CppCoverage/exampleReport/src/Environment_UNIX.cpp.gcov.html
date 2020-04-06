@@ -1,0 +1,408 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - src/Environment_UNIX.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">src</a> - Environment_UNIX.cpp<span style="font-size: 80%;"> (source / <a href="Environment_UNIX.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">79</td>
+            <td class="headerCovTableEntryLo">2.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : </a>
+<span class="lineNum">       2 </span>            : // Environment_UNIX.cpp
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Core
+<span class="lineNum">       6 </span>            : // Module:  Environment
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">       9 </span>            : // and Contributors.
+<span class="lineNum">      10 </span>            : //
+<span class="lineNum">      11 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : #include &quot;Poco/Environment_UNIX.h&quot;
+<span class="lineNum">      16 </span>            : #include &quot;Poco/Exception.h&quot;
+<span class="lineNum">      17 </span>            : #include &quot;Poco/Buffer.h&quot;
+<span class="lineNum">      18 </span>            : #include &lt;cstring&gt;
+<span class="lineNum">      19 </span>            : #include &lt;unistd.h&gt;
+<span class="lineNum">      20 </span>            : #include &lt;stdlib.h&gt;
+<span class="lineNum">      21 </span>            : #include &lt;sys/utsname.h&gt;
+<span class="lineNum">      22 </span>            : #include &lt;sys/param.h&gt;
+<span class="lineNum">      23 </span>            : #if defined(POCO_OS_FAMILY_BSD)
+<span class="lineNum">      24 </span>            : #include &lt;sys/sysctl.h&gt;
+<span class="lineNum">      25 </span>            : #elif POCO_OS == POCO_OS_HPUX
+<span class="lineNum">      26 </span>            : #include &lt;pthread.h&gt;
+<span class="lineNum">      27 </span>            : #endif
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            : namespace Poco {
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span><span class="lineCov">          1 : EnvironmentImpl::StringMap EnvironmentImpl::_map;</span>
+<span class="lineNum">      34 </span><span class="lineCov">          1 : FastMutex EnvironmentImpl::_mutex;</span>
+<a name="35"><span class="lineNum">      35 </span>            : </a>
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span><span class="lineNoCov">          0 : std::string EnvironmentImpl::getImpl(const std::string&amp; name)</span>
+<span class="lineNum">      38 </span>            : {
+<span class="lineNum">      39 </span><span class="lineNoCov">          0 :         FastMutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span><span class="lineNoCov">          0 :         const char* val = getenv(name.c_str());</span>
+<span class="lineNum">      42 </span><span class="lineNoCov">          0 :         if (val)</span>
+<span class="lineNum">      43 </span><span class="lineNoCov">          0 :                 return std::string(val);</span>
+<span class="lineNum">      44 </span>            :         else
+<span class="lineNum">      45 </span><span class="lineNoCov">          0 :                 throw NotFoundException(name);</span>
+<span class="lineNum">      46 </span>            : }
+<a name="47"><span class="lineNum">      47 </span>            : </a>
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span><span class="lineNoCov">          0 : bool EnvironmentImpl::hasImpl(const std::string&amp; name)</span>
+<span class="lineNum">      50 </span>            : {
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 :         FastMutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :         return getenv(name.c_str()) != 0;</span>
+<span class="lineNum">      54 </span>            : }
+<a name="55"><span class="lineNum">      55 </span>            : </a>
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 : void EnvironmentImpl::setImpl(const std::string&amp; name, const std::string&amp; value)</span>
+<span class="lineNum">      58 </span>            : {
+<span class="lineNum">      59 </span><span class="lineNoCov">          0 :         FastMutex::ScopedLock lock(_mutex);</span>
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 :         std::string var = name;</span>
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :         var.append(&quot;=&quot;);</span>
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 :         var.append(value);</span>
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :         std::swap(_map[name], var);</span>
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 :         if (putenv((char*) _map[name].c_str()))</span>
+<span class="lineNum">      66 </span>            :         {
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :                 std::string msg = &quot;cannot set environment variable: &quot;;</span>
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :                 msg.append(name);</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :                 throw SystemException(msg);</span>
+<span class="lineNum">      70 </span>            :         }
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 : }</span>
+<a name="72"><span class="lineNum">      72 </span>            : </a>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 : std::string EnvironmentImpl::osNameImpl()</span>
+<span class="lineNum">      75 </span>            : {
+<span class="lineNum">      76 </span>            :         struct utsname uts;
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :         uname(&amp;uts);</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :         return uts.sysname;</span>
+<span class="lineNum">      79 </span>            : }
+<a name="80"><span class="lineNum">      80 </span>            : </a>
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 : std::string EnvironmentImpl::osDisplayNameImpl()</span>
+<span class="lineNum">      83 </span>            : {
+<span class="lineNum">      84 </span><span class="lineNoCov">          0 :         return osNameImpl();</span>
+<span class="lineNum">      85 </span>            : }
+<a name="86"><span class="lineNum">      86 </span>            : </a>
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 : std::string EnvironmentImpl::osVersionImpl()</span>
+<span class="lineNum">      89 </span>            : {
+<span class="lineNum">      90 </span>            :         struct utsname uts;
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :         uname(&amp;uts);</span>
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :         return uts.release;</span>
+<span class="lineNum">      93 </span>            : }
+<a name="94"><span class="lineNum">      94 </span>            : </a>
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 : std::string EnvironmentImpl::osArchitectureImpl()</span>
+<span class="lineNum">      97 </span>            : {
+<span class="lineNum">      98 </span>            :         struct utsname uts;
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :         uname(&amp;uts);</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :         return uts.machine;</span>
+<span class="lineNum">     101 </span>            : }
+<a name="102"><span class="lineNum">     102 </span>            : </a>
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 : std::string EnvironmentImpl::nodeNameImpl()</span>
+<span class="lineNum">     105 </span>            : {
+<span class="lineNum">     106 </span>            :         struct utsname uts;
+<span class="lineNum">     107 </span><span class="lineNoCov">          0 :         uname(&amp;uts);</span>
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :         return uts.nodename;</span>
+<span class="lineNum">     109 </span>            : }
+<a name="110"><span class="lineNum">     110 </span>            : </a>
+<span class="lineNum">     111 </span>            : 
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 : unsigned EnvironmentImpl::processorCountImpl()</span>
+<span class="lineNum">     113 </span>            : {
+<span class="lineNum">     114 </span>            : #if defined(_SC_NPROCESSORS_ONLN)
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :         int count = sysconf(_SC_NPROCESSORS_ONLN);</span>
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :         if (count &lt;= 0) count = 1;</span>
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :         return static_cast&lt;int&gt;(count);</span>
+<span class="lineNum">     118 </span>            : #elif defined(POCO_OS_FAMILY_BSD)
+<span class="lineNum">     119 </span>            :         unsigned count;
+<span class="lineNum">     120 </span>            :         std::size_t size = sizeof(count);
+<span class="lineNum">     121 </span>            :         if (sysctlbyname(&quot;hw.ncpu&quot;, &amp;count, &amp;size, 0, 0))
+<span class="lineNum">     122 </span>            :                 return 1;
+<span class="lineNum">     123 </span>            :         else
+<span class="lineNum">     124 </span>            :                 return count;
+<span class="lineNum">     125 </span>            : #elif POCO_OS == POCO_OS_HPUX
+<span class="lineNum">     126 </span>            :         return pthread_num_processors_np();
+<span class="lineNum">     127 </span>            : #else
+<span class="lineNum">     128 </span>            :         return 1;
+<span class="lineNum">     129 </span>            : #endif
+<span class="lineNum">     130 </span>            : }
+<span class="lineNum">     131 </span>            : 
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            : } // namespace Poco
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span>            : //
+<span class="lineNum">     137 </span>            : // nodeIdImpl
+<span class="lineNum">     138 </span>            : //
+<span class="lineNum">     139 </span>            : #if defined(POCO_OS_FAMILY_BSD) || POCO_OS == POCO_OS_QNX
+<span class="lineNum">     140 </span>            : //
+<span class="lineNum">     141 </span>            : // BSD variants
+<span class="lineNum">     142 </span>            : //
+<span class="lineNum">     143 </span>            : #include &lt;sys/types.h&gt;
+<span class="lineNum">     144 </span>            : #include &lt;sys/socket.h&gt;
+<span class="lineNum">     145 </span>            : #include &lt;ifaddrs.h&gt;
+<span class="lineNum">     146 </span>            : #include &lt;net/if_dl.h&gt;
+<span class="lineNum">     147 </span>            : 
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span>            : namespace Poco {
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            : void EnvironmentImpl::nodeIdImpl(NodeId&amp; id)
+<span class="lineNum">     153 </span>            : {
+<span class="lineNum">     154 </span>            :         std::memset(&amp;id, 0, sizeof(id));
+<span class="lineNum">     155 </span>            :         struct ifaddrs* ifaphead;
+<span class="lineNum">     156 </span>            :         int rc = getifaddrs(&amp;ifaphead);
+<span class="lineNum">     157 </span>            :         if (rc) return;
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            :         for (struct ifaddrs* ifap = ifaphead; ifap; ifap = ifap-&gt;ifa_next)
+<span class="lineNum">     160 </span>            :         {
+<span class="lineNum">     161 </span>            :                 if (ifap-&gt;ifa_addr &amp;&amp; ifap-&gt;ifa_addr-&gt;sa_family == AF_LINK)
+<span class="lineNum">     162 </span>            :                 {
+<span class="lineNum">     163 </span>            :                         struct sockaddr_dl* sdl = reinterpret_cast&lt;struct sockaddr_dl*&gt;(ifap-&gt;ifa_addr);
+<span class="lineNum">     164 </span>            :                         caddr_t ap = LLADDR(sdl);
+<span class="lineNum">     165 </span>            :                         int alen = sdl-&gt;sdl_alen;
+<span class="lineNum">     166 </span>            :                         if (ap &amp;&amp; alen &gt; 0)
+<span class="lineNum">     167 </span>            :                         {
+<span class="lineNum">     168 </span>            :                                 std::memcpy(&amp;id, ap, sizeof(id));
+<span class="lineNum">     169 </span>            :                                 break;
+<span class="lineNum">     170 </span>            :                         }
+<span class="lineNum">     171 </span>            :                 }
+<span class="lineNum">     172 </span>            :         }
+<span class="lineNum">     173 </span>            :         freeifaddrs(ifaphead);
+<span class="lineNum">     174 </span>            : }
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span>            : } // namespace Poco
+<span class="lineNum">     178 </span>            : 
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span>            : #elif defined(__CYGWIN__) || POCO_OS == POCO_OS_LINUX || POCO_OS == POCO_OS_ANDROID
+<span class="lineNum">     181 </span>            : //
+<span class="lineNum">     182 </span>            : // Linux, Cygwin
+<span class="lineNum">     183 </span>            : //
+<span class="lineNum">     184 </span>            : #include &lt;sys/ioctl.h&gt;
+<span class="lineNum">     185 </span>            : #include &lt;sys/socket.h&gt;
+<span class="lineNum">     186 </span>            : #include &lt;netinet/in.h&gt;
+<span class="lineNum">     187 </span>            : #include &lt;net/if.h&gt;
+<span class="lineNum">     188 </span>            : #ifndef __CYGWIN__
+<span class="lineNum">     189 </span>            : #include &lt;net/if_arp.h&gt;
+<span class="lineNum">     190 </span>            : #else // workaround for Cygwin, which does not have if_arp.h
+<span class="lineNum">     191 </span>            : #define ARPHRD_ETHER 1 /* Ethernet 10Mbps */
+<span class="lineNum">     192 </span>            : #endif
+<span class="lineNum">     193 </span>            : #include &lt;arpa/inet.h&gt;
+<span class="lineNum">     194 </span>            : #include &lt;unistd.h&gt;
+<span class="lineNum">     195 </span>            : #include &lt;sys/types.h&gt;
+<span class="lineNum">     196 </span>            : #include &lt;sys/stat.h&gt;
+<span class="lineNum">     197 </span>            : #include &lt;fcntl.h&gt;
+<span class="lineNum">     198 </span>            : #include &lt;cstdio&gt;
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span>            : 
+<span class="lineNum">     201 </span>            : namespace Poco {
+<a name="202"><span class="lineNum">     202 </span>            : </a>
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 : void EnvironmentImpl::nodeIdImpl(NodeId&amp; id)</span>
+<span class="lineNum">     205 </span>            : {
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :         std::memset(&amp;id, 0, sizeof(id));</span>
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span>            :         // ideally, the following code should be rewritten
+<span class="lineNum">     209 </span>            :         // to use netlink
+<span class="lineNum">     210 </span>            : 
+<span class="lineNum">     211 </span>            :         // first try to obtain the MAC address of eth0 using /sys/class/net
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 :         int fd = open(&quot;/sys/class/net/eth0/address&quot;, O_RDONLY);</span>
+<span class="lineNum">     213 </span><span class="lineNoCov">          0 :         if (fd &gt;= 0)</span>
+<span class="lineNum">     214 </span>            :         {
+<span class="lineNum">     215 </span>            :                 char buffer[18];
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :                 int n = read(fd, buffer, 17);</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :                 close(fd);</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :                 if (n == 17)</span>
+<span class="lineNum">     219 </span>            :                 {
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :                         buffer[n] = 0;</span>
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :                         if (std::sscanf(buffer, &quot;%hhx:%hhx:%hhx:%hhx:%hhx:%hhx&quot;, &amp;id[0], &amp;id[1], &amp;id[2], &amp;id[3], &amp;id[4], &amp;id[5]) == 6)</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :                                 return;</span>
+<span class="lineNum">     223 </span>            :                 }
+<span class="lineNum">     224 </span>            :         }
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            :         // if that did not work, search active interfaces
+<span class="lineNum">     227 </span><span class="lineNoCov">          0 :         int sock = socket(PF_INET, SOCK_DGRAM, 0);</span>
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 :         if (sock == -1) return;</span>
+<span class="lineNum">     229 </span>            : 
+<span class="lineNum">     230 </span>            :         // the following code is loosely based
+<span class="lineNum">     231 </span>            :         // on W. Richard Stevens, UNIX Network Programming, pp 434ff.
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :         int lastlen = 0;</span>
+<span class="lineNum">     233 </span><span class="lineNoCov">          0 :         int len = 100*sizeof(struct ifreq);</span>
+<span class="lineNum">     234 </span>            :         struct ifconf ifc;
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :         char* buf = 0;</span>
+<span class="lineNum">     236 </span>            :         for (;;)
+<span class="lineNum">     237 </span>            :         {
+<span class="lineNum">     238 </span><span class="lineNoCov">          0 :                 buf = new char[len];</span>
+<span class="lineNum">     239 </span><span class="lineNoCov">          0 :                 ifc.ifc_len = len;</span>
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :                 ifc.ifc_buf = buf;</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :                 if (::ioctl(sock, SIOCGIFCONF, &amp;ifc) &lt; 0)</span>
+<span class="lineNum">     242 </span>            :                 {
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :                         if (errno != EINVAL || lastlen != 0)</span>
+<span class="lineNum">     244 </span>            :                         {
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :                                 close(sock);</span>
+<span class="lineNum">     246 </span><span class="lineNoCov">          0 :                                 delete [] buf;</span>
+<span class="lineNum">     247 </span><span class="lineNoCov">          0 :                                 return;</span>
+<span class="lineNum">     248 </span>            :                         }
+<span class="lineNum">     249 </span>            :                 }
+<span class="lineNum">     250 </span>            :                 else
+<span class="lineNum">     251 </span>            :                 {
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :                         if (ifc.ifc_len == lastlen)</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :                                 break;</span>
+<span class="lineNum">     254 </span><span class="lineNoCov">          0 :                         lastlen = ifc.ifc_len;</span>
+<span class="lineNum">     255 </span>            :                 }
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :                 len += 10*sizeof(struct ifreq);</span>
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :                 delete [] buf;</span>
+<span class="lineNum">     258 </span>            :         }
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 :         for (const char* ptr = buf; ptr &lt; buf + ifc.ifc_len;)</span>
+<span class="lineNum">     260 </span>            :         {
+<span class="lineNum">     261 </span><span class="lineNoCov">          0 :                 const struct ifreq* ifr = reinterpret_cast&lt;const struct ifreq*&gt;(ptr);</span>
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :                 int rc = ioctl(sock, SIOCGIFHWADDR, ifr);</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :                 if (rc != -1)</span>
+<span class="lineNum">     264 </span>            :                 {
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :                         const struct sockaddr* sa = reinterpret_cast&lt;const struct sockaddr*&gt;(&amp;ifr-&gt;ifr_hwaddr);</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :                         if (sa-&gt;sa_family == ARPHRD_ETHER)</span>
+<span class="lineNum">     267 </span>            :                         {
+<span class="lineNum">     268 </span><span class="lineNoCov">          0 :                                 std::memcpy(&amp;id, sa-&gt;sa_data, sizeof(id));</span>
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :                                 break;</span>
+<span class="lineNum">     270 </span>            :                         }
+<span class="lineNum">     271 </span>            :                 }
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 :                 ptr += sizeof(struct ifreq);</span>
+<span class="lineNum">     273 </span>            :         }
+<span class="lineNum">     274 </span><span class="lineNoCov">          0 :         close(sock);</span>
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :         delete [] buf;</span>
+<span class="lineNum">     276 </span>            : }
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span>            : } // namespace Poco
+<span class="lineNum">     280 </span>            : 
+<span class="lineNum">     281 </span>            : 
+<span class="lineNum">     282 </span>            : #elif defined(POCO_OS_FAMILY_UNIX)
+<span class="lineNum">     283 </span>            : //
+<span class="lineNum">     284 </span>            : // General Unix
+<span class="lineNum">     285 </span>            : //
+<span class="lineNum">     286 </span>            : #include &lt;sys/ioctl.h&gt;
+<span class="lineNum">     287 </span>            : #if defined(sun) || defined(__sun)
+<span class="lineNum">     288 </span>            : #include &lt;sys/sockio.h&gt;
+<span class="lineNum">     289 </span>            : #endif
+<span class="lineNum">     290 </span>            : #include &lt;sys/socket.h&gt;
+<span class="lineNum">     291 </span>            : #include &lt;sys/types.h&gt;
+<span class="lineNum">     292 </span>            : #include &lt;netinet/in.h&gt;
+<span class="lineNum">     293 </span>            : #include &lt;net/if.h&gt;
+<span class="lineNum">     294 </span>            : #include &lt;arpa/inet.h&gt;
+<span class="lineNum">     295 </span>            : #include &lt;netdb.h&gt;
+<span class="lineNum">     296 </span>            : #include &lt;net/if.h&gt;
+<span class="lineNum">     297 </span>            : #include &lt;net/if_arp.h&gt;
+<span class="lineNum">     298 </span>            : #include &lt;unistd.h&gt;
+<span class="lineNum">     299 </span>            : 
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span>            : namespace Poco {
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span>            : void EnvironmentImpl::nodeIdImpl(NodeId&amp; id)
+<span class="lineNum">     305 </span>            : {
+<span class="lineNum">     306 </span>            :         std::memset(&amp;id, 0, sizeof(id));
+<span class="lineNum">     307 </span>            :         char name[MAXHOSTNAMELEN];
+<span class="lineNum">     308 </span>            :         if (gethostname(name, sizeof(name)))
+<span class="lineNum">     309 </span>            :                 return;
+<span class="lineNum">     310 </span>            : 
+<span class="lineNum">     311 </span>            :         struct hostent* pHost = gethostbyname(name);
+<span class="lineNum">     312 </span>            :         if (!pHost) return;
+<span class="lineNum">     313 </span>            : 
+<span class="lineNum">     314 </span>            :         int s = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+<span class="lineNum">     315 </span>            :         if (s == -1) return;
+<span class="lineNum">     316 </span>            : 
+<span class="lineNum">     317 </span>            :         struct arpreq ar;
+<span class="lineNum">     318 </span>            :         std::memset(&amp;ar, 0, sizeof(ar));
+<span class="lineNum">     319 </span>            :         struct sockaddr_in* pAddr = reinterpret_cast&lt;struct sockaddr_in*&gt;(&amp;ar.arp_pa);
+<span class="lineNum">     320 </span>            :         pAddr-&gt;sin_family = AF_INET;
+<span class="lineNum">     321 </span>            :         std::memcpy(&amp;pAddr-&gt;sin_addr, *pHost-&gt;h_addr_list, sizeof(struct in_addr));
+<span class="lineNum">     322 </span>            :         int rc = ioctl(s, SIOCGARP, &amp;ar);
+<span class="lineNum">     323 </span>            :         close(s);
+<span class="lineNum">     324 </span>            :         if (rc &lt; 0) return;
+<span class="lineNum">     325 </span>            :         std::memcpy(&amp;id, ar.arp_ha.sa_data, sizeof(id));
+<span class="lineNum">     326 </span>            : }
+<span class="lineNum">     327 </span>            : 
+<span class="lineNum">     328 </span>            : 
+<span class="lineNum">     329 </span>            : } // namespace Poco
+<span class="lineNum">     330 </span>            : 
+<span class="lineNum">     331 </span>            : 
+<span class="lineNum">     332 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

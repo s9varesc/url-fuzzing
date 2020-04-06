@@ -1,0 +1,349 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - main-coverage.info - include/Poco/Process.h</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">include/Poco</a> - Process.h<span style="font-size: 80%;"> (source / <a href="Process.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">main-coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-02-27 13:24:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : //</a>
+<span class="lineNum">       2 </span>            : // Process.h
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : // Library: Foundation
+<span class="lineNum">       5 </span>            : // Package: Processes
+<span class="lineNum">       6 </span>            : // Module:  Process
+<span class="lineNum">       7 </span>            : //
+<span class="lineNum">       8 </span>            : // Definition of the Process class.
+<span class="lineNum">       9 </span>            : //
+<span class="lineNum">      10 </span>            : // Copyright (c) 2004-2006, Applied Informatics Software Engineering GmbH.
+<span class="lineNum">      11 </span>            : // and Contributors.
+<span class="lineNum">      12 </span>            : //
+<span class="lineNum">      13 </span>            : // SPDX-License-Identifier:     BSL-1.0
+<span class="lineNum">      14 </span>            : //
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : #ifndef Foundation_Process_INCLUDED
+<span class="lineNum">      18 </span>            : #define Foundation_Process_INCLUDED
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            : #include &quot;Poco/Foundation.h&quot;
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : #if defined(POCO_OS_FAMILY_WINDOWS)
+<span class="lineNum">      25 </span>            : #if defined(_WIN32_WCE)
+<span class="lineNum">      26 </span>            : #include &quot;Process_WINCE.h&quot;
+<span class="lineNum">      27 </span>            : #else
+<span class="lineNum">      28 </span>            : #include &quot;Poco/Process_WIN32U.h&quot;
+<span class="lineNum">      29 </span>            : #endif
+<span class="lineNum">      30 </span>            : #elif defined(POCO_VXWORKS)
+<span class="lineNum">      31 </span>            : #include &quot;Poco/Process_VX.h&quot;
+<span class="lineNum">      32 </span>            : #elif defined(POCO_OS_FAMILY_UNIX)
+<span class="lineNum">      33 </span>            : #include &quot;Poco/Process_UNIX.h&quot;
+<span class="lineNum">      34 </span>            : #endif
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : namespace Poco {
+<span class="lineNum">      38 </span>            : 
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : class Pipe;
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : class Foundation_API ProcessHandle
+<span class="lineNum">      44 </span>            :         /// A handle for a process created with Process::launch().
+<span class="lineNum">      45 </span>            :         ///
+<span class="lineNum">      46 </span>            :         /// This handle can be used to determine the process ID of
+<span class="lineNum">      47 </span>            :         /// the newly created process and it can be used to wait for
+<span class="lineNum">      48 </span>            :         /// the completion of a process.
+<span class="lineNum">      49 </span>            : {
+<span class="lineNum">      50 </span>            : public:
+<span class="lineNum">      51 </span>            :         typedef ProcessImpl::PIDImpl PID;
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            :         ProcessHandle(const ProcessHandle&amp; handle);
+<span class="lineNum">      54 </span>            :                 /// Creates a ProcessHandle by copying another one.
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            :         ~ProcessHandle();
+<span class="lineNum">      57 </span>            :                 /// Destroys the ProcessHandle.
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            :         ProcessHandle&amp; operator = (const ProcessHandle&amp; handle);
+<span class="lineNum">      60 </span>            :                 /// Assigns another handle.
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            :         PID id() const;
+<span class="lineNum">      63 </span>            :                 /// Returns the process ID.
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            :         int wait() const;
+<span class="lineNum">      66 </span>            :                 /// Waits for the process to terminate
+<span class="lineNum">      67 </span>            :                 /// and returns the exit code of the process.
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            :         int tryWait() const;
+<span class="lineNum">      70 </span>            :                 /// Checks that process is terminated
+<span class="lineNum">      71 </span>            :                 /// and returns the exit code of the process.
+<span class="lineNum">      72 </span>            :                 /// If the process is still running, returns -1.
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            : protected:
+<span class="lineNum">      75 </span>            :         ProcessHandle(ProcessHandleImpl* pImpl);
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            : private:
+<span class="lineNum">      78 </span>            :         ProcessHandle();
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span>            :         ProcessHandleImpl* _pImpl;
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            :         friend class Process;
+<span class="lineNum">      83 </span>            : };
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span>            : class Foundation_API Process: public ProcessImpl
+<span class="lineNum">      87 </span>            :         /// This class provides methods for working with processes.
+<span class="lineNum">      88 </span>            : {
+<span class="lineNum">      89 </span>            : public:
+<span class="lineNum">      90 </span>            :         typedef PIDImpl  PID;
+<span class="lineNum">      91 </span>            :         typedef ArgsImpl Args;
+<span class="lineNum">      92 </span>            :         typedef EnvImpl  Env;
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            :         static PID id();
+<span class="lineNum">      95 </span>            :                 /// Returns the process ID of the current process.
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            :         static void times(long&amp; userTime, long&amp; kernelTime);
+<span class="lineNum">      98 </span>            :                 /// Returns the number of seconds spent by the
+<span class="lineNum">      99 </span>            :                 /// current process in user and kernel mode.
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span>            :         static ProcessHandle launch(const std::string&amp; command, const Args&amp; args);
+<span class="lineNum">     102 </span>            :                 /// Creates a new process for the given command and returns
+<span class="lineNum">     103 </span>            :                 /// a ProcessHandle of the new process. The given arguments are
+<span class="lineNum">     104 </span>            :                 /// passed to the command on the command line.
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            :         static ProcessHandle launch(
+<span class="lineNum">     107 </span>            :                 const std::string&amp; command,
+<span class="lineNum">     108 </span>            :                 const Args&amp; args,
+<span class="lineNum">     109 </span>            :                 const std::string&amp; initialDirectory);
+<span class="lineNum">     110 </span>            :                 /// Creates a new process for the given command and returns
+<span class="lineNum">     111 </span>            :                 /// a ProcessHandle of the new process. The given arguments are
+<span class="lineNum">     112 </span>            :                 /// passed to the command on the command line.
+<span class="lineNum">     113 </span>            :                 /// The process starts executing in the specified initial directory.
+<span class="lineNum">     114 </span>            : 
+<span class="lineNum">     115 </span>            :         static ProcessHandle launch(
+<span class="lineNum">     116 </span>            :                 const std::string&amp; command,
+<span class="lineNum">     117 </span>            :                 const Args&amp; args,
+<span class="lineNum">     118 </span>            :                 Pipe* inPipe,
+<span class="lineNum">     119 </span>            :                 Pipe* outPipe,
+<span class="lineNum">     120 </span>            :                 Pipe* errPipe);
+<span class="lineNum">     121 </span>            :                 /// Creates a new process for the given command and returns
+<span class="lineNum">     122 </span>            :                 /// a ProcessHandle of the new process. The given arguments are
+<span class="lineNum">     123 </span>            :                 /// passed to the command on the command line.
+<span class="lineNum">     124 </span>            :                 ///
+<span class="lineNum">     125 </span>            :                 /// If inPipe, outPipe or errPipe is non-null, the corresponding
+<span class="lineNum">     126 </span>            :                 /// standard input, standard output or standard error stream
+<span class="lineNum">     127 </span>            :                 /// of the launched process is redirected to the Pipe.
+<span class="lineNum">     128 </span>            :                 /// PipeInputStream or PipeOutputStream can be used to
+<span class="lineNum">     129 </span>            :                 /// send receive data from, or send data to the process.
+<span class="lineNum">     130 </span>            :                 ///
+<span class="lineNum">     131 </span>            :                 /// Note: the same Pipe can be used for both outPipe and errPipe.
+<span class="lineNum">     132 </span>            :                 ///
+<span class="lineNum">     133 </span>            :                 /// After a Pipe has been passed as inPipe, only write operations
+<span class="lineNum">     134 </span>            :                 /// are valid. After a Pipe has been passed as outPipe or errPipe,
+<span class="lineNum">     135 </span>            :                 /// only read operations are valid.
+<span class="lineNum">     136 </span>            :                 ///
+<span class="lineNum">     137 </span>            :                 /// It is forbidden to pass the same pipe as inPipe and outPipe or errPipe.
+<span class="lineNum">     138 </span>            :                 ///
+<span class="lineNum">     139 </span>            :                 /// Usage example:
+<span class="lineNum">     140 </span>            :                 ///     Pipe outPipe;
+<span class="lineNum">     141 </span>            :                 ///     Process::Args args;
+<span class="lineNum">     142 </span>            :                 ///     ProcessHandle ph(launch(&quot;/bin/ps&quot;, args, 0, &amp;outPipe, 0));
+<span class="lineNum">     143 </span>            :                 ///     PipeInputStream istr(outPipe);
+<span class="lineNum">     144 </span>            :                 ///     ... // read output of ps from istr
+<span class="lineNum">     145 </span>            :                 ///     int rc = ph.wait();
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            :         static ProcessHandle launch(
+<span class="lineNum">     148 </span>            :                 const std::string&amp; command,
+<span class="lineNum">     149 </span>            :                 const Args&amp; args,
+<span class="lineNum">     150 </span>            :                 const std::string&amp; initialDirectory,
+<span class="lineNum">     151 </span>            :                 Pipe* inPipe,
+<span class="lineNum">     152 </span>            :                 Pipe* outPipe,
+<span class="lineNum">     153 </span>            :                 Pipe* errPipe);
+<span class="lineNum">     154 </span>            :                 /// Creates a new process for the given command and returns
+<span class="lineNum">     155 </span>            :                 /// a ProcessHandle of the new process. The given arguments are
+<span class="lineNum">     156 </span>            :                 /// passed to the command on the command line.
+<span class="lineNum">     157 </span>            :                 /// The process starts executing in the specified initial directory.
+<span class="lineNum">     158 </span>            :                 ///
+<span class="lineNum">     159 </span>            :                 /// If inPipe, outPipe or errPipe is non-null, the corresponding
+<span class="lineNum">     160 </span>            :                 /// standard input, standard output or standard error stream
+<span class="lineNum">     161 </span>            :                 /// of the launched process is redirected to the Pipe.
+<span class="lineNum">     162 </span>            :                 /// PipeInputStream or PipeOutputStream can be used to
+<span class="lineNum">     163 </span>            :                 /// send receive data from, or send data to the process.
+<span class="lineNum">     164 </span>            :                 ///
+<span class="lineNum">     165 </span>            :                 /// Note: the same Pipe can be used for both outPipe and errPipe.
+<span class="lineNum">     166 </span>            :                 ///
+<span class="lineNum">     167 </span>            :                 /// After a Pipe has been passed as inPipe, only write operations
+<span class="lineNum">     168 </span>            :                 /// are valid. After a Pipe has been passed as outPipe or errPipe,
+<span class="lineNum">     169 </span>            :                 /// only read operations are valid.
+<span class="lineNum">     170 </span>            :                 ///
+<span class="lineNum">     171 </span>            :                 /// It is forbidden to pass the same pipe as inPipe and outPipe or errPipe.
+<span class="lineNum">     172 </span>            :                 ///
+<span class="lineNum">     173 </span>            :                 /// Usage example:
+<span class="lineNum">     174 </span>            :                 ///     Pipe outPipe;
+<span class="lineNum">     175 </span>            :                 ///     Process::Args args;
+<span class="lineNum">     176 </span>            :                 ///     ProcessHandle ph(launch(&quot;/bin/ps&quot;, args, 0, &amp;outPipe, 0));
+<span class="lineNum">     177 </span>            :                 ///     PipeInputStream istr(outPipe);
+<span class="lineNum">     178 </span>            :                 ///     ... // read output of ps from istr
+<span class="lineNum">     179 </span>            :                 ///     int rc = ph.wait();
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span>            :         static ProcessHandle launch(
+<span class="lineNum">     182 </span>            :                 const std::string&amp; command,
+<span class="lineNum">     183 </span>            :                 const Args&amp; args,
+<span class="lineNum">     184 </span>            :                 Pipe* inPipe,
+<span class="lineNum">     185 </span>            :                 Pipe* outPipe,
+<span class="lineNum">     186 </span>            :                 Pipe* errPipe,
+<span class="lineNum">     187 </span>            :                 const Env&amp; env);
+<span class="lineNum">     188 </span>            :                 /// Creates a new process for the given command and returns
+<span class="lineNum">     189 </span>            :                 /// a ProcessHandle of the new process. The given arguments are
+<span class="lineNum">     190 </span>            :                 /// passed to the command on the command line.
+<span class="lineNum">     191 </span>            :                 ///
+<span class="lineNum">     192 </span>            :                 /// If inPipe, outPipe or errPipe is non-null, the corresponding
+<span class="lineNum">     193 </span>            :                 /// standard input, standard output or standard error stream
+<span class="lineNum">     194 </span>            :                 /// of the launched process is redirected to the Pipe.
+<span class="lineNum">     195 </span>            :                 ///
+<span class="lineNum">     196 </span>            :                 /// The launched process is given the specified environment variables.
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span>            :         static ProcessHandle launch(
+<span class="lineNum">     199 </span>            :                 const std::string&amp; command,
+<span class="lineNum">     200 </span>            :                 const Args&amp; args,
+<span class="lineNum">     201 </span>            :                 const std::string&amp; initialDirectory,
+<span class="lineNum">     202 </span>            :                 Pipe* inPipe,
+<span class="lineNum">     203 </span>            :                 Pipe* outPipe,
+<span class="lineNum">     204 </span>            :                 Pipe* errPipe,
+<span class="lineNum">     205 </span>            :                 const Env&amp; env);
+<span class="lineNum">     206 </span>            :                 /// Creates a new process for the given command and returns
+<span class="lineNum">     207 </span>            :                 /// a ProcessHandle of the new process. The given arguments are
+<span class="lineNum">     208 </span>            :                 /// passed to the command on the command line.
+<span class="lineNum">     209 </span>            :                 /// The process starts executing in the specified initial directory.
+<span class="lineNum">     210 </span>            :                 /// If inPipe, outPipe or errPipe is non-null, the corresponding
+<span class="lineNum">     211 </span>            :                 /// standard input, standard output or standard error stream
+<span class="lineNum">     212 </span>            :                 /// of the launched process is redirected to the Pipe.
+<span class="lineNum">     213 </span>            :                 /// The launched process is given the specified environment variables.
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span>            :         static int wait(const ProcessHandle&amp; handle);
+<span class="lineNum">     216 </span>            :                 /// Waits for the process specified by handle to terminate
+<span class="lineNum">     217 </span>            :                 /// and returns the exit code of the process.
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            :         static int tryWait(const ProcessHandle&amp; handle);
+<span class="lineNum">     220 </span>            :                 /// Checks that process is finished and returns the exit code of the
+<span class="lineNum">     221 </span>            :                 /// process. If the process is still running, returns -1.
+<span class="lineNum">     222 </span>            : 
+<span class="lineNum">     223 </span>            :         static bool isRunning(const ProcessHandle&amp; handle);
+<span class="lineNum">     224 </span>            :                 /// check if the process specified by handle is running or not
+<span class="lineNum">     225 </span>            :                 ///
+<span class="lineNum">     226 </span>            :                 /// This is preferable on Windows where process IDs
+<span class="lineNum">     227 </span>            :                 /// may be reused.
+<span class="lineNum">     228 </span>            : 
+<span class="lineNum">     229 </span>            :         static bool isRunning(PID pid);
+<span class="lineNum">     230 </span>            :                 /// Check if the process specified by given pid is running or not.
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span>            :         static void kill(ProcessHandle&amp; handle);
+<span class="lineNum">     233 </span>            :                 /// Kills the process specified by handle.
+<span class="lineNum">     234 </span>            :                 ///
+<span class="lineNum">     235 </span>            :                 /// This is preferable on Windows where process IDs
+<span class="lineNum">     236 </span>            :                 /// may be reused.
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            :         static void kill(PID pid);
+<span class="lineNum">     239 </span>            :                 /// Kills the process with the given pid.
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span>            :         static void requestTermination(PID pid);
+<span class="lineNum">     242 </span>            :                 /// Requests termination of the process with the give PID.
+<span class="lineNum">     243 </span>            :                 ///
+<span class="lineNum">     244 </span>            :                 /// On Unix platforms, this will send a SIGINT to the
+<span class="lineNum">     245 </span>            :                 /// process and thus work with arbitrary processes.
+<span class="lineNum">     246 </span>            :                 ///
+<span class="lineNum">     247 </span>            :                 /// On other platforms, a global event flag
+<span class="lineNum">     248 </span>            :                 /// will be set. Setting the flag will cause
+<span class="lineNum">     249 </span>            :                 /// Util::ServerApplication::waitForTerminationRequest() to
+<span class="lineNum">     250 </span>            :                 /// return. Therefore this will only work with applications
+<span class="lineNum">     251 </span>            :                 /// based on Util::ServerApplication.
+<span class="lineNum">     252 </span>            : };
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span>            : 
+<span class="lineNum">     255 </span>            : //
+<a name="256"><span class="lineNum">     256 </span>            : // inlines</a>
+<span class="lineNum">     257 </span>            : //
+<span class="lineNum">     258 </span><span class="lineNoCov">          0 : inline Process::PID Process::id()</span>
+<span class="lineNum">     259 </span>            : {
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :         return ProcessImpl::idImpl();</span>
+<span class="lineNum">     261 </span>            : }
+<span class="lineNum">     262 </span>            : 
+<span class="lineNum">     263 </span>            : 
+<span class="lineNum">     264 </span>            : inline void Process::times(long&amp; userTime, long&amp; kernelTime)
+<span class="lineNum">     265 </span>            : {
+<span class="lineNum">     266 </span>            :         ProcessImpl::timesImpl(userTime, kernelTime);
+<span class="lineNum">     267 </span>            : }
+<span class="lineNum">     268 </span>            : 
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span>            : } // namespace Poco
+<span class="lineNum">     271 </span>            : 
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span>            : #endif // Foundation_Process_INCLUDED
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
