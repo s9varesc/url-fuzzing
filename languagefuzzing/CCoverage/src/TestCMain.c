@@ -11,7 +11,7 @@ main(void)
     size_t len = 0;
     ssize_t read;
 
-   fp = fopen("../exampleURLs/plainURLs", "r");
+   fp = fopen("../urls/plainURLs", "r");
     if (fp == NULL)
         exit(EXIT_FAILURE);
 

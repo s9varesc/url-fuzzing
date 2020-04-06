@@ -5,7 +5,7 @@ var fs = require('fs');
 var readline = require('readline');
 
 var rd = readline.createInterface({
-    input: fs.createReadStream('/home/vera/url-fuzzing/languagefuzzing/exampleURLs/plainURLs'),
+    input: fs.createReadStream('../urls/plainURLs'),
     output: '',
     console: false
 });

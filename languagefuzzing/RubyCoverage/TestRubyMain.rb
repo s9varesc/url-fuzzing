@@ -2,7 +2,7 @@
 
 require_relative './testuri/uri'
 
-IO.foreach("../exampleURLs/plainURLs"){|block| 
+IO.foreach("../urls/plainURLs"){|block| 
 	begin 
 	    uri = URI(block) 
 	    puts uri

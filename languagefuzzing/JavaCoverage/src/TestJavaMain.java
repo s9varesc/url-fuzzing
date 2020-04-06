@@ -12,7 +12,7 @@ public class TestJavaMain {
 
     public static void main(String[] args) {
         InputReader reader=new InputReader();
-        reader.readInput("../exampleURLs/plainURLs");
+        reader.readInput("../urls/plainURLs");
     }
 }
 class InputReader {

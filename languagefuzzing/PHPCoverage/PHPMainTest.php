@@ -10,7 +10,7 @@ use League\Uri\Exceptions\SyntaxError;
 
 class PHPMainTest extends TestCase {
 public function test_urls(){
-$file = fopen("../exampleURLs/plainURLs","r");
+$file = fopen("../urls/plainURLs","r");
 
 while(! feof($file))
   {

@@ -44,7 +44,7 @@ int main()
 	std::vector<std::string> vecOfStr;
  
 	// Get the contents of file in a vector
-	bool result = getFileContent("../exampleURLs/plainURLs", vecOfStr);
+	bool result = getFileContent("../urls/plainURLs", vecOfStr);
  
 	if(result)
 	{
