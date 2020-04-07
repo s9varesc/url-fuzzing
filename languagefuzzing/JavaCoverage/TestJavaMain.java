@@ -41,8 +41,8 @@ class ParsingHandler {
         try {
             URL url=new URL(input);
         } catch (Exception e) {
-            System.out.println("caught exception on parse of: "+input);
-            System.out.println(e.getMessage());
+            //System.out.println("caught exception on parse of: "+input);
+            //System.out.println(e.getMessage());
         }
     }
 }
