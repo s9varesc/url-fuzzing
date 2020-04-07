@@ -7,7 +7,7 @@ lines=file.readlines()
 urls=[]
 for line in lines:
     urls.append(line)
-    print(line)
+    #print(line)
 
 for url in urls:
     urlparse(url)
