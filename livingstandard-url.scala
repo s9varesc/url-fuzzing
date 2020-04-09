@@ -1,5 +1,6 @@
 import saarland.cispa.se.tribble.dsl._
-//following §4.3 URL writing at https://url.spec.whatwg.org/
+
+//following 4.3 URL writing at https://url.spec.whatwg.org/
 //including parts from https://tools.ietf.org/html/rfc3986#appendix-A and //https://tools.ietf.org/html/rfc6874
 //(whenever the living standard documentation was not sufficient to formulate a grammar)
 
