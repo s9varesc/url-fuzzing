@@ -90,5 +90,5 @@ Grammar(
   'alpha := "[a-zA-Z]".regex,
   'hexdig := ("[a-f]".regex) | 'digit,
   'unicodeHEX := 'digit | ("[A-F]".regex),
-  'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
+  'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig
 )
