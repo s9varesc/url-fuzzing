@@ -1,0 +1,52 @@
+//based on the coverage report of the URLs built using the initial living standard grammar on nsURLParsers.cpp
+
+//nsBaseURL
+
+- code: skip leading whitespace (lines 65-70)
+	grammar: allow leading whitespace
+
+- code: spec contains only ws (lines 94-97)
+	grammar: allow ws URLs
+	
+- code: ParseAfterScheme (lines 144-147)
+	grammar: check authority/path definitions
+
+- code: ParseAuthority (lines 154-170)
+	grammar: check authority definitions
+	
+- code: ParseUserInfo (lines 173-178)
+	grammar: check userinfo definitions
+	
+- code: ParseServerInfo (lines 182-187)
+	grammar: check serverinfo definitions
+	
+- code: filePathlen==0 (lines 261-164)
+	grammar: allow file path with length 0
+	
+- code: catch /.. and /. (lines 276, 277)
+	grammar: make sure to allow /. and /..
+	
+- code: <filePath>=<filename>.<extension> (lines 286,287)
+	grammar: allow filepaths without leading directory
+	
+- code: (line 368) //sets path when followed by ?,#,/
+	grammar: check query and fragment definitions (after //-path)
+	
+//nsAuthURL
+
+- code: authlen==0 (lines 435-439)
+	grammar: allow empty authority
+	
+- code: <serverinfo>=<hostname:port> (lines 536-550)
+	grammar: check serverinfo definitions
+	
+//nsStdURL
+
+- code: spec=(//)auth (lines 619,620)
+	grammar: allow empty path
+
+- code: spec=/<path> (lines 625, 626)
+	grammar: allow empty authority
+	
+- code: spec=///[/]<path> (lines 630,631)
+	grammar: ?allow more slashes?
