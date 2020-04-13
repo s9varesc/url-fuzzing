@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"testing"
 	"fmt"
+	"io/ioutil"
 )
 func TestURLs(t *testing.T) {
 	//file reading from https://webdamn.com/read-file-line-by-line-using-golang/
