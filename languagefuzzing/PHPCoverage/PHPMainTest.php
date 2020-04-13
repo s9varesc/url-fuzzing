@@ -21,7 +21,7 @@ while(! feof($file))
 try {
     UriString::parse($url);
 } catch (Exception $e) {
-   $exceptions.="\n{ url:\"".$url."\",\n exception:\"".$e."\"},";
+   $exceptions.="\n{ url:\"".$url."\",\n exception:\"".$e->getemssage()."\"},";
 }
   }
 
