@@ -10,7 +10,7 @@ for filename in os.listdir(rel_dir):
         start=s.find("spec:\"")+6
         end1=s.find("\",\n", start)
         end2=s.find("\"}")
-        end=end1 if end1>end2 else end=end2
+        end=end1 if end1>=0 else end2
         url=s[start:end]
         urls+=url+"\n"
 
