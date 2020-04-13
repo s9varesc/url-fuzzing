@@ -49,7 +49,7 @@ class ParsingHandler {
 
    public void writeExceptionsFile(){
 	try ( PrintStream out = new PrintStream(new FileOutputStream("JavaExceptions.txt"))) {
-    		out.print("["+exceptions.substring(0, exceptions.length() - 1)+"]");}
+    		out.print("["+exceptions.substring(0, exceptions.length() - 1)+"]");
 	}
    }
 }

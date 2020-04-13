@@ -57,7 +57,7 @@ int main()
 			{
 			    Poco::URI uri1(line);
 			}
-			catch(exception& e)
+			catch(const std::exception& e)
 			{
 			    exceptions.append("\n{ url:\""
 			    exceptions.append(line);
