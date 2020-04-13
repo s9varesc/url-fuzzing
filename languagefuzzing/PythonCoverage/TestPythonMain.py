@@ -10,5 +10,7 @@ for line in lines:
     #print(line)
 
 for url in urls:
-    urlparse(url)
+    try:
+       urlparse(url)
+    except:
 

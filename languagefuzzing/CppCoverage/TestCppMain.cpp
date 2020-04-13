@@ -50,10 +50,12 @@ int main()
 	{
 		// Print the vector contents
 		for(std::string & line : vecOfStr){
-			//const char *c = line.c_str();
 			//parse urls
-			Poco::URI uri1(line);
-			
+			try
+			{
+			    Poco::URI uri1(line);
+			}
+			catch(...){}
 			//std::cout<<uri1<<std::endl;
 		}
 	}
