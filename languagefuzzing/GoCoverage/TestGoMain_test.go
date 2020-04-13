@@ -39,7 +39,7 @@ func TestURLs(t *testing.T) {
             fmt.Println(err)
             return
     	}
-    	    l, err := f.WriteString("["+execeptions[:1]+"]")
+    	l, err := f.WriteString("["+execeptions[:1]+"]")
     	if err != nil {
             fmt.Println(err)
             f.Close()
