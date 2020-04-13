@@ -25,7 +25,7 @@ func TestURLs(t *testing.T) {
 	}
  
 	readFile.Close()
- 
+ 	exceptions=""
 	for _, eachline := range fileTextLines {
 		
 		u, err :=url.Parse(eachline)
