@@ -25,17 +25,17 @@ func TestURLs(t *testing.T) {
 	}
  
 	readFile.Close()
- 	exceptions=""
+ 	exceptions;:=""
 	for _, eachline := range fileTextLines {
 		
 		u, err :=url.Parse(eachline)
 		if err != nil {
-		    exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+err+"\"},"
+		    exceptions:=exceptions+"\n{ url:\""+eachline+"\",\n exception:\""+err+"\"},"
 		}
 
 	}
-	f, err := os.Open("GoExceptions.txt")
-	fmt.println("created file")
+	f, err := os.Create("GoExceptions.txt")
+	
         if err != nil {
             fmt.Println(err)
             return
