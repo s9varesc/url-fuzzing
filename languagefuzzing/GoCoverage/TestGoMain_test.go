@@ -6,6 +6,7 @@ import (
 	"os"
 	"net/url"
 	"testing"
+	"fmt"
 )
 func TestURLs(t *testing.T) {
 	//file reading from https://webdamn.com/read-file-line-by-line-using-golang/
@@ -27,7 +28,21 @@ func TestURLs(t *testing.T) {
  
 	for _, eachline := range fileTextLines {
 		
-		url.Parse(eachline)
+		u, err :=url.Parse(eachline)
+		if err != nil {
+		    exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+err+"\"},"
+		}
 
 	}
+	f, err := os.Create("GoExceptions.txt")
+        if err != nil {
+            fmt.Println(err)
+            return
+    	}
+    	    l, err := f.WriteString("["+execeptions[:1]+"]")
+    	if err != nil {
+            fmt.Println(err)
+            f.Close()
+            return
+    	}
 }
