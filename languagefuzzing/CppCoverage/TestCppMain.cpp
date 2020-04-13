@@ -59,7 +59,7 @@ int main()
 			}
 			catch(const std::exception& e)
 			{
-			    exceptions.append("\n{ url:\""
+			    exceptions.append("\n{ url:\"");
 			    exceptions.append(line);
     			    exceptions.append("\",\n exception:\"");
 			    exceptions.append(e.what());
