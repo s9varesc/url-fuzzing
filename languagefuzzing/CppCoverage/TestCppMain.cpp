@@ -1,6 +1,7 @@
 
 #include "Poco/URI.h"	
 #include <iostream>
+#include <exception>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -42,6 +43,7 @@ int main()
 {
 	
 	std::vector<std::string> vecOfStr;
+	std::string exceptions;
  
 	// Get the contents of file in a vector
 	bool result = getFileContent("../urls/plainURLs", vecOfStr);
@@ -55,8 +57,25 @@ int main()
 			{
 			    Poco::URI uri1(line);
 			}
-			catch(...){}
+			catch(exception& e)
+			{
+			    exceptions.append("\n{ url:\""
+			    exceptions.append(line);
+    			    exceptions.append("\",\n exception:\"");
+			    exceptions.append(e.what());
+			    exceptions.append("\"},");
+			}
 			//std::cout<<uri1<<std::endl;
 		}
 	}
+	std::string exceptionsfinal;
+	exceptionsfinal.append("["+exceptions.substr(0,exceptions.length()-1)+"]");
+        std::ofstream os("CppExceptions.txt");  
+	if (!os) { 
+	    std::cerr<<"Error writing to ..."<<std::endl; 
+	} else {  
+  	    os << exceptionsfinal;  
+	}
+}  
+	
 }

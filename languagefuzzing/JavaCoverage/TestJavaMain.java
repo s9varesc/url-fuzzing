@@ -32,17 +32,24 @@ class InputReader {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        parsingHandler.writeExceptionsFile();
     }
 
 }
 class ParsingHandler {
+    private String exceptions="";
 
     public void parseInput(String input){
         try {
             URL url=new URL(input);
         } catch (Exception e) {
-            //System.out.println("caught exception on parse of: "+input);
-            //System.out.println(e.getMessage());
+            exceptions+="\n{ url:\""+input+"\",\n exception:\""+e.toString()+"\"},";
         }
     }
+
+   public void writeExceptionsFile(){
+	try ( PrintStream out = new PrintStream(new FileOutputStream("JavaExceptions.txt"))) {
+    		out.print("["+exceptions.substring(0, exceptions.length() - 1)+"]");}
+	}
+   }
 }
