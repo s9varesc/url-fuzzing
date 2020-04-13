@@ -25,7 +25,7 @@ func TestURLs(t *testing.T) {
 	}
  
 	readFile.Close()
- 	exceptions:=""
+ 	var exceptions:=""
 	for _, eachline := range fileTextLines {
 		
 		u, err :=url.Parse(eachline)
@@ -34,16 +34,9 @@ func TestURLs(t *testing.T) {
 		}
 
 	}
-	f, err := os.Create("./GoExceptions.txt")
 	
-        if err != nil {
-            fmt.Println(err)
-            return
-    	}
-    	l, err := f.WriteString("["+exceptions[:1]+"]")
+	err = ioutil.WriteFile("GoExceptions.txt", "["+exceptions[:1]+"]", 0644)
     	if err != nil {
-            fmt.Println(err)
-            f.Close()
-            return
+            panic(err)
     	}
 }
