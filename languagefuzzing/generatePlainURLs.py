@@ -4,7 +4,7 @@ urls=""
 rel_dir='./urls/'
 for filename in os.listdir(rel_dir):
     if filename != "plainURLs":
-        print "opening" + filename
+        
         f=open(rel_dir+filename)
         s = f.read()
         start=s.find("spec: \"")+7
