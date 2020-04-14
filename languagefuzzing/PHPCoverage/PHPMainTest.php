@@ -16,7 +16,7 @@ $exceptions="";
 while(! feof($file))
   {
   $url= fgets($file);
-  $url= substr($url, 0, -1)
+  $url= substr($url, 0, -1);
   //parse_url($url);
   
 try {
