@@ -21,8 +21,8 @@ main(void)
 	UriUriA uriA;
 	stateA.uri = &uriA;
 	
-	
-	if (((int) rc=uriParseUriA(&stateA, line)) != URI_SUCCESS) {
+	int rc;
+	if ((rc=uriParseUriA(&stateA, line)) != URI_SUCCESS) {
     	    //write url + rc to string
 	} else{
 		uriFreeUriMembersA(&uriA);
