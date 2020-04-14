@@ -11,7 +11,7 @@ import (
 )
 func TestURLs(t *testing.T) {
 	//file reading from https://webdamn.com/read-file-line-by-line-using-golang/
-	readFile, err := os.Open("../urls/plainURLs")
+	readFile, err := os.Open("/../urls/plainURLs")
  
 	if err != nil {
 		log.Fatalf("failed to open file: %s", err)
@@ -36,15 +36,15 @@ func TestURLs(t *testing.T) {
 
 	}
 	
-	file, err := os.Create("/home/coverageReports/Exceptions/GoExceptions.txt", os.O_CREATE)
+	file, err := os.Create("GoExceptions.txt")
 
     	if err != nil {
 	    fmt.Println(err)
             return
     	}
     	
-
     	file.WriteString("write file in golang")
 	file.Sync()
+	file.Close()
 
 }
