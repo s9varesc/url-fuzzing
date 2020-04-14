@@ -2,7 +2,14 @@
 require "./vendor/league/uri/src/UriString.php";
 require "./vendor/league/uri-interfaces/src/Contracts/UriException.php";
 require "./vendor/league/uri-interfaces/src/Exceptions/SyntaxError.php";
-require "./vendor/league/uri-interfaces/src/Exceptions/";
+
+
+foreach (glob("./vendor/league/uri-interfaces/src/Exceptions/*.php") as $filename)
+{
+    require $filename;
+}
+
+
 
 
 use PHPUnit\Framework\TestCase;
