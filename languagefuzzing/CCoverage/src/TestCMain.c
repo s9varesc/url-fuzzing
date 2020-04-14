@@ -22,7 +22,7 @@ main(void)
 	stateA.uri = &uriA;
 	
 	
-	if ((int rc=uriParseUriA(&stateA, line)) != URI_SUCCESS) {
+	if (((int) rc=uriParseUriA(&stateA, line)) != URI_SUCCESS) {
     	    //write url + rc to string
 	} else{
 		uriFreeUriMembersA(&uriA);

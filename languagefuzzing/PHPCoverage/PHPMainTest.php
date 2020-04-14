@@ -1,7 +1,7 @@
 <?php
 require "./vendor/league/uri/src/UriString.php";
 require "./vendor/league/uri-interfaces/src/Contracts/UriException.php";
-require "./vendor/league/uri-interfaces/src/Exceptions/SyntaxError.php";
+
 
 
 foreach (glob("./vendor/league/uri-interfaces/src/Exceptions/*.php") as $filename)
