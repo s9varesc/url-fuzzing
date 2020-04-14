@@ -22,19 +22,19 @@ main(void)
 	stateA.uri = &uriA;
 	
 	
-	if (uriParseUriA(&stateA, line) != URI_SUCCESS) {
-    	    /* Failure (no need to call uriFreeUriMembersA) */
+	if ((rc=uriParseUriA(&stateA, line)) != URI_SUCCESS) {
+    	    //write url + rc to string
 	} else{
 		uriFreeUriMembersA(&uriA);
 	}
 
     }
 
-   FILE *fp = fopen("CExceptions.txt", "ab");
-   if (fp != NULL)
+   FILE *nfp = fopen("CExceptions.txt", "ab");
+   if (nfp != NULL)
    {
-       fputs("write test", fp);
-       fclose(fp);
+       fputs("write test", nfp);
+       fclose(nfp);
    }
    free(line);
    exit(EXIT_SUCCESS);

@@ -7,7 +7,7 @@ IO.foreach("../urls/plainURLs"){|block|
 	    uri = URI(block) 
 	    
 	rescue URI::InvalidURIError => e
-	   exceptions+="\n{ url:\""+block+"\",\n exception:\""+e.message+"\"},";
+	   exceptions+="\n{ url:\""+block[0..-2]+"\",\n exception:\""+e.message+"\"},";
 	end
 }
     File.open('RubyExceptions.txt', 'w') do |f|  

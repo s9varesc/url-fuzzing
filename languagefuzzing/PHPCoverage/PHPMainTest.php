@@ -2,6 +2,7 @@
 require "./vendor/league/uri/src/UriString.php";
 require "./vendor/league/uri-interfaces/src/Contracts/UriException.php";
 require "./vendor/league/uri-interfaces/src/Exceptions/SyntaxError.php";
+require "./vendor/league/uri-interfaces/src/Exceptions/";
 
 
 use PHPUnit\Framework\TestCase;
