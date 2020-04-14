@@ -53,7 +53,7 @@ int main()
 		// Print the vector contents
 		for(std::string & line : vecOfStr){
 			try {
-			    line=line.substring(0,line.length()-1)
+			    line=line.substr(0,line.length()-1)
 			} catch(const std::exception& e){
 				
 			}			
