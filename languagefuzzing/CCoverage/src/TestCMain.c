@@ -30,11 +30,12 @@ main(void)
 
     }
 
-   FILE *nfp = fopen("CExceptions.txt", "ab");
+   FILE *nfp = fopen("CExceptions.txt", "w");
    if (nfp != NULL)
    {
        fputs("write test", nfp);
        fclose(nfp);
+       
    }
    free(line);
    exit(EXIT_SUCCESS);
