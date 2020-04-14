@@ -36,7 +36,7 @@ func TestURLs(t *testing.T) {
 
 	}
 	
-	file, err := os.Create("/home/coverageReports/Exceptions/GoExceptions.txt")
+	file, err := os.Create("/home/coverageReports/Exceptions/GoExceptions.txt", os.O_CREATE)
 
     	if err != nil {
             return
