@@ -42,7 +42,7 @@ func TestURLs(t *testing.T) {
 	    fmt.Println(err)
             return
     	}
-    	defer file.Close()
+    	
 
     	file.WriteString("write file in golang")
 	file.Sync()
