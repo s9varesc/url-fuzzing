@@ -42,7 +42,10 @@ class ParsingHandler {
     private String exceptions="";
 
     public void parseInput(String input){
-	input=input.substring(0,input.length()-1);
+	if (input.length()>0){
+	    input=input.substring(0,input.length()-1);
+	}
+	
         try {
             URL url=new URL(input);
         } catch (Exception e) {
