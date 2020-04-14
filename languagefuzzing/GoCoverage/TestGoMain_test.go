@@ -31,12 +31,18 @@ func TestURLs(t *testing.T) {
 		
 		u, err :=url.Parse(eachline)
 		if err != nil {
-		    exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+err+"\"},"
+		    //exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+err+"\"},"
 		}
 
 	}
 	
-	f, _ := os.Create("GoExceptions.txt")
-	f.WriteString("TEST")
+	file, err := os.Create("GoExceptions.txt")
+
+    	if err != nil {
+            return
+    	}
+    	defer file.Close()
+
+    	file.WriteString("write file in golang")
 
 }
