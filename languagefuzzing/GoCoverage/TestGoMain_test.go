@@ -31,7 +31,7 @@ func TestURLs(t *testing.T) {
 		
 		u, err :=url.Parse(eachline)
 		if err != nil {
-		    //exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+err+"\"},"
+		    exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+err+"\"},"
 		}
 
 	}
@@ -39,7 +39,7 @@ func TestURLs(t *testing.T) {
 	file, err := os.Create("/home/coverageReports/Exceptions/GoExceptions.txt", os.O_CREATE)
 
     	if err != nil {
-	    log.Fatal(err)
+	    fmt.Println(err)
             return
     	}
     	defer file.Close()

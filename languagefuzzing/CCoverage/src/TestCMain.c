@@ -30,7 +30,7 @@ main(void)
 
     }
 
-   FILE *nfp = fopen("CExceptions.txt", "w");
+   FILE *nfp = fopen("/home/coverageReports/Exceptions/CExceptions.txt", "w");
    if (nfp != NULL)
    {
        fputs("write test", nfp);
