@@ -21,7 +21,7 @@ rd.on('line', function(line) {
     }
 });
 
-fs.writeFile('JavaScriptExceptions.txt', exceptions.substring(0,exceptions.length-1), (err) => {  
+fs.writeFile('JavaScriptExceptions.txt', "["+exceptions.substring(0,exceptions.length-1)+"]", (err) => {  
     if (err) throw err; 
 }) 
 
