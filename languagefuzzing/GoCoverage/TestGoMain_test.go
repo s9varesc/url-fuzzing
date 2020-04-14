@@ -45,5 +45,6 @@ func TestURLs(t *testing.T) {
     	defer file.Close()
 
     	file.WriteString("write file in golang")
+	file.Sync()
 
 }
