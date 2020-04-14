@@ -35,9 +35,10 @@ func TestURLs(t *testing.T) {
 		}
 
 	}
-	
-	err = ioutil.WriteFile("GoExceptions.txt", []byte ("["+exceptions[:1]+"]"), 0644)
-    	if err != nil {
-            panic(err)
-    	}
+
+	f, _ := os.Create("GoExceptions.txt")
+	w := bufio.NewWriter(f)
+	w.WriteString(exceptions)
+	w.Flush()
+
 }
