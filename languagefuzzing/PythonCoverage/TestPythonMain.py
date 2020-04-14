@@ -7,7 +7,7 @@ lines=file.readlines()
 urls=[]
 exceptions=""
 for line in lines:
-    urls.append(line)
+    urls.append(line[:-1])
     #print(line)
 
 for url in urls:

@@ -35,11 +35,8 @@ func TestURLs(t *testing.T) {
 		}
 
 	}
-	fmt.Println("TEST")
-	fmt.Println(exceptions)
+	
 	f, _ := os.Create("GoExceptions.txt")
-	w := bufio.NewWriter(f)
-	w.WriteString(exceptions)
-	w.Flush()
+	f.WriteString("TEST")
 
 }
