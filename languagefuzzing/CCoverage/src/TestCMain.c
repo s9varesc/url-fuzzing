@@ -30,6 +30,12 @@ main(void)
 
     }
 
+   FILE *fp = fopen("CExceptions.txt", "ab");
+   if (fp != NULL)
+   {
+       fputs("write test", fp);
+       fclose(fp);
+   }
    free(line);
    exit(EXIT_SUCCESS);
 }
