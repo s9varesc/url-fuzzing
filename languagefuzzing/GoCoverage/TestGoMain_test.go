@@ -36,7 +36,7 @@ func TestURLs(t *testing.T) {
 
 	}
 	
-	err = ioutil.WriteFile("GoExceptions.txt", "["+exceptions[:1]+"]", 0644)
+	err = ioutil.WriteFile("GoExceptions.txt", []byte ("["+exceptions[:1]+"]"), 0644)
     	if err != nil {
             panic(err)
     	}

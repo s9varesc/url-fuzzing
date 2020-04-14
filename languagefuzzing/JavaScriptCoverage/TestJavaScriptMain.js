@@ -13,6 +13,7 @@ var rd = readline.createInterface({
 
 rd.on('line', function(line) {
     try {
+	line=line.substring(0,line.length-1)
         const url=new URI(line);
     }
     catch(err){
