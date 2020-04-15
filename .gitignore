@@ -76,6 +76,16 @@ vendor/
 ## JavaScript
 node_modules/
 
+##generated exception files
+CExceptions.txt
+CppExceptions.txt
+JavaExceptions.txt
+RubyExceptions.txt
+PyhtonExceptions.txt
+GoExceptions.txt
+PHPExceptions.txt
+JavaScriptExceptions.txt
+
 #old stuff
 
 #JaCoCo
