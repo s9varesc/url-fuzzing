@@ -11,19 +11,55 @@ main(void)
     size_t len = 0;
     ssize_t read;
 
-   fp = fopen("../../urls/plainURLs", "r");
+    #define ADD_SPACE 1500
+    char* exceptions;
+    int max_size=ADD_SPACE;
+
+    exceptions=(char*)malloc(sizeof(char)*max_size);
+    if (exceptions == NULL){
+	exit(EXIT_FAILURE);
+    }
+    strcat(exceptions, "[");    
+
+    fp = fopen("../../urls/plainURLs", "r");
     if (fp == NULL)
         exit(EXIT_FAILURE);
 
-   while ((read = getline(&line, &len, fp)) != -1) {
+    char before[] = "\n{ url:\"";
+    char middle[] = "\",\n exception:\"";
+    char end[] = "\"},";
+    
+
+    while ((read = getline(&line, &len, fp)) != -1) {
         //printf("%s", line);
 	UriParserStateA stateA;
 	UriUriA uriA;
 	stateA.uri = &uriA;
 	
+	char * addstr;
+	int addsize=strlen(before)+strlen(middle)+strlen(end);
+	
 	int rc;
+	
+
 	if ((rc=uriParseUriA(&stateA, line)) != URI_SUCCESS) {
     	    //write url + rc to string
+		char rcstr[6];
+		sprintf(rcstr, "%i",stateA.errorCode);
+		addsize+=strlen(line)+strlen(rcstr);
+		addstr=(char*)calloc(addsize+1,sizeof(char));
+		strcat(addstr,before);
+		strcat(addstr,line);
+		strcat(addstr,middle);
+		strcat(addstr,rcstr);
+		strcat(addstr,end);
+		//printf("%s", addstr);
+		if (strlen(exceptions)+addsize >= max_size){
+		    max_size+=ADD_SPACE;
+		    exceptions=realloc(exceptions, max_size*sizeof(char));
+		}
+		strcat(exceptions,addstr);
+
 	} else{
 		uriFreeUriMembersA(&uriA);
 	}
@@ -33,7 +69,9 @@ main(void)
    FILE *nfp = fopen("CExceptions.txt", "w");
    if (nfp != NULL)
    {
-       fputs("write test", nfp);
+       exceptions[strlen(exceptions)-1]=0;
+       strcat(exceptions,"]");
+       fputs(exceptions, nfp);
        fclose(nfp);
        
    }
