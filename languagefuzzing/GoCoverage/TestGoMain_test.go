@@ -7,12 +7,13 @@ import (
 	"net/url"
 	"testing"
 	"fmt"
-	"io/ioutil"
+	//"io/ioutil"
 )
 func TestURLs(t *testing.T) {
+	
 	//file reading from https://webdamn.com/read-file-line-by-line-using-golang/
-	readFile, err := os.Open("/../urls/plainURLs")
- 
+	readFile, err := os.Open("../urls/plainURLs")
+ 	
 	if err != nil {
 		log.Fatalf("failed to open file: %s", err)
 	}
@@ -29,21 +30,20 @@ func TestURLs(t *testing.T) {
  	exceptions:=""
 	for _, eachline := range fileTextLines {
 		
-		u, err :=url.Parse(eachline)
+		_, err :=url.Parse(eachline)
 		if err != nil {
-		    exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+err+"\"},"
+		    exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+err.Error()+"\"},"
 		}
 
 	}
 	
 	file, err := os.Create("GoExceptions.txt")
-
     	if err != nil {
 	    fmt.Println(err)
             return
     	}
     	
-    	file.WriteString("write file in golang")
+    	file.WriteString("["+exceptions[:len(exceptions)-1]+"]")
 	file.Sync()
 	file.Close()
 
