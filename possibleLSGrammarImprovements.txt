@@ -9,7 +9,7 @@
 	grammar: allow ws URLs
 	
 - code: ParseAfterScheme (lines 144-147)
-	grammar: check authority/path definitions
+	grammar: check authority/path definitions -> allow urls without scheme, use domain production
 
 - code: ParseAuthority (lines 154-170)
 	grammar: check authority definitions

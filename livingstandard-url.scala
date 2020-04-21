@@ -6,7 +6,7 @@ import saarland.cispa.se.tribble.dsl._
 
 Grammar(
   'url := 'relativeURLwithFragment | 'absoluteURLwithFragment,
-  'absoluteURLwithFragment := 'absoluteURL ~ ("#" ~ 'URLfragment).?,
+  'absoluteURLwithFragment := 'ws.rep ~ ('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
   'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL)
     | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL)
     | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL)) ~ ("?" ~ 'URLquery).?,
@@ -15,7 +15,7 @@ Grammar(
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := ("f" | "F") ~ ("i" | "I") ~ ("l" | "L") ~ ("e" | "E"),
 
-  'relativeURLwithFragment := 'relativeURL ~ ("#" ~ 'URLfragment).?,
+  'relativeURLwithFragment := 'ws.rep ~ ('relativeURL ~ ("#" ~ 'URLfragment).?).?,
   'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
   'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
@@ -91,5 +91,6 @@ Grammar(
   'alpha := "[a-zA-Z]".regex,
   'hexdig := ("[a-f]".regex) | 'digit,
   'unicodeHEX := 'digit | ("[A-F]".regex),
-  'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig
+  'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
+  'ws := " " | "\t"| "\r"|"\n"
 )
