@@ -108,22 +108,22 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       String path=components.get("path");
       String query=dict.get("URLquery");
       String ref=components.get("ref");
+      String pqr="";
       if(path !=null) {
-        String pqr = path;
-        if (query != null) {
-          pqr += "?" + query;
-        }
-        if (ref != null) {
-          pqr += "#" + ref;
-          //build hasRef
-          components.put("hasRef", "true");
-        } else {
-          components.put("hasRef", "false");
-        }
-        components.put("pathQueryRef", pqr);
-      } else {
-	components.put("pathQueryRef", "");
+        pqr = path;
       }
+      if (query != null) {
+        pqr += "?" + query;
+      }
+      if (ref != null) {
+        pqr += "#" + ref;
+          //build hasRef
+        components.put("hasRef", "true");
+      } else {
+        components.put("hasRef", "false");
+      }
+      components.put("pathQueryRef", pqr);
+
       //build scheme
       String specialnf=dict.get("URLspecialSchemeNotFile");
       String nonspecial=dict.get("URLnonSpecialScheme");
