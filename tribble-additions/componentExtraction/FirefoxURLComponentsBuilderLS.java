@@ -121,6 +121,8 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
           components.put("hasRef", "false");
         }
         components.put("pathQueryRef", pqr);
+      } else {
+	components.put("pathQueryRef", "");
       }
       //build scheme
       String specialnf=dict.get("URLspecialSchemeNotFile");
