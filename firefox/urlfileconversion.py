@@ -24,7 +24,7 @@ for filename in os.listdir(dir):
 	if filename[0]=="c": #open only component files
 		f=open(dir+"/"+filename, "r")
 		url=f.read()
-		urldata+=url+"];\n"
+		urldata+=url+"];"
 		prefix="\"use strict\";\
 	\n var gIoService = Cc[\"@mozilla.org/network/io-service;1\"].getService(Ci.nsIIOService);\n"
 		js_file=prefix+"\n"+urldata+"\n"+suffix
