@@ -121,6 +121,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
         components.put("hasRef", "true");
       } else {
         components.put("hasRef", "false");
+	components.put("ref", "");
       }
       components.put("pathQueryRef", pqr);
 
@@ -139,7 +140,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       //build prePath
       String scheme=components.get("scheme");
       String host=components.get("host");
-      String userinfo=components.get("userinfo");
+      String userinfo=dict.get("userinfo");
       String p=components.get("port");
       String prePath="";
       boolean first=true;
