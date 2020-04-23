@@ -5,21 +5,21 @@ import saarland.cispa.se.tribble.dsl._
 //(whenever the living standard documentation was not sufficient to formulate a grammar)
 
 Grammar(
-  'url := 'relativeURLwithFragment | 'absoluteURLwithFragment,
+  'url := "" ~ ('relativeURLwithFragment | 'absoluteURLwithFragment),
   'absoluteURLwithFragment := 'ws.rep ~ ('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
   'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL)
     | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL)
     | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL)) ~ ("?" ~ 'URLquery).?,
 
-  'URLspecialSchemeNotFile := "ftp" | "http" | "https" | "ws" | "wss", //TODO enough?
+  'URLspecialSchemeNotFile := "ftp" | "http" | "https" | "ws" | "wss", 
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
-  'URLschemeFile := ("f" | "F") ~ ("i" | "I") ~ ("l" | "L") ~ ("e" | "E"),
+  'URLschemeFile := "file",
 
   'relativeURLwithFragment := 'ws.rep ~ ('relativeURL ~ ("#" ~ 'URLfragment).?).?,
   'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
-  'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
+  'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL | 'ws,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
-    | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL,
+    | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL | 'ws,
   'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
   'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?,
 
@@ -68,7 +68,7 @@ Grammar(
     | ("FDF" ~ 'unicodeHEX)),
   'host := ('userinfo ~ "@").? ~ 'domain,
   //missing ipfuture, zoneid
-  'domain := ('unreserved | 'percentEncodedByte | 'subdelims).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
+  'domain := ('unreserved | 'percentEncodedByte | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep,
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
@@ -92,5 +92,5 @@ Grammar(
   'hexdig := ("[a-f]".regex) | 'digit,
   'unicodeHEX := 'digit | ("[A-F]".regex),
   'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
-  'ws := " " | "\t"| "\r"|"\n"
+  'ws := " " | "\t" | "\r" 
 )
