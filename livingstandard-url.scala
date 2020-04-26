@@ -19,27 +19,27 @@ Grammar(
   'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
   'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL | 'ws,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
-    | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL | 'ws,
+    | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL | 'empty | 'ws,
   'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
-  'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?,
+  'schemeRelativeSpecialURL := "//" ~ (('host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?) | 'empty ),
 
   'URLport := 'digit.rep,
-  'schemeRelativeURL := "//" ~ 'opaqueHostAndPort,
-  'opaqueHostAndPort := "" | ('opaqueHost ~ (":" ~ 'URLport).?),
+  'schemeRelativeURL := "//" ~ ('opaqueHostAndPort | 'empty),
+  'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?,
   'opaqueHost := ('URLunit ~ 'URLunit.rep) | ("[" ~ 'ipv6address ~ "]"),
-  'schemeRelativeFileURL := "//" ~ (('host ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL),
+  'schemeRelativeFileURL := "//" ~ (('host ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL | 'empty),
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
-  'pathAbsoluteNonWindowsFileURL := 'pathRelativeURL ~ 'windowsDriveLetter ~ "/",
+  'pathAbsoluteNonWindowsFileURL := 'pathRelativeURL ~ 'windowsDriveLetter ~ ("/"| "\\").?,
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
-  'pathRelativeURL := ('URLpathSegment ~ "/" ~ 'pathRelativeURL) | "",
-  'pathRelativeSchemelessURL := 'pathRelativeURL ~ ":",
+  'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
+  'pathRelativeSchemelessURL := ('pathRelativeURL ~ ":") | 'empty,
   //pathRelativeURL can't start with URLscheme
   'URLpathSegment := ('URLunit.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
   // URLunit can't be /,?, singleDotPathSegment, doubleDotPathSegment
   'singleDotPathSegment := "." | "%2e",
   'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e",
-  'URLquery := 'URLunit.rep,
-  'URLfragment := 'URLunit.rep,
+  'URLquery := 'URLunit.rep | 'empty,
+  'URLfragment := 'URLunit.rep | 'empty,
   'URLunit := 'URLcodePoint | 'percentEncodedByte,
   'URLcodePoint := 'reserved | 'unreserved | 'unicode,
   'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
@@ -68,7 +68,7 @@ Grammar(
     | ("FDF" ~ 'unicodeHEX)),
   'host := ('userinfo ~ "@").? ~ 'domain,
   //missing ipfuture, zoneid
-  'domain := ('unreserved | 'percentEncodedByte | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
+  'domain := ('unreserved | 'percentEncodedByte | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]") | 'empty,
   'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep,
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
@@ -92,5 +92,6 @@ Grammar(
   'hexdig := ("[a-f]".regex) | 'digit,
   'unicodeHEX := 'digit | ("[A-F]".regex),
   'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
-  'ws := " " | "\t" | "\r" 
+  'ws := " " | "\t" | "\r" ,
+  'empty := ""
 )
