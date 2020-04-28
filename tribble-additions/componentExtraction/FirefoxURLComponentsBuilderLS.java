@@ -74,7 +74,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       else{
         components.put("spec", dict.get("absoluteURLwithFragment"));
       }
-
+      String spec=components.get("spec");
       //build path
 
       String pa=dict.get("pathAbsoluteURL");
@@ -149,7 +149,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       String host=components.get("host");
       String userinfo=dict.get("userinfo");
       String p=components.get("port");
-      String slashes=components.get("slashes");
+      String slashes=dict.get("slashes");
       String prePath="";
       boolean first=true; 
       if(scheme != null){
