@@ -14,7 +14,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       this.InternalComponentNames.add("spec");
       this.InternalComponentNames.add("specIgnoringRef");
       this.InternalComponentNames.add("scheme");
-      this.InternalComponentNames.add("hostPort");
+      //this.InternalComponentNames.add("hostPort");
       this.InternalComponentNames.add("host");
       this.InternalComponentNames.add("port");
       this.InternalComponentNames.add("userPass");
@@ -40,7 +40,14 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       String result="{";
       for(String key:components.keySet()){
         if(key != "hasRef") {
-          result += key + ":\"" + components.get(key) + "\",\n";
+	  String content = components.get(key);
+	  String tmp=content.replaceAll("\\", "\\");
+	  if (key=="host"){
+	    if (tmp.startsWith("[") && tmp.endsWith("]")){
+	      tmp=tmp.subSequence(1, tmp.length()-2);
+	    }
+	  }
+          result += key + ":\"" + tmp + "\",\n";
         }
         else{
           result += key + ":" + components.get(key) + ",\n";
@@ -91,17 +98,17 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
         }
       }
       //build hostport
-      String hosts=components.get("host");
+      /*String hosts=components.get("host");
       String port=components.get("port");
       if(hosts !=null){
         if(port !=null){
-          components.put("hostPort", hosts+":"+port);
+          components.put("hostPort", hosts+":"+port); //TODO only add ":" if it is there originally -> search for hosts+":"+port in string
         }
         else{
           components.put("hostPort", hosts);
         }
 
-      }
+      }*/
 
 
       //build pathQueryRef
@@ -113,7 +120,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
         pqr = path;
       }
       if (query != null) {
-        pqr += "?" + query;
+        pqr += "?" + query; 
       }
       if (ref != null) {
         pqr += "#" + ref;
@@ -142,21 +149,25 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       String host=components.get("host");
       String userinfo=dict.get("userinfo");
       String p=components.get("port");
+      String slashes=components.get("slashes");
       String prePath="";
-      boolean first=true;
+      boolean first=true; 
       if(scheme != null){
-        prePath+=scheme +":";
+        prePath+=scheme ;
+	if (spec.startsWith(scheme+":")){
+	  prePath+=":";
+	}
       }
-      if(userinfo != null){
+      if(userinfo != null && userinfo != ""){
         if(first){
-          prePath+="//";
+          prePath+=slashes;
           first=false;
         }
         prePath+=userinfo+"@";
       }
       if(host != null){
         if(first){
-          prePath+="//";
+          prePath+=slashes;
           first=false;
         }
         prePath+=host;
