@@ -41,7 +41,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       for(String key:components.keySet()){
         if(key != "hasRef") {
 	  String content = components.get(key);
-	  String tmp=content.replaceAll("\\", "\\");
+	  String tmp=content.replaceAll("\\", "\\\\");
 	  if (key=="host"){
 	    if (tmp.startsWith("[") && tmp.endsWith("]")){
 	      tmp=tmp.subSequence(1, tmp.length()-2).toString();
