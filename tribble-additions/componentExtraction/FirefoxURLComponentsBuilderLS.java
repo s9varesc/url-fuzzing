@@ -172,7 +172,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
         }
         prePath+=host;
       }
-      if(p != null){
+      if(p != null && p!= ""){
         prePath+=":"+p;
       }
       if(prePath!="") {
