@@ -149,7 +149,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       String host=components.get("host");
       String userinfo=dict.get("userinfo");
       String p=components.get("port");
-      String slashes=dict.get("slashes");
+      
       String prePath="";
       boolean first=true; 
       if(scheme != null){
@@ -160,14 +160,14 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       }
       if(userinfo != null && userinfo != ""){
         if(first){
-          prePath+=slashes;
+          prePath+="//";
           first=false;
         }
         prePath+=userinfo+"@";
       }
       if(host != null){
         if(first){
-          prePath+=slashes;
+          prePath+="//";
           first=false;
         }
         prePath+=host;
