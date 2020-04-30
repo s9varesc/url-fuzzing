@@ -44,7 +44,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
 	  String tmp=content.replaceAll("\\\\", "\\\\\\\\");
 	  if (key=="host"){
 	    if (tmp.startsWith("[") && tmp.endsWith("]")){
-	      tmp=tmp.subSequence(1, tmp.length()-2).toString();
+	      tmp=tmp.subSequence(1, tmp.length()-1).toString();
 	    }
 	  }
           result += key + ":\"" + tmp + "\",\n";
