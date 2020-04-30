@@ -71,9 +71,9 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
         " of " +
         (aTestFunctor ? "modified '" : "'") +
         aTest.spec +
-        "' is '" +
+        "' expected '" +
         expectedVal +
-        "'" + "' actually is '" + aURI[aPropertyName] +"'"
+        "'" + " actually is '" + aURI[aPropertyName] +"'"
     );
     Assert.equal(aURI[aPropertyName], expectedVal);
   }
