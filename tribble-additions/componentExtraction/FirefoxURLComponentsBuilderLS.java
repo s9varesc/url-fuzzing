@@ -90,7 +90,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
       if(ophost !=null){
-        components.put("host", ophost..toLowerCase());
+        components.put("host", ophost.toLowerCase());
       }
       else{
         if(d !=null){
