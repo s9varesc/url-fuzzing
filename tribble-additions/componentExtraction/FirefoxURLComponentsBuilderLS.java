@@ -90,11 +90,11 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
       if(ophost !=null){
-        components.put("host", ophost);
+        components.put("host", ophost..toLowerCase());
       }
       else{
         if(d !=null){
-          components.put("host", d);
+          components.put("host", d.toLowerCase());
         }
       }
       //build hostport
