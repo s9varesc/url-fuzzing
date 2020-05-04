@@ -139,7 +139,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
 
       for (String content: Arrays.asList(specialnf, nonspecial, file)){
         if(content !=null){
-          components.put("scheme", content);
+          components.put("scheme", content.toLowerCase());
         }
       }
 
