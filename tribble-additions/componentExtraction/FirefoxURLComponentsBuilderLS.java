@@ -153,8 +153,8 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       String prePath="";
       boolean first=true; 
       if(scheme != null){
-        prePath+=scheme ;
-	if (spec.startsWith(scheme+":")){
+        prePath+=scheme;
+	if (spec.toLowerCase().startsWith(scheme+":")){
 	  prePath+=":";
 	}
       }
