@@ -175,6 +175,9 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       if(p != null && p!= ""){
         prePath+=":"+p;
       }
+      if(first){
+          prePath+="//";
+      }
       if(prePath!="") {
         components.put("prePath", prePath);
       }
