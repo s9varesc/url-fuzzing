@@ -175,7 +175,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       if(p != null && p!= ""){
         prePath+=":"+p;
       }
-      if(first){
+      if(spec.toLowerCase().startsWith(prePath + "//")){
           prePath+="//";
       }
       if(prePath!="") {
