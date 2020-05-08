@@ -38,8 +38,8 @@ Grammar(
   // URLunit can't be /,?, singleDotPathSegment, doubleDotPathSegment
   'singleDotPathSegment := "." | "%2e",
   'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e",
-  'URLquery := 'URLunit.rep | 'empty,
-  'URLfragment := 'URLunit.rep | 'empty,
+  'URLquery := 'URLunit.rep,
+  'URLfragment := 'URLunit.rep,
   'URLunit := 'URLcodePoint | 'percentEncodedByte,
   'URLcodePoint := 'reserved | 'unreserved | 'unicode,
   'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
