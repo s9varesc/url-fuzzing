@@ -22,11 +22,11 @@ Grammar(
 
    'ipliteral       := "[" ~ ( 'ipv6address | 'ipv6addrz | 'ipvFuture ) ~ "]", 
 
-   'zoneID          := ( 'unreserved | 'pctencoded ).rep(1,1),                   
+   'zoneID          := ( 'unreserved | 'pctencoded ),                   
 
    'ipv6addrz       := 'ipv6address ~ "%25" ~ 'zoneID,                          
 
-   'ipvFuture       := "v" ~ 'hexdig.rep(1,1) ~ "." ~ ( 'unreserved | 'subdelims | ":" ).rep(1,1),
+   'ipvFuture       := "v" ~ 'hexdig ~ "." ~ ( 'unreserved | 'subdelims | ":" ),
 
    'ipv6address     :=                            (( 'h16 ~ ":"  ).rep(6,6) ~ 'ls32)  
                       |                      ( "::" ~ ( 'h16 ~ ":"  ).rep(5,5) ~ 'ls32)
@@ -63,8 +63,8 @@ Grammar(
    'pathempty       := "", 
 
    'segment         := 'pchar.rep, 
-   'segmentnz       := 'pchar.rep(1,1),
-   'segmentnznc     := ( 'unreserved | 'pctencoded | 'subdelims | "@" ).rep(1,1),
+   'segmentnz       := 'pchar,
+   'segmentnznc     :=  'unreserved | 'pctencoded | 'subdelims | "@" ,
                  
    'pchar           := 'unreserved | 'pctencoded | 'subdelims | ":" | "@",
 
