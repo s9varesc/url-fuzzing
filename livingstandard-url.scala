@@ -29,7 +29,7 @@ Grammar(
   'opaqueHost := ('URLunit ~ 'URLunit.rep) | ("[" ~ 'ipv6address ~ "]"),
   'schemeRelativeFileURL := "//" ~ (('host ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL | 'empty),
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
-  'pathAbsoluteNonWindowsFileURL := 'pathRelativeURL ~ 'windowsDriveLetter ~ ("/"| "\\\\").?,
+  'pathAbsoluteNonWindowsFileURL := 'pathRelativeURL ~ 'windowsDriveLetter ~ ("/"| "\\\\").?, //TODO make sure the final tests contain "\"
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'pathRelativeSchemelessURL := ('pathRelativeURL ~ ":").?,
@@ -92,7 +92,7 @@ Grammar(
   'hexdig := ("[a-f]".regex) | 'digit,
   'unicodeHEX := 'digit | ("[A-F]".regex),
   'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
-  'ws := " " | "\\t" | "\\r" | "\\n" ,
+  'ws := " " | "\\t" | "\\r" | "\\n" , //TODO make sure the final tests contain \n etc
   'empty := ""
 )
 
