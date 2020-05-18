@@ -59,7 +59,7 @@ void ExpectInvalidComponent(const Component& component) {
 //TODO
 static URLParseCase parse_cases[]={
 	{"http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
-    {"http:foo.com",                        "http", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL}
+    	{"http:foo.com",                        "http", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL}
 
 }
 
@@ -101,14 +101,14 @@ TEST(URLParser, Parsing){
 		const char* url = parse_cases[i].input;
 		int port = ParsePort(url, parsed.port);
 
-	    EXPECT_TRUE(ComponentMatches(url, cases[i].scheme, parsed.scheme));
-	    EXPECT_TRUE(ComponentMatches(url, cases[i].username, parsed.username));
-	    EXPECT_TRUE(ComponentMatches(url, cases[i].password, parsed.password));
-	    EXPECT_TRUE(ComponentMatches(url, cases[i].host, parsed.host));
-	    EXPECT_EQ(cases[i].port, port);
-	    EXPECT_TRUE(ComponentMatches(url, cases[i].path, parsed.path));
-	    EXPECT_TRUE(ComponentMatches(url, cases[i].query, parsed.query));
-	    EXPECT_TRUE(ComponentMatches(url, cases[i].ref, parsed.ref));
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme));
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].username, parsed.username));
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].password, parsed.password));
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].host, parsed.host));
+	    EXPECT_EQ(parse_cases[i].port, port);
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].path, parsed.path));
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].query, parsed.query));
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].ref, parsed.ref));
 
 	}
 
