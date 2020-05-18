@@ -23,4 +23,4 @@ gn gen out/coverage --args="use_clang_coverage=true is_component_build=false dch
 '''cd /home/chromium/src
 python tools/code_coverage/coverage.py url_unittests -b out/coverage -o out/report -c 'out/coverage/url_unittests --gtest_filter=URLParser.PathURL' -f url/ '''
 
-The generated report will be stored in '''out/report''' and contains the obtained coverage data [like this](reports/existingTestsReport/report.html).
+The generated report will be stored in '''out/report''' and contains the obtained coverage data [like this](ExampleReports/existingTestsReport/report.html).
