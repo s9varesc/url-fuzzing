@@ -5,6 +5,7 @@
 #include "base/stl_util.h"
 #include "testing/gtest/include/gtest/gtest.h"
 #include "url/third_party/mozilla/url_parse.h"
+#include "url/url_util.h"
 
 
 namespace url {
@@ -61,7 +62,7 @@ static URLParseCase parse_cases[]={
 	{"http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
     	{"http:foo.com",                        "http", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL}
 
-}
+};
 
 //test execution
 TEST(URLParser, Parsing){
