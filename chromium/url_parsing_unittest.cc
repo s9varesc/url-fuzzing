@@ -79,15 +79,15 @@ TEST(URLParser, Parsing){
 		else{
 			if( IsStandard(parse_cases[i].input,scheme)){
 				if (scheme == kFileScheme){
-					ParseFileURL(parse_cases[i],len, &parsed);
+					ParseFileURL(parse_cases[i].input,len, &parsed);
 				}
 				else {
 					if (scheme == kFileSystemScheme){
-						ParseFileSystemURL(parse_cases[i], len, &parsed);
+						ParseFileSystemURL(parse_cases[i].input, len, &parsed);
 					}
 					else{
 						//standard schemes, see url_util.cc
-						ParseStandardURL(parse_cases[i], len, &parsed);
+						ParseStandardURL(parse_cases[i].input, len, &parsed);
 					}
 				}
 			}
