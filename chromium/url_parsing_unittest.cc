@@ -77,11 +77,11 @@ TEST(URLParser, Parsing){
 		} 
 		else{
 			if( IsStandard(parse_cases[i].input,scheme)){
-				if (scheme == "file"){
+				if (scheme == kFileScheme){
 					ParseFileURL(parse_cases[i],len, &parsed);
 				}
 				else {
-					if (scheme == "filesystem"){
+					if (scheme == kFileSystemScheme){
 						ParseFileSystemURL(parse_cases[i], len, &parsed);
 					}
 					else{
@@ -92,7 +92,7 @@ TEST(URLParser, Parsing){
 			}
 			else {
 				//non-standard scheme
-				ParsePathURL(parse_cases[i], len, &parsed);
+				ParsePathURL(parse_cases[i], len,false, &parsed);
 			}
 		}
 
