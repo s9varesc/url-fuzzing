@@ -93,7 +93,7 @@ TEST(URLParser, Parsing){
 			}
 			else {
 				//non-standard scheme
-				ParsePathURL(parse_cases[i], len,false, &parsed);
+				ParsePathURL(parse_cases[i].input, len,false, &parsed);
 			}
 		}
 
