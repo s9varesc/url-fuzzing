@@ -78,11 +78,11 @@ TEST(URLParser, Parsing){
 		} 
 		else{
 			if( IsStandard(parse_cases[i].input,scheme)){
-				if (parse_cases[i].input[0,scheme.end()]==kFileScheme){
+				if (parse_cases[i].input.compare(scheme.begin(),scheme.end(),kFileScheme)==0){
 					ParseFileURL(parse_cases[i].input,len, &parsed);
 				}
 				else {
-					if (parse_cases[i].input[0,scheme.end()]==kFileSystemScheme){
+					if (parse_cases[i].input.compare(scheme.begin(),scheme.end(),kFileSystemScheme)==0){
 						ParseFileSystemURL(parse_cases[i].input, len, &parsed);
 					}
 					else{
