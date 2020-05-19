@@ -77,13 +77,13 @@ TEST(URLParser, Parsing){
 			return;
 		} 
 		else{
-			std::string schemeString(parse_cases[i].input + scheme.begin(), parse_cases[i].input+scheme.end());
+			std::string schemeString(parse_cases[i].input + scheme.begin, parse_cases[i].input+scheme.end);
 			if( IsStandard(parse_cases[i].input,scheme)){
 				if (schemeString==kFileScheme){
 					ParseFileURL(parse_cases[i].input,len, &parsed);
 				}
 				else {
-					if (parse_cases[i].input.compare(scheme.begin(),scheme.end(),kFileSystemScheme)==0){
+					if (schemeString==kFileSystemScheme){
 						ParseFileSystemURL(parse_cases[i].input, len, &parsed);
 					}
 					else{
