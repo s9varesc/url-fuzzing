@@ -78,7 +78,7 @@ TEST(URLParser, Parsing){
 		} 
 		else{
 			if( IsStandard(parse_cases[i].input,scheme)){
-				if (parse_cases[i].input.compare(scheme.begin(),scheme.end(),kFileScheme)==0){
+				if (std::string(parse_cases[i].input).compare(scheme.begin(),scheme.end(),kFileScheme)==0){
 					ParseFileURL(parse_cases[i].input,len, &parsed);
 				}
 				else {
