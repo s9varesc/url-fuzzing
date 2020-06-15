@@ -11,7 +11,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
     HashMap<String, String> translation=new HashMap<>();
     String format = "firefox";
 
-    public FirefoxURLComponentsBuilderLS(){
+    public FirefoxURLComponentsBuilder(){
       this.InternalComponentNames.add("spec");
       this.InternalComponentNames.add("specIgnoringRef");
       this.InternalComponentNames.add("scheme");
