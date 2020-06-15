@@ -1,126 +1,194 @@
 package saarland.cispa.se.tribble.execution.componentExtraction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
-  ArrayList<String> InternalComponentNames=new ArrayList<String>();
-  HashMap<String, String> translation=new HashMap<>();
+    ArrayList<String> InternalComponentNames=new ArrayList<String>();
+    HashMap<String, String> translation=new HashMap<>();
+    String format = "firefox";
 
-  public FirefoxURLComponentsBuilder(){
-    this.InternalComponentNames.add("spec");
-    this.InternalComponentNames.add("specIgnoringRef");
-    this.InternalComponentNames.add("scheme");
-    this.InternalComponentNames.add("hostPort");
-    this.InternalComponentNames.add("host");
-    this.InternalComponentNames.add("port");
-    this.InternalComponentNames.add("userPass");
-    this.InternalComponentNames.add("username");
-    this.InternalComponentNames.add("password");
-    this.InternalComponentNames.add("pathQueryRef");
-    this.InternalComponentNames.add("prePath");
-    this.InternalComponentNames.add("hasRef");
-    this.InternalComponentNames.add("ref");
+    public FirefoxURLComponentsBuilderLS(){
+      this.InternalComponentNames.add("spec");
+      this.InternalComponentNames.add("specIgnoringRef");
+      this.InternalComponentNames.add("scheme");
+      //this.InternalComponentNames.add("hostPort");
+      this.InternalComponentNames.add("host");
+      this.InternalComponentNames.add("port");
+      this.InternalComponentNames.add("userPass");
+      this.InternalComponentNames.add("username");
+      this.InternalComponentNames.add("password");
+      this.InternalComponentNames.add("pathQueryRef");
+      this.InternalComponentNames.add("prePath");
+      this.InternalComponentNames.add("hasRef");
+      this.InternalComponentNames.add("ref");
 
 
 
-    translation.put("scheme", "scheme");
-    translation.put("host", "host");
-    translation.put("port", "port");
-    translation.put("userPass","userinfo" );
-    translation.put("ref", "fragment");
 
-  }
+      translation.put("port", "URLport");
+      translation.put("userPass","userinfo" );
+      translation.put("ref", "URLfragment");
 
-  @Override
-  public String buildRepresentation() {
-    Map<String, String> components=buildMapping();
-    String result="{";
-    for(String key:components.keySet()){
-      if(key != "hasRef") {
-        result += key + ":\"" + components.get(key) + "\",\n";
+    }
+
+
+    @Override
+    public String buildRepresentation() {
+      Map<String, String> components=buildMapping();
+      String result="{";
+      for(String key:components.keySet()){
+        if(key != "hasRef") {
+	  String content = components.get(key);
+	  String tmp=content.replaceAll("\\\\", "\\\\\\\\");
+	  if (key=="host"){
+	    if (tmp.startsWith("[") && tmp.endsWith("]")){
+	      tmp=tmp.subSequence(1, tmp.length()-1).toString();
+	    }
+	  }
+          result += key + ":\"" + tmp + "\",\n";
+        }
+        else{
+          result += key + ":" + components.get(key) + ",\n";
+        }
+      }
+      result=result.subSequence(0, result.length()-2).toString();
+      result+="}\n";
+      return result;
+    }
+
+    private Map<String, String> buildMapping(){
+      Map<String, String> components=new HashMap<>();
+      for(String name:translation.keySet()){
+        String content=dict.get(translation.get(name));
+        if (content!=null){
+          components.put(name, content);
+        }
+      }
+      //build spec
+      String url=dict.get("relativeURLwithFragment");
+      if(url !=null){
+        components.put("spec", url);
       }
       else{
-        result += key + ":" + components.get(key) + ",\n";
+        components.put("spec", dict.get("absoluteURLwithFragment"));
       }
-    }
-    result=result.subSequence(0, result.length()-2).toString();
-    result+="}\n";
-    return result;
-  }
+      String spec=components.get("spec");
+      //build path
 
-  private Map<String, String> buildMapping(){
-    Map<String, String> components=new HashMap<>();
-    for(String name:translation.keySet()){
-      String content=dict.get(translation.get(name));
-      if (content!=null){
-        components.put(name, content);
+      String pa=dict.get("pathAbsoluteURL");
+      String panW=dict.get("pathAbsoluteNonWindowsFileURL");
+      String prsl=dict.get("pathRelativeSchemelessURL");
+
+      for (String content: Arrays.asList(panW, pa, prsl)){
+        if(content !=null){
+          components.put("path", content);
+        }
       }
-    }
-    //build spec
-    String uri=dict.get("uri");
-    if (uri != null){
-      components.put("spec", uri);
-    }
-    else {
-      String uriref=dict.get("relativeref");
-      if(uriref != null){
-        components.put("spec", uriref);
+      //build host
+      String ophost=dict.get("opaqueHost");
+      String d=dict.get("domain");
+      if(ophost !=null){
+        components.put("host", ophost.toLowerCase());
       }
-    }
-    //build path
-
-    String pr=dict.get("pathrootless");
-    String pn=dict.get("pathnoscheme");
-    String pae=dict.get("pathabempty");
-    String pa=dict.get("pathabsolute");
-    String pe=dict.get("pathempty");
-    for (String content: Arrays.asList(pae, pa, pe, pr, pn)){
-      if(content !=null){
-        components.put("path", content);
+      else{
+        if(d !=null){
+          components.put("host", d.toLowerCase());
+        }
       }
-    }
-    //build hostport
-    String host=components.get("host");
-    String port=components.get("port");
-    String hostport=host;
-    if(port !=null){
-      hostport+=":"+port;
-    }
-    components.put("hostPort", hostport);
+      //build hostport
+      /*String hosts=components.get("host");
+      String port=components.get("port");
+      if(hosts !=null){
+        if(port !=null){
+          components.put("hostPort", hosts+":"+port); //TODO only add ":" if it is there originally -> search for hosts+":"+port in string
+        }
+        else{
+          components.put("hostPort", hosts);
+        }
 
-    //build pathQueryRef
-    String path=components.get("path");
-    String query=dict.get("query");
-    String ref=components.get("ref");
-    String pqr=path;
-    if (query !=null){
-      pqr+="?"+query;
-    }
-    if(ref !=null){
-      pqr+="#"+ref;
-      //build hasRef
-      components.put("hasRef", "true");
-    }
-    else{
-      components.put("hasRef", "false");
-    }
-    components.put("pathQueryRef", pqr);
-
-    //build prePath
-    String scheme=components.get("scheme");
-    String authority=dict.get("authority");
-    if(scheme != null){
-      components.put("prePath", scheme +"://"+authority);
-    }
-    else{
-      components.put("prePath", "//"+authority);
-    }
+      }*/
 
 
+      //build pathQueryRef
+      String path=components.get("path");
+      String query=dict.get("URLquery");
+      String ref=components.get("ref");
+      String pqr="";
+      if(path !=null) {
+        pqr = path;
+      }
+      if (query != null) {
+        pqr += "?" + query; 
+      }
+      if (ref != null) {
+        pqr += "#" + ref;
+          //build hasRef
+        components.put("hasRef", "true");
+      } else {
+        components.put("hasRef", "false");
+	components.put("ref", "");
+      }
+      components.put("pathQueryRef", pqr);
+
+      //build scheme
+      String specialnf=dict.get("URLspecialSchemeNotFile");
+      String nonspecial=dict.get("URLnonSpecialScheme");
+      String file=dict.get("URLschemeFile");
+
+      for (String content: Arrays.asList(specialnf, nonspecial, file)){
+        if(content !=null){
+          components.put("scheme", content.toLowerCase());
+        }
+      }
 
 
-    return components;
-  }
+      //build prePath
+      String scheme=components.get("scheme");
+      String host=components.get("host");
+      String userinfo=dict.get("userinfo");
+      String p=components.get("port");
+      
+      String prePath="";
+      boolean first=true; 
+      if(scheme != null){
+        prePath+=scheme;
+	if (spec.toLowerCase().startsWith(scheme+":")){
+	  prePath+=":";
+	}
+      }
+      if(userinfo != null && userinfo != ""){
+        if(first){
+          prePath+="//";
+          first=false;
+        }
+        prePath+=userinfo+"@";
+      }
+      if(host != null){
+        if(first){
+          prePath+="//";
+          first=false;
+        }
+        prePath+=host;
+      }
+      if(p != null && p!= ""){
+        prePath+=":"+p;
+      }
+      if(spec.toLowerCase().startsWith(prePath + "//")){
+          prePath+="//";
+      }
+      if(prePath!="") {
+        components.put("prePath", prePath);
+      }
+
+
+
+      return components;
+    }
+
+
+
 }
-
