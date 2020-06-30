@@ -61,8 +61,8 @@ public class DictExtractor {
     List<List<String>> representations = new ArrayList<List<String>>();
     for (ComponentsBuilder cb : componentBuilders){
       List<String> rep = new ArrayList<String>();
-      rep[0]=cb.getComponentFormat();
-      rep[1]=cb.buildRepresentation();
+      rep.add(0, cb.getComponentFormat());
+      rep.add(1, cb.buildRepresentation());
       representations.add(rep);
     }
     return representations;

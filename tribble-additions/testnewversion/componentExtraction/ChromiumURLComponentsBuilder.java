@@ -52,7 +52,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	result+= "\""+components.get("path")+"\",";
       	result+= "\""+components.get("query")+"\",";
       	result+= "\""+components.get("ref")+"\"";
-      	result =+"}";
+      	result +="}";
 
       	String res=result.replaceAll("\"NULL\"", "NULL");
       	result=res;
