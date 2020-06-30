@@ -34,7 +34,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       translation.put("ref", "URLfragment");
 
     }
-
+    public String getComponentFormat(){
+      return format:
+    }
 
     @Override
     public String buildRepresentation() {

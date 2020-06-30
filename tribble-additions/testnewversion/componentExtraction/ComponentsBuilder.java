@@ -66,7 +66,5 @@ public abstract class ComponentsBuilder {
   * 
   * @return a string containing an identification of the component format used, will be used to name the output folder
   */
-  public String getComponentFormat(){
-      return format;
-    }
+  public abstract String getComponentFormat();
 }
