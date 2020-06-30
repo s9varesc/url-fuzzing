@@ -36,7 +36,7 @@ final class GenerateTask extends Command("generate", "Generate sample inputs")
       val components=dictExtractor.extract(tree);
       for(comp<-components.asScala){
         val outdir=Files.createDirectories(Paths.get(outputDir+"/"+comp(0)))
-        val path2 = Files.write(Files.createTempFile(outdir, f"components_file${i + 1}%06d_${tree.size()}%d_${tree.depth()}%d_", suffix), comp(1).getBytes(StandardCharsets.UTF_8))
+        val path2 = Files.write(Files.createTempFile(outdir, f"components_file${i + 1}%06d_${tree.size()}%d_${tree.depth()}%d_", suffix), comp(1))
         logger.debug(s"Generated $path2")
       }
       
