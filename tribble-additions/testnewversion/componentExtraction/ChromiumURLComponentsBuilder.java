@@ -68,7 +68,18 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
     	Map<String, String> components=new HashMap<>();
       	for(String name:translation.keySet()){
         	String content=dict.get(translation.get(name));
-          	components.put(name, content);
+          if (name=="port"){
+            if (content != null){
+              components.put(name, content);
+            }
+            else{
+              components.put(name, "-1");
+            }
+          	
+          }
+          else{
+            components.put(name, content);
+          }
       	}
 
       	//build input = whole URL
