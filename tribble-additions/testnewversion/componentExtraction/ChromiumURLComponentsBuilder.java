@@ -115,7 +115,11 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
 
       	//build username and password
       	String userinfo = dict.get("userinfo");
-      	int colon=userinfo.indexOf(":");
+        int colon=-1;
+        if (userinfo != null){
+          colon=userinfo.indexOf(":");
+        }
+
       	if(colon==-1){
       		components.put("username", userinfo);
       	}
