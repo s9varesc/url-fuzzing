@@ -21,7 +21,7 @@ public class DictExtractor {
     componentBuilders.add(new ChromiumURLComponentsBuilder());
   }
 
-  public String extract(DTree root) {
+  public List<String> extract(DTree root) {
     List<String> componentNames = new ArrayList<String>();
     for (ComponentsBuilder cb : componentBuilders){
       for(String name: cb.getComponentNames()){
