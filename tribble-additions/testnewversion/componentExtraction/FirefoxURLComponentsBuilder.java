@@ -5,12 +5,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
+public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
     ArrayList<String> InternalComponentNames=new ArrayList<String>();
     HashMap<String, String> translation=new HashMap<>();
+    String format = "firefox";
 
-    public FirefoxURLComponentsBuilderLS(){
+    public FirefoxURLComponentsBuilder(){
       this.InternalComponentNames.add("spec");
       this.InternalComponentNames.add("specIgnoringRef");
       this.InternalComponentNames.add("scheme");
@@ -33,6 +34,7 @@ public class FirefoxURLComponentsBuilderLS extends ComponentsBuilder {
       translation.put("ref", "URLfragment");
 
     }
+
 
     @Override
     public String buildRepresentation() {
