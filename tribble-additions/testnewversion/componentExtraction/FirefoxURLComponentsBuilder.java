@@ -35,7 +35,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
     }
     public String getComponentFormat(){
-      return format:
+      return format;
     }
 
     @Override
