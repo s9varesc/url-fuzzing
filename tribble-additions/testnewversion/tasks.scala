@@ -26,13 +26,15 @@ final class GenerateTask extends Command("generate", "Generate sample inputs")
     for ((tree, i) <- trees.zipWithIndex) {
       reporter.processTree(i + 1, tree)
       val input = tree.leaves.mkString
-      val path = Files.write(Files.createTempFile(outputDir+"/plain", f"file${i + 1}%06d_${tree.size()}%d_${tree.depth()}%d_", suffix), input.getBytes(StandardCharsets.UTF_8))
+      val outdir=outputDir+"/plain"
+      val path = Files.write(Files.createTempFile(outdir, f"file${i + 1}%06d_${tree.size()}%d_${tree.depth()}%d_", suffix), input.getBytes(StandardCharsets.UTF_8))
       logger.debug(s"Generated $path")
 
       val dictExtractor=new DictExtractor();
       val components=dictExtractor.extract(tree);
       for(comp<-components){
-        val path2 = Files.write(Files.createTempFile(outputDir+"/"+comp(0), f"components_file${i + 1}%06d_${tree.size()}%d_${tree.depth()}%d_", suffix), comp(1).getBytes(StandardCharsets.UTF_8))
+        val outdir=outputDir+"/"+comp(0)
+        val path2 = Files.write(Files.createTempFile(outdir+, f"components_file${i + 1}%06d_${tree.size()}%d_${tree.depth()}%d_", suffix), comp(1).getBytes(StandardCharsets.UTF_8))
         logger.debug(s"Generated $path2")
       }
       
