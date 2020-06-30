@@ -2,12 +2,12 @@ package saarland.cispa.se.tribble.execution.componentExtraction;
 
 import java.util.*;
 
-public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
+public class FirefoxURLComponentsBuilderOLD extends ComponentsBuilder {
 
   ArrayList<String> InternalComponentNames=new ArrayList<String>();
   HashMap<String, String> translation=new HashMap<>();
 
-  public FirefoxURLComponentsBuilder(){
+  public FirefoxURLComponentsBuilderOLD(){
     this.InternalComponentNames.add("spec");
     this.InternalComponentNames.add("specIgnoringRef");
     this.InternalComponentNames.add("scheme");
