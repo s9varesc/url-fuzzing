@@ -34,7 +34,9 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
     	translation.put("query", "URLquery");
     	translation.put("ref", "URLfragment");
     }
-
+    public String getComponentFormat(){
+      return format:
+    }
 
     public String buildRepresentation(){//TODO needs to be changed when using filesystem URL
     	//build actual representation
