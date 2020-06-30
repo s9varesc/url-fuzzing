@@ -31,6 +31,9 @@ public class FirefoxURLComponentsBuilderOLD extends ComponentsBuilder {
     translation.put("ref", "fragment");
 
   }
+  public String getComponentFormat(){
+      return "firefoxoldgrammar";
+   }
 
   @Override
   public String buildRepresentation() {
