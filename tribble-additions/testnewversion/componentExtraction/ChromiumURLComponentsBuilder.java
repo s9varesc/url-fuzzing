@@ -121,7 +121,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	}
       	else {
       		components.put("username", userinfo.substring(0, colon));
-      		components.put("password", userinfo.substring(colon + 1))
+      		components.put("password", userinfo.substring(colon + 1));
       	}
       	
 
