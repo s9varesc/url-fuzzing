@@ -33,6 +33,8 @@ final class GenerateTask extends Command("generate", "Generate sample inputs")
       logger.debug(s"Generated $path")
 
       val dictExtractor=new DictExtractor();
+      dictExtractor.addComponentsBuilder(new FirefoxURLComponentsBuilder());
+      dictExtractor.addComponentsBuilder(new ChromiumURLComponentsBuilder());
       val components=dictExtractor.extract(tree).asScala;
       for(comp<-components){
         val comp1=comp.asScala
