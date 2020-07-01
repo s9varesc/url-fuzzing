@@ -27,7 +27,7 @@ for filename in os.listdir(dir):
 	
 
 
-f=open("URLTestFiles/url_parsing_unittest.cc","w")
+f=open("url_parsing_unittest.cc","w")
 f.write(prefix+urldata[:2]+"};"+suffix)
 f.close()
 
