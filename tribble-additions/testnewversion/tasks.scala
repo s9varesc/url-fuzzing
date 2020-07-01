@@ -7,7 +7,7 @@ import java.nio.file.Paths
 
 import org.backuity.clist.Command
 import org.log4s.getLogger
-import saarland.cispa.se.tribble.execution.componentExtraction.DictExtractor
+import saarland.cispa.se.tribble.execution.componentExtraction._
 import collection.JavaConverters._
 
 trait Task {
