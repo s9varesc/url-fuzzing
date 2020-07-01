@@ -11,14 +11,13 @@ package saarland.cispa.se.tribble.execution.componentExtraction;
 public class DictExtractor {
   private List<ComponentsBuilder> componentBuilders;
 
-  public DictExtractor(List<ComponentsBuilder> builders){
-    this.componentBuilders=builders;
-  }
 
   public DictExtractor(){
     componentBuilders=new ArrayList<ComponentsBuilder>();
-    componentBuilders.add(new FirefoxURLComponentsBuilder());
-    componentBuilders.add(new ChromiumURLComponentsBuilder());
+  }
+
+  public void addComponentsBuilder(ComponentsBuilder builder){
+    componentBuilders.add(builder);
   }
 
   public List<List<String>> extract(DTree root) {
