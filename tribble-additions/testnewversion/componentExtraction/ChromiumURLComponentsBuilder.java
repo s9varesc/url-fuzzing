@@ -70,7 +70,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	for(String name:translation.keySet()){
         	String content=dict.get(translation.get(name));
           if (name=="port"){
-            if (content != null || content != ""){
+            if (content != null && content != ""){
               components.put(name, content);
             }
             else{
