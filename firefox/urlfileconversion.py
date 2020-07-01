@@ -21,7 +21,7 @@ testnames=[]
 for filename in os.listdir(dir):
 	i+=1
 	urldata="var gTests = ["
-	if filename[0]=="c": #open only component files
+	if filename[0]=="c": #open only component files #can be removed, now only component files in folder
 		f=open(dir+"/"+filename, "r")
 		url=f.read()
 		urldata+=url+"];"
@@ -29,7 +29,7 @@ for filename in os.listdir(dir):
 	\n var gIoService = Cc[\"@mozilla.org/network/io-service;1\"].getService(Ci.nsIIOService);\n"
 		js_file=prefix+"\n"+urldata+"\n"+suffix
 	
-		f=open("URLTestFiles/test_URIs_"+str(i)+".js","w")
+		f=open("URLTestFiles/test_URIs_"+str(i)+".js","w") #TODO collect multiple inputs in test file
 		testnames+=["test_URIs_"+str(i)+".js"]
 		f.write(js_file)
 		f.close()
