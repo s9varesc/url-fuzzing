@@ -46,6 +46,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
 
     	Map<String, String> components=buildMapping();
       	String result="{";
+        result+= "\""+components.get("scheme")+"\",";
       	result+= "\""+components.get("input")+"\",";
       	result+= "\""+components.get("username")+"\",";
       	result+= "\""+components.get("password")+"\",";
