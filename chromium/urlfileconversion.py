@@ -18,7 +18,7 @@ f=open("./url_parsing_suffix.txt","r")
 suffix=f.read()
 i=2
 
-urldata="static URLParseCase parse_cases[]={"
+urldata="\nstatic URLParseCase parse_cases[]={"
 for filename in os.listdir(dir):
 	i+=1
 	f=open(dir+"/"+filename, "r")
@@ -28,7 +28,7 @@ for filename in os.listdir(dir):
 
 
 f=open("url_parsing_unittest.cc","w")
-f.write(prefix+urldata[:2]+"};"+suffix)
+f.write(prefix+urldata[:-2]+"};\n"+suffix)
 f.close()
 
 
