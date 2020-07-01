@@ -13,7 +13,7 @@ args = parser.parse_args()
 dir = args.dir
 
 f1=open("./url_parsing_prefix.txt","r")
-fileprefix=f1.read()
+prefix=f1.read()
 f=open("./url_parsing_suffix.txt","r")
 suffix=f.read()
 i=2
