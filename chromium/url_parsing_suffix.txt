@@ -8,6 +8,7 @@ TEST(URLParser, Parsing){
 		if(!ExtractScheme(parse_cases[i].input, len, &scheme)){
 			//no scheme found
 			//TODO decide what to do
+			ParseStandardURL(parse_cases[i].input, len, &parsed);
 			return;
 		} 
 		else{
