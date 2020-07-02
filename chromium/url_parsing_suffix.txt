@@ -41,7 +41,7 @@ TEST(URLParser, Parsing){
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].username, parsed.username));
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].password, parsed.password));
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].host, parsed.host));
-	    EXPECT_EQ(parse_cases[i].port, port);
+	    EXPECT_EQ(parse_cases[i].port, 7);//port);
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].path, parsed.path));
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].query, parsed.query));
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].ref, parsed.ref));
