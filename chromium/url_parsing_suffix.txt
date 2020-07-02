@@ -36,16 +36,16 @@ TEST(URLParser, Parsing){
 		//verify components
 		//TODO might have to use specialized methods to correctly include inner_...
 		const char* url = parse_cases[i].input;
-		//int port = ParsePort(url, parsed.port);
+		int port = ParsePort(url, parsed.port);
 
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme)) << "parsed scheme" << parse_cases[i].scheme ;/*<< "does not match expected scheme" << parse_cases[i].scheme ;
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].username, parsed.username))<< "parsed username" << parsed.username << "does not match expected username" << parse_cases[i].username ;
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].password, parsed.password))<< "parsed password" << parsed.password << "does not match expected password" << parse_cases[i].password ;
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].host, parsed.host))<< "parsed host" << parsed.host << "does not match expected host" << parse_cases[i].host ;
-	    EXPECT_EQ(parse_cases[i].port, port)<< "parsed port" << parsed.port<< "does not match expected port" << parse_cases[i].port ;
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].path, parsed.path))<< "parsed path" << parsed.path << "does not match expected path" << parse_cases[i].path ;
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].query, parsed.query))<< "parsed query" << parsed.query << "does not match expected query" << parse_cases[i].query ;
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].ref, parsed.ref))<< "parsed fragment" << parsed.ref << "does not match expected fragment" << parse_cases[i].ref ;*/
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme)) << "parsed scheme does not match expected value" << parse_cases[i].scheme ;
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].username, parsed.username))<< "parsed username does not match expected value" <<  parse_cases[i].username ;
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].password, parsed.password))<< "parsed password does not match expected value" << parse_cases[i].password ;
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].host, parsed.host))<< "parsed host does not match expected value" << parse_cases[i].host ;
+	    EXPECT_EQ(parse_cases[i].port, port)<< "parsed port does not match expected value" << parse_cases[i].port ;
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].path, parsed.path))<< "parsed path does not match expected value" << parse_cases[i].path ;
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].query, parsed.query))<< "parsed query does not match expected value" << parse_cases[i].query ;
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].ref, parsed.ref))<< "parsed fragment does not match expected value" << parse_cases[i].ref ;
 
 	}
 
