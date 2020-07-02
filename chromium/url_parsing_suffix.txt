@@ -36,9 +36,9 @@ TEST(URLParser, Parsing){
 		//verify components
 		//TODO might have to use specialized methods to correctly include inner_...
 		const char* url = parse_cases[i].input;
-		int port = ParsePort(url, parsed.port);
+		//int port = ParsePort(url, parsed.port);
 
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme)) << "parsed scheme" << parsed.scheme ;/*<< "does not match expected scheme" << parse_cases[i].scheme ;
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme)) << "parsed scheme" << parse_cases[i].scheme ;/*<< "does not match expected scheme" << parse_cases[i].scheme ;
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].username, parsed.username))<< "parsed username" << parsed.username << "does not match expected username" << parse_cases[i].username ;
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].password, parsed.password))<< "parsed password" << parsed.password << "does not match expected password" << parse_cases[i].password ;
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].host, parsed.host))<< "parsed host" << parsed.host << "does not match expected host" << parse_cases[i].host ;
