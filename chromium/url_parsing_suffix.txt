@@ -46,8 +46,8 @@ TEST(URLParser, Parsing){
 	    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].host, parsed.host);
 	    EXPECT_EQ(parse_cases[i].port, port);
 	    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].path, parsed.path);
-	    EXPECT_PRED3(ComponentMatches(url, parse_cases[i].query, parsed.query);
-	    EXPECT_PRED3(ComponentMatches(url, parse_cases[i].ref, parsed.ref);
+	    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].query, parsed.query);
+	    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].ref, parsed.ref);
 
 	}
 
