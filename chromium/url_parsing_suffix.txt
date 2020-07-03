@@ -40,6 +40,7 @@ TEST(URLParser, Parsing){
 
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme)) << "parsed scheme \""<< ::testing::PrintToString(parsed) <<"\" does not match expected value \"" << parse_cases[i].scheme << "\"";
 	    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].scheme, parsed.scheme );
+	    EXPECT_PRED_FORMAT3(ComponentMatches, url, parse_cases[i].scheme, parsed.scheme );
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].username, parsed.username))<< "parsed username does not match expected value " <<  parse_cases[i].username ;
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].password, parsed.password))<< "parsed password does not match expected value " << parse_cases[i].password ;
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].host, parsed.host))<< "parsed host does not match expected value" << parse_cases[i].host ;
