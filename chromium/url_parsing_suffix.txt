@@ -8,7 +8,7 @@ TEST(URLParser, Parsing){
 		if(!ExtractScheme(parse_cases[i].input, len, &scheme)){
 			//no scheme found
 			// try to parse anyway
-			ParsePathURL(parse_cases[i].input, len,false, &parsed);
+			ParseStandardURL(parse_cases[i].input, len,false, &parsed);
 		} 
 		else{
 			std::string schemeString(parse_cases[i].input + scheme.begin, parse_cases[i].input+scheme.end());
