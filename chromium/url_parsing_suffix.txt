@@ -7,8 +7,7 @@ TEST(URLParser, Parsing){
 
 		if(!ExtractScheme(parse_cases[i].input, len, &scheme)){
 			//no scheme found
-			//TODO decide what to do
-			//break;
+			// try to parse anyway
 			ParsePathURL(parse_cases[i].input, len,false, &parsed);
 		} 
 		else{
@@ -39,7 +38,7 @@ TEST(URLParser, Parsing){
 		int port = ParsePort(url, parsed.port);
 	
 
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme)) << "parsed scheme \"<< ::testing::PrintToString(parsed) <<"\" does not match expected value \"" << parse_cases[i].scheme << "\"";
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme)) << "parsed scheme \""<< ::testing::PrintToString(parsed) <<"\" does not match expected value \"" << parse_cases[i].scheme << "\"";
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].username, parsed.username))<< "parsed username does not match expected value " <<  parse_cases[i].username ;
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].password, parsed.password))<< "parsed password does not match expected value " << parse_cases[i].password ;
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].host, parsed.host))<< "parsed host does not match expected value" << parse_cases[i].host ;
