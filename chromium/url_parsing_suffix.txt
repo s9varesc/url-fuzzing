@@ -37,17 +37,9 @@ TEST(URLParser, Parsing){
 		//TODO might have to use specialized methods to correctly include inner_...
 		const char* url = parse_cases[i].input;
 		int port = ParsePort(url, parsed.port);
-		
-		/*EXPECT_EQ(parse_cases[i].scheme, parsed.scheme) ;
-	    EXPECT_EQ(parse_cases[i].username, parsed.username);
-	    EXPECT_EQ(parse_cases[i].password, parsed.password);
-	    EXPECT_EQ(parse_cases[i].host, parsed.host);
-	    EXPECT_EQ(parse_cases[i].port, port);
-	    EXPECT_EQ(parse_cases[i].path, parsed.path);
-	    EXPECT_EQ(parse_cases[i].query, parsed.query);
-	    EXPECT_EQ(parse_cases[i].ref, parsed.ref);*/
+	
 
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme)) << "parsed scheme does not match expected value " << parse_cases[i].scheme ;
+	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme)) << "parsed scheme << ::testing::PrintToString(parsed.scheme) << does not match expected value " << parse_cases[i].scheme ;
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].username, parsed.username))<< "parsed username does not match expected value " <<  parse_cases[i].username ;
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].password, parsed.password))<< "parsed password does not match expected value " << parse_cases[i].password ;
 	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].host, parsed.host))<< "parsed host does not match expected value" << parse_cases[i].host ;
