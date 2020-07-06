@@ -43,7 +43,7 @@ class ParsingHandler {
 
     public void parseInput(String input){
 	if (input.length()>0){
-	    input=input.substring(0,input.length()-1);
+	    input=input.substring(0,input.length());
 	}
 	
         try {
@@ -55,7 +55,7 @@ class ParsingHandler {
 
    public void writeExceptionsFile(){
 	try ( PrintStream out = new PrintStream(new FileOutputStream("JavaExceptions.txt"))) {
-    		out.print("["+exceptions.substring(0, exceptions.length() - 1)+"]");
+    		out.print(exceptions.substring(0, exceptions.length() - 1));
 	} catch(Exception e) {
             e.printStackTrace();
         }

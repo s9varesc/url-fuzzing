@@ -43,7 +43,7 @@ func TestURLs(t *testing.T) {
             return
     	}
     	
-    	file.WriteString("["+exceptions[:len(exceptions)-1]+"]")
+    	file.WriteString(exceptions[:len(exceptions)-1])
 	file.Sync()
 	file.Close()
 

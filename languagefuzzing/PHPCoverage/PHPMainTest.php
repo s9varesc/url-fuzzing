@@ -24,7 +24,6 @@ $exceptions="";
 while(! feof($file))
   {
   $url= fgets($file);
-  $url= substr($url, 0, -1);
   //parse_url($url);
   
 try {
@@ -35,7 +34,7 @@ try {
   }
 
 fclose($file);
-file_put_contents('PHPExceptions.txt', "[".substr($exceptions, 0, -1)."]"); 
+file_put_contents('PHPExceptions.txt', "".substr($exceptions, 0, -1)); 
 $this->assertTrue(True);
 }
 }

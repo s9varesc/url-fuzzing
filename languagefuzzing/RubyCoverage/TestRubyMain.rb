@@ -11,5 +11,5 @@ IO.foreach("../urls/plainURLs"){|block|
 	end
 }
     File.open('RubyExceptions.txt', 'w') do |f|  
-      f.write("["+exceptions[0..-2]+"]")  
+      f.write(exceptions[0..-2])  
     end  

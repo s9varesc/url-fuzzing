@@ -53,7 +53,7 @@ int main()
 		// Print the vector contents
 		for(std::string & line : vecOfStr){
 			try {
-			    line=line.substr(0,line.length()-1);
+			    line=line.substr(0,line.length());
 			} catch(const std::exception& e){
 				
 			}			
@@ -74,7 +74,7 @@ int main()
 		}
 	}
 	std::string exceptionsfinal;
-	exceptionsfinal.append("["+exceptions.substr(0,exceptions.length()-1)+"]");
+	exceptionsfinal.append(exceptions.substr(0,exceptions.length()-1));
         std::ofstream os("CppExceptions.txt");  
 	if (!os) { 
 	    std::cerr<<"Error writing to ..."<<std::endl; 

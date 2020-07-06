@@ -19,7 +19,7 @@ main(void)
     if (exceptions == NULL){
 	exit(EXIT_FAILURE);
     }
-    strcat(exceptions, "[");    
+  
 
     fp = fopen("../../urls/plainURLs", "r");
     if (fp == NULL)
@@ -32,6 +32,7 @@ main(void)
 
     while ((read = getline(&line, &len, fp)) != -1) {
         //printf("%s", line);
+	line[strlen(line)-1]="\0";
 	UriParserStateA stateA;
 	UriUriA uriA;
 	stateA.uri = &uriA;
@@ -69,8 +70,7 @@ main(void)
    FILE *nfp = fopen("CExceptions.txt", "w");
    if (nfp != NULL)
    {
-       exceptions[strlen(exceptions)-1]=0;
-       strcat(exceptions,"]");
+       exceptions[strlen(exceptions)-1]="\0";
        fputs(exceptions, nfp);
        fclose(nfp);
        

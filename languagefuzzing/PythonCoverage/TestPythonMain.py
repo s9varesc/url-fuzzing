@@ -17,7 +17,7 @@ for url in urls:
         exceptions+="\n{ url:\""+url+"\",\n exception:\""+str(e)+"\"},"
 
 f=open('PythonExceptions.txt', 'w')
-f.write("["+exceptions[:-1]+"]")
+f.write(exceptions[:-1])
 f.close()
 	
 
