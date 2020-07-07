@@ -24,9 +24,6 @@ public class URLGrammarTest extends ComponentsBuilder {
     this.internalComponentNames.add("fragment");
 
   }
-  public String getComponentFormat(){
-      return "test";
-    }
 
   @Override
   public String buildRepresentation() {

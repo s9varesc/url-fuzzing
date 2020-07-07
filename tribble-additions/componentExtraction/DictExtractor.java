@@ -9,9 +9,27 @@ package saarland.cispa.se.tribble.execution.componentExtraction;
   import java.util.List;
 
 public class DictExtractor {
-  ComponentsBuilder componentsBuilder = new FirefoxURLComponentsBuilderLS();
-  public String extract(DTree root) {
-    List<String> componentNames=componentsBuilder.getComponentNames();
+  private List<ComponentsBuilder> componentBuilders;
+
+
+  public DictExtractor(){
+    componentBuilders=new ArrayList<ComponentsBuilder>();
+  }
+
+  public void addComponentsBuilder(ComponentsBuilder builder){
+    componentBuilders.add(builder);
+  }
+
+  public List<List<String>> extract(DTree root) {
+    List<String> componentNames = new ArrayList<String>();
+    for (ComponentsBuilder cb : componentBuilders){
+      for(String name: cb.getComponentNames()){
+        if (!componentNames.contains(name)){
+          componentNames.add(name);
+        }
+      }
+    }
+
     List<DTree> workList = new ArrayList<>();
     List<DTree> visitedList=new ArrayList<>();
     workList.add(root);
@@ -32,12 +50,21 @@ public class DictExtractor {
         //if (componentNames.contains(name)){
           //System.out.println(name);
           String content=current.leaves().mkString();
-          componentsBuilder.addComponent(name, content);
+          for (ComponentsBuilder cb : componentBuilders){
+            cb.addComponent(name, content);
+          }
         //}
 
       }
     }
-    return componentsBuilder.buildRepresentation();
+    List<List<String>> representations = new ArrayList<List<String>>();
+    for (ComponentsBuilder cb : componentBuilders){
+      List<String> rep = new ArrayList<String>();
+      rep.add(0, cb.getComponentFormat());
+      rep.add(1, cb.buildRepresentation());
+      representations.add(rep);
+    }
+    return representations;
   }
 
 }

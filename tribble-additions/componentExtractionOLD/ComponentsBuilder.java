@@ -5,7 +5,6 @@ import java.util.*;
 public abstract class ComponentsBuilder {
   Map<String, String> dict = new HashMap<String, String>();
   List<String> componentNames=new ArrayList<String>();
-  String format;
   public ComponentsBuilder(){
     /* rfc-grammar version
     this.componentNames.add("uri");
@@ -61,10 +60,4 @@ public abstract class ComponentsBuilder {
    * @return a string containing the final representation to be written into a file
    */
   public abstract String buildRepresentation();
-
-  /***
-  * 
-  * @return a string containing an identification of the component format used, will be used to name the output folder
-  */
-  public abstract String getComponentFormat();
 }
