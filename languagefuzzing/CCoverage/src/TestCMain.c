@@ -32,7 +32,7 @@ main(void)
 
     while ((read = getline(&line, &len, fp)) != -1) {
         //printf("%s", line);
-	line[strlen(line)-2]="\0";
+	line[strlen(line)-1]=0;
 	UriParserStateA stateA;
 	UriUriA uriA;
 	stateA.uri = &uriA;
@@ -70,7 +70,7 @@ main(void)
    FILE *nfp = fopen("CExceptions.txt", "w");
    if (nfp != NULL)
    {
-       exceptions[strlen(exceptions)-1]="\0";
+       exceptions[strlen(exceptions)-1]=0;
        fputs(exceptions, nfp);
        fclose(nfp);
        
