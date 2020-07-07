@@ -32,7 +32,7 @@ main(void)
 
     while ((read = getline(&line, &len, fp)) != -1) {
         //printf("%s", line);
-	line[strlen(line)-1]="\0";
+	line[strlen(line)-2]="\0";
 	UriParserStateA stateA;
 	UriUriA uriA;
 	stateA.uri = &uriA;
