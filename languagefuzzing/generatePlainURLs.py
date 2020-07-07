@@ -1,7 +1,7 @@
 import os
 
 urls=""
-rel_dir='./urls/'
+rel_dir='./urls/plain/'
 for filename in os.listdir(rel_dir):
     if filename != "plainURLs":
         
@@ -14,6 +14,6 @@ for filename in os.listdir(rel_dir):
         url=s[start:end]
         urls+=url+"\n"
 
-f=open(rel_dir+'plainURLs', "w")
+f=open('./urls/plainURLs', "w")
 f.write(urls)
 f.close()
