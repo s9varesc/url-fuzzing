@@ -7,12 +7,7 @@ for filename in os.listdir(rel_dir):
         
         f=open(rel_dir+filename)
         s = f.read()
-        start=s.find("spec:\"")+6
-        end1=s.find("\",\n", start)
-        end2=s.find("\"}")
-        end=end1 if end1>=0 else end2
-        url=s[start:end]
-        urls+=url+"\n"
+        urls+=s+"\n"
 
 f=open('./urls/plainURLs', "w")
 f.write(urls)
