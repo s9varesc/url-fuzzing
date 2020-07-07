@@ -25,6 +25,7 @@ while(! feof($file))
   {
   $url= fgets($file);
   //parse_url($url);
+  $url=substr($url, 0, -1);
   
 try {
     UriString::parse($url);
