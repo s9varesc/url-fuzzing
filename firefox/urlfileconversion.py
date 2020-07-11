@@ -25,8 +25,8 @@ for filename in os.listdir(dir):
 	f=open(dir+"/"+filename, "r")
 	urlcontents+=[f.read()]
 
-#create test files with ~20 test cases per file
-n=20
+#create test files with ~n test cases per file
+n=1
 testnames=[]
 testchunks=[urlcontents[i*n:(i+1)*n] for i in range((len(urlcontents)+n-1)//n)]
 testid=2
