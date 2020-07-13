@@ -51,9 +51,9 @@ bool ComponentMatches(const char* input,
   return strncmp(reference, &input[component.begin], component.len) == 0;
 }
 
-/*void ExpectInvalidComponent(const Component& component) {
+void ExpectInvalidComponent(const Component& component) {
   EXPECT_EQ(0, component.begin);
   EXPECT_EQ(-1, component.len);
-}*/
+}
 
 //Test inputs
