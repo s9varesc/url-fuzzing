@@ -23,7 +23,7 @@ Grammar(
   'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
   'schemeRelativeSpecialURL := "//" ~ (('host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?) | 'empty ),
 
-  'URLport := 'digit.rep,
+  
   'schemeRelativeURL := "//" ~ ('opaqueHostAndPort | 'empty),
   'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?,
   'opaqueHost := ('URLunit ~ 'URLunit.rep) | ("[" ~ 'ipv6address ~ "]"),
@@ -40,6 +40,13 @@ Grammar(
   'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e",
   'URLquery := 'URLunit.rep,
   'URLfragment := 'URLunit.rep,
+   // 0<=port<=65535
+  'URLport := 'digit.rep(1,4)		
+		| (("[1-5]".regex) ~ 'digit.rep(4))
+		| ("6" ~ ("[0-4]".regex) ~ 'digit.rep(3))
+		| ("65" ~ ("[0-4]".regex) ~ 'digit.rep(2))
+		| ("655" ~ ("[0-2]".regex) ~ 'digit)
+		| ("6553" ~ ("[0-5]".regex)),
   'URLunit := 'URLcodePoint | 'percentEncodedByte,
   'URLcodePoint := 'reserved | 'unreserved | 'unicode,
   'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
