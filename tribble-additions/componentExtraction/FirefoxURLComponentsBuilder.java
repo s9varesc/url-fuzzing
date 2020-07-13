@@ -47,8 +47,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	  String content = components.get(key);
 	  String tmp=content.replaceAll("\\\\", "\\\\\\\\");
 	  if (key=="host"){
-	    if (tmp.startsWith("[") && tmp.endsWith("]")){
-	      tmp=tmp.subSequence(1, tmp.length()-1).toString();
+	    if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: need to remove leading zeros and convert ipv4 pieces
+	      tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
+	      tmp=formatIPv6(tmp);
 	    }
 	  }
           result += key + ":\"" + tmp + "\",\n";
@@ -60,6 +61,38 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       result=result.subSequence(0, result.length()-2).toString();
       result+="}\n";
       return result;
+    }
+
+    private String formatIPv6(String original){
+	String[] pieces=original.split(":");
+	String result="";
+	for (String piece: pieces){
+	   if (piece.contains(".")){ //ipv4 piece: i.e. 123.123.234.111, convert to hex(123)hex(123):hex(234)hex(111)
+		String[] parts = piece.split(".");
+		for (String p: parts){
+		    int pnr;
+		    try {
+		    	pnr=Integer.parseInt(p);
+		    } catch (Exception e) {
+		        pnr=0;
+		    }
+		    String tmp=Integer.toHexString(pnr)
+		    if (tmp.length()<2){ //need leading zeros
+			p="0"+tmp;
+		    }
+		    else {
+			p=tmp;
+		    }
+		}
+		//combine parts 0,1 and 2,3 and get rid of leading zeros
+		piece=(parts[0]+parts[1]).replaceFirst("^0+(?!$)", "")+":"+(parts[2]+parts[3]).replaceFirst("^0+(?!$)", "");
+	   }
+	   if(piece != "" && !piece.contains(":")){
+		piece.replaceFirst("^0+(?!$)", ""); //remove leading zeros but keep the string nonempty
+	   }
+	result += piece +":";
+	}
+	return result.replaceAll(":$", "");
     }
 
     private Map<String, String> buildMapping(){
@@ -101,18 +134,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
           components.put("host", d.toLowerCase());
         }
       }
-      //build hostport
-      /*String hosts=components.get("host");
-      String port=components.get("port");
-      if(hosts !=null){
-        if(port !=null){
-          components.put("hostPort", hosts+":"+port); //TODO only add ":" if it is there originally -> search for hosts+":"+port in string
-        }
-        else{
-          components.put("hostPort", hosts);
-        }
-
-      }*/
+      
 
 
       //build pathQueryRef
