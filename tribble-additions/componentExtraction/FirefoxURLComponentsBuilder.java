@@ -76,7 +76,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 		    } catch (Exception e) {
 		        pnr=0;
 		    }
-		    String tmp=Integer.toHexString(pnr)
+		    String tmp=Integer.toHexString(pnr);
 		    if (tmp.length()<2){ //need leading zeros
 			p="0"+tmp;
 		    }
