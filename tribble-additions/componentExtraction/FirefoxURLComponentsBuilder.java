@@ -68,7 +68,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	String result="";
 	for (String piece: pieces){
 	   if (piece.contains(".")){ //ipv4 piece: i.e. 123.123.234.111, convert to hex(123)hex(123):hex(234)hex(111)
-		String[] parts = piece.split("\.");
+		String[] parts = piece.split("\\.");
 		for (String p: parts){
 		    int pnr;
 		    try {
