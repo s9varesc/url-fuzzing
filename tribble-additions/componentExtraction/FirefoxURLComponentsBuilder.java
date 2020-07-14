@@ -69,6 +69,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	for (String piece: pieces){
 	   if (piece.contains(".")){ //ipv4 piece: i.e. 123.123.234.111, convert to hex(123)hex(123):hex(234)hex(111)
 		String[] parts = piece.split("\\.");
+		int index=0;
 		for (String p: parts){
 		    int pnr;
 		    try {
@@ -83,6 +84,8 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 		    else {
 			p=tmp;
 		    }
+		    parts[index]=p;
+		    index++;
 		}
 		//combine parts 0,1 and 2,3 and get rid of leading zeros
 		piece=(parts[0]+parts[1]).replaceFirst("^0+(?!$)", "")+":"+(parts[2]+parts[3]).replaceFirst("^0+(?!$)", "");
@@ -90,9 +93,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   if(piece != "" && !piece.contains(":")){
 		piece.replaceFirst("^0+(?!$)", ""); //remove leading zeros but keep the string nonempty
 	   }
-	result += piece +":";
+	   result += piece +":";
 	}
-	return result.replaceAll(":$", "");
+	return result.subSequence(0, result.length()-2).toString();
     }
 
     private Map<String, String> buildMapping(){
