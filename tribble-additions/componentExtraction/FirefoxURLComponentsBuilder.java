@@ -126,15 +126,22 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       //build host
       String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
+      String reshost="";
       if(ophost !=null){
-        components.put("host", ophost.toLowerCase());
+        reshost= ophost.toLowerCase();
       }
       else{
         if(d !=null){
-          components.put("host", d.toLowerCase());
+          reshost= d.toLowerCase();
         }
       }
-      
+      String tmp=reshost;
+      if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: need to remove leading zeros and convert ipv4 pieces
+	  tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
+	  tmp="["+formatIPv6(tmp)+"]";
+      }
+      reshost=tmp;	
+      components.put("host", reshost);
 
 
       //build pathQueryRef
