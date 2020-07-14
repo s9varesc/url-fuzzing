@@ -95,7 +95,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   }
 	   result += piece +":";
 	}
-	return result.subSequence(0, result.length()-2).toString();
+	return result.subSequence(0, result.length()-1).toString();
     }
 
     private Map<String, String> buildMapping(){
@@ -187,7 +187,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       String p=components.get("port");
       
       String prePath="";
-      boolean first=true; 
+      /*boolean first=true; 
       if(scheme != null){
         prePath+=scheme;
 	if (spec.toLowerCase().startsWith(scheme+":")){
@@ -213,7 +213,8 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
       if(spec.toLowerCase().startsWith(prePath + "//")){
           prePath+="//";
-      }
+      }*/
+      prePath=spec.replace(pqr, "");
       if(prePath!="") {
         components.put("prePath", prePath);
       }
