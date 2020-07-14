@@ -91,7 +91,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 		piece=(parts[0]+parts[1]).replaceFirst("^0+(?!$)", "")+":"+(parts[2]+parts[3]).replaceFirst("^0+(?!$)", "");
 	   }
 	   if(piece != "" && !piece.contains(":")){
-		piece.replaceFirst("^0+(?!$)", ""); //remove leading zeros but keep the string nonempty
+		piece=piece.replaceFirst("^0+(?!$)", ""); //remove leading zeros but keep the string nonempty
 	   }
 	   result += piece +":";
 	}
