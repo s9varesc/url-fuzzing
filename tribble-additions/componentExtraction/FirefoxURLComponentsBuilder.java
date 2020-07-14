@@ -118,17 +118,18 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         components.put("spec", dict.get("absoluteURLwithFragment"));
       }
       String spec=components.get("spec");
-      //build path
+      
+      /*//build path, unused?
 
       String pa=dict.get("pathAbsoluteURL");
       String panW=dict.get("pathAbsoluteNonWindowsFileURL");
-      String prsl=dict.get("pathRelativeSchemelessURL");
+      String prsl=dict.get("pathRelativeSchemelessURL"); //TODO use schemerelativeFileURL to include slashes
 
       for (String content: Arrays.asList(panW, pa, prsl)){
         if(content !=null){
           components.put("path", content);
         }
-      }
+      }*/
       //build host
       String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
@@ -150,27 +151,6 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       components.put("host", reshost);
 
 
-      //build pathQueryRef
-      String path=components.get("path");
-      String query=dict.get("URLquery");
-      String ref=components.get("ref");
-      String pqr="";
-      if(path !=null) {
-        pqr = path;
-      }
-      if (query != null) {
-        pqr += "?" + query; 
-      }
-      if (ref != null) {
-        pqr += "#" + ref;
-          //build hasRef
-        components.put("hasRef", "true");
-      } else {
-        components.put("hasRef", "false");
-	components.put("ref", "");
-      }
-      components.put("pathQueryRef", pqr);
-
       //build scheme
       String specialnf=dict.get("URLspecialSchemeNotFile");
       String nonspecial=dict.get("URLnonSpecialScheme");
@@ -190,7 +170,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       String p=components.get("port");
       
       String prePath="";
-      /*boolean first=true; 
+      boolean first=true; 
       if(scheme != null){
         prePath+=scheme;
 	if (spec.toLowerCase().startsWith(scheme+":")){
@@ -216,13 +196,32 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
       if(spec.toLowerCase().startsWith(prePath + "//")){
           prePath+="//";
-      }*/
-      prePath=spec.replace(pqr, "");
-      if(prePath!="") {
+      }
+      if(spec.toLowerCase().startsWith("file://")){
+	  prePath="file://";
+      }
+      if(prePath!="" && spec.toLowerCase().startsWith(prePath.toLowerCase())) {
         components.put("prePath", prePath);
       }
 
-
+      //build pathQueryRef 
+      
+      String ref=components.get("ref");
+      String pqr="";
+      int pqrindex=spec.toLowerCase().indexOf(prePath.toLowerCase());
+      if (pqrindex>=0){
+	pqr=spec.subSequence(pqrindex, spec.length()).toString(); 
+      }
+      
+      if (ref != null) {
+        pqr += "#" + ref;
+          //build hasRef
+        components.put("hasRef", "true");
+      } else {
+        components.put("hasRef", "false");
+	components.put("ref", "");
+      }
+      components.put("pathQueryRef", pqr);
 
       return components;
     }
