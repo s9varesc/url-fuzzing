@@ -210,7 +210,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       String pqr="";
       int pqrindex=spec.toLowerCase().indexOf(prePath.toLowerCase());
       if (pqrindex>=0){
-	pqr=spec.subSequence(pqrindex, spec.length()).toString(); 
+	pqr=spec.subSequence(pqrindex+prePath.length(), spec.length()).toString(); 
       }
       
       if (ref != null) {
