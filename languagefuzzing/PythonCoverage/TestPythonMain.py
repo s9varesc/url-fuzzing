@@ -1,4 +1,4 @@
-from urlib.parse import urlparse
+from urllib.parse import urlparse
 
 
 file=open("../urls/plainURLs","r")
