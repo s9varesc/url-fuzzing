@@ -95,7 +95,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   }
 	   result += piece +":";
 	}
-        if(result != ""){
+        if(result != "" && ! result.endsWith("::")){
 	   return result.subSequence(0, result.length()-1).toString();
 	}
 	return result;
@@ -198,7 +198,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
           prePath+="//";
       }
       if(spec.toLowerCase().startsWith("file://")){
-	  prePath="file://";
+	  prePath="file://";//TODO what about host part
       }
       if(prePath!="" && spec.toLowerCase().startsWith(prePath.toLowerCase())) {
         components.put("prePath", prePath);
