@@ -75,11 +75,11 @@ Grammar(
     | ("FDF" ~ 'unicodeHEX)),
   'host := ('userinfo ~ "@").? ~ 'domain,
   //missing ipfuture, zoneid
-  'domain := ('unreserved | 'percentEncodedByte | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
+  'domain := ('unreserved | 'percentEncodedByte | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO maybe remove subdelims
   'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep,
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
-    | ("::" ~ ('h16 ~ ":").rep(5, 5) ~ 'ls32)
+    //| ("::" ~ ('h16 ~ ":").rep(5, 5) ~ 'ls32) //TODO dont use :: to shorten single 0 field, use for longest and first consecutive 0 fields
     | ('h16 ~ "::" ~ ('h16 ~ ":").rep(4, 4) ~ 'ls32)
     | ((('h16 ~ ":").rep(0, 1) ~ 'h16).? ~ "::" ~ ('h16 ~ ":").rep(3, 3) ~ 'ls32)
     | ((('h16 ~ ":").rep(0, 2) ~ 'h16).? ~ "::" ~ ('h16 ~ ":").rep(2, 2) ~ 'ls32)
