@@ -95,7 +95,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   }
 	   result += piece +":";
 	}
-        if(result != "" && ! original.endsWith("::")){
+        if(result != ""){
 	   return result.subSequence(0, result.length()-1).toString();
 	}
 	return result;
