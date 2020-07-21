@@ -197,12 +197,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       if(spec.toLowerCase().startsWith(prePath + "//")){
           prePath+="//";
       }
-      if(spec.toLowerCase().startsWith("file://")){
-	  prePath="file://";//TODO what about host part
-      }
-      if(prePath!="" && spec.toLowerCase().startsWith(prePath.toLowerCase())) {
-        components.put("prePath", prePath);
-      }
+      //finalizing the prePath entry is only possible after building pathQueryRef
 
       //build pathQueryRef 
       
@@ -222,6 +217,15 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	components.put("ref", "");
       }
       components.put("pathQueryRef", pqr);
+
+
+      //finalizing prePath as the intermediate representation is used to build pathQueryRef
+      if(spec.toLowerCase().startsWith("file://")){
+	  prePath="file://";//TODO what about host part
+      }
+      if(prePath!="" && spec.toLowerCase().startsWith(prePath.toLowerCase())) {
+        components.put("prePath", prePath);
+      }
 
       return components;
     }
