@@ -209,7 +209,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
       
       if (ref != null) {
-        pqr += "#" + ref;
+        
           //build hasRef
         components.put("hasRef", "true");
       } else {
