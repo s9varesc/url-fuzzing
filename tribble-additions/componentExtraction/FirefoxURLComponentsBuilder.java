@@ -93,7 +93,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   if(piece != "" && !piece.contains(":")){
 		piece=piece.replaceFirst("^0+(?!$)", ""); //remove leading zeros but keep the string nonempty
 	   }
-	   result += piece +":";
+	   result += piece +":"; //TODO fix loosing trailing ::
 	}
         if(result != ""){
 	   return result.subSequence(0, result.length()-1).toString();
@@ -194,7 +194,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       if(p != null && p!= ""){
         prePath+=":"+p;
       }
-      if(spec.toLowerCase().startsWith(prePath + "//")){
+      if(spec.toLowerCase().startsWith(prePath + "//")){ //TODO not always the case
           prePath+="//";
       }
       //finalizing the prePath entry is only possible after building pathQueryRef
@@ -221,7 +221,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
       //finalizing prePath as the intermediate representation is used to build pathQueryRef
       if(spec.toLowerCase().startsWith("file://")){
-	  prePath="file://";
+	  prePath="file://"; //TODO remove this, the standard allows hosts
       }
       if(prePath!="" && spec.toLowerCase().startsWith(prePath.toLowerCase())) { //TODO might have to remove "//" for some cases
         components.put("prePath", prePath);
