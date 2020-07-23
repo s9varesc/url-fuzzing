@@ -6,7 +6,7 @@ import saarland.cispa.se.tribble.dsl._
 
 Grammar(
   'url := "" ~ ('relativeURLwithFragment | 'absoluteURLwithFragment),
-  'absoluteURLwithFragment := 'ws.rep ~ ('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
+  'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
   'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL)
     | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL)
     | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL)) ~ ("?" ~ 'URLquery).?,
@@ -15,11 +15,11 @@ Grammar(
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  'relativeURLwithFragment := 'ws.rep ~ ('relativeURL ~ ("#" ~ 'URLfragment).?).?,
+  'relativeURLwithFragment := ('relativeURL ~ ("#" ~ 'URLfragment).?).?,
   'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
-  'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL | 'ws,
+  'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL.// | 'ws,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
-    | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL | 'empty | 'ws,
+    | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL | 'empty,// | 'ws,
   'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
   'schemeRelativeSpecialURL := "//" ~ (('host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?) | 'empty ),
 
@@ -96,7 +96,7 @@ Grammar(
   'hexdig := ("[a-f]".regex) | 'digit,
   //'unicodeHEX := 'digit | ("[A-F]".regex),
   'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
-  'ws := " " | "\\t" | "\\r" | "\\n" , //TODO make sure the final tests contain \n etc
+  //'ws := " " | "\\t" | "\\r" | "\\n" , //TODO make sure the final tests contain \n etc
   'empty := ""
 )
 
