@@ -17,7 +17,7 @@ Grammar(
 
   'relativeURLwithFragment := ('relativeURL ~ ("#" ~ 'URLfragment).?).?,
   'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
-  'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL.// | 'ws,
+  'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,// | 'ws,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
     | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL | 'empty,// | 'ws,
   'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
@@ -74,7 +74,6 @@ Grammar(
   //  | ("FD" ~ ('digit | "A" | "B" | "C") ~ 'unicodeHEX)
   //  | ("FDF" ~ 'unicodeHEX)),
   'host := ('userinfo ~ "@").? ~ 'domain,
-  //missing ipfuture, zoneid
   'domain := ('unreserved | 'percentEncodedByte | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO maybe remove subdelims
   'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep,
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
