@@ -96,6 +96,6 @@ Grammar(
   //'unicodeHEX := 'digit | ("[A-F]".regex),
   'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
   //'ws := " " | "\\t" | "\\r" | "\\n" , //TODO make sure the final tests contain \n etc
-  'empty := ""
+  //'empty := ""
 )
 
