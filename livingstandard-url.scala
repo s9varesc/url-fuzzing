@@ -19,15 +19,15 @@ Grammar(
   'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
   'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,// | 'ws,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
-    | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL | 'empty,// | 'ws,
+    | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL,// | 'empty,// | 'ws,
   'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
-  'schemeRelativeSpecialURL := "//" ~ (('host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?) | 'empty ),
+  'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?, //removed empty alternative
 
   
-  'schemeRelativeURL := "//" ~ ('opaqueHostAndPort | 'empty),
+  'schemeRelativeURL := "//" ~ 'opaqueHostAndPort, //removed empty alternative
   'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?,
   'opaqueHost := ('URLunit ~ 'URLunit.rep) | ("[" ~ 'ipv6address ~ "]"),
-  'schemeRelativeFileURL := "//" ~ (('host ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL | 'empty),
+  'schemeRelativeFileURL := "//" ~ (('host ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),//removed empty alternative
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := 'pathRelativeURL ~ 'windowsDriveLetter ~ ("/"| "\\\\").?, //TODO make sure the final tests contain "\"
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
@@ -74,7 +74,7 @@ Grammar(
   //  | ("FD" ~ ('digit | "A" | "B" | "C") ~ 'unicodeHEX)
   //  | ("FDF" ~ 'unicodeHEX)),
   'host := ('userinfo ~ "@").? ~ 'domain,
-  'domain := ('unreserved | 'percentEncodedByte | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO maybe remove subdelims
+  'domain := ('unreserved | 'percentEncodedByte | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO remove percent encoded
   'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep,
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
