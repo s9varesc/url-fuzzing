@@ -24,12 +24,12 @@ Grammar(
   'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?, //removed empty alternative
 
   
-  'schemeRelativeURL := "//" ~ 'opaqueHostAndPort, //removed empty alternative
+  'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, //removed empty alternative
   'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?,
   'opaqueHost := ('URLunit ~ 'URLunit.rep) | ("[" ~ 'ipv6address ~ "]"),
   'schemeRelativeFileURL := "//" ~ (('host ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),//removed empty alternative
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
-  'pathAbsoluteNonWindowsFileURL := 'pathRelativeURL ~ 'windowsDriveLetter ~ ("/"| "\\\\").?, //TODO make sure the final tests contain "\"
+  'pathAbsoluteNonWindowsFileURL := 'pathAbsoluteURL ~ 'windowsDriveLetter ~ "/", 
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'pathRelativeSchemelessURL := ('pathRelativeURL ~ ":").?,
@@ -41,7 +41,7 @@ Grammar(
   'URLquery := 'URLunit.rep,
   'URLfragment := 'URLunit.rep,
    // 0<=port<=65535
-  'URLport := 'digit.rep(1,4)		
+  'URLport := ('digit.rep(1,4))		
 		| (("[1-5]".regex) ~ 'digit.rep(4))
 		| ("6" ~ ("[0-4]".regex) ~ 'digit.rep(3))
 		| ("65" ~ ("[0-4]".regex) ~ 'digit.rep(2))
@@ -74,7 +74,7 @@ Grammar(
   //  | ("FD" ~ ('digit | "A" | "B" | "C") ~ 'unicodeHEX)
   //  | ("FDF" ~ 'unicodeHEX)),
   'host := ('userinfo ~ "@").? ~ 'domain,
-  'domain := ('unreserved | 'percentEncodedByte | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO remove percent encoded
+  'domain := ('unreserved | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), // removed percent encoded
   'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep,
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
