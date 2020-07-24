@@ -5,7 +5,7 @@ import saarland.cispa.se.tribble.dsl._
 //(whenever the living standard documentation was not sufficient to formulate a grammar)
 
 Grammar(
-  'url := "" ~ ('relativeURLwithFragment | 'absoluteURLwithFragment),
+  'url := "" ~ (('absoluteURL ~'relativeURLwithFragment) | 'absoluteURLwithFragment),
   'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
   'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL)
     | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL)
@@ -15,7 +15,7 @@ Grammar(
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  'relativeURLwithFragment := ('relativeURL ~ ("#" ~ 'URLfragment).?).?,
+  'relativeURLwithFragment := ('relativeURL ~ ("#" ~ 'URLfragment).?).?, //TODO add baseURL
   'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
   'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,// | 'ws,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL

@@ -111,8 +111,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
       //build spec
       String url=dict.get("relativeURLwithFragment");
-      if(url !=null){
-        components.put("spec", url);
+      String baseurl=dict.get("absoluteURL");
+      if(url !=null && baseurl != null ){
+        components.put("spec", baseurl+url);
       }
       else{
         components.put("spec", dict.get("absoluteURLwithFragment"));
