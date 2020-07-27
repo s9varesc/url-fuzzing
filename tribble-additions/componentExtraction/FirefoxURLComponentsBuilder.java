@@ -95,10 +95,13 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   }
 	   result += piece +":"; //TODO fix loosing trailing ::
 	}
-	if(original.contains("::")){
-	   System.out.println("original "+original+" formatting result "+result+" (without cutting last char)");
+	if(original.endsWith("::")){
+	   //System.out.println("original "+original+" formatting result "+result+" (without cutting last char)");
+           //complete :: at the end
+ 	   return result+":";
 	}
         if(result != ""){
+	   //remove additional : at the end
 	   return result.subSequence(0, result.length()-1).toString();
 	}
 	return result;
