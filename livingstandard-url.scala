@@ -42,11 +42,11 @@ Grammar(
   'URLfragment := 'URLunit.rep,
    // 0<=port<=65535
   'URLport := ('digit.rep(1,4))		
-		| (("[1-5]".regex) ~ 'digit.rep(4))
-		| ("6" ~ ("[0-4]".regex) ~ 'digit.rep(3))
-		| ("65" ~ ("[0-4]".regex) ~ 'digit.rep(2))
-		| ("655" ~ ("[0-2]".regex) ~ 'digit)
-		| ("6553" ~ ("[0-5]".regex)),
+		| (( "1" | "2" | "3" | "4"| "5") ~ 'digit.rep(4))
+		| ("6" ~ ("0" | "1" | "2" | "3" | "4") ~ 'digit.rep(3))
+		| ("65" ~ ("0" | "1" | "2" | "3" | "4") ~ 'digit.rep(2))
+		| ("655" ~ ("0" | "1" | "2" ) ~ 'digit)
+		| ("6553" ~ ( "0"|"1" | "2" | "3" | "4"| "5")),
   'URLunit := 'URLcodePoint | 'percentEncodedByte,
   'URLcodePoint := 'reserved | 'unreserved, //| 'unicode,
   'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
