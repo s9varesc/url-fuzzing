@@ -95,6 +95,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   }
 	   result += piece +":"; //TODO fix loosing trailing ::
 	}
+	if(original.contains("::")){
+	   System.out.println("original "+original+" formatting result "+result+" (without cutting last char)");
+	}
         if(result != ""){
 	   return result.subSequence(0, result.length()-1).toString();
 	}
