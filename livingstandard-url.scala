@@ -49,7 +49,7 @@ Grammar(
 		| ("6553" ~ ( "0"|"1" | "2" | "3" | "4"| "5")),
   'URLunit := 'URLcodePoint | 'percentEncodedByte,
   'URLcodePoint := 'unreserved, //| 'unicode |'reserved ,
-  'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
+  //'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
   'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   //unicode: code points in u+00A0 to u+10FFFD, excluding surrogates(u+D800-u+DFFF) and noncharachters(u+FDD0-u+FDEF)
