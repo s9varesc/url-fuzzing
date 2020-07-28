@@ -48,7 +48,7 @@ Grammar(
 		| ("655" ~ ("0" | "1" | "2" ) ~ 'digit)
 		| ("6553" ~ ( "0"|"1" | "2" | "3" | "4"| "5")),
   'URLunit := 'URLcodePoint | 'percentEncodedByte,
-  'URLcodePoint := 'reserved | 'unreserved, //| 'unicode,
+  'URLcodePoint := 'unreserved, //| 'unicode |'reserved ,
   'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
   'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
