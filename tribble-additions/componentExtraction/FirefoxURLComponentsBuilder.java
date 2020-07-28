@@ -222,10 +222,13 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         components.put("hasRef", "false");
 	components.put("ref", "");
       }
-      if(!pqr.startsWith("/")){
-	pqr="/"+pqr;
+      if(!pqr.startsWith("/")&& pqr!=""){
+	String addslash="/"+pqr;
+	pqr=addslash;
       }
-      pqr.replaceAll("/\\.","/");
+      //remove dot segments
+      pqr=pqr.replaceAll("/*/\\.\\.","/");
+      pqr=pqr.replaceAll("/\\.","/");
       components.put("pathQueryRef", pqr);
 
 
