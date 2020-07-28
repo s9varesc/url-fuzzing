@@ -93,10 +93,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   if(piece != "" && !piece.contains(":")){
 		piece=piece.replaceFirst("^0+(?!$)", ""); //remove leading zeros but keep the string nonempty
 	   }
-	   result += piece +":"; //TODO fix loosing trailing ::
+	   result += piece +":"; 
 	}
 	if(original.endsWith("::")){
-	   //System.out.println("original "+original+" formatting result "+result+" (without cutting last char)");
            //complete :: at the end
  	   return result+":";
 	}
@@ -170,7 +169,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
 
 
-      //build prePath
+      //build prePath  
       String scheme=components.get("scheme");
       String host=components.get("host");
       String userinfo=dict.get("userinfo");
@@ -212,7 +211,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       String pqr="";
       int pqrindex=spec.toLowerCase().indexOf(prePath.toLowerCase());
       if (pqrindex>=0){
-	pqr=spec.subSequence(pqrindex+prePath.length(), spec.length()).toString(); //TODO might have to include leading / in some cases
+	pqr=spec.subSequence(pqrindex+prePath.length(), spec.length()).toString(); //TODO go back to build from parts for encodings
       }
       
       if (ref != null) {
@@ -223,6 +222,10 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         components.put("hasRef", "false");
 	components.put("ref", "");
       }
+      if(!pqr.startsWith("/")){
+	pqr="/"+pqr;
+      }
+      pqr.replaceAll("/\\.","/");
       components.put("pathQueryRef", pqr);
 
 
