@@ -15,7 +15,7 @@ Grammar(
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  'relativeURLwithFragment := ('relativeURL ~ ("#" ~ 'URLfragment).?).?, 
+  //'relativeURLwithFragment := ('relativeURL ~ ("#" ~ 'URLfragment).?).?, 
   'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
   'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,// | 'ws,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
