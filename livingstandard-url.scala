@@ -26,7 +26,7 @@ Grammar(
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, //removed empty alternative
   'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?,
-  'opaqueHost := 'URLunit.rep | ("[" ~ 'ipv6address ~ "]"), //TODO host code points
+  'opaqueHost := 'c0CodePoint.rep | ("[" ~ 'ipv6address ~ "]"), //TODO host code points
   'schemeRelativeFileURL := "//" ~ (('host ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),//removed empty alternative
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := 'pathAbsoluteURL ~ 'windowsDriveLetter ~ "/", 
@@ -48,8 +48,8 @@ Grammar(
 		| ("65" ~ ("0" | "1" | "2" | "3" | "4") ~ 'digit.rep(2))
 		| ("655" ~ ("0" | "1" | "2" ) ~ 'digit)
 		| ("6553" ~ ( "0"|"1" | "2" | "3" | "4"| "5")),
-  'URLunit := 'URLcodePoint | 'percentEncodedByte,
-  'URLcodePoint := 'unreserved, //| 'unicode |'reserved ,
+  //'URLunit := 'URLcodePoint | 'percentEncodedByte,
+  //'URLcodePoint := 'unreserved, //| 'unicode |'reserved ,
   //'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
   'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
@@ -75,7 +75,7 @@ Grammar(
   'alpha := "[a-zA-Z]".regex,
   'hexdig := ("[a-f]".regex) | 'digit,
   //'unicodeHEX := 'digit | ("[A-F]".regex),
-  'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
+  //'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
   //'ws := " " | "\\t" | "\\r" | "\\n" , //TODO make sure the final tests contain \n etc
   //'empty := ""
 
