@@ -7,9 +7,9 @@ import saarland.cispa.se.tribble.dsl._
 Grammar(
   'url := "" ~ 'absoluteURLwithFragment,// ('absoluteURL ~'relativeURLwithFragment)  
   'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
-  'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL)
-    | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL)
-    | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL)) ~ ("?" ~ 'URLquery).?,
+  'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?) 
+    | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL ~ ("?" ~ 'URLquery).?)
+    | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) ,
 
   'URLspecialSchemeNotFile := "ftp" | "http" | "https" | "ws" | "wss", 
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
@@ -26,7 +26,7 @@ Grammar(
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, //removed empty alternative
   'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?,
-  'opaqueHost := 'URLunit.rep | ("[" ~ 'ipv6address ~ "]"),
+  'opaqueHost := 'URLunit.rep | ("[" ~ 'ipv6address ~ "]"), //TODO host code points
   'schemeRelativeFileURL := "//" ~ (('host ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),//removed empty alternative
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := 'pathAbsoluteURL ~ 'windowsDriveLetter ~ "/", 
@@ -34,12 +34,13 @@ Grammar(
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'pathRelativeSchemelessURL := ('pathRelativeURL ~ ":").?,
   //pathRelativeURL can't start with URLscheme
-  'URLpathSegment := ('URLunit.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
+  'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
   // URLunit can't be /,?, singleDotPathSegment, doubleDotPathSegment
   'singleDotPathSegment := "." | "%2e",
   'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", //TODO also add %2E ?
-  'URLquery := 'URLunit.rep,
-  'URLfragment := 'URLunit.rep,
+  'URLquery := 'queryCodePoint.rep,
+  'URLSpecialquery := 'specialQueryCodePoint.rep,
+  'URLfragment := 'fragmentCodePoint.rep,
    // 0<=port<=65535
   'URLport := ('digit.rep(1,4))		
 		| (( "1" | "2" | "3" | "4"| "5") ~ 'digit.rep(4))
@@ -52,30 +53,10 @@ Grammar(
   //'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
   'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
-  //unicode: code points in u+00A0 to u+10FFFD, excluding surrogates(u+D800-u+DFFF) and noncharachters(u+FDD0-u+FDEF)
-  //u+00A0 - u+0FFF
-  //u+1000-u+CFFF, u+E000-u+EFFF
-  //u+10000-u+10EFFF
-  //u+10F000-u+10FEFF
-  //u+10FF00-u+10FFEF
-  //u+10FFF0-u+10FFFD
-  //u+D000-u+D7FF
-  //u+F000-u+FCFF, u+FE00-u+FFFF
-  //u+FD00 - u+FDCF
-  //u+FDF0-u+FDFF
-  //'unicode := "U+" ~ (("0" ~ (("0" ~ "A" ~ 'unicodeHEX) | (("[1-9]".regex | "[A-F]".regex) ~ 'unicodeHEX.rep(2, 2))))
-  //  | (("[1-9]".regex | "A" | "B" | "C" | "E") ~ 'unicodeHEX.rep(3, 3))
-  //  | ("10" ~ ((('digit | "[A-E]".regex) ~ 'unicodeHEX.rep(3, 3))
-  //  | ("F" ~ ('digit | "[A-E]".regex) ~ 'unicodeHEX.rep(2, 2))
-  //  | ("FF" ~ ('digit | "[A-E]".regex) ~ 'unicodeHEX)
-  //  | ("FFF" ~ ('digit | "[A-D]".regex))))
-  //  | ("D" ~ "[0-7]".regex ~ 'unicodeHEX.rep(2, 2))
-  //  | ("F" ~ ('digit | "A" | "B" | "C" | "E" | "F") ~ 'unicodeHEX.rep(2, 2))
-  //  | ("FD" ~ ('digit | "A" | "B" | "C") ~ 'unicodeHEX)
-  //  | ("FDF" ~ 'unicodeHEX)),
+  
   'host := ('userinfo ~ "@").? ~ 'domain,
   'domain := (('unreserved | 'subdelims ) ~('unreserved | 'subdelims ).rep ) | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), // removed percent encoded //TODO forbidden host code points
-  'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep, //TODO correct encoding, prevent generating empty userinfo
+  'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
     | ((('h16 ~ ":").rep(0, 1) ~ 'h16).? ~ "::" ~ ('h16 ~ ":").rep(2, 2) ~ 'ls32)
@@ -97,5 +78,25 @@ Grammar(
   'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
   //'ws := " " | "\\t" | "\\r" | "\\n" , //TODO make sure the final tests contain \n etc
   //'empty := ""
+
+  'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded,
+  'pathCodePoint := 'pathAllowed | 'pathPercentEncoded,
+  'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded,
+  'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "%27",
+  'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded,
+  'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
+
+  'c0PercentEncoded:= "%" ~ ((("0"|"1") ~ ('hexdig)) | (("7" | "8" | "9" | "[a-f]".regex) ~ 'hexdig)), //TODO add code points above %ff
+  //unicode: code points in u+00A0 to u+10FFFD, excluding surrogates(u+D800-u+DFFF) and noncharachters(u+FDD0-u+FDEF)
+  'fragmentPercentEncoded := 'c0PercentEncoded | ( "%" ~ ("20" | "22" | "3c" | "3e" | "60")),
+  'queryPercentEncoded := 'c0PercentEncoded | ("%" ~ ("20" | "22" | "23" | "3c" | "3e" )),
+  'pathPercentEncoded := 'queryPercentEncoded | ("%" ~ ("3f" | "60" | "7b" | "7d")),
+  'userinfoPercentEncoded := 'pathPercentEncoded | ("%" ~ ("2f" | "3a" | "3b" | "3d" | "40" | "5b"| "5c" | "5d" | "5e" | "7c")),
+
+  'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
+  'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" | "\\" | "^" | "|",
+  'specialQueryAllowed := 'pathAllowed | "?" | "{" | "}" |"`",
+  'fragmentAllowed := 'specialQueryAllowed | "#",
+  'c0Allowed := 'fragmentAllowed | " " | "\"" | "<" | ">" | "`",
 )
 
