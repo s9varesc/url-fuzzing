@@ -15,7 +15,7 @@ Grammar(
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  'relativeURLwithFragment := ('relativeURL ~ ("#" ~ 'URLfragment).?).?, //TODO add baseURL
+  'relativeURLwithFragment := ('relativeURL ~ ("#" ~ 'URLfragment).?).?, 
   'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
   'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,// | 'ws,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
@@ -26,7 +26,7 @@ Grammar(
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, //removed empty alternative
   'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?,
-  'opaqueHost := ('URLunit ~ 'URLunit.rep) | ("[" ~ 'ipv6address ~ "]"),
+  'opaqueHost := 'URLunit.rep | ("[" ~ 'ipv6address ~ "]"),
   'schemeRelativeFileURL := "//" ~ (('host ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),//removed empty alternative
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := 'pathAbsoluteURL ~ 'windowsDriveLetter ~ "/", 
@@ -74,7 +74,7 @@ Grammar(
   //  | ("FD" ~ ('digit | "A" | "B" | "C") ~ 'unicodeHEX)
   //  | ("FDF" ~ 'unicodeHEX)),
   'host := ('userinfo ~ "@").? ~ 'domain,
-  'domain := ('unreserved | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), // removed percent encoded
+  'domain := ('unreserved | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), // removed percent encoded //TODO forbidden host code points
   'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep,
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
