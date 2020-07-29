@@ -43,9 +43,9 @@ Grammar(
   'URLfragment := 'fragmentCodePoint.rep,
    // 0<=port<=65535
   'URLport := ('digit.rep(1,4))		
-		| (( "1" | "2" | "3" | "4"| "5") ~ 'digit.rep(4))
-		| ("6" ~ ("0" | "1" | "2" | "3" | "4") ~ 'digit.rep(3))
-		| ("65" ~ ("0" | "1" | "2" | "3" | "4") ~ 'digit.rep(2))
+		| (( "1" | "2" | "3" | "4"| "5") ~ 'digit.rep(4,4))
+		| ("6" ~ ("0" | "1" | "2" | "3" | "4") ~ 'digit.rep(3,3))
+		| ("65" ~ ("0" | "1" | "2" | "3" | "4") ~ 'digit.rep(2,2))
 		| ("655" ~ ("0" | "1" | "2" ) ~ 'digit)
 		| ("6553" ~ ( "0"|"1" | "2" | "3" | "4"| "5")),
   //'URLunit := 'URLcodePoint | 'percentEncodedByte,
@@ -95,8 +95,8 @@ Grammar(
 
   'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
   'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" | "\\" | "^" | "|",
-  'specialQueryAllowed := 'pathAllowed | "?" | "{" | "}" |"`",
-  'fragmentAllowed := 'specialQueryAllowed | "#",
+  'specialQueryAllowed := 'pathAllowed | "?" | "{" | "}" |"`", //TODO path includes userinfo includes ' which is not allowed
+  'fragmentAllowed := 'pathAllowed | "?" | "{" | "}" | "#",
   'c0Allowed := 'fragmentAllowed | " " | "\"" | "<" | ">" | "`",
 )
 
