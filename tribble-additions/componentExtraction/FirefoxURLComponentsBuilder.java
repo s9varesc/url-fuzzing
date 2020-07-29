@@ -39,7 +39,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
     }
 
     @Override
-    public String buildRepresentation() {
+    public String buildRepresentation() { //TODO escape quotation marks in content
       Map<String, String> components=buildMapping();
       String result="{";
       for(String key:components.keySet()){
@@ -222,7 +222,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         components.put("hasRef", "false");
 	components.put("ref", "");
       }
-      if(pqr.length()>=1 &&!pqr.startsWith("/")&&  !pqr.startsWith("?")){//dont add if query starts immediately or pqr is empty
+      if(pqr.length()>=1 &&!pqr.startsWith("/")){//dont add if pqr is empty
 	String addslash="/"+pqr; 
 	pqr=addslash;
       }
