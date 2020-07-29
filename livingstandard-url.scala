@@ -37,7 +37,7 @@ Grammar(
   'URLpathSegment := ('URLunit.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
   // URLunit can't be /,?, singleDotPathSegment, doubleDotPathSegment
   'singleDotPathSegment := "." | "%2e",
-  'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e",
+  'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", //TODO also add %2E ?
   'URLquery := 'URLunit.rep,
   'URLfragment := 'URLunit.rep,
    // 0<=port<=65535
@@ -74,7 +74,7 @@ Grammar(
   //  | ("FD" ~ ('digit | "A" | "B" | "C") ~ 'unicodeHEX)
   //  | ("FDF" ~ 'unicodeHEX)),
   'host := ('userinfo ~ "@").? ~ 'domain,
-  'domain := ('unreserved | 'subdelims ).rep  | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), // removed percent encoded //TODO forbidden host code points
+  'domain := (('unreserved | 'subdelims ) ~('unreserved | 'subdelims ).rep ) | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), // removed percent encoded //TODO forbidden host code points
   'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep,
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
