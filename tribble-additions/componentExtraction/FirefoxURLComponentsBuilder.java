@@ -232,6 +232,10 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       //remove dot segments
       pqr=pqr.replaceAll("/*/\\.\\./","/"); 
       pqr=pqr.replaceAll("/\\./","/");
+      pqr=pqr.replaceAll("/\\.\\?","/\\?");
+      pqr=pqr.replaceAll("/\\.\\.\\?","/\\?");
+      pqr=pqr.replaceAll("/\\.#","/#");
+      pqr=pqr.replaceAll("/\\.\\.#","/#");
       pqr=pqr.replaceAll("/\\.$","/");
       pqr=pqr.replaceAll("/\\.\\.$","/");
       components.put("pathQueryRef", pqr);
