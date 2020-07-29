@@ -75,7 +75,7 @@ Grammar(
   //  | ("FDF" ~ 'unicodeHEX)),
   'host := ('userinfo ~ "@").? ~ 'domain,
   'domain := (('unreserved | 'subdelims ) ~('unreserved | 'subdelims ).rep ) | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), // removed percent encoded //TODO forbidden host code points
-  'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep,
+  'userinfo := ('unreserved | 'percentEncodedByte | 'subdelims | ":").rep, //TODO correct encoding, prevent generating empty userinfo
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
     | ((('h16 ~ ":").rep(0, 1) ~ 'h16).? ~ "::" ~ ('h16 ~ ":").rep(2, 2) ~ 'ls32)
