@@ -5,29 +5,28 @@ import saarland.cispa.se.tribble.dsl._
 //(whenever the living standard documentation was not sufficient to formulate a grammar)
 
 Grammar(
-  'url := "" ~ 'absoluteURLwithFragment,// ('absoluteURL ~'relativeURLwithFragment)  
+  'url := "" ~ 'absoluteURLwithFragment,
   'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
   'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?) 
     | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL ~ ("?" ~ 'URLquery).?)
-    | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) ,
+    | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , //TODO file urls dont allow userinfo -> replaced host with domain
 
   'URLspecialSchemeNotFile := "ftp" | "http" | "https" | "ws" | "wss", 
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  //'relativeURLwithFragment := ('relativeURL ~ ("#" ~ 'URLfragment).?).?, 
   'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
-  'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,// | 'ws,
+  'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
-    | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL,// | 'empty,// | 'ws,
+    | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL,
   'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
-  'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?, //removed empty alternative
+  'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?, 
 
   
-  'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, //removed empty alternative
+  'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
   'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?,
   'opaqueHost := 'c0CodePoint.rep | ("[" ~ 'ipv6address ~ "]"), //TODO host code points
-  'schemeRelativeFileURL := "//" ~ (('host ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),//removed empty alternative
+  'schemeRelativeFileURL := "//" ~ (('domain ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := 'pathAbsoluteURL ~ 'windowsDriveLetter ~ "/", 
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
@@ -55,7 +54,7 @@ Grammar(
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
   'host := ('userinfo ~ "@").? ~ 'domain,
-  'domain := (('unreserved | 'subdelims ) ~('unreserved | 'subdelims ).rep ) | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), // removed percent encoded //TODO forbidden host code points
+  'domain := (('unreserved | 'subdelims ) ~('unreserved | 'subdelims ).rep ) | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO forbidden host code points
   'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
@@ -74,10 +73,7 @@ Grammar(
   'alphanum := "[a-zA-Z0-9]".regex,
   'alpha := "[a-zA-Z]".regex,
   'hexdig := ("[a-f]".regex) | 'digit,
-  //'unicodeHEX := 'digit | ("[A-F]".regex),
-  //'percentEncodedByte := "%" ~ 'hexdig ~ 'hexdig,
-  //'ws := " " | "\\t" | "\\r" | "\\n" , //TODO make sure the final tests contain \n etc
-  //'empty := ""
+  
 
   'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded,
   'pathCodePoint := 'pathAllowed | 'pathPercentEncoded,
@@ -95,7 +91,7 @@ Grammar(
 
   'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
   'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" | "\\" | "^" | "|",
-  'specialQueryAllowed := 'pathAllowed | "?" | "{" | "}" |"`", //TODO path includes userinfo includes ' which is not allowed
+  'specialQueryAllowed := 'unreserved | "!" | "$" | "&" | "%"  | "(" | ")" | "*" | "+" | "," | "?" | "{" | "}" |"`" | "/" | ":" | ";" | "=" | "@" | "[" | "]" | "\\" | "^" | "|", 
   'fragmentAllowed := 'pathAllowed | "?" | "{" | "}" | "#",
   'c0Allowed := 'fragmentAllowed | " " | "\"" | "<" | ">" | "`",
 )
