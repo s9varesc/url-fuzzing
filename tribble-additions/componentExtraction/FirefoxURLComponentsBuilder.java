@@ -100,10 +100,12 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   result += piece +":"; 
 	}
 	if(original.endsWith("::")){
-           //complete :: at the end
- 	   return result+":";
+	   if(!result.endsWith("::")){
+              //complete :: at the end
+ 	      return result+":";
+           }
 	}
-        if(result != ""){
+        if(result != "" && result !="::"){
 	   //remove additional : at the end
 	   return result.subSequence(0, result.length()-1).toString();
 	}
@@ -129,17 +131,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
       String spec=components.get("spec");
       
-      /*//build path, unused? if used: add dotsegment replacing logic
-
-      String pa=dict.get("pathAbsoluteURL");
-      String panW=dict.get("pathAbsoluteNonWindowsFileURL");
-      String prsl=dict.get("pathRelativeSchemelessURL"); 
-
-      for (String content: Arrays.asList(panW, pa, prsl)){
-        if(content !=null){
-          components.put("path", content);
-        }
-      }*/
+      
       //build host
       String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
@@ -209,7 +201,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
       //finalizing the prePath entry is only possible after building pathQueryRef
 
-      //build pathQueryRef 
+      //build pathQueryRef //TODO return to building pqr from parts
       
       String ref=components.get("ref");
       String pqr="";
@@ -217,7 +209,17 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       if (pqrindex>=0){
 	pqr=spec.subSequence(pqrindex+prePath.length(), spec.length()).toString(); 
       }
-      
+      /*//build path, unused? 
+
+      String pa=dict.get("pathAbsoluteURL");
+      String panW=dict.get("pathAbsoluteNonWindowsFileURL");
+      String prsl=dict.get("pathRelativeSchemelessURL"); 
+
+      for (String content: Arrays.asList(panW, pa, prsl)){
+        if(content !=null){
+          components.put("path", content);
+        }
+      }*/
       if (ref != null) {
         
           //build hasRef
@@ -270,7 +272,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
       //finalizing prePath as the intermediate representation is used to build pathQueryRef
       /*if(spec.toLowerCase().startsWith("file://")){
-	  prePath="file://"; //TODO remove this, the standard allows hosts; 
+	  prePath="file://"; // removed this, the standard allows hosts; 
       }*/
       if(prePath!="" /*&& spec.toLowerCase().startsWith(prePath.toLowerCase())*/) { 
         components.put("prePath", prePath);
