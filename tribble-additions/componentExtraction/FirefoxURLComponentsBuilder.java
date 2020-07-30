@@ -235,7 +235,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       pqr=pqr.replaceAll("/\\.%2e/","/\\.\\./");
       pqr=pqr.replaceAll("/%2e\\./","/\\.\\./");
       pqr=pqr.replaceAll("/%2e%2e/","/\\.\\./");
-      //remove dot segments
+      //remove dot segments //TODO remove dots at the beginning: ^\\./ and ^\\.\\./
       pqr=pqr.replaceAll("/*/\\.\\./","/"); 
       pqr=pqr.replaceAll("/\\./","/");
       pqr=pqr.replaceAll("/\\.\\?","/\\?");
