@@ -100,6 +100,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   result += piece +":"; 
 	}
 	if(original.endsWith("::")){
+	   System.out.println("original: "+original+" result after format: "+result);
 	   if(!result.endsWith("::")){
               //complete :: at the end
  	      return result+":";
