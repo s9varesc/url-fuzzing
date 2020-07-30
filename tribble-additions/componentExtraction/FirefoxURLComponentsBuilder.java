@@ -226,7 +226,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       //get query
       String query="";
       String qs=dict.get("URLSpecialquery");
-      String qns=dict.get("URLQuery");
+      String qns=dict.get("URLquery");
 
       if(qs != null && qs != ""){
 	query=qs; 
