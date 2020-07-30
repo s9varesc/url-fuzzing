@@ -90,7 +90,7 @@ Grammar(
   'userinfoPercentEncoded := 'pathPercentEncoded | ("%" ~ ("2f" | "3a" | "3b" | "3d" | "40" | "5b"| "5c" | "5d" | "5e" | "7c")),
 
   'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
-  'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" | "\\" | "^" | "|",
+  'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" | "\"" | "^" | "|",
   'specialQueryAllowed := 'unreserved | "!" | "$" | "&" | "%"  | "(" | ")" | "*" | "+" | "," | "?" | "{" | "}" |"`" | "/" | ":" | ";" | "=" | "@" | "[" | "]" | "\\" | "^" | "|", 
   'fragmentAllowed := 'pathAllowed | "?" | "{" | "}" | "#",
   'c0Allowed := 'fragmentAllowed | " " | "\"" | "<" | ">" | "`",

@@ -45,7 +45,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       for(String key:components.keySet()){
         if(key != "hasRef") {
 	  String content = components.get(key);
-	  String tmp=content.replaceAll("\\", "\\\\");
+	  String tmp=content.replaceAll("\\\\", "\\\\\\");
 	  tmp=tmp.replaceAll("\"", "\\\"");
 	  if (key=="host"){
 	    if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: need to remove leading zeros and convert ipv4 pieces
