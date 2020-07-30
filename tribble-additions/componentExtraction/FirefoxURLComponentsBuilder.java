@@ -66,6 +66,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
     private String formatIPv6(String original){
 	if(original == "::"){
+	   System.out.println("ORIGINAL RETURNED");
 	   return original;
 	}
 	String[] pieces=original.split(":");
@@ -100,11 +101,13 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	   result += piece +":"; 
 	}
 	if(original.endsWith("::")){
-	   System.out.println("original: "+original+" result after format: "+result);
+	   
 	   if(!result.endsWith("::")){
               //complete :: at the end
+	      System.out.println("original: "+original+" result after format: "+result);
  	      return result+":";
            }
+           System.out.println("original: "+original+" result after format: "+result);
 	   return result;
 	}
         if(result != "" && result !="::"){
