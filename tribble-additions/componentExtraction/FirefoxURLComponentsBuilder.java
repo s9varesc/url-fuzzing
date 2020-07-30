@@ -66,7 +66,6 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
     private String formatIPv6(String original){
 	if(original.startsWith("::") && original.endsWith("::")){
-	   System.out.println("ORIGINAL RETURNED");
 	   return original;
 	}
 	String[] pieces=original.split(":");
