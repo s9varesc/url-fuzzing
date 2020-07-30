@@ -232,8 +232,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
       //replace %2e and %2E
       pqr=pqr.replaceAll("/%2e/","/\\./");
-      pqr=pqr.replaceAll("/.%2e/","/\\.\\./");
-      pqr=pqr.replaceAll("/%2e./","/\\.\\./");
+      pqr=pqr.replaceAll("/\\.%2e/","/\\.\\./");
+      pqr=pqr.replaceAll("/%2e\\./","/\\.\\./");
+      pqr=pqr.replaceAll("/%2e%2e/","/\\.\\./");
       //remove dot segments
       pqr=pqr.replaceAll("/*/\\.\\./","/"); 
       pqr=pqr.replaceAll("/\\./","/");
