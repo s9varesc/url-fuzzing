@@ -246,7 +246,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       /*if(spec.toLowerCase().startsWith("file://")){
 	  prePath="file://"; //TODO remove this, the standard allows hosts; 
       }*/
-      if(prePath!="" && spec.toLowerCase().startsWith(prePath.toLowerCase())) { 
+      if(prePath!="" /*&& spec.toLowerCase().startsWith(prePath.toLowerCase())*/) { 
         components.put("prePath", prePath);
       } 
 
