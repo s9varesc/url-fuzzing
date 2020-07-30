@@ -191,7 +191,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
         prePath+=userinfo+"@";
       }
-      if(host != null){
+      if(host != null && host != ""){
         if(first){
           prePath+="//";
           first=false;
