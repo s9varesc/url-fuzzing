@@ -46,7 +46,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         if(key != "hasRef") {
 	  String content = components.get(key);
 	  String tmp=content.replaceAll("\\\\", "\\\\\\\\");
-	  tmp=tmp.replaceAll("\"", "\\\"");
+	  tmp=tmp.replaceAll("\\\"", "\\\\\\\"");
 	  if (key=="host"){
 	    if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: need to remove leading zeros and convert ipv4 pieces
 	      tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
@@ -141,7 +141,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
       String reshost="";
-      if(ophost !=null){
+      if(ophost !=null && ophost!=""){
         reshost= ophost.toLowerCase();
       }
       else{
