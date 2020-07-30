@@ -65,6 +65,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
     }
 
     private String formatIPv6(String original){
+	if(original == "::"){
+	   return original;
+	}
 	String[] pieces=original.split(":");
 	String result="";
 	for (String piece: pieces){
@@ -223,13 +226,14 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         components.put("hasRef", "false");
 	components.put("ref", "");
       }
-      if(pqr.length()>=1 &&!pqr.startsWith("/")){//dont add if pqr is empty
+      if(pqr.length()>=1 &&!pqr.startsWith("/") && !prePath.endsWith(":")){//dont add if pqr is empty
 	String addslash="/"+pqr; 
 	pqr=addslash;
       }
       //replace %2e and %2E
-      pqr=pqr.replaceAll("%2e","\\.");
-      pqr=pqr.replaceAll("%2E","\\.");
+      pqr=pqr.replaceAll("/%2e/","/\\./");
+      pqr=pqr.replaceAll("/.%2e/","/\\.\\./");
+      pqr=pqr.replaceAll("/%2e./","/\\.\\./");
       //remove dot segments
       pqr=pqr.replaceAll("/*/\\.\\./","/"); 
       pqr=pqr.replaceAll("/\\./","/");
