@@ -28,7 +28,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
 
 
-
+      //TODO check for query in documentation of components
       translation.put("port", "URLport");
       translation.put("userPass","userinfo" );
       translation.put("ref", "URLfragment");
@@ -45,7 +45,8 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       for(String key:components.keySet()){
         if(key != "hasRef") {
 	  String content = components.get(key);
-	  String tmp=content.replaceAll("\\\\", "\\\\\\\\");
+	  String tmp=content.replaceAll("\\", "\\\\");
+	  tmp=tmp.replaceAll("\"", "\\\"");
 	  if (key=="host"){
 	    if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: need to remove leading zeros and convert ipv4 pieces
 	      tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
@@ -125,11 +126,11 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
       String spec=components.get("spec");
       
-      /*//build path, unused?
+      /*//build path, unused? if used: add dotsegment replacing logic
 
       String pa=dict.get("pathAbsoluteURL");
       String panW=dict.get("pathAbsoluteNonWindowsFileURL");
-      String prsl=dict.get("pathRelativeSchemelessURL"); //TODO use schemerelativeFileURL to include slashes
+      String prsl=dict.get("pathRelativeSchemelessURL"); 
 
       for (String content: Arrays.asList(panW, pa, prsl)){
         if(content !=null){
@@ -200,7 +201,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       if(p != null && p!= ""){
         prePath+=":"+p;
       }
-      if(spec.toLowerCase().startsWith(prePath + "//")){ //TODO not always the case
+      if(spec.toLowerCase().startsWith(prePath + "//")){ 
           prePath+="//";
       }
       //finalizing the prePath entry is only possible after building pathQueryRef
@@ -211,7 +212,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       String pqr="";
       int pqrindex=spec.toLowerCase().indexOf(prePath.toLowerCase());
       if (pqrindex>=0){
-	pqr=spec.subSequence(pqrindex+prePath.length(), spec.length()).toString(); //TODO go back to build from parts for encodings
+	pqr=spec.subSequence(pqrindex+prePath.length(), spec.length()).toString(); 
       }
       
       if (ref != null) {
@@ -247,7 +248,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
       if(prePath!="" && spec.toLowerCase().startsWith(prePath.toLowerCase())) { //TODO might have to remove "//" for some cases
         components.put("prePath", prePath);
-      } //temporarily removed as custom schemes lead to test failures
+      } 
 
       return components;
     }
