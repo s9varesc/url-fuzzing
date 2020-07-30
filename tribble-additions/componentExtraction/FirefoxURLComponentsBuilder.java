@@ -230,12 +230,33 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	String addslash="/"+pqr; 
 	pqr=addslash;
       }
-      //replace %2e and %2E
+      //replace %2e and %2e%2e in dot path segments
       pqr=pqr.replaceAll("/%2e/","/\\./");
+      pqr=pqr.replaceAll("/%2e$","/\\.");
+      pqr=pqr.replaceAll("/%2e#","/\\.#");
+      pqr=pqr.replaceAll("/%2e\\?","/\\.\\?");
+
       pqr=pqr.replaceAll("/\\.%2e/","/\\.\\./");
+      pqr=pqr.replaceAll("/\\.%2e$","/\\.\\.");
+      pqr=pqr.replaceAll("/\\.%2e#","/\\.\\.#");
+      pqr=pqr.replaceAll("/\\.%2e\\?","/\\.\\.\\?");
+
       pqr=pqr.replaceAll("/%2e\\./","/\\.\\./");
+      pqr=pqr.replaceAll("/%2e\\.$","/\\.\\.");
+      pqr=pqr.replaceAll("/%2e\\.#","/\\.\\.#");
+      pqr=pqr.replaceAll("/%2e\\.\\?","/\\.\\.\\?");
+      
       pqr=pqr.replaceAll("/%2e%2e/","/\\.\\./");
+      pqr=pqr.replaceAll("/%2e%2e$","/\\.\\.");
+      pqr=pqr.replaceAll("/%2e%2e#","/\\.\\.#");
+      pqr=pqr.replaceAll("/%2e%2e\\?","/\\.\\.\\?");
+      
       //remove dot segments //TODO remove dots at the beginning: ^\\./ and ^\\.\\./
+	
+      pqr=pqr.replaceAll("^\\.\\./","/");
+      pqr=pqr.replaceAll("^\\./","/");
+      pqr=pqr.replaceAll("^/\\.\\./","/");
+      pqr=pqr.replaceAll("^/\\./","/");
       pqr=pqr.replaceAll("/*/\\.\\./","/"); 
       pqr=pqr.replaceAll("/\\./","/");
       pqr=pqr.replaceAll("/\\.\\?","/\\?");
