@@ -9,13 +9,13 @@ Grammar(
   'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
   'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?) 
     | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL ~ ("?" ~ 'URLquery).?)
-    | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , //TODO file urls dont allow userinfo -> replaced host with domain
+    | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , 
 
   'URLspecialSchemeNotFile := "ftp" | "http" | "https" | "ws" | "wss", 
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?,
+  'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?, //TODO use URLSpecialquery
   'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
     | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL,
@@ -36,7 +36,7 @@ Grammar(
   'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
   // URLunit can't be /,?, singleDotPathSegment, doubleDotPathSegment
   'singleDotPathSegment := "." | "%2e",
-  'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", //TODO also add %2E ?
+  'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", //also add %2E ?
   'URLquery := 'queryCodePoint.rep,
   'URLSpecialquery := 'specialQueryCodePoint.rep,
   'URLfragment := 'fragmentCodePoint.rep,
