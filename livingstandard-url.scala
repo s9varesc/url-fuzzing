@@ -8,7 +8,7 @@ Grammar(
   'url := "" ~ 'absoluteURLwithFragment,
   'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
   'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?) 
-    | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL ~ ("?" ~ 'URLquery).?)
+    | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL )
     | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , 
 
   'URLspecialSchemeNotFile := "ftp" | "http" | "https" | "ws" | "wss", 
