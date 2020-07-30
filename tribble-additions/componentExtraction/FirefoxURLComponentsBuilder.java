@@ -104,6 +104,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
               //complete :: at the end
  	      return result+":";
            }
+	   return result;
 	}
         if(result != "" && result !="::"){
 	   //remove additional : at the end
@@ -205,25 +206,42 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       
       String ref=components.get("ref");
       String pqr="";
-      int pqrindex=spec.toLowerCase().indexOf(prePath.toLowerCase());
+      /*int pqrindex=spec.toLowerCase().indexOf(prePath.toLowerCase());
       if (pqrindex>=0){
 	pqr=spec.subSequence(pqrindex+prePath.length(), spec.length()).toString(); 
-      }
-      /*//build path, unused? 
-
+      }*/
+      //build path
       String pa=dict.get("pathAbsoluteURL");
       String panW=dict.get("pathAbsoluteNonWindowsFileURL");
       String prsl=dict.get("pathRelativeSchemelessURL"); 
+      String path="";
 
       for (String content: Arrays.asList(panW, pa, prsl)){
         if(content !=null){
-          components.put("path", content);
+          path=content;
         }
-      }*/
-      if (ref != null) {
+      }
+      
+      pqr+=path;
+      //get query
+      String query="";
+      String qs=dict.get("URLSpecialquery");
+      String qns=dict.get("URLQuery");
+
+      if(qs != null && qs != ""){
+	query=qs; 
+      }
+      if(qns != null && qns != ""){
+	query=qns; 
+      }
+      if(query != ""){
+	pqr+="?"+query; 
+      }
+      if(ref != null) {
         
           //build hasRef
         components.put("hasRef", "true");
+	pqr+="#"+ref;
       } else {
         components.put("hasRef", "false");
 	components.put("ref", "");
