@@ -7,7 +7,7 @@ import saarland.cispa.se.tribble.dsl._
 Grammar(
   'url := "" ~ 'absoluteURLwithFragment,
   'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
-  'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?)  //TODO include other relative alternatives?
+  'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?))  //TODO include other relative alternatives?
     | ('URLnonSpecialScheme ~ ":" ~ ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL ) ~ ("?" ~ 'URLquery ).?)//'relativeURL ) // relativeURL includes driveletter
     | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , 
 
