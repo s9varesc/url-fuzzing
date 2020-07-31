@@ -50,10 +50,10 @@ Grammar(
   //'URLunit := 'URLcodePoint | 'percentEncodedByte,
   //'URLcodePoint := 'unreserved, //| 'unicode |'reserved ,
   //'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
-  'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
+  //'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
-  'host := ('userinfo ~ "@").? ~ 'domain,
+  //'host := ('userinfo ~ "@").? ~ 'domain,
   'domain := 'hostAllowed.rep | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO explixitly include xn-- variations?
   'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
@@ -86,7 +86,7 @@ Grammar(
   'hostAllowed := 'unreserved | "!" | "\"" |"$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "|",
   'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO c0percent encoding above %7f
 
-  'c0PercentEncoded:= "%" ~ ((("0"|"1") ~ ('hexdig)) | (("7" | "8" | "9" | "[a-f]".regex) ~ 'hexdig)), //TODO add code points above %ff
+  'c0PercentEncoded:= "%" ~ ((("0"|"1") ~ 'hexdig) | (("7" | "8" | "9" | "[a-f]".regex) ~ 'hexdig)), //TODO add code points above %ff
   //unicode: code points in u+00A0 to u+10FFFD, excluding surrogates(u+D800-u+DFFF) and noncharachters(u+FDD0-u+FDEF)
   'fragmentPercentEncoded := 'c0PercentEncoded | ( "%" ~ ("20" | "22" | "3c" | "3e" | "60")),
   'queryPercentEncoded := 'c0PercentEncoded | ("%" ~ ("20" | "22" | "23" | "3c" | "3e" )),
