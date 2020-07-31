@@ -7,20 +7,20 @@ import saarland.cispa.se.tribble.dsl._
 Grammar(
   'url := "" ~ 'absoluteURLwithFragment,
   'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
-  'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?) 
-    | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL ) //TODO relativeURL includes driveletter
+  'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?)  //TODO include other relative alternatives?
+    | ('URLnonSpecialScheme ~ ":" ~ ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL ) ~ ("?" ~ 'URLquery ).?)//'relativeURL ) // relativeURL includes driveletter
     | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , 
 
   'URLspecialSchemeNotFile := "ftp" | "http" | "https" | "ws" | "wss", 
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?, //TODO use URLSpecialquery 
-  'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
-  'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
+  //'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?, // use URLSpecialquery 
+  //'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
+  //'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
     | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL,
-  'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
-  'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?, 
+  //'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
+  //'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?, 
 
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
@@ -54,7 +54,7 @@ Grammar(
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
   'host := ('userinfo ~ "@").? ~ 'domain,
-  'domain := (('unreserved | 'subdelims ) ~('unreserved | 'subdelims ).rep ) | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO forbidden host code points
+  'domain := ('hostAllowed ).rep ) | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO explixitly include xn-- variations?
   'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
@@ -81,9 +81,9 @@ Grammar(
   'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "%27",
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded,
   //'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
-  'opaqueHostCodePoint := 'opaqueHostAllowed | 'opaqueHostPercentEncoded,
+  'opaqueHostCodePoint := 'hostAllowed | "%"| 'opaqueHostPercentEncoded,
 
-  'opaqueHostAllowed := 'unreserved | "!" | "\"" |"$" | "&" | "%" |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "|",
+  'hostAllowed := 'unreserved | "!" | "\"" |"$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "|",
   'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO c0percent encoding above %7f
 
   'c0PercentEncoded:= "%" ~ ((("0"|"1") ~ ('hexdig)) | (("7" | "8" | "9" | "[a-f]".regex) ~ 'hexdig)), //TODO add code points above %ff
