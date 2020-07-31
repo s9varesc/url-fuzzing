@@ -20,7 +20,7 @@ Grammar(
   //'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
    // | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL,
   //'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
-  //'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?, 
+  'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?, 
 
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
@@ -53,7 +53,7 @@ Grammar(
   //'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
-  //'host := ('userinfo ~ "@").? ~ 'domain,
+  'host := ('userinfo ~ "@").? ~ 'domain,
   'domain := 'hostAllowed.rep | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO explixitly include xn-- variations?
   'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
