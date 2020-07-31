@@ -8,14 +8,14 @@ Grammar(
   'url := "" ~ 'absoluteURLwithFragment,
   'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
   'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?) 
-    | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL )
+    | ('URLnonSpecialScheme ~ ":" ~ 'relativeURL ) //TODO relativeURL includes driveletter
     | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , 
 
   'URLspecialSchemeNotFile := "ftp" | "http" | "https" | "ws" | "wss", 
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?, //TODO use URLSpecialquery
+  'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?, //TODO use URLSpecialquery 
   'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
   'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
     | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL,
@@ -24,9 +24,9 @@ Grammar(
 
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
-  'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?,
-  'opaqueHost := 'c0CodePoint.rep | ("[" ~ 'ipv6address ~ "]"), //TODO host code points
-  'schemeRelativeFileURL := "//" ~ (('domain ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
+  'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?).?, 
+  'opaqueHost := 'c0CodePoint.rep(1) | ("[" ~ 'ipv6address ~ "]"), //TODO host code points
+  'schemeRelativeFileURL := "//" ~ ((('domain | 'ipv4address | "[" ~ 'ipv6address ~ "]").? ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := 'pathAbsoluteURL ~ 'windowsDriveLetter ~ "/", 
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
@@ -37,8 +37,8 @@ Grammar(
   // URLunit can't be /,?, singleDotPathSegment, doubleDotPathSegment
   'singleDotPathSegment := "." | "%2e",
   'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", //also add %2E ?
-  'URLquery := 'queryCodePoint.rep,
-  'URLSpecialquery := 'specialQueryCodePoint.rep,
+  'URLquery := 'queryCodePoint.rep(1),
+  'URLSpecialquery := 'specialQueryCodePoint.rep(1),
   'URLfragment := 'fragmentCodePoint.rep,
    // 0<=port<=65535
   'URLport := ('digit.rep(1,4))		
