@@ -80,7 +80,7 @@ Grammar(
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded,
   'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "%27",
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded,
-  'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
+  //'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
   'opaqueHostCodePoint := 'opaqueHostAllowed | 'opaqueHostPercentEncoded,
 
   'opaqueHostAllowed := 'unreserved | "!" | "\"" |"$" | "&" | "%" |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "|",
@@ -97,6 +97,6 @@ Grammar(
   'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|",
   'specialQueryAllowed := 'unreserved | "!" | "$" | "&" | "%"  | "(" | ")" | "*" | "+" | "," | "?" | "{" | "}" |"`" | "/" | ":" | ";" | "=" | "@" | "[" | "]" | "\\" | "^" | "|", 
   'fragmentAllowed := 'pathAllowed | "?" | "{" | "}" | "#",
-  'c0Allowed := 'fragmentAllowed | " " | "\"" | "<" | ">" | "`",
+  //'c0Allowed := 'fragmentAllowed | " " | "\"" | "<" | ">" | "`",
 )
 
