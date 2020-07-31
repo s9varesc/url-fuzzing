@@ -54,7 +54,7 @@ Grammar(
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
   'host := ('userinfo ~ "@").? ~ 'domain,
-  'domain := ('hostAllowed ).rep ) | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO explixitly include xn-- variations?
+  'domain := 'hostAllowed.rep | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO explixitly include xn-- variations?
   'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
