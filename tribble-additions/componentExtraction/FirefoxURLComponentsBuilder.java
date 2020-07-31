@@ -212,6 +212,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	pqr=spec.subSequence(pqrindex+prePath.length(), spec.length()).toString(); 
       }*/
       //build path
+
       String pa=dict.get("pathAbsoluteURL");
       String panW=dict.get("pathAbsoluteNonWindowsFileURL");
       String prsl=dict.get("pathRelativeSchemelessURL"); 

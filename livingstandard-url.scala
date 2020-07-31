@@ -25,7 +25,7 @@ Grammar(
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
   'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?).?, 
-  'opaqueHost := 'c0CodePoint.rep(1) | ("[" ~ 'ipv6address ~ "]"), //TODO host code points
+  'opaqueHost := 'opaqueHostCodePoint.rep(1) | ("[" ~ 'ipv6address ~ "]"), 
   'schemeRelativeFileURL := "//" ~ ((('domain | 'ipv4address | "[" ~ 'ipv6address ~ "]").? ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := 'pathAbsoluteURL ~ 'windowsDriveLetter ~ "/", 
@@ -81,6 +81,10 @@ Grammar(
   'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "%27",
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded,
   'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
+  'opaqueHostCodePoint := 'opaqueHostAllowed | 'opaqueHostPercentEncoded,
+
+  'opaqueHostAllowed := 'unreserved | "!" | "\"" |"$" | "&" | "%" |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "|",
+  'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO c0percent encoding above %7f
 
   'c0PercentEncoded:= "%" ~ ((("0"|"1") ~ ('hexdig)) | (("7" | "8" | "9" | "[a-f]".regex) ~ 'hexdig)), //TODO add code points above %ff
   //unicode: code points in u+00A0 to u+10FFFD, excluding surrogates(u+D800-u+DFFF) and noncharachters(u+FDD0-u+FDEF)
