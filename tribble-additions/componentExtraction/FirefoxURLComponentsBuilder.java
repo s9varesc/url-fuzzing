@@ -286,10 +286,10 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       pqr=pqr.replaceAll("/%2e%2e\\?","/\\.\\.\\?");
       
       //replace /./ by /
+      pqr=pqr.replaceAll("^/\\./","/");
       pqr=pqr.replaceAll("/\\./","/");
       pqr=pqr.replaceAll("/\\.#","/#");
       pqr=pqr.replaceAll("/\\.$","/");
-      pqr=pqr.replaceAll("^/\\./","/");
       pqr=pqr.replaceAll("/\\.\\?","/\\?"); 
 
       //replace /afdf/../ by /
@@ -301,10 +301,10 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       boolean cont=true;
       while (cont && pqr.contains("..")){
 	String old=pqr;
-      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\./","/"); 
-      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.\\?","/\\?");
-      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.#","/#");
-      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.$","/");
+      	pqr=pqr.replaceFirst("/[^\\.\\.]/\\.\\./","/"); 
+      	pqr=pqr.replaceFirst("/[^\\.\\.]/\\.\\.\\?","/\\?");
+      	pqr=pqr.replaceFirst("/[^\\.\\.]/\\.\\.#","/#");
+      	pqr=pqr.replaceFirst("/[^\\.\\.]/\\.\\.$","/");
 	if(old.equals(pqr)){ //no more changes happening
           cont=false;
 	}
