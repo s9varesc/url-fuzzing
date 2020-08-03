@@ -20,7 +20,7 @@ Grammar(
   //'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
    // | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL,
   //'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
-  'schemeRelativeSpecialURL := "//" ~ 'host ~ (":" ~ 'URLport ~ 'pathAbsoluteURL.?).?, 
+  'schemeRelativeSpecialURL := "//" ~ 'host ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, 
 
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
