@@ -214,11 +214,15 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       //build path
 
       String pa=dict.get("pathAbsoluteURL");
-      String panW=dict.get("pathAbsoluteNonWindowsFileURL");
+      String sr=dict.get("schemeRelativeURL");
       String prsl=dict.get("pathRelativeSchemelessURL"); 
+      String srf=dict.get("schemeRelativeFileURL"); 
+      if( srf != null || sr != null ){
+	pa=null; //schemeRelativeFileURL contains pathAbsolute productions
+      }
       String path="";
 
-      for (String content: Arrays.asList(panW, pa, prsl)){
+      for (String content: Arrays.asList(sr, pa, prsl, srf)){
         if(content !=null){
           path=content;
         }
