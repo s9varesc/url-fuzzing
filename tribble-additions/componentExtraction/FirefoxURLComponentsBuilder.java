@@ -207,10 +207,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       
       String ref=components.get("ref");
       String pqr="";
-      /*int pqrindex=spec.toLowerCase().indexOf(prePath.toLowerCase());
-      if (pqrindex>=0){
-	pqr=spec.subSequence(pqrindex+prePath.length(), spec.length()).toString(); 
-      }*/
+      
       //build path
 
       String pa=dict.get("pathAbsoluteURL");
@@ -279,8 +276,8 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       
       //remove dot segments //TODO remove dots at the beginning: ^\\./ and ^\\.\\./
 	
-      pqr=pqr.replaceAll("^\\.\\./","/");
-      pqr=pqr.replaceAll("^\\./","/");
+      //pqr=pqr.replaceAll("^\\.\\./","/");
+      //pqr=pqr.replaceAll("^\\./","/");
       
       pqr=pqr.replaceAll("/*/\\.\\./","/"); 
       pqr=pqr.replaceAll("/\\./","/");
