@@ -188,7 +188,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
         prePath+=userinfo+"@";
       }
-      if(host != null && host != ""){
+      if(host != null && host != ""){ //TODO fix slashes
         if(first){
           prePath+="//";
           first=false;
@@ -198,9 +198,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       if(p != null && p!= ""){
         prePath+=":"+p;
       }
-      if(spec.toLowerCase().startsWith(prePath + "//")){ 
+      /*if(spec.toLowerCase().startsWith(prePath + "//")){ 
           prePath+="//";
-      }
+      }*/
       //finalizing the prePath entry is only possible after building pathQueryRef
 
       //build pathQueryRef //TODO return to building pqr from parts
