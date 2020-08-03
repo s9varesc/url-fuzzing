@@ -200,7 +200,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
       }
       
-      if(scheme=="file"){ //TODO is there a better way? 
+      if(prePath.contains("file:")){ //TODO is there a better way? 
 	  prePath="file://";
       }
       if(prePath!="" /*&& spec.toLowerCase().startsWith(prePath.toLowerCase())*/) { 
