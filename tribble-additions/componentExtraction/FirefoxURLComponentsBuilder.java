@@ -135,17 +135,17 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       
       
       //build host
-      String ophost=dict.get("opaqueHost");
+      //String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
       String reshost="";
-      if(ophost !=null && ophost!=""){
+      /*if(ophost !=null && ophost!=""){
         reshost= ophost.toLowerCase();
       }
-      else{
+      else{*/
         if(d !=null){
           reshost= d.toLowerCase();
         }
-      }
+      //}
       String tmp=reshost;
       if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: need to remove leading zeros and convert ipv4 pieces
 	  tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
