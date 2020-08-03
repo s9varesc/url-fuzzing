@@ -301,10 +301,12 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       boolean cont=true;
       while (cont && pqr.contains("..")){
 	String old=pqr;
-      	pqr=pqr.replaceFirst("/[^\\.\\.]/\\.\\./","/"); 
-      	pqr=pqr.replaceFirst("/[^\\.\\.]/\\.\\.\\?","/\\?");
-      	pqr=pqr.replaceFirst("/[^\\.\\.]/\\.\\.#","/#");
-      	pqr=pqr.replaceFirst("/[^\\.\\.]/\\.\\.$","/");
+        pqr=pqr.replaceAll("^/\\.\\./","/");
+        pqr=pqr.replaceAll("^/[^\\.\\.]/\\.\\./","/"); 
+      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\./","/"); 
+      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.\\?","/\\?");
+      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.#","/#");
+      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.$","/");
 	if(old.equals(pqr)){ //no more changes happening
           cont=false;
 	}
