@@ -289,9 +289,11 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       pqr=pqr.replaceAll("/\\.#","/#");
       pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.#","/#");
       pqr=pqr.replaceAll("/\\.$","/");
+
       pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.$","/");
 
       pqr=pqr.replaceAll("^/\\.\\./","/");
+      pqr=pqr.replaceAll("^/\\.\\.$","/");
       pqr=pqr.replaceAll("^/\\./","/");
       components.put("pathQueryRef", pqr);
 
