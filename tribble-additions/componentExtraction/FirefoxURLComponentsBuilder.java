@@ -281,6 +281,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       pqr=pqr.replaceAll("/%2e\\.\\?","/\\.\\.\\?");
       
       pqr=pqr.replaceAll("/%2e%2e/","/\\.\\./");
+      pqr=pqr.replaceAll("^/%2e%2e/","/");
       pqr=pqr.replaceAll("/%2e%2e$","/\\.\\.");
       pqr=pqr.replaceAll("/%2e%2e#","/\\.\\.#");
       pqr=pqr.replaceAll("/%2e%2e\\?","/\\.\\.\\?");
