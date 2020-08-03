@@ -194,10 +194,11 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
           first=false;
         }
         prePath+=host;
+	if(p != null && p!= ""){
+          prePath+=":"+p;
+        }
       }
-      if(p != null && p!= ""){
-        prePath+=":"+p;
-      }
+      
       /*if(spec.toLowerCase().startsWith(prePath + "//")){ 
           prePath+="//";
       }*/
