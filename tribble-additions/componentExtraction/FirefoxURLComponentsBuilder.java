@@ -295,6 +295,8 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       //replace /afdf/../ by /
       pqr=pqr.replaceAll("^/\\.\\./","/");
       pqr=pqr.replaceAll("^/\\.\\.$","/");
+      pqr=pqr.replaceAll("^/\\.\\.\\?","/\\?");
+      pqr=pqr.replaceAll("^/\\.\\.#","/#");
       boolean cont=true;
       while (cont && pqr.contains("..")){
 	String old=pqr;
