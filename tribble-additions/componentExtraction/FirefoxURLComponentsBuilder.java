@@ -135,17 +135,17 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       
       
       //build host
-      //String ophost=dict.get("opaqueHost");
+      String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
       String reshost="";
-      /*if(ophost !=null && ophost!=""){
+      if(ophost !=null && ophost!=""){
         reshost= ophost.toLowerCase();
       }
-      else{*/
+      else{
         if(d !=null){
           reshost= d.toLowerCase();
         }
-      //}
+      }
       String tmp=reshost;
       if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: need to remove leading zeros and convert ipv4 pieces
 	  tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
@@ -172,6 +172,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       String host=components.get("host");
       String userinfo=dict.get("userinfo");
       String p=components.get("port");
+      //String d=dict.get("domain");
       
       String prePath="";
       boolean first=true; 
@@ -188,7 +189,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
         prePath+=userinfo+"@";
       }
-      if(host != null && host != ""){ 
+      if(host != null && host != "" && d!=null){//ignore opaque hosts for prePath 
         if(first){
           prePath+="//";
           first=false;
@@ -277,10 +278,6 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       pqr=pqr.replaceAll("/%2e%2e#","/\\.\\.#");
       pqr=pqr.replaceAll("/%2e%2e\\?","/\\.\\.\\?");
       
-      //remove dot segments //TODO remove dots at the beginning: ^\\./ and ^\\.\\./
-	
-      //pqr=pqr.replaceAll("^\\.\\./","/");
-      //pqr=pqr.replaceAll("^\\./","/");
       
       pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\./","/"); 
       pqr=pqr.replaceAll("/\\./","/");
