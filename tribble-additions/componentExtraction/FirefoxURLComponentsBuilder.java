@@ -188,7 +188,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
         prePath+=userinfo+"@";
       }
-      if(host != null && host != ""){ //TODO fix slashes
+      if(host != null && host != ""){ 
         if(first){
           prePath+="//";
           first=false;
@@ -199,10 +199,12 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
       }
       
-      /*if(spec.toLowerCase().startsWith(prePath + "//")){ 
-          prePath+="//";
-      }*/
-      //finalizing the prePath entry is only possible after building pathQueryRef
+      if(scheme=="file"){ //TODO is there a better way? 
+	  prePath="file://";
+      }
+      if(prePath!="" /*&& spec.toLowerCase().startsWith(prePath.toLowerCase())*/) { 
+        components.put("prePath", prePath);
+      } 
 
       //build pathQueryRef //TODO return to building pqr from parts
       
@@ -294,13 +296,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       components.put("pathQueryRef", pqr);
 
 
-      //finalizing prePath as the intermediate representation is used to build pathQueryRef
-      /*if(spec.toLowerCase().startsWith("file://")){
-	  prePath="file://"; // removed this, the standard allows hosts; 
-      }*/
-      if(prePath!="" /*&& spec.toLowerCase().startsWith(prePath.toLowerCase())*/) { 
-        components.put("prePath", prePath);
-      } 
+      
 
       return components;
     }
