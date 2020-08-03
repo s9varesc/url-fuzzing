@@ -257,7 +257,14 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	String addslash="/"+pqr; 
 	pqr=addslash;
       }
-      //replace %2e and %2e%2e in dot path segments
+      
+      components.put("pathQueryRef", removeDotSegments(pqr));
+
+      return components;
+    }
+    
+    private String removeDotSegments(String pqr){ //TODO 
+	//replace %2e and %2e%2e in dot path segments
       pqr=pqr.replaceAll("/%2e/","/\\./");
       pqr=pqr.replaceAll("/%2e$","/\\.");
       pqr=pqr.replaceAll("/%2e#","/\\.#");
@@ -278,26 +285,30 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       pqr=pqr.replaceAll("/%2e%2e#","/\\.\\.#");
       pqr=pqr.replaceAll("/%2e%2e\\?","/\\.\\.\\?");
       
-      
-      pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\./","/"); 
+      //replace /./ by /
       pqr=pqr.replaceAll("/\\./","/");
-      pqr=pqr.replaceAll("/\\.\\?","/\\?");
-      pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.\\?","/\\?");
       pqr=pqr.replaceAll("/\\.#","/#");
-      pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.#","/#");
       pqr=pqr.replaceAll("/\\.$","/");
+      pqr=pqr.replaceAll("^/\\./","/");
+      pqr=pqr.replaceAll("/\\.\\?","/\\?"); 
 
-      pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.$","/");
-
+      //replace /afdf/../ by /
       pqr=pqr.replaceAll("^/\\.\\./","/");
       pqr=pqr.replaceAll("^/\\.\\.$","/");
-      pqr=pqr.replaceAll("^/\\./","/");
-      components.put("pathQueryRef", pqr);
-
-
+      boolean cont=true;
+      while (cont && pqr.contains("..")){
+	String old=pqr;
+      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\./","/"); 
+      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.\\?","/\\?");
+      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.#","/#");
+      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.$","/");
+	if(old.equals(pqr)){ //no more changes happening
+          cont=false;
+	}
+      }
       
-
-      return components;
+      
+      return pqr;	
     }
 
 
