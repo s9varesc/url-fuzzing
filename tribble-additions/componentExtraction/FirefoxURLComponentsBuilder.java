@@ -297,6 +297,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       pqr=pqr.replaceAll("^/\\.\\.$","/");
       pqr=pqr.replaceAll("^/\\.\\.\\?","/\\?");
       pqr=pqr.replaceAll("^/\\.\\.#","/#");
+      pqr=pqr.replaceAll("^/[^\\.\\.]/\\.\\./","/"); 
       boolean cont=true;
       while (cont && pqr.contains("..")){
 	String old=pqr;
