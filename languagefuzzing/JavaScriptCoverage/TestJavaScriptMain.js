@@ -21,7 +21,7 @@ rd
     }
   })
   .on('close', function(){
-	    fs.writeFile('JavaScriptExceptions.txt', exceptions, (err) => {  
+	    fs.writeFile('JavaScriptExceptionsurijs.txt', exceptions.substring(0,exceptions.length-1), (err) => {  
     if (err) throw err; 
      }) 
   });
