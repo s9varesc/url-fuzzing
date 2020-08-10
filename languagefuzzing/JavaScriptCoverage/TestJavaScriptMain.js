@@ -3,7 +3,7 @@
 var URI = require('urijs');
 var fs = require('fs');
 var readline = require('readline');
-var exceptions="";
+var exceptions='';
 
 var rd = readline.createInterface({
     input: fs.createReadStream('../urls/plainURLs'),
@@ -11,19 +11,20 @@ var rd = readline.createInterface({
     console: false
 });
 
-rd.on('line', function(line) {
+rd
+  .on('line', function(line) {
     try {
-	line=line.substring(0,line.length-1)
         const url=new URI(line);
     }
     catch(err){
-	exceptions=exceptions+"\n{ url:\""+line+"\",\n exception:\""+err.message+"\"},";
+	exceptions+="\n{ url:\""+line+"\",\n exception:\""+err.message+"\"},";
     }
-});
-
-fs.writeFile('JavaScriptExceptions.txt', exceptions.substring(0,exceptions.length-1), (err) => {  
+  })
+  .on('close', function(){
+	    fs.writeFile('JavaScriptExceptions.txt', exceptions, (err) => {  
     if (err) throw err; 
-}) 
+     }) 
+  });
 
 
 
