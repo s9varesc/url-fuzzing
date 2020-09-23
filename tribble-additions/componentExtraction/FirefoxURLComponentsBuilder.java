@@ -316,10 +316,10 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	if(old.equals(pqr)){ //no more changes happening
           cont=false;
 	}
-      }*/
+      }
       
       
-      return pqr;	
+      return pqr;*/	
     }
 
 
