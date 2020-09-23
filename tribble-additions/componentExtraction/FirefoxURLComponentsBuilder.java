@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
@@ -147,7 +149,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
       }
       String tmp=reshost;
-      if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: need to remove leading zeros and convert ipv4 pieces
+      if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: remove leading zeros and convert ipv4 pieces
 	  tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
 	  tmp="["+formatIPv6(tmp)+"]";
       }
@@ -207,7 +209,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         components.put("prePath", prePath);
       } 
 
-      //build pathQueryRef //TODO return to building pqr from parts
+      //build pathQueryRef 
       
       String ref=components.get("ref");
       String pqr="";
@@ -253,7 +255,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         components.put("hasRef", "false");
 	components.put("ref", "");
       }
-      if(pqr.length()>=1 &&!pqr.startsWith("/") && !prePath.endsWith(":")){//dont add if pqr is empty
+      if(pqr.length()>=1 &&!pqr.startsWith("/") && !prePath.endsWith(":")){//don't add if pqr is empty
 	String addslash="/"+pqr; 
 	pqr=addslash;
       }
@@ -264,8 +266,11 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
     }
     
     private String removeDotSegments(String pqr){ //TODO 
-	//replace %2e and %2e%2e in dot path segments
-      pqr=pqr.replaceAll("/%2e/","/");
+	//replace dot path segments
+	Path npqr=Paths.get(pqr);
+	return npqr.normalize();
+
+      /*pqr=pqr.replaceAll("/%2e/","/");
       pqr=pqr.replaceAll("/%2e$","/");
       pqr=pqr.replaceAll("/%2e#","/#");
       pqr=pqr.replaceAll("/%2e\\?","/\\?");
@@ -311,7 +316,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	if(old.equals(pqr)){ //no more changes happening
           cont=false;
 	}
-      }
+      }*/
       
       
       return pqr;	
