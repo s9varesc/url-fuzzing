@@ -266,62 +266,20 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
     }
     
     private String removeDotSegments(String pqr){ //TODO 
-	//replace dot path segments
+	//replace dot path segments and normalize path
 	pqr=pqr.replaceAll("%2e",".");
 	Path npqr=Paths.get(pqr);
-	return npqr.normalize().toString();
-	//TODO convert %2e before normalization, manually fix "/.?" etc
-
-      /*pqr=pqr.replaceAll("/%2e/","/");
-      pqr=pqr.replaceAll("/%2e$","/");
-      pqr=pqr.replaceAll("/%2e#","/#");
-      pqr=pqr.replaceAll("/%2e\\?","/\\?");
-
-      pqr=pqr.replaceAll("/\\.%2e/","/\\.\\./");
-      pqr=pqr.replaceAll("/\\.%2e$","/\\.\\.");
-      pqr=pqr.replaceAll("/\\.%2e#","/\\.\\.#");
-      pqr=pqr.replaceAll("/\\.%2e\\?","/\\.\\.\\?");
-
-      pqr=pqr.replaceAll("/%2e\\./","/\\.\\./");
-      pqr=pqr.replaceAll("/%2e\\.$","/\\.\\.");
-      pqr=pqr.replaceAll("/%2e\\.#","/\\.\\.#");
-      pqr=pqr.replaceAll("/%2e\\.\\?","/\\.\\.\\?");
-      
-      pqr=pqr.replaceAll("/%2e%2e/","/\\.\\./");
-      pqr=pqr.replaceAll("^/%2e%2e/","/");
-      pqr=pqr.replaceAll("/%2e%2e$","/\\.\\.");
-      pqr=pqr.replaceAll("/%2e%2e#","/\\.\\.#");
-      pqr=pqr.replaceAll("/%2e%2e\\?","/\\.\\.\\?");
-      
-      //replace /./ by /
-      pqr=pqr.replaceAll("^/\\./","/");
-      pqr=pqr.replaceAll("/\\./","/");
-      pqr=pqr.replaceAll("/\\.#","/#");
-      pqr=pqr.replaceAll("/\\.$","/");
-      pqr=pqr.replaceAll("/\\.\\?","/\\?"); 
-
-      //replace /afdf/../ by /
-      pqr=pqr.replaceAll("^/\\.\\./","/");
-      pqr=pqr.replaceAll("^/\\.\\.$","/");
-      pqr=pqr.replaceAll("^/\\.\\.\\?","/\\?");
-      pqr=pqr.replaceAll("^/\\.\\.#","/#");
-      pqr=pqr.replaceAll("^/[^\\.\\.]/\\.\\./","/"); 
-      boolean cont=true;
-      while (cont && pqr.contains("..")){
-	String old=pqr;
-        pqr=pqr.replaceAll("^/\\.\\./","/");
-        pqr=pqr.replaceAll("^/[^\\.\\.]/\\.\\./","/"); 
-      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\./","/"); 
-      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.\\?","/\\?");
-      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.#","/#");
-      	pqr=pqr.replaceAll("/[^\\.\\.]/\\.\\.$","/");
-	if(old.equals(pqr)){ //no more changes happening
-          cont=false;
+	String res=npqr.normalize().toString();
+	// add slashes that were removed during normalization
+	if(pqr.startsWith("//") && !res.startsWith("//")){
+	    String nres="/"+res;
+	    res=nres;
 	}
-      }
-      
-      
-      return pqr;*/	
+	if(pqr.endsWith("/") && !res.endsWith("/")){
+	    res+="/";
+	}
+	return res;
+	
     }
 
 
