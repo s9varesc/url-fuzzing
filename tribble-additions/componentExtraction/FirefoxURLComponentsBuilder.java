@@ -267,8 +267,10 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
     
     private String removeDotSegments(String pqr){ //TODO 
 	//replace dot path segments
+	pqr=pqr.replaceAll("%2e",".");
 	Path npqr=Paths.get(pqr);
 	return npqr.normalize().toString();
+	//TODO convert %2e before normalization, manually fix "/.?" etc
 
       /*pqr=pqr.replaceAll("/%2e/","/");
       pqr=pqr.replaceAll("/%2e$","/");
