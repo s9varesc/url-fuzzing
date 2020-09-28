@@ -271,9 +271,16 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	Path npqr=Paths.get(pqr);
 	String res=npqr.normalize().toString();
 	// add slashes that were removed during normalization
-	if(pqr.startsWith("//") ){//&& !res.startsWith("//")){
-	    String nres="//"+res;//TODO doesn't work
-	    res=nres;
+	if(pqr.startsWith("//")){
+	    if (res.startsWith("/")){
+		String nres="/"+res;//TODO doesn't work
+	        res=nres;
+	    }
+	    else {
+		String nres="//"+res;//TODO doesn't work
+	        res=nres;
+            }
+	    
 	}
 	if(pqr.endsWith("/") && !res.endsWith("/")){
 	    res+="/";
