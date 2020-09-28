@@ -260,14 +260,14 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	pqr=addslash;
       }
       
-      components.put("pathQueryRef", removeDotSegments(pqr));
+      components.put("pathQueryRef", normalize(pqr));
 
       return components;
     }
     
-    private String removeDotSegments(String pqr){ //TODO 
-	//replace dot path segments and normalize path
-	pqr=pqr.replaceAll("%2e",".");
+    private String normalize(String pqr){ //TODO 
+	
+	//pqr=pqr.replaceAll("%2e",".");
 	Path npqr=Paths.get(pqr);
 	String res=npqr.normalize().toString();
 	// add slashes that were removed during normalization
