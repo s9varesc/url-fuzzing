@@ -80,6 +80,7 @@ vendor/
 node_modules/
 .nyc_output/
 JavaScriptCoverage/coverage/
+JavaScriptCoverage/test/
 
 ##generated exception files
 CExceptions.txt
