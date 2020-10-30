@@ -19,7 +19,7 @@ rd
 		//console.log(url)
 	    }
 	    catch(err){
-		console.log(err);
+		//console.log(err);
 		exceptions+= '\n{ url:\"'+line+'\",\n exception:\"'+err.message+'\"},';
 		
 	    }
