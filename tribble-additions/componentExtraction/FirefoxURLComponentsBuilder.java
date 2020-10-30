@@ -7,6 +7,9 @@ import java.util.Map;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/***
+* concrete implementation of a ComponentsBuilder for the livingstandard-url grammar and the Firefox URL format
+*/
 public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
     ArrayList<String> InternalComponentNames=new ArrayList<String>();
@@ -29,18 +32,25 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       this.InternalComponentNames.add("ref");
 
 
-
-      //TODO check for query in documentation of components
+      //components which need no further processing
       translation.put("port", "URLport");
       translation.put("userPass","userinfo" );
       translation.put("ref", "URLfragment");
 
     }
+
+    /***
+    * @return returns the name of the specified format that this ComponentBuilder will produce 
+    */
     public String getComponentFormat(){
       return format;
     }
 
     @Override
+    /***
+    *
+    * @return components and their contents in the Firefox component format
+    */
     public String buildRepresentation() { //TODO escape quotation marks in content
       Map<String, String> components=buildMapping();
       String result="{";
@@ -66,6 +76,10 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       return result;
     }
 
+    /***
+    * formats the original IPv6 address by converting the IPv4 part to hex
+    * @return the given IPv6 address without IPv4 formatting
+    */
     private String formatIPv6(String original){
 	if(original.startsWith("::") && original.endsWith("::")){
 	   return original;
@@ -116,6 +130,10 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	return result;
     }
 
+    /***
+    * uses the dictionary created by DictExtractor to create a mapping of component name (in ff formatting) and component content
+    * @return a mapping of component name to component content
+    */
     private Map<String, String> buildMapping(){
       Map<String, String> components=new HashMap<>();
       for(String name:translation.keySet()){
