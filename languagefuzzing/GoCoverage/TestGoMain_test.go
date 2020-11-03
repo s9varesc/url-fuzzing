@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"testing"
 	"fmt"
-	"strings"
 	//"io/ioutil"
 )
 func TestURLs(t *testing.T) {
