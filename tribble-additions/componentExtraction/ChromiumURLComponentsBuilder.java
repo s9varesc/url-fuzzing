@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/***
+* concrete implementation of a ComponentsBuilder for the livingstandard-url grammar and the Chromium URL format
+*/
 public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
 
 	ArrayList<String> InternalComponentNames=new ArrayList<String>();
@@ -23,22 +27,24 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
     	this.InternalComponentNames.add("query");
     	this.InternalComponentNames.add("ref");
 
-    	/*this.InternalComponentNames.add("inner_scheme"); //TODO only used for filesystem URLs
-    	this.InternalComponentNames.add("inner_username");
-    	this.InternalComponentNames.add("inner_password");
-    	this.InternalComponentNames.add("inner_host");
-    	this.InternalComponentNames.add("inner_port");
-    	this.InternalComponentNames.add("inner_path"); */
-
-    	translation.put("port", "URLport"); //TODO cant be used whith filesystem URL
+      //components which need no further processing
+    	translation.put("port", "URLport"); 
     	translation.put("query", "URLquery");
     	translation.put("ref", "URLfragment");
     }
+
+    /***
+    * @return returns the name of the specified format that this ComponentBuilder will produce 
+    */
     public String getComponentFormat(){
       return format;
     }
 
-    public String buildRepresentation(){//TODO needs to be changed when using filesystem URL
+    /***
+    *
+    * @return components and their contents in the Chromium component format
+    */
+    public String buildRepresentation(){
     	//build actual representation
     	//{input, scheme, username, password, host, port, path, query, ref}
     	//{"http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
@@ -63,7 +69,10 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
 
     }
 
-
+    /***
+    * uses the dictionary created by DictExtractor to create a mapping of component name (in chr formatting) and component content
+    * @return a mapping of component name to component content
+    */
     private Map<String, String> buildMapping(){
     	//build mapping between grammar names and component names
     	Map<String, String> components=new HashMap<>();

@@ -8,6 +8,9 @@ package saarland.cispa.se.tribble.execution.componentExtraction;
   import java.util.ArrayList;
   import java.util.List;
 
+/***
+* extracts possible components and their contents from the tree representations and passes them to ComponentsBuilder classes for further processing
+*/
 public class DictExtractor {
   private List<ComponentsBuilder> componentBuilders;
 
@@ -16,11 +19,19 @@ public class DictExtractor {
     componentBuilders=new ArrayList<ComponentsBuilder>();
   }
 
+  /***
+  * adds "builder" to the list of ComponentsBuilder to use
+  */
   public void addComponentsBuilder(ComponentsBuilder builder){
     componentBuilders.add(builder);
   }
 
+  /***
+  * extracts all specified components from the tree representation and passes them to the specified component builders
+  * @return a list containing the formats and component representations e.g [["firefox", "{spec:...}"], ["chromium", "{input:..."], ["plain", "http://..."]]
+  */
   public List<List<String>> extract(DTree root) {
+    // determine which components to extract
     List<String> componentNames = new ArrayList<String>();
     for (ComponentsBuilder cb : componentBuilders){
       for(String name: cb.getComponentNames()){
@@ -30,6 +41,7 @@ public class DictExtractor {
       }
     }
 
+    //extract specified components
     List<DTree> workList = new ArrayList<>();
     List<DTree> visitedList=new ArrayList<>();
     workList.add(root);
@@ -37,7 +49,6 @@ public class DictExtractor {
     while (!workList.isEmpty()) {
       DTree current = workList.remove(0);
       visitedList.add(current);
-      //workList.addAll(JavaConverters.asJavaCollection(current.nodes()));
       for( DTree node:JavaConverters.asJavaCollection(current.nodes())){
         if(!visitedList.contains(node)){
           workList.add(node);
@@ -46,22 +57,20 @@ public class DictExtractor {
       DerivationRule decl = current.decl();
       if (decl instanceof Reference) {
         String name = ((Reference) decl).name();
-
-        //if (componentNames.contains(name)){
-          //System.out.println(name);
-          String content=current.leaves().mkString();
-          for (ComponentsBuilder cb : componentBuilders){
-            cb.addComponent(name, content);
-          }
-        //}
+        String content=current.leaves().mkString();
+        for (ComponentsBuilder cb : componentBuilders){
+          cb.addComponent(name, content);
+        }
 
       }
     }
+
+    //use specified component builders to format components
     List<List<String>> representations = new ArrayList<List<String>>();
     for (ComponentsBuilder cb : componentBuilders){
       List<String> rep = new ArrayList<String>();
-      rep.add(0, cb.getComponentFormat());
-      rep.add(1, cb.buildRepresentation());
+      rep.add(0, cb.getComponentFormat()); //e.g. "firefox"
+      rep.add(1, cb.buildRepresentation()); //e.g. "{spec: ...}"
       representations.add(rep);
     }
     return representations;
