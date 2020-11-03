@@ -33,7 +33,7 @@ func TestURLs(t *testing.T) {
 		
 		_, err :=url.Parse(eachline)
 		if err != nil {
-		    exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+strings.ReplaceAll(err.Error(), "\"", "")+"\"},"
+		    exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+strings.Replace(err.Error(), "\"", "", -1)+"\"},"
 		}
 
 	}
