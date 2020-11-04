@@ -50,6 +50,7 @@ for test in testnames:
 
 f=open("URLTestFiles/xpcshell.ini","w")
 f.write(xpcshellinicontent)
+print(xpcshellinicontent[:50])
 f.close()
 
 	
