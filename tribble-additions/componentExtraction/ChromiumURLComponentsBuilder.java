@@ -74,7 +74,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
     * @return the given string with escaped quotationmarks and backsalshes
     */
     private String fixEscaping(String original){
-      return original.replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"");
+      return original.replaceAll("\\\\\\","\\\\\\\\").replaceAll("\\\"", "\\\\\"");
     }
 
     /***
