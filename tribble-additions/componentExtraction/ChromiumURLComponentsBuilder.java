@@ -50,17 +50,17 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
     	//{"http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
     	//{"http:foo.com",                        "http", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL}
 
-    	Map<String, String> components=buildMapping();
+    	Map<String, String> components=buildMapping(); //TODO escape quotation marks and backslashes
       	String result="{";
-      	result+= "\""+components.get("input")+"\",";
-        result+= "\""+components.get("scheme")+"\",";
-      	result+= "\""+components.get("username")+"\",";
-      	result+= "\""+components.get("password")+"\",";
-      	result+= "\""+components.get("host")+"\",";
-      	result+= components.get("port")+",";
-      	result+= "\""+components.get("path")+"\",";
-      	result+= "\""+components.get("query")+"\",";
-      	result+= "\""+components.get("ref")+"\"";
+      	result+= "\""+components.get("input").replaceAll("\\","\\\\").replaceAll("\"", "\\\"")+"\",";
+        result+= "\""+components.get("scheme").replaceAll("\\","\\\\").replaceAll("\"", "\\\"")+"\",";
+      	result+= "\""+components.get("username").replaceAll("\\","\\\\").replaceAll("\"", "\\\"")+"\",";
+      	result+= "\""+components.get("password").replaceAll("\\","\\\\").replaceAll("\"", "\\\"")+"\",";
+      	result+= "\""+components.get("host").replaceAll("\\","\\\\").replaceAll("\"", "\\\"")+"\",";
+      	result+= components.get("port").replaceAll("\\","\\\\").replaceAll("\"", "\\\"")+",";
+      	result+= "\""+components.get("path").replaceAll("\\","\\\\").replaceAll("\"", "\\\"")+"\",";
+      	result+= "\""+components.get("query").replaceAll("\\","\\\\").replaceAll("\"", "\\\"")+"\",";
+      	result+= "\""+components.get("ref").replaceAll("\\","\\\\").replaceAll("\"", "\\\"")+"\"";
       	result +="}";
 
       	String res=result.replaceAll("\"null\"", "NULL");
