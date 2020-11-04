@@ -50,23 +50,31 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
     	//{"http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
     	//{"http:foo.com",                        "http", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL}
 
-    	Map<String, String> components=buildMapping(); //TODO escape quotation marks and backslashes
+    	Map<String, String> components=buildMapping(); 
       	String result="{";
-      	result+= "\""+components.get("input").replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"")+"\",";
-        result+= "\""+components.get("scheme").replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"")+"\",";
-      	result+= "\""+components.get("username").replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"")+"\",";
-      	result+= "\""+components.get("password").replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"")+"\",";
-      	result+= "\""+components.get("host").replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"")+"\",";
-      	result+= components.get("port").replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"")+",";
-      	result+= "\""+components.get("path").replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"")+"\",";
-      	result+= "\""+components.get("query").replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"")+"\",";
-      	result+= "\""+components.get("ref").replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"")+"\"";
+      	result+= "\""+fixEscaping(""+components.get("input"))+"\",";
+        result+= "\""+fixEscaping(""+components.get("scheme"))+"\",";
+      	result+= "\""+fixEscaping(""+components.get("username"))+"\",";
+      	result+= "\""+fixEscaping(""+components.get("password"))+"\",";
+      	result+= "\""+fixEscaping(""+components.get("host"))+"\",";
+      	result+= fixEscaping(""+components.get("port"))+",";
+      	result+= "\""+fixEscaping(""+components.get("path"))+"\",";
+      	result+= "\""+fixEscaping(""+components.get("query"))+"\",";
+      	result+= "\""+fixEscaping(""+components.get("ref"))+"\"";
       	result +="}";
 
       	String res=result.replaceAll("\"null\"", "NULL");
       	result=res;
       	return result;
 
+    }
+
+    /***
+    * 
+    * @return the given string with escaped quotationmarks and backsalshes
+    */
+    private String fixEscaping(String original){
+      return original..replaceAll("\\\\","\\\\\\").replaceAll("\\\"", "\\\\\"");
     }
 
     /***
