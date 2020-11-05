@@ -23,7 +23,7 @@ for filename in os.listdir(dir):
 	i+=1
 	f=open(dir+"/"+filename, "r")
 	url=f.read()
-	if "\"" in url:
+	if "\\\"" in url:
 		print(filename)
 	url.replace("\\", "\\\\")
 	url.replace("\\\"", "\\\\\"")
