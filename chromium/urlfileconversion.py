@@ -24,7 +24,7 @@ for filename in os.listdir(dir):
 	f=open(dir+"/"+filename, "r")
 	url=f.read()
 	url.replace("\\", "\\\\")
-	url.replace("\"", "\\\\\"")
+	url.replace("\\\"", "\\\\\"")
 	urldata+=url+",\n"
 	
 
