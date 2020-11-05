@@ -75,7 +75,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
     */
     private String fixEscaping(String original){
       String res=original;//.replaceAll("\\\\", "\\\\\\"); 
-      return res.replaceAll("\\\"", "QUOTE");
+      return res;//.replaceAll("\\\"", "QUOTE");
     }
 
     /***
