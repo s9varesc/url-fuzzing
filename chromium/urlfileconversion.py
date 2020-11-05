@@ -27,6 +27,7 @@ for filename in os.listdir(dir):
 		print(filename)
 	url.replace("\\\\", "\\\\\\")
 	url.replace("\\\"", "\\\\\"")
+	url.replace("\\\",", "\\\\\",")
 
 	urldata+=url+",\n"
 	
