@@ -16,3 +16,6 @@ TEST(URLParser, Parsing){
 
 	}
 }
+
+//namespace url
+}
