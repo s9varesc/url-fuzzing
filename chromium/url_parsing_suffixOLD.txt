@@ -1,0 +1,74 @@
+//test execution
+TEST(URLParser, Parsing){
+	for (size_t i = 0; i < base::size(parse_cases); i++) {
+		Parsed parsed;
+		Component scheme;
+		int len =static_cast<int>(strlen(parse_cases[i].input));
+
+		if(!ExtractScheme(parse_cases[i].input, len, &scheme)){
+			//no scheme found
+			ADD_FAILURE() << "found no scheme for "<< parse_cases[i].input;
+		} 
+		else{
+			std::string schemeString(parse_cases[i].input + scheme.begin, parse_cases[i].input+scheme.end());
+			if( IsStandard(parse_cases[i].input,scheme)){
+				if (schemeString==kFileScheme){
+					ParseFileURL(parse_cases[i].input,len, &parsed);
+
+					const char* url = parse_cases[i].input;
+					int port = ParsePort(url, parsed.port);
+				   
+				    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].scheme, parsed.scheme );
+				    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].username, parsed.username);
+				    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].password, parsed.password);
+				    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].host, parsed.host);
+				    EXPECT_EQ(parse_cases[i].port, port);
+				    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].path, parsed.path);
+				    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].query, parsed.query);
+				    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].ref, parsed.ref);
+				}
+				else {
+					if (schemeString==kFileSystemScheme){
+						ParseFileSystemURL(parse_cases[i].input, len, &parsed);
+
+						//TODO: create struct to parse into using inner_..., 
+					}
+					else{
+						//standard schemes, see url_util.cc
+						ParseStandardURL(parse_cases[i].input, len, &parsed);
+						
+						const char* url = parse_cases[i].input;
+						int port = ParsePort(url, parsed.port);
+					   
+					    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].scheme, parsed.scheme );
+					    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].username, parsed.username);
+					    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].password, parsed.password);
+					    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].host, parsed.host);
+					    EXPECT_EQ(parse_cases[i].port, port);
+					    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].path, parsed.path);
+					    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].query, parsed.query);
+					    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].ref, parsed.ref);
+					}
+				}
+			}
+			else {
+				//non-standard scheme
+				ParsePathURL(parse_cases[i].input, len,false, &parsed);
+				const char* url = parse_cases[i].input;
+			   
+			    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].scheme, parsed.scheme );
+			    EXPECT_PRED3(ComponentMatches, url, parse_cases[i].path, parsed.GetContent());
+			    ExpectInvalidComponent(parsed.username);
+			    ExpectInvalidComponent(parsed.password);
+			    ExpectInvalidComponent(parsed.host);
+			    ExpectInvalidComponent(parsed.port);
+
+			}
+		}
+
+	}
+
+}
+
+}
+}
