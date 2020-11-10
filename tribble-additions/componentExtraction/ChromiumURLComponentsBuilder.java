@@ -63,7 +63,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	result+= "\""+fixEscaping(""+components.get("ref"))+"\"";
       	result +="}";
 
-      	String res=result.replaceAll("\"null\"", "NULL");
+      	String res=result.replaceAll("\"null\"", "");
       	result=res;
       	return result;
 
