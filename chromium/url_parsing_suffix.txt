@@ -2,7 +2,7 @@
 TEST(URLParser, Parsing){
 	for (size_t i = 0; i < base::size(parse_cases); i++) {
 		GURL parsed_url(parse_cases[i].input);
-		EXPECT_TRUE(parsed_url.is_valid());
+		EXPECT_TRUE(parsed_url.is_valid()) << "{url:\""<< parse_cases[i].input<<"\"exception:\"TEST\"}"
 
 		EXPECT_EQ(parse_cases[i].scheme, parsed_url.scheme());
 		EXPECT_EQ(parse_cases[i].username, parsed_url.username());
