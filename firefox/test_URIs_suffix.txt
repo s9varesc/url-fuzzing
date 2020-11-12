@@ -33,6 +33,13 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     var expectedVal = aTestFunctor
       ? aTestFunctor(aTest[aPropertyName])
       : aTest[aPropertyName];
+    
+    try {
+      comp=aURI[aPropertyName];
+    } catch(e) {
+      dump("\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+e.name+" " + e.result+"\"}}"); 
+      do_throw(e.result);
+    }
     do_info(
       "testing " +
         aPropertyName +
@@ -43,14 +50,8 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
         expectedVal +
         "' actually is '" + aURI[aPropertyName] + "'"
     );
-    try {
-      comp=aURI[aPropertyName];
-    } catch(e) {
-      dump("\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+e.name+" " + e.result+"\"}}"); 
-      do_throw(e.result);
-    }
 
-    Assert.equal(aURI[aPropertyName], expectedVal, "\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+aURI[aPropertyName]+"\"}}");
+    Assert.equal(aURI[aPropertyName], expectedVal, "TEST ASSERT MESSAGE");//"\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+aURI[aPropertyName]+"\"}}");
   }
 }
 
