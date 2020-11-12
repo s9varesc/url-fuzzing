@@ -21,40 +21,7 @@ function do_info(text, stack) {
   );
 }
 
-// Checks that the URIs satisfy equals(), in both possible orderings.
-// Also checks URI.equalsExceptRef(), because equal URIs should also be equal
-// when we ignore the ref.
-//
-// The third argument is optional. If the client passes a third argument
-// (e.g. todo_check_true), we'll use that in lieu of ok.
-function do_check_uri_eq(aURI1, aURI2, aCheckTrueFunc = ok) {
-  do_info("(uri equals check: '" + aURI1.spec + "' == '" + aURI2.spec + "')");
-  aCheckTrueFunc(aURI1.equals(aURI2));
-  do_info("(uri equals check: '" + aURI2.spec + "' == '" + aURI1.spec + "')");
-  aCheckTrueFunc(aURI2.equals(aURI1));
 
-  // (Only take the extra step of testing 'equalsExceptRef' when we expect the
-  // URIs to really be equal.  In 'todo' cases, the URIs may or may not be
-  // equal when refs are ignored - there's no way of knowing in general.)
-  if (aCheckTrueFunc == ok) {
-    do_check_uri_eqExceptRef(aURI1, aURI2, aCheckTrueFunc);
-  }
-}
-
-// Checks that the URIs satisfy equalsExceptRef(), in both possible orderings.
-//
-// The third argument is optional. If the client passes a third argument
-// (e.g. todo_check_true), we'll use that in lieu of ok.
-function do_check_uri_eqExceptRef(aURI1, aURI2, aCheckTrueFunc = ok) {
-  do_info(
-    "(uri equalsExceptRef check: '" + aURI1.spec + "' == '" + aURI2.spec + "')"
-  );
-  aCheckTrueFunc(aURI1.equalsExceptRef(aURI2));
-  do_info(
-    "(uri equalsExceptRef check: '" + aURI2.spec + "' == '" + aURI1.spec + "')"
-  );
-  aCheckTrueFunc(aURI2.equalsExceptRef(aURI1));
-}
 
 // Checks that the given property on aURI matches the corresponding property
 // in the test bundle (or matches some function of that corresponding property,
@@ -69,7 +36,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     try {
       comp=aURI[aPropertyName];
     } catch(e) {
-      do_info("\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+e.name+" " + e.result+"\"}}"); 
+      dump("\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+e.name+" " + e.result+"\"}}"); 
       do_throw(e.result);
     }
 
@@ -81,18 +48,11 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
 function do_test_uri_basic(aTest) {
   var URI;
 
-  do_info(
-    "Basic tests for " +
-      aTest.spec +
-      " relative URI: " +
-      (aTest.relativeURI === undefined ? "(none)" : aTest.relativeURI)
-  );
-
   try {
     URI = gIoService.newURI(aTest.spec);
   } catch (e) {
     do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
-    do_info("\n{url:\""+ aTest.spec+"\", exception:\""+e.name+" "+e.result+"\"}");
+    dump("\n{url:\""+ aTest.spec+"\", exception:\""+e.name+" "+e.result+"\"}");
     if (aTest.fail) {
       Assert.equal(e.result, aTest.result);
       return;
@@ -100,46 +60,6 @@ function do_test_uri_basic(aTest) {
     do_throw(e.result);
   }
 
-  /*if (aTest.relativeURI) {
-    var relURI;
-
-    try {
-      relURI = gIoService.newURI(aTest.relativeURI, null, URI);
-    } catch (e) {
-      do_info(
-        "Caught error on Relative parse of " +
-          aTest.spec +
-          " + " +
-          aTest.relativeURI +
-          " Error: " +
-          e.result
-      );
-      if (aTest.relativeFail) {
-        Assert.equal(e.result, aTest.relativeFail);
-        return;
-      }
-      do_throw(e.result);
-    }
-    do_info(
-      "relURI.pathQueryRef = " +
-        relURI.pathQueryRef +
-        ", was " +
-        URI.pathQueryRef
-    );
-    URI = relURI;
-    do_info("URI.pathQueryRef now = " + URI.pathQueryRef);
-  }*/
-
-  // Sanity-check
-  do_info("testing " + aTest.spec + " equals a clone of itself");
-  do_check_uri_eq(URI, URI.mutate().finalize());
-  do_check_uri_eqExceptRef(
-    URI,
-    URI.mutate()
-      .setRef("")
-      .finalize()
-  );
-  
   
   // Check the various components
   do_check_property(aTest, URI, "scheme");
@@ -153,8 +73,8 @@ function do_test_uri_basic(aTest) {
   do_check_property(aTest, URI, "host");
   do_check_property(aTest, URI, "specIgnoringRef");
   if ("hasRef" in aTest) {
-    do_info("testing hasref: " + aTest.hasRef + " vs " + URI.hasRef);
-    Assert.equal(aTest.hasRef, URI.hasRef);
+    //do_info("testing hasref: " + aTest.hasRef + " vs " + URI.hasRef);
+    Assert.equal(aTest.hasRef, URI.hasRef,"\n{url:\""+ aTest.spec+"\", error:{component:\"hasRef\", expected:\""+aTest.hasRef +"\", actual:\""+URI.hasRef+"\"}}");
   }
 }
 
