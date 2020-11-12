@@ -65,7 +65,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
       ? aTestFunctor(aTest[aPropertyName])
       : aTest[aPropertyName];
 
-    do_info(//TODO insert custom format here?
+    do_info(//TODO insert custom format here? but only for failing checks
       "testing " +
         aPropertyName +
         " of " +
@@ -75,7 +75,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
         expectedVal +
         "'" + " actually is '" + aURI[aPropertyName] +"'"
     );
-    Assert.equal(aURI[aPropertyName], expectedVal);
+    Assert.equal(aURI[aPropertyName], expectedVal, "{url:\""+ aTest[spec]+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+aURI[aPropertyName]+"\"}}");
   }
 }
 
@@ -94,6 +94,7 @@ function do_test_uri_basic(aTest) {
     URI = gIoService.newURI(aTest.spec);
   } catch (e) {
     do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
+    do_info("{url:\""+ aTest.spec+"\", exception:\""+e.name+" "+e.result+"\"}");
     if (aTest.fail) {
       Assert.equal(e.result, aTest.result);
       return;
