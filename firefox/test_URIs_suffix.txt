@@ -33,6 +33,16 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     var expectedVal = aTestFunctor
       ? aTestFunctor(aTest[aPropertyName])
       : aTest[aPropertyName];
+    do_info(
+      "testing " +
+        aPropertyName +
+        " of " +
+        (aTestFunctor ? "modified '" : "'") +
+        aTest.spec +
+        "' is '" +
+        expectedVal +
+        "'"
+    );
     try {
       comp=aURI[aPropertyName];
     } catch(e) {
