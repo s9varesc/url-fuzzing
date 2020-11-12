@@ -3,8 +3,8 @@ TEST(URLParser, Parsing){
 	for (size_t i = 0; i < base::size(parse_cases); i++) {
 		GURL parsed_url(parse_cases[i].input);
 		//ASSERT_TRUE(parsed_url.is_valid()) << "{url:\""<< parse_cases[i].input<<"\", exception:\"invalid URL\"}";
-		bool valid_parse=CheckValidity(parse_cases[i], parsed_url);
-		if (valid_parse) {
+		CheckValidity(parse_cases[i], parsed_url);
+		if ( parsed_url.is_valid()) {
 			CheckComponents(parse_cases[i], parsed_url);
 
 		}
