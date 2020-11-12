@@ -41,7 +41,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
         aTest.spec +
         "' is '" +
         expectedVal +
-        "'"
+        "' actually is '" + aURI[aPropertyName] + "'"
     );
     try {
       comp=aURI[aPropertyName];
