@@ -16,7 +16,7 @@ for file in os.listdir(dir):
 	if file.endswith('.log'):
 		with open(dir +"/"+ file) as f:
 			logfile=f.read()  
-			browsername=file[:-10] remove "output.log"
+			browsername=file[:-10] #remove "output.log"
 
 		exceptionfiledata="\n" #match other exception files
 		errorfiledata=""
@@ -30,11 +30,11 @@ for file in os.listdir(dir):
 					#exception during parsing
 					exceptionfiledata+=line+",\n" #matches format of languages
 	
-	#write resulting files
-	exfile=open(browsername+"Exceptions.txt", "w")
-	exfile.write(exceptionfiledata)
-	exfile.close()
+		#write resulting files
+		exfile=open(dir +"/"+ browsername+"Exceptions.txt", "w")
+		exfile.write(exceptionfiledata)
+		exfile.close()
 
-	erfile=open(browsername+"Errors.txt", "w")
-	erfile.write(errorfiledata)
-	erfile.close()	
+		erfile=open(dir +"/"+ browsername+"Errors.txt", "w")
+		erfile.write(errorfiledata)
+		erfile.close()	
