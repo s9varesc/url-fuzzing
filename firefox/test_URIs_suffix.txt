@@ -62,11 +62,12 @@ function do_check_uri_eqExceptRef(aURI1, aURI2, aCheckTrueFunc = ok) {
 function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
 
   if (aTest[aPropertyName]) {
+    var comp;
     var expectedVal = aTestFunctor
       ? aTestFunctor(aTest[aPropertyName])
       : aTest[aPropertyName];
-    try{
-      var comp=aURI[aPropertyName];
+    try {
+      comp=aURI[aPropertyName];
     } catch(e) {
       do_info("{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+"+e.name+" " + e.result+"\"}}");
       do_throw(e.result);
