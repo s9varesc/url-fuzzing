@@ -75,7 +75,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
         expectedVal +
         "'" + " actually is '" + aURI[aPropertyName] +"'"
     );
-    Assert.equal(aURI[aPropertyName], expectedVal, "{url:\""+ aTest[spec]+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+aURI[aPropertyName]+"\"}}");
+    Assert.equal(aURI[aPropertyName], expectedVal, "{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+aURI[aPropertyName]+"\"}}");
   }
 }
 
