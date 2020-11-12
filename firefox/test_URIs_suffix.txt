@@ -69,22 +69,11 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     try {
       comp=aURI[aPropertyName];
     } catch(e) {
-      do_info("{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+"+e.name+" " + e.result+"\"}}");
+      do_info("\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+"+e.name+" " + e.result+"\"}}");
       do_throw(e.result);
     }
 
-    /*do_info(//TODO insert custom format here? but only for failing checks
-      "testing " +
-        aPropertyName +
-        " of " +
-        (aTestFunctor ? "modified '" : "'") +
-        aTest.spec +
-        "' expected '" +
-        expectedVal +
-        "'" + " actually is '" + aURI[aPropertyName] +"'"
-    );*/
-
-    Assert.equal(aURI[aPropertyName], expectedVal, "{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+aURI[aPropertyName]+"\"}}");
+    Assert.equal(aURI[aPropertyName], expectedVal,"CUSTOM MESSAGE TEST");// "{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+aURI[aPropertyName]+"\"}}");
   }
 }
 
