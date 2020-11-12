@@ -69,7 +69,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     try {
       comp=aURI[aPropertyName];
     } catch(e) {
-      do_info("\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+"+e.name+" " + e.result+"\"}}");
+      do_info( "CUSTOM COMPONENT MESSAGE");  //"\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+"+e.name+" " + e.result+"\"}}");
       do_throw(e.result);
     }
 
