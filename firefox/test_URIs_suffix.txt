@@ -51,7 +51,11 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
         "' actually is '" + aURI[aPropertyName] + "'"
     );
 
-    Assert.equal(aURI[aPropertyName], expectedVal, "TEST ASSERT MESSAGE");//"\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+aURI[aPropertyName]+"\"}}");
+    if (aURI[aPropertyName] != expectedVal){ //needed to display custom format, adding assertion message spams output
+      dump("\n{url:\""+ aTest.spec+"\", error:{component:\""+aPropertyName+"\", expected:\""+expectedVal +"\", actual:\""+aURI[aPropertyName]+"\"}}");
+    }
+
+    Assert.equal(aURI[aPropertyName], expectedVal);
   }
 }
 
