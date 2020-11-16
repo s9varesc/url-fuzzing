@@ -22,13 +22,15 @@ for file in os.listdir(dir):
 		errorfiledata=""
 		splitlogfile=logfile.split("\n")
 		for line in splitlogfile:
-			if "{url" in line:
-				if "error:{component:" in line:
+			if "{\"url\"" in line: 
+				cutindex=line.find("{\"url\":") #remove any leading stuff
+				line=line[cutindex:]
+				if "\"error\":{\"component\":" in line:
 					#failed component match
 					errorfiledata+=line+"\n"
 				else:
 					#exception during parsing
-					exceptionfiledata+=line+",\n" #matches format of languages
+					exceptionfiledata+=line+"\n" 
 	
 		#write resulting files
 		exfile=open(dir +"/"+ browsername+"Exceptions.txt", "w")

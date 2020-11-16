@@ -7,9 +7,8 @@ import json
 def fixdatapoint(datapoint):
 	print(datapoint)
 	if len(datapoint)<=2: return datapoint
-	expectedquotationmarks=8
 	res=datapoint
-	#if datapoint.count("\"") > expectedquotationmarks:
+	
 	[dp1, dp2]=datapoint.split("\n")
 	pre1=dp1[:9] #{ "url":"
 	p1=dp1[9:-2] #url contents
@@ -66,14 +65,14 @@ for exfile in os.listdir(dir):
 		with open(dir +"/"+ exfile) as f:
 			data=f.read()
 		
-		data = data.replace("{ url:", "{ \"url\":") 
-		data = data.replace("exception:", "\"exception\":")
+		#data = data.replace("{ url:", "{ \"url\":") 
+		#data = data.replace("exception:", "\"exception\":")
 		
 		data = data[1:-1]
 		
 
-		sep="},\n" 
-		splitdata=[d+"}" for d in data.split(sep) if d] #one entry per {url:...,exception:...},
+		sep="}\n" 
+		splitdata=[d+"}" for d in data.split(sep) if d] #one entry per {url:...,exception:...}
 		#print(splitdata[2])
 		#produce dictionary with {url1 : exception1, url2:...}
 		datadict={}
