@@ -28,7 +28,7 @@ struct URLParseCase {
 };
 
 void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
-  ASSERT_TRUE(parsed_url.is_valid()) << << "{\"url\":\""<< parse_case.input<<"\", \"exception\":\"invalid URL\"}";
+  ASSERT_TRUE(parsed_url.is_valid()) << "{\"url\":\""<< parse_case.input<<"\", \"exception\":\"invalid URL\"}";
   return;
 }
 
