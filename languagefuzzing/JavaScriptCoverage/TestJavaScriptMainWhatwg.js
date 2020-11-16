@@ -20,12 +20,12 @@ rd
 	    }
 	    catch(err){
 		//console.log(err);
-		exceptions+= '\n{ url:\"'+line+'\",\n exception:\"'+err.message+'\"},';
+		exceptions+= "\n{\"url\":\""+line+"\", \"exception\":\""+err.message+"\"}";
 		
 	    }
 	})
 	.on('close', function(){
-	    fs.writeFile('JavaScriptExceptionswhatwg-url.txt', exceptions.substring(0,exceptions.length-1), (err) => {  
+	    fs.writeFile('JavaScriptExceptionswhatwg-url.txt', exceptions, (err) => {  
     if (err) throw err; 
 }) 
 

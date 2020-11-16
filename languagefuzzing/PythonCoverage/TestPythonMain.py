@@ -14,10 +14,10 @@ for url in urls:
     try:
        urlparse(url)
     except Exception as e:
-        exceptions+="\n{ url:\""+url+"\",\n exception:\""+str(e)+"\"},"
+        exceptions+="\n{\"url\":\""+url+"\", \"exception\":\""+str(e)+"\"}"
 
 f=open('PythonExceptions.txt', 'w')
-f.write(exceptions[:-1])
+f.write(exceptions)
 f.close()
 	
 

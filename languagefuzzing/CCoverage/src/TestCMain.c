@@ -25,9 +25,9 @@ main(void)
     if (fp == NULL)
         exit(EXIT_FAILURE);
 
-    char before[] = "\n{ url:\"";
-    char middle[] = "\",\n exception:\"";
-    char end[] = "\"},";
+    char before[] = "\n{\"url\":\"";
+    char middle[] = "\", \"exception\":\"";
+    char end[] = "\"}";
     
 
     while ((read = getline(&line, &len, fp)) != -1) {
@@ -70,7 +70,7 @@ main(void)
    FILE *nfp = fopen("CExceptions.txt", "w");
    if (nfp != NULL)
    {
-       exceptions[strlen(exceptions)-1]=0;
+       //exceptions[strlen(exceptions)-1]=0;
        fputs(exceptions, nfp);
        fclose(nfp);
        

@@ -30,12 +30,12 @@ while(! feof($file))
 try {
     UriString::parse($url);
 } catch (Exception $e) {
-   $exceptions.="\n{ url:\"".$url."\",\n exception:\"".$e->getMessage()."\"},";
+   $exceptions.="\n{\"url\":\"".$url."\", \"exception\":\"".$e->getMessage()."\"}";
 }
   }
 
 fclose($file);
-file_put_contents('PHPExceptions.txt', "".substr($exceptions, 0, -1)); 
+file_put_contents('PHPExceptions.txt', $exceptions); 
 $this->assertTrue(True);
 }
 }

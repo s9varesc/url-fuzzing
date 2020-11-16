@@ -17,11 +17,11 @@ rd
         const url=new URI(line);
     }
     catch(err){
-	exceptions+="\n{ url:\""+line+"\",\n exception:\""+err.message+"\"},";
+	exceptions+="\n{\"url\":\""+line+"\", \"exception\":\""+err.message+"\"}";
     }
   })
   .on('close', function(){
-	    fs.writeFile('JavaScriptExceptionsurijs.txt', exceptions.substring(0,exceptions.length-1), (err) => {  
+	    fs.writeFile('JavaScriptExceptionsurijs.txt', exceptions, (err) => {  
     if (err) throw err; 
      }) 
   });

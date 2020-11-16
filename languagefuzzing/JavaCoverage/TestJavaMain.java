@@ -49,13 +49,13 @@ class ParsingHandler {
         try {
             URL url=new URL(input);
         } catch (Exception e) {
-            exceptions+="\n{ url:\""+input+"\",\n exception:\""+e.toString()+"\"},";
+            exceptions+="\n{\"url\":\""+input+"\", \"exception\":\""+e.toString()+"\"},";
         }
     }
 
    public void writeExceptionsFile(){
 	try ( PrintStream out = new PrintStream(new FileOutputStream("JavaExceptions.txt"))) {
-    		out.print(exceptions.substring(0, exceptions.length() - 1));
+    		out.print(exceptions);
 	} catch(Exception e) {
             e.printStackTrace();
         }

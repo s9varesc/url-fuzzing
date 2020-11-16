@@ -64,17 +64,17 @@ int main()
 			}
 			catch(const std::exception& e)
 			{
-			    exceptions.append("\n{ url:\"");
+			    exceptions.append("\n{\"url\":\"");
 			    exceptions.append(line);
-    			    exceptions.append("\",\n exception:\"");
+    			    exceptions.append("\", \"exception\":\"");
 			    exceptions.append(e.what());
-			    exceptions.append("\"},");
+			    exceptions.append("\"}");
 			}
 			//std::cout<<uri1<<std::endl;
 		}
 	}
 	std::string exceptionsfinal;
-	exceptionsfinal.append(exceptions.substr(0,exceptions.length()-1));
+	exceptionsfinal.append(exceptions.substr(0,exceptions.length()));
         std::ofstream os("CppExceptions.txt");  
 	if (!os) { 
 	    std::cerr<<"Error writing to ..."<<std::endl; 

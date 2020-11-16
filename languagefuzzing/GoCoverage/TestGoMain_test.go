@@ -32,7 +32,7 @@ func TestURLs(t *testing.T) {
 		
 		_, err :=url.Parse(eachline)
 		if err != nil {
-		    exceptions+="\n{ url:\""+eachline+"\",\n exception:\""+err.Error()+"\"},"
+		    exceptions+="\n{\"url\":\""+eachline+"\", \"exception\":\""+err.Error()+"\"}"
 		}
 
 	}
@@ -43,7 +43,7 @@ func TestURLs(t *testing.T) {
             return
     	}
     	
-    	file.WriteString(exceptions[:len(exceptions)-1])
+    	file.WriteString(exceptions)
 	file.Sync()
 	file.Close()
 
