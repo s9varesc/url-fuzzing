@@ -49,7 +49,7 @@ class ParsingHandler {
         try {
             URL url=new URL(input);
         } catch (Exception e) {
-            exceptions+="\n{\"url\":\""+input+"\", \"exception\":\""+e.toString()+"\"},";
+            exceptions+="\n{\"url\":\""+input+"\", \"exception\":\""+e.toString()+"\"}";
         }
     }
 
