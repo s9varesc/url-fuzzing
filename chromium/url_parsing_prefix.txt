@@ -28,19 +28,19 @@ struct URLParseCase {
 };
 
 void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
-  ASSERT_TRUE(parsed_url.is_valid()) << "{url:\""<< parse_case.input<<"\", exception:\"invalid URL\"}";
+  ASSERT_TRUE(parsed_url.is_valid()) << << "{\"url\":\""<< parse_cases[i].input<<"\", \"exception\":\"invalid URL\"}";
   return;
 }
 
 void CheckComponents(const URLParseCase& parse_case, const GURL& parsed_url) {
-  ASSERT_EQ(parse_case.scheme, parsed_url.scheme()) << "{url:\""<< parse_case.input<<"\", error:{component:\"scheme\", expected:\""<<parse_case.scheme <<"\", actual:\""<<parsed_url.scheme()<<"\"}}";
-  ASSERT_EQ(parse_case.username, parsed_url.username())<< "{url:\""<< parse_case.input<<"\", error:{component:\"username\", expected:\""<<parse_case.username <<"\", actual:\""<<parsed_url.username()<<"\"}}";
-  ASSERT_EQ(parse_case.password, parsed_url.password())<< "{url:\""<< parse_case.input<<"\", error:{component:\"password\", expected:\""<<parse_case.password <<"\", actual:\""<<parsed_url.password()<<"\"}}";
-  ASSERT_EQ(parse_case.host, parsed_url.host())<< "{url:\""<< parse_case.input<<"\", error:{component:\"host\", expected:\""<<parse_case.host <<"\", actual:\""<<parsed_url.host()<<"\"}}";
-  ASSERT_EQ(parse_case.port, parsed_url.IntPort())<< "{url:\""<< parse_case.input<<"\", error:{component:\"port\", expected:\""<<parse_case.port <<"\", actual:\""<<parsed_url.IntPort()<<"\"}}";
-  ASSERT_EQ(parse_case.path, parsed_url.path())<< "{url:\""<< parse_case.input<<"\", error:{component:\"path\", expected:\""<<parse_case.path <<"\", actual:\""<<parsed_url.path()<<"\"}}";
-  ASSERT_EQ(parse_case.query, parsed_url.query())<< "{url:\""<< parse_case.input<<"\", error:{component:\"query\", expected:\""<<parse_case.query <<"\", actual:\""<<parsed_url.query()<<"\"}}";
-  ASSERT_EQ(parse_case.ref, parsed_url.ref())<< "{url:\""<< parse_case.input<<"\", error:{component:\"ref\", expected:\""<<parse_case.ref <<"\", actual:\""<<parsed_url.ref()<<"\"}}";
+  ASSERT_EQ(parse_cases[i].scheme, parsed_url.scheme()) << "{\"url\":\""<< parse_cases[i].input<<"\", \"error\":{\"component\":\"scheme\", \"expected\":\""<<parse_cases[i].scheme <<"\", \"actual\":\""<<parsed_url.scheme()<<"\"}}";
+    ASSERT_EQ(parse_cases[i].username, parsed_url.username())<< "{\"url\":\""<< parse_cases[i].input<<"\", \"error\":{\"component\":\"username\", \"expected\":\""<<parse_cases[i].username <<"\", \"actual\":\""<<parsed_url.username()<<"\"}}";
+    ASSERT_EQ(parse_cases[i].password, parsed_url.password())<< "{\"url\":\""<< parse_cases[i].input<<"\", \"error\":{\"component\":\"password\", \"expected\":\""<<parse_cases[i].password <<"\", \"actual\":\""<<parsed_url.password()<<"\"}}";
+    ASSERT_EQ(parse_cases[i].host, parsed_url.host())<< "{\"url\":\""<< parse_cases[i].input<<"\", \"error\":{\"component\":\"host\", \"expected\":\""<<parse_cases[i].host <<"\", \"actual\":\""<<parsed_url.host()<<"\"}}";
+    ASSERT_EQ(parse_cases[i].port, parsed_url.IntPort())<< "{\"url\":\""<< parse_cases[i].input<<"\", \"error\":{\"component\":\"port\", \"expected\":\""<<parse_cases[i].port <<"\", \"actual\":\""<<parsed_url.IntPort()<<"\"}}";
+    ASSERT_EQ(parse_cases[i].path, parsed_url.path())<< "{\"url\":\""<< parse_cases[i].input<<"\", \"error\":{\"component\":\"path\", \"expected\":\""<<parse_cases[i].path <<"\", \"actual\":\""<<parsed_url.path()<<"\"}}";
+    ASSERT_EQ(parse_cases[i].query, parsed_url.query())<< "{\"url\":\""<< parse_cases[i].input<<"\", \"error\":{\"component\":\"query\", \"expected\":\""<<parse_cases[i].query <<"\", \"actual\":\""<<parsed_url.query()<<"\"}}";
+    ASSERT_EQ(parse_cases[i].ref, parsed_url.ref())<< "{\"url\":\""<< parse_cases[i].input<<"\", \"error\":{\"component\":\"ref\", \"expected\":\""<<parse_cases[i].ref <<"\", \"actual\":\""<<parsed_url.ref()<<"\"}}";
   return;
 }
 
