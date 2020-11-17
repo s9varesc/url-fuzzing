@@ -114,12 +114,12 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
           reshost= d.toLowerCase();
         }
       }
-      /*String tmp=reshost;
+      String tmp=reshost;
       if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: remove leading zeros and convert ipv4 pieces
-	  tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
-	  tmp="["+util.formatIPv6(tmp)+"]";
+    	  tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
+    	  tmp="["+util.formatIPv6(tmp)+"]";
       }
-      reshost=tmp;	*///ipv6 formatting is done when putting together final representation
+      reshost=tmp;	
       components.put("host", reshost);
 
 
