@@ -1,0 +1,12 @@
+//test execution
+TEST(URLParser, Parsing){
+	for (size_t i = 0; i < base::size(parse_cases); i++) {
+		GURL parsed_url(parse_cases[i].input);
+		CheckValidity(parse_cases[i], parsed_url);
+
+	}
+}
+
+//namespace url
+}
+}
