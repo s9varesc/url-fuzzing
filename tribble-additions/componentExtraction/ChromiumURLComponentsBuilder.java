@@ -130,7 +130,9 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	String pa=dict.get("pathAbsoluteURL");
       	String panW=dict.get("pathAbsoluteNonWindowsFileURL");
       	String prsl=dict.get("pathRelativeSchemelessURL");
-        //TODO drive letter parts are missing  
+        if (panW != null){
+          pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
+        }
       	for (String content: Arrays.asList(panW, pa, prsl)){
         	if(content !=null){
           		components.put("path", content);
