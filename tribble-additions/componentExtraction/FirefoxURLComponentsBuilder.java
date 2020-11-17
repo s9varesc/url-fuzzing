@@ -163,7 +163,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
         prePath+=userinfo+"@";
       }
-      if(host != null && host != "" && d!=null){//ignore opaque hosts for prePath 
+      if((host != null && host != "" )|| d!=null){//ignore opaque hosts for prePath 
         if(first){
           prePath+="//";
           first=false;
