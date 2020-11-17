@@ -58,7 +58,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	result+= "\""+fixEscaping(""+components.get("username"))+"\",";
       	result+= "\""+fixEscaping(""+components.get("password"))+"\",";
         String tmp=components.get("host");
-        if (tmp != NULL){
+        if (tmp != null){
           if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: remove leading zeros and convert ipv4 pieces
             tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
             tmp="["+util.formatIPv6(tmp)+"]";
