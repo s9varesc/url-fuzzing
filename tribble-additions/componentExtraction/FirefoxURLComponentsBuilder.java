@@ -105,13 +105,19 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       //build host
       String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
-      String reshost="";
+      String ip=dict.get("ipAddress");
+      String reshost=""; 
       if(ophost !=null && ophost!=""){
         reshost= ophost.toLowerCase();
       }
       else{
         if(d !=null){
           reshost= d.toLowerCase();
+        }
+        else{
+          if(ip != null){
+            reshost=ip.toLowerCase();
+          }
         }
       }
       String tmp=reshost;

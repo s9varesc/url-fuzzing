@@ -132,7 +132,8 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
 
 		//build host
       	String ophost=dict.get("opaqueHost");
-      	String d=dict.get("domain");
+      	String d=dict.get("domain"); 
+        String ip=dict.get("ipadress");
       	if(ophost !=null){
         	components.put("host", ophost.toLowerCase());
       	}
@@ -140,6 +141,11 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
         	if(d !=null){
           		components.put("host", d.toLowerCase());
         	}
+          else{
+            if (ip!=null){
+              components.put("host", op.toLowerCase());
+            }
+          }
       	}
 
       	//build scheme

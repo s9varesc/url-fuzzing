@@ -26,7 +26,8 @@ Grammar(
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
   'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?).?, 
   'opaqueHost := 'opaqueHostCodePoint.rep(1) | ("[" ~ 'ipv6address ~ "]"), 
-  'schemeRelativeFileURL := "//" ~ ((('domain | 'ipv4address | "[" ~ 'ipv6address ~ "]").? ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
+  'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress).? ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
+  'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := 'pathAbsoluteURL ~ 'windowsDriveLetter ~ "/", 
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
@@ -54,7 +55,7 @@ Grammar(
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
   'host := ('userinfo ~ "@").? ~ 'domain,
-  'domain := 'hostAllowed.rep(1) | 'ipv4address | ("[" ~ 'ipv6address ~ "]"), //TODO explixitly include xn-- variations?
+  'domain := 'hostAllowed.rep(1) | 'ipAddress, //TODO explixitly include xn-- variations?
   'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
