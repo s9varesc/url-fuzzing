@@ -5,17 +5,19 @@ import json
 
 # correct escaping 
 def fixdatapoint(datapoint):
-	print(datapoint)
+	
 	if len(datapoint)<=2: return datapoint
 	res=datapoint
 	
-	[dp1, dp2]=datapoint.split("\n")
-	pre1=dp1[:9] #{ "url":"
-	p1=dp1[9:-2] #url contents
-	post1=dp1[-2:] # ",
+	[dp1, dp2]=datapoint.split("\", \"exception\":\"")
+	dp1=dp1+"\","
+	
+	pre1=dp1[:8] #{ "url":"
+	p1=dp1[8:-2] #url contents
+	post1=dp1[-2:] + " \"exception\":\""
 
-	pre2=dp2[:14]#"exception":"
-	p2=dp2[14:-2] #exception contents
+	pre2=""# 
+	p2=dp2[:-2] #exception contents
 	post2=dp2[-2:] # "}
 
 	p1=p1.replace("\\", "\\\\")
@@ -23,6 +25,8 @@ def fixdatapoint(datapoint):
 
 	p1=p1.replace("\"", "\\\"")
 	p2=p2.replace("\"", "\\\"")
+
+	
 		
 	if p1[-1:]=="\\":
 		p1=p1+" "
@@ -30,8 +34,6 @@ def fixdatapoint(datapoint):
 	if p2[-1:]=="\\":
 		p2=p2+" "
 
-		
-		
 	res=pre1+p1+post1+pre2+p2+post2
 	return res
 
@@ -46,6 +48,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-dir")
 args = parser.parse_args()
 dir = args.dir
+
+#TODO add arg to build or not build html rep
 
 for file in os.listdir(dir):
 	if file.endswith('URLs'):
@@ -76,7 +80,7 @@ for exfile in os.listdir(dir):
 		#print(splitdata[2])
 		#produce dictionary with {url1 : exception1, url2:...}
 		datadict={}
-		print(parsername)
+		
 		for datapoint in splitdata:
 			#datapoint=datapoint[1:]
 			#print(datapoint)
@@ -87,6 +91,7 @@ for exfile in os.listdir(dir):
 		# {parsername1 : {url1:exception1, url2:...},
 		#  parsername2 : {...}}
 		parsers[parsername]=datadict 
+		
 
 
 #evaluate
