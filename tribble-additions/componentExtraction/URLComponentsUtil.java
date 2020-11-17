@@ -1,6 +1,6 @@
 package saarland.cispa.se.tribble.execution.componentExtraction;
 
-public Class URLComponentsUtil {
+public class URLComponentsUtil {
 
 	/***
     * formats the original IPv6 address(given without brackets) by converting the IPv4 part to hex
