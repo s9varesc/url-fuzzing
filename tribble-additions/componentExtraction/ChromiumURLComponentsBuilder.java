@@ -66,7 +66,14 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
         }
       	result+= "\""+fixEscaping(""+tmp)+"\",";
       	result+= fixEscaping(""+components.get("port"))+",";
-      	result+= "\""+fixEscaping(""+components.get("path"))+"\",";
+        String p=components.get("path");
+        if(p != null){
+          result+= "\""+fixEscaping(""+p)+"\",";
+        }
+        else{
+          result+= "\""+fixEscaping("/")+"\","; //empty path
+        }
+      	
       	result+= "\""+fixEscaping(""+components.get("query"))+"\",";
       	result+= "\""+fixEscaping(""+components.get("ref"))+"\"";
       	result +="}";
@@ -123,7 +130,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	String pa=dict.get("pathAbsoluteURL");
       	String panW=dict.get("pathAbsoluteNonWindowsFileURL");
       	String prsl=dict.get("pathRelativeSchemelessURL");
-
+        //TODO drive letter parts are missing  
       	for (String content: Arrays.asList(panW, pa, prsl)){
         	if(content !=null){
           		components.put("path", content);
