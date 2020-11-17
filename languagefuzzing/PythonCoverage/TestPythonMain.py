@@ -13,7 +13,6 @@ for line in lines:
 for url in urls:
     try:
        urlparse(url)
-       print(url)
     except Exception as e:
         exceptions+="\n{\"url\":\""+url+"\", \"exception\":\""+str(e)+"\"}"
 
