@@ -168,9 +168,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
       }
       
-      if(prePath.contains("file:")){ //TODO is there a better way? 
+      /*if(prePath.contains("file:")){ //TODO is there a better way? 
 	  prePath="file://";
-      }
+      }*/
       if(prePath!="" /*&& spec.toLowerCase().startsWith(prePath.toLowerCase())*/) { 
         components.put("prePath", prePath);
       } 
@@ -221,7 +221,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         components.put("hasRef", "false");
 	components.put("ref", "");
       }
-      if(pqr.length()>=1 &&!pqr.startsWith("/") && !prePath.endsWith(":")){//don't add if pqr is empty
+      if(!pqr.startsWith("/") && !prePath.endsWith(":")){//don't add if pqr is empty
 	String addslash="/"+pqr; 
 	pqr=addslash;
       }
