@@ -49,7 +49,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
     	//build actual representation
     	//{input, scheme, username, password, host, port, path, query, ref}
     	//{"http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
-    	//{"http:foo.com",                        "http", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL}
+    	//{"http:foo.com",                        "http", "",  "",      "foo.com",    -1, "",      "",        ""}
 
     	Map<String, String> components=buildMapping(); 
       	String result="{";
@@ -58,9 +58,11 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	result+= "\""+fixEscaping(""+components.get("username"))+"\",";
       	result+= "\""+fixEscaping(""+components.get("password"))+"\",";
         String tmp=components.get("host");
-        if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: remove leading zeros and convert ipv4 pieces
-          tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
-          tmp="["+util.formatIPv6(tmp)+"]";
+        if (tmp != NULL){
+          if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: remove leading zeros and convert ipv4 pieces
+            tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
+            tmp="["+util.formatIPv6(tmp)+"]";
+          }
         }
       	result+= "\""+fixEscaping(""+tmp)+"\",";
       	result+= fixEscaping(""+components.get("port"))+",";
