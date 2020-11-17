@@ -14,6 +14,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
 	ArrayList<String> InternalComponentNames=new ArrayList<String>();
     HashMap<String, String> translation=new HashMap<>();
     String format = "chromium";
+    URLComponentsUtil util=new URLComponentsUtil();
 
 
     public ChromiumURLComponentsBuilder(){
@@ -56,7 +57,12 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
         result+= "\""+fixEscaping(""+components.get("scheme"))+"\",";
       	result+= "\""+fixEscaping(""+components.get("username"))+"\",";
       	result+= "\""+fixEscaping(""+components.get("password"))+"\",";
-      	result+= "\""+fixEscaping(""+components.get("host"))+"\",";
+        String tmp=components.get("host");
+        if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: remove leading zeros and convert ipv4 pieces
+          tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
+          tmp="["+util.formatIPv6(tmp)+"]";
+        }
+      	result+= "\""+fixEscaping(""+tmp)+"\",";
       	result+= fixEscaping(""+components.get("port"))+",";
       	result+= "\""+fixEscaping(""+components.get("path"))+"\",";
       	result+= "\""+fixEscaping(""+components.get("query"))+"\",";
