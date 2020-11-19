@@ -104,7 +104,6 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       
       
       //build host
-      //String h=dict.get("host"); 
       String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
       String ip=dict.get("ipAddress");
@@ -236,7 +235,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 	pqr=addslash;
       }
       
-      components.put("pathQueryRef", normalize(pqr));
+      //components.put("pathQueryRef", normalize(pqr));
 
       return components;
     }
