@@ -145,7 +145,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       }
 
 
-      //build prePath  
+      //build prePath  TODO 
       String scheme=components.get("scheme");
       String host=components.get("host"); 
       String userinfo=dict.get("userinfo");
@@ -183,9 +183,9 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       /*if(prePath.contains("file:")){ //TODO is there a better way? 
 	  prePath="file://";
       }*/
-      if(prePath!="" /*&& spec.toLowerCase().startsWith(prePath.toLowerCase())*/) { 
+      /*if(prePath!="" /*&& spec.toLowerCase().startsWith(prePath.toLowerCase())) { 
         components.put("prePath", prePath);
-      } 
+      } */
 
       //build pathQueryRef 
       
