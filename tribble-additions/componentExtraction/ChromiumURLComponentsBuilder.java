@@ -140,7 +140,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	String pa=dict.get("pathAbsoluteURL");
       	String panW=dict.get("pathAbsoluteNonWindowsFileURL");
       	String prsl=dict.get("pathRelativeSchemelessURL");
-        String pathcontent;
+        String pathcontent="";
         if (panW != null){
           pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
         }
@@ -155,7 +155,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	String ophost=dict.get("opaqueHost");
       	String d=dict.get("domain"); 
         String ip=dict.get("ipAddress");
-        String reshost;
+        String reshost="";
       	if(ophost !=null){
         	//components.put("host", ophost.toLowerCase());
           reshost=ophost.toLowerCase();
