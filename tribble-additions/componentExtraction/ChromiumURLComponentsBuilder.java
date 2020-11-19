@@ -124,17 +124,30 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
         	components.put("input", dict.get("absoluteURLwithFragment"));
       	}
       	String input=components.get("input");
+
+        //build scheme
+        String specialnf=dict.get("URLspecialSchemeNotFile");
+        String nonspecial=dict.get("URLnonSpecialScheme");
+        String file=dict.get("URLschemeFile");
+
+        for (String content: Arrays.asList(specialnf, nonspecial, file)){
+          if(content !=null){
+              components.put("scheme", content.toLowerCase());
+          }
+        }
 		
-		//build path
+		//build path  //TODO: if scheme is nonspecial the path starts at :
       	String pa=dict.get("pathAbsoluteURL");
       	String panW=dict.get("pathAbsoluteNonWindowsFileURL");
       	String prsl=dict.get("pathRelativeSchemelessURL");
+        String pathcontent;
         if (panW != null){
           pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
         }
       	for (String content: Arrays.asList(panW, pa, prsl)){
         	if(content !=null){
-          		components.put("path", content);
+          	//components.put("path", content);
+            pathcontent=content;
         	}
       	}
 
@@ -142,30 +155,33 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	String ophost=dict.get("opaqueHost");
       	String d=dict.get("domain"); 
         String ip=dict.get("ipAddress");
+        String reshost;
       	if(ophost !=null){
-        	components.put("host", ophost.toLowerCase());
+        	//components.put("host", ophost.toLowerCase());
+          reshost=ophost.toLowerCase();
       	}
       	else{
         	if(d !=null){
-          		components.put("host", d.toLowerCase());
+          	//components.put("host", d.toLowerCase());
+            reshost=d.toLowerCase();
         	}
           else{
             if (ip!=null){
-              components.put("host", ip.toLowerCase());
+              //components.put("host", ip.toLowerCase());
+              reshost=ip.toLowerCase();
             }
           }
       	}
 
-      	//build scheme
-      	String specialnf=dict.get("URLspecialSchemeNotFile");
-      	String nonspecial=dict.get("URLnonSpecialScheme");
-      	String file=dict.get("URLschemeFile");
-
-      	for (String content: Arrays.asList(specialnf, nonspecial, file)){
-        	if(content !=null){
-        	  	components.put("scheme", content.toLowerCase());
-        	}
-      	}
+        if(nonspecial!=null){ //nonspecial scheme, url treated as pathurl
+          //TODO check in specification again
+          components.put("path", reshost+pathcontent);
+        }
+        else{
+          components.put("path", pathcontent);
+          components.put("host", reshost);
+        }
+      	
 
       	//build username and password
       	String userinfo = dict.get("userinfo");
