@@ -175,7 +175,18 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
 
         if(nonspecial!=null){ //nonspecial scheme, url treated as pathurl
           //TODO check in specification again
-          components.put("path", reshost+pathcontent);
+          
+          String srel=dict.get("schemeRelativeURL"); 
+          String pabs=dict.get("pathAbsoluteURL");
+          String prel=dict.get("pathRelativeSchemelessURL");
+          Strin pc=""; //includes leading slashes
+          for (String content: Arrays.asList(srel, pabs, prel)){
+            if(content !=null){
+              pc=content;
+            }
+          }
+
+          components.put("path", pc);
           components.put("port", "-1");
         }
         else{
