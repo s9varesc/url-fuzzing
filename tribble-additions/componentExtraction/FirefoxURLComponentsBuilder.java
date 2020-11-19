@@ -103,23 +103,27 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       
       
       //build host
+      String h=dict.get("host"); 
       String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
       String ip=dict.get("ipAddress");
-      String reshost=""; 
+      String reshost="";
+      if (h!=null){
+        d=null; //domain is contained in host rule
+        ip=null;
+        reshost=h.toLowerCase();
+      }
       if(ophost !=null && ophost!=""){
         reshost= ophost.toLowerCase();
       }
-      else{
-        if(d !=null){
-          reshost= d.toLowerCase();
-        }
-        else{
-          if(ip != null){
-            reshost=ip.toLowerCase();
-          }
-        }
+      if(d !=null){
+        reshost= d.toLowerCase();
+      }  
+      if(ip != null){
+        reshost=ip.toLowerCase();
       }
+        
+      
       String tmp=reshost;
       if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: remove leading zeros and convert ipv4 pieces
     	  tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
@@ -143,18 +147,18 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
       //build prePath  
       String scheme=components.get("scheme");
-      String host=components.get("host");
+      String host=components.get("host"); 
       String userinfo=dict.get("userinfo");
       String p=components.get("port");
-      //String d=dict.get("domain");
+      String d2=dict.get("domain"); //used in schemeRelativeFileURL together with ip
       
       String prePath="";
       boolean first=true; 
       if(scheme != null){
         prePath+=scheme;
-	if (spec.toLowerCase().startsWith(scheme+":")){
-	  prePath+=":";
-	}
+      	if (spec.toLowerCase().startsWith(scheme+":")){
+      	  prePath+=":";
+      	}
       }
       if(userinfo != null && userinfo != ""){
         if(first){
@@ -163,17 +167,19 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
         prePath+=userinfo+"@";
       }
-      if((host != null && host != "" )|| d!=null){//ignore opaque hosts for prePath 
+      if((host != null && host != "" )){
         if(first){
           prePath+="//";
           first=false;
         }
-        prePath+=host;
-	if(p != null && p!= ""){
-          prePath+=":"+p;
+        if( scheme != "file"){ //prePath for file URLs is just "file://"
+          prePath+=host;
+        	if(p != null && p!= ""){
+            prePath+=":"+p;
+          }
         }
       }
-      
+            
       /*if(prePath.contains("file:")){ //TODO is there a better way? 
 	  prePath="file://";
       }*/
