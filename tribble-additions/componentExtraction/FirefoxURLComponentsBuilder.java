@@ -103,22 +103,19 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       
       
       //build host
-      String h=dict.get("host"); 
+      //String h=dict.get("host"); 
       String ophost=dict.get("opaqueHost");
       String d=dict.get("domain");
       String ip=dict.get("ipAddress");
       String reshost="";
-      if (h!=null){
-        d=null; //domain is contained in host rule
+      if (d!=null){
+        //ip is contained in domain
         ip=null;
-        reshost=h.toLowerCase();
+        reshost=d.toLowerCase();
       }
       if(ophost !=null && ophost!=""){
         reshost= ophost.toLowerCase();
-      }
-      if(d !=null){
-        reshost= d.toLowerCase();
-      }  
+      } 
       if(ip != null){
         reshost=ip.toLowerCase();
       }
