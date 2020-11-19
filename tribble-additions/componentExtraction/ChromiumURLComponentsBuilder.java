@@ -30,7 +30,6 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
 
       //components which need no further processing
     	translation.put("port", "URLport"); 
-    	translation.put("query", "URLquery");
     	translation.put("ref", "URLfragment");
     }
 
@@ -182,7 +181,19 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       		components.put("username", userinfo.substring(0, colon));
       		components.put("password", userinfo.substring(colon + 1));
       	}
-      	
+
+        //get query
+        String query;
+        String qs=dict.get("URLSpecialquery");
+        String qns=dict.get("URLquery");
+
+        if(qs != null){
+          query=qs; 
+        }
+        else{
+          query=qns; 
+        }
+      	components.put("query", query);
 
 
       	return components;
