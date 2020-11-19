@@ -37,6 +37,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
       translation.put("port", "URLport");
       translation.put("userPass","userinfo" );
       translation.put("ref", "URLfragment");
+      translation.put("spec", "absoluteURLwithFragment");
 
     }
 
@@ -91,14 +92,14 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         }
       }
       //build spec
-      String url=dict.get("relativeURLwithFragment");
+      /*String url=dict.get("relativeURLwithFragment");
       String baseurl=dict.get("absoluteURL");
       if(url !=null && baseurl != null ){
         components.put("spec", baseurl+url);
       }
       else{
         components.put("spec", dict.get("absoluteURLwithFragment"));
-      }
+      }*/
       String spec=components.get("spec");
       
       

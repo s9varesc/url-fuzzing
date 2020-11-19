@@ -31,6 +31,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       //components which need no further processing
     	translation.put("port", "URLport"); 
     	translation.put("ref", "URLfragment");
+      translation.put("input", "absoluteURLwithFragment");
     }
 
     /***
@@ -116,13 +117,13 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       }
         
       	//build input = whole URL
-      	String url=dict.get("relativeURLwithFragment");
+      	/*String url=dict.get("relativeURLwithFragment");
       	if(url !=null){
         	components.put("input", url);
       	}
       	else{
         	components.put("input", dict.get("absoluteURLwithFragment"));
-      	}
+      	}*/
       	String input=components.get("input");
 
         //build scheme
