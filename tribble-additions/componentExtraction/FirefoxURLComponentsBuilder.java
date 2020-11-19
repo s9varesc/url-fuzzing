@@ -148,7 +148,31 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         String d2=dict.get("domain"); //used in schemeRelativeFileURL together with ip
 
         String prePath="";
-        boolean first=true; 
+
+        if(nonspecial !=null){
+            //custom scheme
+            prePath+=components.get("scheme")+":";
+        }
+        else{
+            if(file!=null){
+                //file scheme
+                prePath+=components.get("scheme")+"://";
+            }
+            else{
+                //special scheme
+                prePath+=components.get("scheme")+"://";
+                if(userinfo!=null){
+                    prePath+=userinfo+"@";
+                }
+                prePath+=host;
+                if(p!=null){
+                    prePath+=":"+p;
+                }
+            }
+        }
+        components.put("prePath", prePath);
+
+        /*boolean first=true; 
         if(scheme != null){
             prePath+=scheme;
             if (spec.toLowerCase().startsWith(scheme+":")){
@@ -175,7 +199,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
             }
         }
 
-        /*if(prePath.contains("file:")){ //TODO is there a better way? 
+        if(prePath.contains("file:")){ //TODO is there a better way? 
         prePath="file://";
         }*/
         /*if(prePath!="" /*&& spec.toLowerCase().startsWith(prePath.toLowerCase())) { 
@@ -244,8 +268,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
             pqr+="?"+query; 
         }
         if(ref != null) {
-
-        //build hasRef
+            //build hasRef
             components.put("hasRef", "true");
             pqr+="#"+ref;
         } else {
@@ -257,7 +280,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
             pqr=addslash;
         }
 
-        //components.put("pathQueryRef", normalize(pqr));
+        components.put("pathQueryRef", pqr);
 
         return components;
     }
