@@ -66,7 +66,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       	result+= "\""+fixEscaping(""+tmp)+"\",";
       	result+= fixEscaping(""+components.get("port"))+",";
         String p=components.get("path");
-        if(p != null){
+        if(p != null && p != ""){
           result+= "\""+fixEscaping(""+p)+"\",";
         }
         else{
@@ -113,8 +113,8 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
           else{
             components.put(name, content);
           }
-      	}
-
+      }
+        
       	//build input = whole URL
       	String url=dict.get("relativeURLwithFragment");
       	if(url !=null){
@@ -136,7 +136,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
           }
         }
 		
-		//build path  //TODO: if scheme is nonspecial the path starts at :
+		//build path  
       	String pa=dict.get("pathAbsoluteURL");
       	String panW=dict.get("pathAbsoluteNonWindowsFileURL");
       	String prsl=dict.get("pathRelativeSchemelessURL");
