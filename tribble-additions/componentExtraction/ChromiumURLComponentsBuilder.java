@@ -176,6 +176,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
         if(nonspecial!=null){ //nonspecial scheme, url treated as pathurl
           //TODO check in specification again
           components.put("path", reshost+pathcontent);
+          components.put("port", "-1");
         }
         else{
           components.put("path", pathcontent);
