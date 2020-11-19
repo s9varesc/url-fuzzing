@@ -179,6 +179,9 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
           String srel=dict.get("schemeRelativeURL"); 
           String pabs=dict.get("pathAbsoluteURL");
           String prel=dict.get("pathRelativeSchemelessURL");
+          if(srel!=null){
+            pabs=null; //contained in schemeRelativeURL
+          }
           String pc=""; //includes leading slashes
           for (String content: Arrays.asList(srel, pabs, prel)){
             if(content !=null){
