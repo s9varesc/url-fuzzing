@@ -244,8 +244,10 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
                 }
             }
 
-            components.put("host",""); //TODO find a better solution, only want to add present components
-            components.put("port", "-1");
+            //components.put("host",""); //TODO find a better solution, only want to add present components
+            //components.put("port", "-1");//TODO use components.remove("port"), also works if no key port present
+            components.remove("host");
+            components.remove("port");
             pqr+=pc;
         }
         else{

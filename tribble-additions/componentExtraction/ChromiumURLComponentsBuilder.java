@@ -158,17 +158,17 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
     String ip=dict.get("ipAddress");
     String reshost="";
     if(ophost !=null){
-    //components.put("host", ophost.toLowerCase());
+      //components.put("host", ophost.toLowerCase());
       reshost=ophost.toLowerCase();
     }
     else{
       if(d !=null){
-    //components.put("host", d.toLowerCase());
+        //components.put("host", d.toLowerCase());
         reshost=d.toLowerCase();
       }
       else{
         if (ip!=null){
-    //components.put("host", ip.toLowerCase());
+          //components.put("host", ip.toLowerCase());
           reshost=ip.toLowerCase();
         }
       }
