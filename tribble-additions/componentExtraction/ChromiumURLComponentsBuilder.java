@@ -173,9 +173,9 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
         }
       }
     }
-
-    if(nonspecial!=null){ //nonspecial scheme, url treated as pathurl
-      //TODO check in specification again
+    components.put("host", reshost);
+    /*if(nonspecial!=null){ //nonspecial scheme, url treated as pathurl
+      //TODO check in specification again: can have host, port etc
 
       String srel=dict.get("schemeRelativeURL"); 
       String pabs=dict.get("pathAbsoluteURL");
@@ -191,12 +191,13 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
       }
 
       components.put("path", pc);
-      components.put("port", "-1");
+      //components.put("port", "-1");
     }
     else{
       components.put("path", pathcontent);
       components.put("host", reshost);
-    }
+    }*/
+    
 
 
     //build username and password

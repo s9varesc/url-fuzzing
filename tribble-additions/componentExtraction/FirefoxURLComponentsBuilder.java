@@ -149,62 +149,30 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
 
         String prePath="";
 
-        if(nonspecial !=null){
-            //custom scheme
-            prePath+=components.get("scheme")+":";
+        if(file!=null){
+            //file scheme
+            prePath+=components.get("scheme")+"://";
         }
         else{
-            if(file!=null){
-                //file scheme
-                prePath+=components.get("scheme")+"://";
+            if(nonspecial !=null){
+                //custom scheme
+                prePath+=components.get("scheme")+":";
             }
             else{
                 //special scheme
                 prePath+=components.get("scheme")+"://";
-                if(userinfo!=null){
-                    prePath+=userinfo+"@";
-                }
-                prePath+=host;
-                if(p!=null){
-                    prePath+=":"+p;
-                }
+            }
+            if(userinfo!=null){
+                prePath+=userinfo+"@";
+            }
+            prePath+=host;
+            if(p!=null){
+                prePath+=":"+p;
             }
         }
+        
         components.put("prePath", prePath);
 
-        /*boolean first=true; 
-        if(scheme != null){
-            prePath+=scheme;
-            if (spec.toLowerCase().startsWith(scheme+":")){
-                prePath+=":";
-            }
-        }
-        if(userinfo != null && userinfo != ""){
-            if(first){
-                prePath+="//";
-                first=false;
-            }
-            prePath+=userinfo+"@";
-        }
-        if((host != null && host != "" )){
-            if(first){
-                prePath+="//";
-                first=false;
-            }
-            if( scheme != "file"){ //prePath for file URLs is just "file://"
-                prePath+=host;
-                if(p != null && p!= ""){
-                    prePath+=":"+p;
-                }
-            }
-        }
-
-        if(prePath.contains("file:")){ //TODO is there a better way? 
-        prePath="file://";
-        }*/
-        /*if(prePath!="" /*&& spec.toLowerCase().startsWith(prePath.toLowerCase())) { 
-        components.put("prePath", prePath);
-        } */
 
         //build pathQueryRef 
 
@@ -218,7 +186,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         String prsl=dict.get("pathRelativeSchemelessURL"); 
         String srf=dict.get("schemeRelativeFileURL"); 
         if( srf != null || sr != null ){
-        pa=null; //schemeRelativeFileURL contains pathAbsolute productions
+            pa=null; //schemeRelativeFileURL contains pathAbsolute productions
         }
         String path="";
 
@@ -228,8 +196,8 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
             }
         }
 
-        if(nonspecial!=null){ //nonspecial scheme, url treated as pathurl
-            //TODO check in specification again
+        /*if(nonspecial!=null){ //nonspecial scheme, url treated as pathurl 
+            //TODO 
 
             String srel=dict.get("schemeRelativeURL"); 
             String pabs=dict.get("pathAbsoluteURL");
@@ -244,15 +212,14 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
                 }
             }
 
-            //components.put("host",""); //TODO find a better solution, only want to add present components
-            //components.put("port", "-1");//TODO use components.remove("port"), also works if no key port present
-            components.remove("host");
-            components.remove("port");
+            //components.remove("host");
+            //components.remove("port");
             pqr+=pc;
         }
         else{
             pqr+=path;
-        }
+        }*/
+        pqr+=path;
 
 
         //get query

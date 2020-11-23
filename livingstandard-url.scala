@@ -34,7 +34,7 @@ Grammar(
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'pathRelativeSchemelessURL := ('pathRelativeURL ~ ":").?,
   //pathRelativeURL can't start with URLscheme
-  'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
+  'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment, 
   // URLunit can't be /,?, singleDotPathSegment, doubleDotPathSegment
   'singleDotPathSegment := "." | "%2e",
   'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", //also add %2E ?
