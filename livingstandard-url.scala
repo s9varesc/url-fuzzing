@@ -29,7 +29,7 @@ Grammar(
   'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress).? ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
-  'pathAbsoluteNonWindowsFileURL := 'pathAbsoluteURL ~ 'windowsDriveLetter ~ "/", 
+  'pathAbsoluteNonWindowsFileURL := ('windowsDriveLetter).? ~ 'pathAbsoluteURL, 
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'pathRelativeSchemelessURL := ('pathRelativeURL ~ ":").?,
