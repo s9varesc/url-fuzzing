@@ -156,7 +156,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         else{
             prePath+=components.get("scheme")+":";
             
-            if(host!=null){
+            if(host!=null && spec.startsWith(scheme+"//")){
                 prePath+="//";
             }
             if(userinfo!=null){
