@@ -154,13 +154,10 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
             prePath+=components.get("scheme")+"://";
         }
         else{
-            if(nonspecial !=null){
-                //custom scheme
-                prePath+=components.get("scheme")+":";
-            }
-            else{
-                //special scheme
-                prePath+=components.get("scheme")+"://";
+            prePath+=components.get("scheme")+":";
+            
+            if(host!=null){
+                prePath+="//";
             }
             if(userinfo!=null){
                 prePath+=userinfo+"@";
