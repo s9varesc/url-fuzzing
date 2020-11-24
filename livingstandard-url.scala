@@ -82,7 +82,7 @@ Grammar(
   'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "%27",
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded,
   //'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
-  'opaqueHostCodePoint := 'hostAllowed | "%"| 'opaqueHostPercentEncoded,
+  'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded,
 
   'hostAllowed := 'unreserved | "!" | "\"" |"$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "|",
   'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO c0percent encoding above %7f
