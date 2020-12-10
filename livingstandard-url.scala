@@ -7,7 +7,7 @@ import saarland.cispa.se.tribble.dsl._
 Grammar(
   'url := "" ~ 'absoluteURLwithFragment,
   'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
-  'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?)  //TODO include other relative alternatives?
+  'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?)  
     | ('URLnonSpecialScheme ~ ":" ~ ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL ) ~ ("?" ~ 'URLquery ).?)//'relativeURL ) // relativeURL includes driveletter
     | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , 
 
@@ -15,11 +15,7 @@ Grammar(
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  //'relativeURL := ('specialSchemeNotFile | 'fileScheme | 'otherScheme) ~ ("?" ~ 'URLquery).?, // use URLSpecialquery 
-  //'specialSchemeNotFile := 'schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
-  //'fileScheme := 'schemeRelativeFileURL | 'pathAbsoluteURL
-   // | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL,
-  //'otherScheme := 'schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL,
+ 
   'schemeRelativeSpecialURL := "//" ~ 'host ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, 
 
   
@@ -37,7 +33,7 @@ Grammar(
   'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment, 
   // URLunit can't be /,?, singleDotPathSegment, doubleDotPathSegment
   'singleDotPathSegment := "." | "%2e",
-  'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", //also add %2E ?
+  'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", 
   'URLquery := 'queryCodePoint.rep(1),
   'URLSpecialquery := 'specialQueryCodePoint.rep(1),
   'URLfragment := 'fragmentCodePoint.rep,
@@ -55,7 +51,8 @@ Grammar(
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
   'host := ('userinfo ~ "@").? ~ 'domain,
-  'domain := 'hostAllowed.rep(1) | 'ipAddress, //TODO explixitly include xn-- variations?
+  'domain := 'internationalHost | 'hostAllowed.rep(1) | 'ipAddress, 
+  'internationalHost := (("xn--").? ~ 'hostAllowed.rep(1)).rep(1),
   'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
@@ -84,11 +81,38 @@ Grammar(
   //'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
   'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded,
 
-  'hostAllowed := 'unreserved | "!" | "\"" |"$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "|",
+  'hostAllowed := 'unreserved | "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|",
   'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO c0percent encoding above %7f
 
-  'c0PercentEncoded:= "%" ~ ((("0"|"1") ~ 'hexdig) | (("7" | "8" | "9" | "[a-f]".regex) ~ 'hexdig)), //TODO add code points above %ff
-  //unicode: code points in u+00A0 to u+10FFFD, excluding surrogates(u+D800-u+DFFF) and noncharachters(u+FDD0-u+FDEF)
+  'unicodeUtil := "%" ~ ("8"|"9"|"a"|"b") ~ 'hexdig,
+
+  'c0PercentEncoded:= "%" ~ ((("0"|"1") ~ 'hexdig)  //c0 control
+                            | ("7f")
+                            | ("c" ~ "[2-9a-f]".regex ~ 'unicodeUtil) //U+0080-U+03FF
+                            | ("d" ~ 'hexdig ~ 'unicodeUtil) //U+0400-U+07ff
+                            | ("e" ~ (("0"~ "%"~("a"|"b") ~ 'hexdig ~ 'unicodeUtil)
+                                        | (("[1-9a-c]".regex | "e") ~ 'unicodeUtil.rep(2,2))
+                                        | ("d" ~ "%" ~ ("8"|"9") ~ 'hexdig ~ 'unicodeUtil) //excludes surrogates
+                                        | ("f" ~ "%" ~ ((("8"|"9"|"a") ~ 'hexdig ~ 'unicodeUtil)
+                                                          | ("b" ~ ((("[0-6a-f]".regex | "8" | "9") ~ 'unicodeUtil)
+                                                                      | ("7" ~ "%" ~ ("[0-8]".regex | "b") ~ 'hexdig) //excludes noncharachters
+                                                                    )
+                                                            )
+                                                        )
+                                          )
+                                      )
+                              )
+                            | ("f0" ~ "%90" ~("%" ~ ((("8"|"9"|"a") ~ 'hexdig ~ 'unicodeUtil)
+                                                    | ("b" ~ "[0-9a-e]".regex ~ 'unicodeUtil)
+                                                    | ("bf" ~ "%" ~ ((('digit | "a") ~ 'hexdig)
+                                                                      | ("b" ~ "[0-9a-c]".regex) //stop at U+10FFFD
+                                                                    )
+                                                      )
+                                                  )
+                                             )
+                              )
+                          ),
+  
   'fragmentPercentEncoded := 'c0PercentEncoded | ( "%" ~ ("20" | "22" | "3c" | "3e" | "60")),
   'queryPercentEncoded := 'c0PercentEncoded | ("%" ~ ("20" | "22" | "23" | "3c" | "3e" )),
   'pathPercentEncoded := 'queryPercentEncoded | ("%" ~ ("3f" | "60" | "7b" | "7d")),
