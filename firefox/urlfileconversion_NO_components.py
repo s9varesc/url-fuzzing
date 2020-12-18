@@ -39,7 +39,7 @@ for chunk in testchunks:
 	testid+=1
 	urldata="var gTests = ["
 	for url in chunk:
-		urldata+="\n {\"spec\": \"" + url + "\"},"  #TODO: url needs to be enclosed in {spec: ...}
+		urldata+="\n {spec: \"" + url + "\"},"  
 	urldata=urldata[:-1]
 	urldata+="];"
 	testname="test_URIs_"+str(testid)+".js"
