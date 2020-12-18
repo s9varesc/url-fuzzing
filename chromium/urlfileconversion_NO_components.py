@@ -27,7 +27,6 @@ for filename in os.listdir(dir):
 	url="{\""+ urlcontents +"\"}"
     url.replace("\\\\", "\\\\\\")
 	url.replace("\\\"", "\\\\\"")
-
 	urldata += url+",\n"
 
 f=open("url_parsing_unittest.cc","w")
