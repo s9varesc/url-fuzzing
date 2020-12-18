@@ -9,10 +9,10 @@ import subprocess
 #
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-urlfile")
+parser.add_argument("-dir")
 
 args = parser.parse_args()
-urlfile = args.urlfile
+dir = args.dir
 
 f=open("./test_URIs_suffix_NO_components.txt","r")
 suffix=f.read()
@@ -21,10 +21,14 @@ prefix="\"use strict\";\
 	\n var gIoService = Cc[\"@mozilla.org/network/io-service;1\"].getService(Ci.nsIIOService);\n"
 
 #collect url data
+urlcontents=[]
+for filename in os.listdir(dir):
+	f=open(dir+"/"+filename, "r")
+	urlcontents+=[f.read()]
 
-f=open(urlfile, "r")
-filecontents=f.read()
-urlcontents=filecontents.split("\n") #TODO: put url in correct format: {spec:"URL"}
+
+
+
 
 #create test files with ~n test cases per file
 n=1
@@ -35,7 +39,7 @@ for chunk in testchunks:
 	testid+=1
 	urldata="var gTests = ["
 	for url in chunk:
-		urldata+="\n" + url + ","
+		urldata+="\n" + url + ","  #TODO: url needs to be enclosed in {spec: ...}
 	urldata=urldata[:-1]
 	urldata+="];"
 	testname="test_URIs_"+str(testid)+".js"
