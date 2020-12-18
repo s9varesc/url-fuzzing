@@ -7,10 +7,10 @@ import subprocess
 #
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-urlfile")
+parser.add_argument("-dir")
 
 args = parser.parse_args()
-urlfile = args.urlfile
+dir = args.dir
 
 f1=open("./url_parsing_prefix_NO_components.txt","r")
 prefix=f1.read()
@@ -20,16 +20,15 @@ i=2
 
 urldata="\nstatic URLParseCase parse_cases[]={"
 
-f=open(urlfile, "r")
-filecontents=f.read()
-filecontents=filecontents.replace("\\\\", "\\\\\\")
-filecontents=filecontents.replace("\\\"", "\\\\\"")
-urlcontents=filecontents.split("\n")
+for filename in os.listdir(dir):
+	i+=1
+	f=open(dir+"/"+filename, "r")
+	urlcontents=f.read()
+	url="{\""+ urlcontents +"\"},\n"
+    url.replace("\\\\", "\\\\\\")
+	url.replace("\\\"", "\\\\\"")
 
-for url in urlcontents:
-	urldata+=url+",\n" #TODO url format
-	
-
+	urldata += url
 
 f=open("url_parsing_unittest.cc","w")
 f.write(prefix+urldata[:-2]+"};\n"+suffix)
