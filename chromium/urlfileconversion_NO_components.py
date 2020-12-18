@@ -24,11 +24,11 @@ for filename in os.listdir(dir):
 	i+=1
 	f=open(dir+"/"+filename, "r")
 	urlcontents=f.read()
-	url="{\""+ urlcontents +"\"},\n"
+	url="{\""+ urlcontents +"\"}"
     url.replace("\\\\", "\\\\\\")
 	url.replace("\\\"", "\\\\\"")
 
-	urldata += url
+	urldata += url+",\n"
 
 f=open("url_parsing_unittest.cc","w")
 f.write(prefix+urldata[:-2]+"};\n"+suffix)
