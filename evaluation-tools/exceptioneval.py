@@ -130,13 +130,13 @@ for url in urls:
 				urlranking[url]=[]
 			urlranking[url]+=[parser]
 
-print("Results: \n")
+#print("Results: \n")
 print("number of urls tested: "+ str(len(urls)))
 print("number of parsers: "+str(len(parsers)))
-print("ranking of parsers (unsorted)")
-print(parserranking)
-print("ranking of urls (unsorted)")
-print(urlranking)
+#print("ranking of parsers (unsorted)")
+#print(parserranking)
+#print("ranking of urls (unsorted)")
+#print(urlranking)
 
 
 
