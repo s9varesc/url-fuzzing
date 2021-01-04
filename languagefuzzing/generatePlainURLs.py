@@ -1,7 +1,16 @@
 import os
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-dir")
+
+args = parser.parse_args()
+dir = args.dir
+
 
 urls=""
-rel_dir='./urls/plain/'
+rel_dir=dir
 for filename in os.listdir(rel_dir):
     if filename != "plainURLs":
         
