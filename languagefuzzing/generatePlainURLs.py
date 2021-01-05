@@ -10,7 +10,7 @@ dir = args.dir
 
 
 urls=""
-rel_dir=dir
+rel_dir=dir+"/"
 for filename in os.listdir(rel_dir):
     if filename != "plainURLs":
         
