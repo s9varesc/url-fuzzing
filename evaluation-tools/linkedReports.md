@@ -27,7 +27,7 @@
 
 #### Java
 [Overview](./Java/index.html)
-NEED TO CHECK THIS AGAIN
+
 
 #### JavaScript
 ##### urijs
