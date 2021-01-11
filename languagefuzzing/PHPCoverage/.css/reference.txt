@@ -1,0 +1,7 @@
+
+style.css from
+
+https://github.com/sebastianbergmann/php-code-coverage/blob/master/src/Report/Html/Renderer/Template/css/style.css
+
+
+date of download: 11.01.2021
