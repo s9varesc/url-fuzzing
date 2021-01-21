@@ -4,7 +4,12 @@ import subprocess
 import json
 
 # correct escaping 
-def fixdatapoint(datapoint):
+def escaping(data):
+	tmp=data.replace("\\", "\\\\")
+	tmp=tmp.replace("\"", "\\\"" )
+	tmp=tmp.replace("\'", "\\\'")
+	return tmp
+def fixdatapoint(datapoint): #TODO use escapebetween
 	
 	if len(datapoint)<=2: return datapoint
 	res=datapoint
@@ -20,14 +25,9 @@ def fixdatapoint(datapoint):
 	p2=dp2[:-2] #exception contents
 	post2=dp2[-2:] # "}
 
-	p1=p1.replace("\\", "\\\\")
-	p2=p2.replace("\\", "\\\\")
+	p1=escaping(p1)
+	p2=escaping(p2)
 
-	p1=p1.replace("\"", "\\\"")
-	p2=p2.replace("\"", "\\\"")
-
-	
-		
 	if p1[-1:]=="\\":
 		p1=p1+" "
 
@@ -37,9 +37,41 @@ def fixdatapoint(datapoint):
 	res=pre1+p1+post1+pre2+p2+post2
 	return res
 
+def fixerrordatapoint(datapoint):
+	# specialized on browser component errors
+	wdata=datapoint
+
+	#{"url":"
+	# ", "error":{"component":"
+	# ", "expected":"
+	# ", "actual":"
+	# "}}
+	
+	s1="{\"url\":\""
+	s2="\", \"error\":{\"component\":\""
+	s3="\", \"expected\":\""
+	s4="\", \"actual\":\""
+	s5="\"}}"
+
+	res=datapoint
+	res=escapebetween(s1, s2, res)
+	res=escapebetween(s2, s3, res)
+	res=escapebetween(s3, s4, res)
+	res=escapebetween(s4, s5, res)
+	
+	return res
+
+def escapebetween(s1, s2, data):
+	wd=data
+	i1=wd.find(s1)
+	i2=wd.find(s2)
+
+	content=wd[i1+len(s1):s2]
+	escapedcontent=escaping(content)
+	return wd[:i1+len(s1)]+escapedcontent+wd[s2:]
 
 #
-# evaluates the collected exceptions
+# evaluates the collected exceptions and errors
 #
 
 # the diretory containing the collected exceptions as *Exceptions.txt 
@@ -49,7 +81,6 @@ parser.add_argument("-dir")
 args = parser.parse_args()
 dir = args.dir
 
-#TODO add arg to build or not build html rep
 
 for file in os.listdir(dir):
 	if file.endswith('URLs'):
@@ -130,16 +161,41 @@ for url in urls:
 				urlranking[url]=[]
 			urlranking[url]+=[parser]
 
-#print("Results: \n")
-print("number of urls tested: "+ str(len(urls)))
-print("number of parsers: "+str(len(parsers)))
-#print("ranking of parsers (unsorted)")
-#print(parserranking)
-#print("ranking of urls (unsorted)")
-#print(urlranking)
+
+pfile=open( dir+"../evaldata/"+"parsercomp.json", "w") 
+pfile.write(parserranking)
+pfile.close()
+
+ufile=open( dir+"../evaldata/"+"urlcomp.json", "w")
+ufile.write(urlranking)
+ufile.close()
 
 
 
+
+# create error dictionaries:
+# { browser : [errordata, ... ]}
+# with errordata looking like {"url":"http://...", "error":{"component":"port", "expected":"20", "actual":"xxx"}}
+
+errorranking={}
+for file in os.listdir(dir):
+	if file.contains('Errors'):
+		with open(dir +"/"+ file) as f:
+			errdata=f.read()   
+			name=file.replace("Errors.txt", "")
+			esplit=errdata.split("\n")
+			fixederrdata={}
+			for errd in esplit:
+				fixederrdata+=[fixerrordatapoint(errd)]
+			tmp=json.loads(fixederrdata)
+			errorranking[name]=tmp #TODO make sure its a list
+
+
+
+
+efile=open( dir+"../evaldata/"+"errorcomp.json", "w")
+efile.write(errorranking)
+efile.close()
 
 
 
