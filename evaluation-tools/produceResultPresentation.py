@@ -6,40 +6,55 @@ import markdown
 
 # links to the coverage reports
 covreps={}
-covreps["chromium"]="\n#### Chromium\n\n[Overview](./chromium/report.html)\n\n[Source File Report](./chromium/url_parse.cc.html)\n"
-covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n[Source File Report](./firefox/netwerk/base/nsURLParser.cpp.gcov.html)\n"
-covreps["C"]="\n#### C\n\n[Overview](./C/index.html)\n\n[Source File Report](./C/src/UriParse.c.gcov.html)\n"
-covreps["Cpp"]="\n#### C\\+\\+\n\n[Overview](./Cpp/index.html)\n\n[Source File Report](./Cpp/src/URI.cpp.gcov.html)\n"
-covreps["Go"]="\n#### GO\n\n[Source File Report](./Go/index.html)\n"
+covreps["chromium"]="\n#### Chromium\n\n[Overview](./chromium/report.html)\n\n[Source File Report](./chromium/url_parse.cc.html)\n\n"
+covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n[Source File Report](./firefox/netwerk/base/nsURLParser.cpp.gcov.html)\n\n"
+covreps["C"]="\n#### C\n\n[Overview](./C/index.html)\n\n[Source File Report](./C/src/UriParse.c.gcov.html)\n\n"
+covreps["Cpp"]="\n#### C\\+\\+\n\n[Overview](./Cpp/index.html)\n\n[Source File Report](./Cpp/src/URI.cpp.gcov.html)\n\n"
+covreps["Go"]="\n#### GO\n\n[Source File Report](./Go/index.html)\n\n"
 covreps["Java"]="\n #### JAVA REPORT HERE" #TODO
-covreps["urijs"]="\n#### JavaScript urijs\n\n[Overview](./JavaScript/urijs/index.html)\n\n[Source File Report](./JavaScript/urijs/src/URI.js.html)\n"
-covreps["whatwg"]="\n#### JavaScript whatwg\\-url\n\n[Overview](./JavaScript/whatwg-url/index.html)\n\n[Source File Report](./JavaScript/whatwg-url/lib/url-state-machine.js.html)\n"
-covreps["PHP"]="\n#### PHP\n\n[Overview](./PHP/index.html)\n\n[Source File Report](./PHP/UriString.php.html)\n"
-covreps["Python"]="\n#### Python\n\n[Overview](./Python/index.html)\n\n[Source File Report](./Python/_usr_lib_python3_6_urllib_parse_py.html)\n"
+covreps["JavaScripturijs"]="\n#### JavaScript urijs\n\n[Overview](./JavaScript/urijs/index.html)\n\n[Source File Report](./JavaScript/urijs/src/URI.js.html)\n\n"
+covreps["JavaScriptwhatwg-url"]="\n#### JavaScript whatwg\\-url\n\n[Overview](./JavaScript/whatwg-url/index.html)\n\n[Source File Report](./JavaScript/whatwg-url/lib/url-state-machine.js.html)\n\n"
+covreps["PHP"]="\n#### PHP\n\n[Overview](./PHP/index.html)\n\n[Source File Report](./PHP/UriString.php.html)\n\n"
+covreps["Python"]="\n#### Python\n\n[Overview](./Python/index.html)\n\n[Source File Report](./Python/_usr_lib_python3_6_urllib_parse_py.html)\n\n"
+covreps["Ruby"]="\n#### Ruby\n\n[Overview](./Ruby/index.html#_AllFiles)\n\n"
 
 
 #TODO explicitly state browsers -> could include others later on
 
 
+def escape_md(data):
+	#escaping for exception messages
+	res=data
+	res=res.replace("|", "&#124;")
+	res=res.replace("`", "\`")
+	return res
+
+def url_escape_md(data):
+	#escaping for urls(=displayed as code blocks)
+	#note: if a url contains 3 or more backticks in a row this breaks the formatting
+	res=data
+	res=res.replace("|", "\|")#"&#124;")
+	return "``` "+res+" ```"
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-data")
 args = parser.parse_args()
 datadir = args.data
+if datadir[-1:]!="/":datadir+="/"
 
 pranking=""
 uranking=""
 eranking="" 
 # read json file
 for file in os.listdir(datadir):
-	if file.contains("parser"):
+	if "parser" in file:
 		with open(datadir+"/"+file) as f:
 			pranking=f.read()
-	if file.contains("url"):
+	if "url" in file:
 		with open(datadir+"/"+file) as f:
 			uranking=f.read()
-	if file.contains("error"): 
+	if "error" in file: 
 		with open(datadir+"/"+file) as f:
 			eranking=f.read()
 
@@ -47,29 +62,31 @@ for file in os.listdir(datadir):
 # multiple rankings: focus on parsers: {parsername: { errorcount: , nrerrtypes: ,
 #						 							errtypes: {errtype:[url, url,...]} }}
 #					focus on urls: {url: [parsers]} 
-#					browsers including exceptions and errors    TODO!!!!!!!!
+#					browsers including exceptions and errors   
 
 
 # prepare data structures
 ptuples=[]
 ptables=[] #list of md tables with heading
-ptableheader=" Exception Type | URLs \n --- | --- \n"
+ptableheader=" Exception Type | URLs \n --- | --- "
 
 parsertable=" Parsername | Number of Exceptions | Number of Different Exceptions \n --- | --- | --- \n"
 
 # create table representation of the parser results
 parserdata=json.loads(pranking)
 
-for (pname, edata) in parserdata:
+for pname in parserdata:
+	edata=parserdata[pname]
 	ptuple=(pname, edata["errorcount"], edata["nrerrtypes"])
 	ptuples+=[ptuple]
-	ptable="###"+pname+"\n"+ptableheader+"\n"
+	ptable="### "+pname+"\n\n"+ptableheader+"\n"
 	
-	for (et, eurls) in edata["errtypes"]:
+	for et in edata["errtypes"]:
+		eurls=edata["errtypes"][et]
 		etline=""
-		etline+=et+ " | "
+		etline+=escape_md(et)+ " | "
 		for eurl in eurls:
-			etline += eurl +"<br>"
+			etline += url_escape_md(eurl) +"<br>"
 		ptable+=etline[:-4]+"\n"
 
 	ptables+=[ptable]
@@ -79,7 +96,7 @@ for (pname, edata) in parserdata:
 sortedptuples=sorted(ptuples, key=lambda ptuple: ptuple[1])
 pnames=[]
 for (pn, en, den) in sortedptuples:
-	parsertable+=pn +" | "+ en +" | "+ den +"\n"
+	parsertable+=pn +" | "+ str(en) +" | "+ str(den) +"\n"
 	pnames+=[pn]
 
 # create table representation of URLs
@@ -90,39 +107,41 @@ utable=" URL | Parsers \n --- | --- \n"
 # keep track of urls that didnt cause parsing exceptions
 succURLs=[]
 nrurls=0
-for (url, parsers) in urldata: #TODO sorted would be nicer
+for url in urldata: 
+	parsers=urldata[url]	
 	nrurls+=1
 	if not parsers:
-		succURLs+=[url]
+		succURLs+=[escape_md(url)]
 	else:
-		uline=url+" | "
+		uline=url_escape_md(url)+" | "
 		for p in parsers:
 			uline += p + "<br>"
 		utable+=uline[:-4]+"\n"
 
 # Browsers
-
+errdata=json.loads(eranking)
 ## create overview table: browser | nr fails | nr exceptions | nr errors
 otable=" Browser | Overall Failures | Parsing Exceptions | Verification Errors \n --- | --- | --- | --- \n"
-for bname in eranking:
-	nrex=pranking[bname]["errorcount"]
-	nrer=len(eranking[bname])
+for bname in errdata:
+	nrex=parserdata[bname]["errorcount"]
+	nrer=len(errdata[bname])
 	allf=nrex+nrer
-	otable+=bname+" | "+ allf+" | "+ nrex+ " | "+nrer+"\n"
+	otable+=bname+" | "+ str(allf)+" | "+ str(nrex)+ " | "+str(nrer)+"\n"
 
 ## create specialized tables per browser: url | component | expected | actual
 vtables=[]
-for bname in eranking:
-	vtable="### "+bname+"\n\n"
+for bname in errdata:
+	vtable="### "+bname+"\n\n" 
 	vtable+=" URL | Component | Expected Value | Actual Value \n --- | --- | --- | --- \n"
-	elist=eranking[bname]
-	for erdata in elist:   #TODO make sure this is accessed correctly
-		u=erdata["url"]
-		c=erdata["error"]["component"]
-		exp=erdata["error"]["expected"]
-		a=erdata["error"]["actual"]
+	elist=errdata[bname]
+	for erdata in elist:   
+		u=url_escape_md(erdata["url"])
+		c=escape_md(erdata["error"]["component"])
+		exp=escape_md(erdata["error"]["expected"])
+		a=escape_md(erdata["error"]["actual"])
 		vtable+=u+ " | "+c+" | "+exp+" | "+ a+"\n"
-	vtables+=vtable
+	vtables+=[vtable]
+
 ## maybe create url comparison with parsing/verification passes
 
 
@@ -130,8 +149,8 @@ for bname in eranking:
 # Build the Document
 
 result="# Results \n\n"
-result+="Total number of URLs: "+nrurls+"\n\n"
-result+="Total number of Parsers: "+len(pnames)+"\n\n" 
+result+="Total number of URLs: "+str(nrurls)+"\n\n"
+result+="Total number of Parsers: "+str(len(pnames))+"\n\n" 
 
 
 result +="## Parser Comparison \n\n"
@@ -149,7 +168,7 @@ for vtable in vtables:
 	result+=vtable+"\n"
 
 result +="## Coverage Reports \n\n"
-#TODO only include actually present reports: dict of links ie parser : link TODO
+
 brep=""
 prep=""
 for name in covreps:
@@ -160,9 +179,9 @@ for name in covreps:
 			prep+=covreps[name]
 
 if brep != "":
-	result+="### Browsers\n"+brep
+	result+="### Browsers\n\n"+brep
 if prep != "":
-	result+="### Stand-Alone Parsers\n"+prep
+	result+="### Stand-Alone Parsers\n\n"+prep
 
 
 resfile=open( datadir+"../resultoverview.md", "w")

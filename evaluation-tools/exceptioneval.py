@@ -167,16 +167,11 @@ for file in os.listdir(dir):
 			name=file.replace("Errors.txt", "")
 			rawesplit=errdata.split("\n")
 			esplit=[]
-			esplit=[x for x in esplit if x]
+			esplit=[x for x in rawesplit if x]
 			errorranking[name]=[]
 			for errd in esplit:
-				
-				try:
-					tmp=json.loads(fixerrordatapoint(errd))
-					errorranking[name]+=[tmp] #TODO make sure its a list
-				except json.decoder.JSONDecodeError as e:
-					print(e)
-					print(fixerrordatapoint(errd))
+				tmp=json.loads(fixerrordatapoint(errd))
+				errorranking[name]+=[tmp] #TODO make sure its a list
 
 
 
