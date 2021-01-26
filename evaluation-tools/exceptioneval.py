@@ -171,7 +171,7 @@ for file in os.listdir(dir):
 			errorranking[name]=[]
 			for errd in esplit:
 				tmp=json.loads(fixerrordatapoint(errd))
-				errorranking[name]+=[tmp] #TODO make sure its a list
+				errorranking[name]+=[tmp] 
 
 
 
