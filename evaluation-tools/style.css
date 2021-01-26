@@ -1,0 +1,63 @@
+table.simpletable {
+  border: 1px solid #DBD7DF;
+  background-color: #FFFFFF;
+  text-align: left;
+  border-collapse: collapse;
+  overflow: auto;
+  padding: 5px 0px 10px 20px
+  font-family: "Arial Black", Gadget, sans-serif;
+  color: #353535;
+}
+table.simpletable td, table.simpletable th {
+  border: 1px solid #DBD7DF;
+  padding: 3px 2px;
+}
+table.simpletable tbody td {
+  font-size: 13px;
+  font-family: "Arial Black", Gadget, sans-serif;
+  color: #353535;
+}
+table.simpletable tr:nth-child(even) {
+  background: #F6F8FA;
+}
+table.simpletable thead {
+    border-bottom: 1px solid #000000;
+}
+table.simpletable thead th {
+  font-size: 15px;
+  font-weight: bold;
+  color: #000000;
+  border-left: 1px solid #000000;
+  font-family: "Arial Black", Gadget, sans-serif;
+  color: #353535;
+}
+table.simpletable thead th:first-child {
+  border-left: none;
+}
+p {
+  padding: 5px 25px 0px 40px;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+
+h1 {
+  padding: 5px 0px 0px 5px;
+  color: #353535;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+h2 {
+  padding: 5px 0px 0px 5px;
+  border-bottom: 1px solid #eaecef;
+  color: #353535;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+h3 {
+  padding: 5px 0px 0px 20px;
+  text-decoration: underline;
+  color: #353535;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+h4 {
+  padding: 5px 0px 0px 35px;
+  color: #353535;
+  font-family: "Arial Black", Gadget, sans-serif;
+}

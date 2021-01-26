@@ -4,10 +4,11 @@ import subprocess
 import json
 import markdown
 
+
 # links to the coverage reports
 covreps={}
 covreps["chromium"]="\n#### Chromium\n\n[Overview](./chromium/report.html)\n\n[Source File Report](./chromium/url_parse.cc.html)\n\n"
-covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n[Source File Report](./firefox/netwerk/base/nsURLParser.cpp.gcov.html)\n\n"
+covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n\n[Source File Report](./firefox/netwerk/base/nsURLParser.cpp.gcov.html)\n\n"
 covreps["C"]="\n#### C\n\n[Overview](./C/index.html)\n\n[Source File Report](./C/src/UriParse.c.gcov.html)\n\n"
 covreps["Cpp"]="\n#### C\\+\\+\n\n[Overview](./Cpp/index.html)\n\n[Source File Report](./Cpp/src/URI.cpp.gcov.html)\n\n"
 covreps["Go"]="\n#### GO\n\n[Source File Report](./Go/index.html)\n\n"
@@ -188,9 +189,25 @@ resfile=open( datadir+"../resultoverview.md", "w")
 resfile.write(result)
 resfile.close()
 
-htmlresult=markdown.markdown(result)
+htmlresult=markdown.markdown(result, extensions=['extra'])
+
+htmlhead="<!DOCTYPE html>\
+<html lang=\"en\">\
+\
+<head>\
+<meta charset=\"utf-8\">\
+<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\
+<title>URL-Fuzzing</title>\
+</head>\
+\
+<body>\n"
+htmltail="</body>\
+</html>"
+htmlresult=htmlresult.replace("<table>", "<table class=\"simpletable\">")
+	
+
 htmlfile=open( datadir+"../resultoverview.html", "w")
-htmlfile.write(htmlresult)
+htmlfile.write(htmlhead + htmlresult +htmltail)
 htmlfile.close()
 
 
