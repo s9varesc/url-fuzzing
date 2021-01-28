@@ -8,13 +8,13 @@ import markdown
 # links to the coverage reports
 covreps={}
 covreps["chromium"]="\n#### Chromium\n\n[Overview](./chromium/report.html)\n\n[Source File Report](./chromium/url_parse.cc.html)\n\n"
-covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n\n[Source File Report](./firefox/netwerk/base/nsURLParser.cpp.gcov.html)\n\n"
+covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n\n[Source File Report](./firefox/netwerk/base/nsURLParsers.cpp.gcov.html)\n\n"
 covreps["C"]="\n#### C\n\n[Overview](./C/index.html)\n\n[Source File Report](./C/src/UriParse.c.gcov.html)\n\n"
 covreps["Cpp"]="\n#### C\\+\\+\n\n[Overview](./Cpp/index.html)\n\n[Source File Report](./Cpp/src/URI.cpp.gcov.html)\n\n"
 covreps["Go"]="\n#### GO\n\n[Source File Report](./Go/index.html)\n\n"
 covreps["Java"]="\n#### Java\n\n[Overview](./Java/index.html)\n\n[Source File Report](./Java/java/net/URL.html)\n\n" 
-covreps["JavaScripturijs"]="\n#### JavaScript urijs\n\n[Overview](./JavaScript/urijs/index.html)\n\n[Source File Report](./JavaScript/urijs/src/URI.js.html)\n\n"
-covreps["JavaScriptwhatwg-url"]="\n#### JavaScript whatwg\\-url\n\n[Overview](./JavaScript/whatwg-url/index.html)\n\n[Source File Report](./JavaScript/whatwg-url/lib/url-state-machine.js.html)\n\n"
+covreps["JavaScripturijs"]="\n#### JavaScript urijs\n\n[Overview](./JavaScript/urijs/index.html)\n\n[Source File Report](./JavaScript/urijs/URI.js.html)\n\n"
+covreps["JavaScriptwhatwg-url"]="\n#### JavaScript whatwg\\-url\n\n[Overview](./JavaScript/whatwg-url/index.html)\n\n[Source File Report](./JavaScript/whatwg-url/whatwg-url/dist/url-state-machine.js.html)\n\n"
 covreps["PHP"]="\n#### PHP\n\n[Overview](./PHP/index.html)\n\n[Source File Report](./PHP/UriString.php.html)\n\n"
 covreps["Python"]="\n#### Python\n\n[Overview](./Python/index.html)\n\n[Source File Report](./Python/_usr_lib_python3_6_urllib_parse_py.html)\n\n"
 covreps["Ruby"]="\n#### Ruby\n\n[Overview](./Ruby/index.html#_AllFiles)\n\n"
