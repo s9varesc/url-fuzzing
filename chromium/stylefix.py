@@ -11,7 +11,7 @@ for filename in os.listdir(dir):
     #print filename
     f=open(dir+"/"+filename)
     s = f.read()
-    if filename.endsWith(".html"):
+    if filename.endswith(".html"):
         s = s.replace('../../../../../../../style.css', './style.css')
     #print "replaced in " + filename
     f=open(dir+"/"+filename, "w")
