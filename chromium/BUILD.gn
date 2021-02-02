@@ -200,7 +200,7 @@ test("url_unittests") {
     "url_parse_unittest.cc",
     "url_test_utils.h",
     "url_util_unittest.cc",
-    "url_parsing_unittest.cc",
+    "url_parsing_unittest.cc",  # this file contains the newly generated tests
   ]
 
   deps = [
