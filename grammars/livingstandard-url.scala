@@ -16,7 +16,7 @@ Grammar(
   'URLschemeFile := "file",
 
  
-  'schemeRelativeSpecialURL := "//" ~ 'host ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, 
+  'schemeRelativeSpecialURL := "//" ~ 'domain ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, //replace host by domain
 
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
@@ -50,10 +50,10 @@ Grammar(
   //'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
-  'host := ('userinfo ~ "@").? ~ 'domain,
+  //'host := ('userinfo ~ "@").? ~ 'domain,  //TODO userinfo is deprecated
   'domain := 'internationalHost | 'hostAllowed.rep(1) | 'ipAddress, 
   'internationalHost := (("xn--").? ~ 'hostAllowed.rep(1)).rep(1),
-  'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
+  //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
     | ((('h16 ~ ":").rep(0, 1) ~ 'h16).? ~ "::" ~ ('h16 ~ ":").rep(2, 2) ~ 'ls32)
@@ -73,7 +73,7 @@ Grammar(
   'hexdig := ("[a-f]".regex) | 'digit,
   
 
-  'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded,
+  //'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded,
   'pathCodePoint := 'pathAllowed | 'pathPercentEncoded,
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded,
   'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "%27",
@@ -116,7 +116,7 @@ Grammar(
   'fragmentPercentEncoded := 'c0PercentEncoded | ( "%" ~ ("20" | "22" | "3c" | "3e" | "60")),
   'queryPercentEncoded := 'c0PercentEncoded | ("%" ~ ("20" | "22" | "23" | "3c" | "3e" )),
   'pathPercentEncoded := 'queryPercentEncoded | ("%" ~ ("3f" | "60" | "7b" | "7d")),
-  'userinfoPercentEncoded := 'pathPercentEncoded | ("%" ~ ("2f" | "3a" | "3b" | "3d" | "40" | "5b"| "5c" | "5d" | "5e" | "7c")),
+  //'userinfoPercentEncoded := 'pathPercentEncoded | ("%" ~ ("2f" | "3a" | "3b" | "3d" | "40" | "5b"| "5c" | "5d" | "5e" | "7c")),
 
   'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
   'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|",
