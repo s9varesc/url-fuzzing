@@ -13,7 +13,10 @@ package saarland.cispa.se.tribble.execution.componentExtraction;
 */
 public class DictExtractor {
   private List<ComponentsBuilder> componentBuilders;
-
+  //TODO: private ComponentsBuilder univcomp=new UniversalURLComponentsBuilder();
+  // other component builders should mainly access the contents of the universal builder
+  // and only extract components from the tree where absolutely necessary
+  // universal components builder should produce a mapping of compname:treecontent and use the most basic compnames possible
 
   public DictExtractor(){
     componentBuilders=new ArrayList<ComponentsBuilder>();
