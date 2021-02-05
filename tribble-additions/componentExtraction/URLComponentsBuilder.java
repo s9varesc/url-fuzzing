@@ -5,7 +5,7 @@ import java.util.*;
 /***
 * abstract class for creating URL component representations
 */
-public abstract class URLComponentsBuilder implements ComponentsBuilder{
+public abstract class URLComponentsBuilder extends ComponentsBuilder{
   UniversalURLComponentsBuilder universalcomponentrep;
 
   public URLComponentsBuilder(UniversalURLComponentsBuilder univcomp){

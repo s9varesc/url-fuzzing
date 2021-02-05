@@ -13,21 +13,13 @@ package saarland.cispa.se.tribble.execution.componentExtraction;
 */
 public class DictExtractor {
   private List<ComponentsBuilder> componentBuilders;
-  //TODO: private ComponentsBuilder univcomp=new UniversalURLComponentsBuilder();
-  // other component builders should mainly access the contents of the universal builder
-  // and only extract components from the tree where absolutely necessary
-  // universal components builder should produce a mapping of compname:treecontent and use the most basic compnames possible
+  private UniversalComponentsBuilder univcompBuilder;
 
-  public DictExtractor(){
-    componentBuilders=new ArrayList<ComponentsBuilder>();
+  public DictExtractor(UniversalComponentsBuilder univcomp, List<ComponentsBuilder> builders){
+    componentBuilders=builders;
+    univcompBuilder=univcomp;
   }
 
-  /***
-  * adds "builder" to the list of ComponentsBuilder to use
-  */
-  public void addComponentsBuilder(ComponentsBuilder builder){
-    componentBuilders.add(builder);
-  }
 
   /***
   * extracts all specified components from the tree representation and passes them to the specified component builders
@@ -35,14 +27,14 @@ public class DictExtractor {
   */
   public List<List<String>> extract(DTree root) {
     // determine which components to extract
-    List<String> componentNames = new ArrayList<String>();
+    /*List<String> componentNames = new ArrayList<String>(); 
     for (ComponentsBuilder cb : componentBuilders){
       for(String name: cb.getComponentNames()){
         if (!componentNames.contains(name)){
           componentNames.add(name);
         }
       }
-    }
+    }*/ //unused
 
     //extract specified components
     List<DTree> workList = new ArrayList<>();
@@ -61,13 +53,15 @@ public class DictExtractor {
       if (decl instanceof Reference) {
         String name = ((Reference) decl).name();
         String content=current.leaves().mkString();
-        for (ComponentsBuilder cb : componentBuilders){
-          cb.addComponent(name, content);
-        }
+        //for (ComponentsBuilder cb : componentBuilders){
+        univcompBuilder.addComponent(name, content);
+        //}
 
       }
     }
 
+    // pre-format component contents
+    univcompBuilder.prepareComponents();
     //use specified component builders to format components
     List<List<String>> representations = new ArrayList<List<String>>();
     for (ComponentsBuilder cb : componentBuilders){

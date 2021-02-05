@@ -9,16 +9,15 @@ import java.util.Map;
 /***
 * concrete implementation of a ComponentsBuilder for the livingstandard-url grammar and the Chromium URL format
 */
-public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
+public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
 
-  ArrayList<String> InternalComponentNames=new ArrayList<String>();
-  HashMap<String, String> translation=new HashMap<>();
   String format = "chromium";
-  URLComponentsUtil util=new URLComponentsUtil();
+   UniversalURLComponentsBuilder univcomp;
 
 
-  public ChromiumURLComponentsBuilder(){
-    this.InternalComponentNames.add("input");
+  public ChromiumURLComponentsBuilder(UniversalURLComponentsBuilder univcomp){
+    
+    /*this.InternalComponentNames.add("input");
     this.InternalComponentNames.add("scheme");
     this.InternalComponentNames.add("username");
     this.InternalComponentNames.add("password");
@@ -31,7 +30,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
 //components which need no further processing
     translation.put("port", "URLport"); 
     translation.put("ref", "URLfragment");
-    translation.put("input", "absoluteURLwithFragment");
+    translation.put("input", "absoluteURLwithFragment");*/
   }
 
   /***
@@ -45,7 +44,7 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
   *
   * @return components and their contents in the Chromium component format
   */
-  public String buildRepresentation(){
+  public String buildRepresentation(){ //TODO use univcomp methods
     //build actual representation
     //{input, scheme, username, password, host, port, path, query, ref}
     //{"http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
@@ -82,154 +81,6 @@ public class ChromiumURLComponentsBuilder extends ComponentsBuilder {
     result=res;
     return result;
 
-  }
-
-  /***
-  * 
-  * @return the given string with escaped quotationmarks and backsalshes
-  */
-  private String fixEscaping(String original){
-    String res=original.replaceAll("\\\\", "\\\\\\\\"); 
-    return res.replaceAll("\"", "\\\\\"");
-  }
-
-  /***
-  * uses the dictionary created by DictExtractor to create a mapping of component name (in chr formatting) and component content
-  * @return a mapping of component name to component content
-  */
-  private Map<String, String> buildMapping(){
-  //build mapping between grammar names and component names
-    Map<String, String> components=new HashMap<>();
-    for(String name:translation.keySet()){
-      String content=dict.get(translation.get(name));
-      if (name=="port"){
-        if (content != null && !content.isEmpty()){
-          components.put(name, content);
-        }
-        else{
-          components.put(name, "-1");
-        }
-
-      }
-      else{
-        components.put(name, content);
-      }
-    }
-
-    //build input = whole URL
-    /*String url=dict.get("relativeURLwithFragment");
-    if(url !=null){
-    components.put("input", url);
-    }
-    else{
-    components.put("input", dict.get("absoluteURLwithFragment"));
-    }*/
-    String input=components.get("input");
-
-    //build scheme
-    String specialnf=dict.get("URLspecialSchemeNotFile");
-    String nonspecial=dict.get("URLnonSpecialScheme");
-    String file=dict.get("URLschemeFile");
-
-    for (String content: Arrays.asList(specialnf, nonspecial, file)){
-      if(content !=null){
-        components.put("scheme", content.toLowerCase());
-      }
-    }
-
-    //build path  
-    String pa=dict.get("pathAbsoluteURL");
-    String panW=dict.get("pathAbsoluteNonWindowsFileURL");
-    String prsl=dict.get("pathRelativeSchemelessURL");
-    String pathcontent="";
-    if (panW != null){
-      pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
-    }
-    for (String content: Arrays.asList(panW, pa, prsl)){
-      if(content !=null){
-        //components.put("path", content);
-        pathcontent=content;
-      }
-    }
-
-    //build host
-    String ophost=dict.get("opaqueHost");
-    String d=dict.get("domain"); 
-    String ip=dict.get("ipAddress");
-    String reshost="";
-    if(ophost !=null){
-      //components.put("host", ophost.toLowerCase());
-      reshost=ophost.toLowerCase();
-    }
-    else{
-      if(d !=null){
-        //components.put("host", d.toLowerCase());
-        reshost=d.toLowerCase();
-      }
-      else{
-        if (ip!=null){
-          //components.put("host", ip.toLowerCase());
-          reshost=ip.toLowerCase();
-        }
-      }
-    }
-    components.put("host", reshost);
-    /*if(nonspecial!=null){ //nonspecial scheme, url treated as pathurl
-      //TODO check in specification again: can have host, port etc
-
-      String srel=dict.get("schemeRelativeURL"); 
-      String pabs=dict.get("pathAbsoluteURL");
-      String prel=dict.get("pathRelativeSchemelessURL");
-      if(srel!=null){
-        pabs=null; //contained in schemeRelativeURL
-      }
-      String pc=""; //includes leading slashes
-      for (String content: Arrays.asList(srel, pabs, prel)){
-        if(content !=null){
-          pc=content;
-        }
-      }
-
-      components.put("path", pc);
-      //components.put("port", "-1");
-    }
-    else{
-      components.put("path", pathcontent);
-      components.put("host", reshost);
-    }*/
-    
-
-
-    //build username and password
-    String userinfo = dict.get("userinfo");
-    int colon=-1;
-    if (userinfo != null){
-      colon=userinfo.indexOf(":");
-    }
-
-    if(colon==-1){
-      components.put("username", userinfo);
-    }
-    else {
-      components.put("username", userinfo.substring(0, colon));
-      components.put("password", userinfo.substring(colon + 1));
-    }
-
-    //get query
-    String query;
-    String qs=dict.get("URLSpecialquery");
-    String qns=dict.get("URLquery");
-
-    if(qs != null){
-      query=qs; 
-    }
-    else{
-      query=qns; 
-    }
-    components.put("query", query);
-
-
-    return components;
   }
 
 }

@@ -10,15 +10,13 @@ import java.nio.file.Paths;
 /***
 * concrete implementation of a ComponentsBuilder for the livingstandard-url grammar and the Firefox URL format
 */
-public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
+public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
 
-    ArrayList<String> InternalComponentNames=new ArrayList<String>();
-    HashMap<String, String> translation=new HashMap<>();
     String format = "firefox";
-    URLComponentsUtil util=new URLComponentsUtil();
+    UniversalURLComponentsBuilder univcomp;
 
-    public FirefoxURLComponentsBuilder(){
-        this.InternalComponentNames.add("spec");
+    public FirefoxURLComponentsBuilder(UniversalURLComponentsBuilder univcomp){
+       /* this.InternalComponentNames.add("spec");
         this.InternalComponentNames.add("specIgnoringRef");
         this.InternalComponentNames.add("scheme");
 //this.InternalComponentNames.add("hostPort");
@@ -37,7 +35,7 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         translation.put("port", "URLport");
         translation.put("userPass","userinfo" );
         translation.put("ref", "URLfragment");
-        translation.put("spec", "absoluteURLwithFragment");
+        translation.put("spec", "absoluteURLwithFragment");*/
 
     }
 
@@ -49,11 +47,8 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
     }
 
     @Override
-    /***
-    *
-    * @return components and their contents in the Firefox component format
-    */
-    public String buildRepresentation() { //TODO escape quotation marks in content
+    public String buildRepresentation() { //TODO use univcomp methods
+        //TODO escape quotation marks in content
         Map<String, String> components=buildMapping();
         String result="{";
         for(String key:components.keySet()){
@@ -77,204 +72,5 @@ public class FirefoxURLComponentsBuilder extends ComponentsBuilder {
         result+="}\n";
         return result;
     }
-
-
-    /***
-    * uses the dictionary created by DictExtractor to create a mapping of component name (in ff formatting) and component content
-    * @return a mapping of component name to component content
-    */
-    private Map<String, String> buildMapping(){
-        Map<String, String> components=new HashMap<>();
-        for(String name:translation.keySet()){
-            String content=dict.get(translation.get(name));
-            if (content!=null){
-                components.put(name, content);
-            }
-        }
-        //build spec
-        /*String url=dict.get("relativeURLwithFragment");
-        String baseurl=dict.get("absoluteURL");
-        if(url !=null && baseurl != null ){
-        components.put("spec", baseurl+url);
-        }
-        else{
-        components.put("spec", dict.get("absoluteURLwithFragment"));
-        }*/
-        String spec=components.get("spec");
-
-        //build host
-        String ophost=dict.get("opaqueHost");
-        String d=dict.get("domain");
-        String ip=dict.get("ipAddress");
-        String reshost="";
-        if (d!=null){
-        //ip is contained in domain
-            ip=null;
-            reshost=d.toLowerCase();
-        }
-        if(ophost !=null && ophost!=""){
-            reshost= ophost.toLowerCase();
-        } 
-        if(ip != null){
-            reshost=ip.toLowerCase();
-        }
-
-
-        String tmp=reshost;
-        if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: remove leading zeros and convert ipv4 pieces
-            tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
-            tmp="["+util.formatIPv6(tmp)+"]";
-        }
-        reshost=tmp;   
-        components.put("host", reshost);
-
-        //build scheme
-        String specialnf=dict.get("URLspecialSchemeNotFile");
-        String nonspecial=dict.get("URLnonSpecialScheme");
-        String file=dict.get("URLschemeFile");
-
-        for (String content: Arrays.asList(specialnf, nonspecial, file)){
-            if(content !=null){
-                components.put("scheme", content.toLowerCase());
-            }
-        }
-
-
-        //build prePath  TODO 
-        String scheme=components.get("scheme");
-        String host=components.get("host"); 
-        String userinfo=dict.get("userinfo");
-        String p=components.get("port");
-        String d2=dict.get("domain"); //used in schemeRelativeFileURL together with ip
-
-        String prePath="";
-
-        if(file!=null){
-            //file scheme
-            prePath+=components.get("scheme")+"://";
-        }
-        else{
-            prePath+=components.get("scheme")+":";
-            
-            if(host!=null && spec.toLowerCase().startsWith(scheme+"://")){
-                prePath+="//";
-            }
-            if(userinfo!=null){
-                prePath+=userinfo+"@";
-            }
-            prePath+=host;
-            if(p!=null){
-                prePath+=":"+p;
-            }
-        }
-        
-        components.put("prePath", prePath);
-
-
-        //build pathQueryRef 
-
-        String ref=components.get("ref");
-        String pqr="";
-
-        //build path
-
-        String pa=dict.get("pathAbsoluteURL");
-        String sr=dict.get("schemeRelativeURL");
-        String prsl=dict.get("pathRelativeSchemelessURL"); 
-        String srf=dict.get("schemeRelativeFileURL"); 
-        if( srf != null || sr != null ){
-            pa=null; //schemeRelativeFileURL contains pathAbsolute productions
-        }
-        String path="";
-
-        for (String content: Arrays.asList(sr, pa, prsl, srf)){
-            if(content !=null){
-                path=content;
-            }
-        }
-
-        /*if(nonspecial!=null){ //nonspecial scheme, url treated as pathurl 
-            //TODO 
-
-            String srel=dict.get("schemeRelativeURL"); 
-            String pabs=dict.get("pathAbsoluteURL");
-            String prel=dict.get("pathRelativeSchemelessURL");
-            if(srel!=null){
-                pabs=null; //contained in schemeRelativeURL
-            }
-            String pc=""; //includes leading slashes
-            for (String content: Arrays.asList(srel, pabs, prel)){
-                if(content !=null){
-                    pc=content;
-                }
-            }
-
-            //components.remove("host");
-            //components.remove("port");
-            pqr+=pc;
-        }
-        else{
-            pqr+=path;
-        }*/
-        pqr+=path;
-
-
-        //get query
-        String query="";
-        String qs=dict.get("URLSpecialquery");
-        String qns=dict.get("URLquery");
-
-        if(qs != null && qs != ""){
-            query=qs; 
-        }
-        if(qns != null && qns != ""){
-            query=qns; 
-        }
-        if(query != ""){
-            pqr+="?"+query; 
-        }
-        if(ref != null) {
-            //build hasRef
-            components.put("hasRef", "true");
-            pqr+="#"+ref;
-        } else {
-            components.put("hasRef", "false");
-            components.put("ref", "");
-        }
-        if(!pqr.startsWith("/") && !prePath.endsWith(":")){//don't add if pqr is empty
-            String addslash="/"+pqr; 
-            pqr=addslash;
-        }
-
-        components.put("pathQueryRef", pqr);
-
-        return components;
-    }
-
-    private String normalize(String pqr){ //TODO 
-
-        //pqr=pqr.replaceAll("%2e",".");
-        Path npqr=Paths.get(pqr);
-        String res=npqr.normalize().toString();
-        // add slashes that were removed during normalization
-        if(pqr.startsWith("//") && !res.startsWith("//")){
-            if (res.startsWith("/")){
-                String nres="/"+res;//TODO doesn't work
-                res=nres;
-            }
-            else {
-                String nres="//"+res;//TODO doesn't work
-                res=nres;
-            }
-
-        }
-        if(pqr.endsWith("/") && !res.endsWith("/")){
-            res+="/";
-        }
-        return res;
-
-    }
-
-
 
 }
