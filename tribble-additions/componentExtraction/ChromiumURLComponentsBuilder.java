@@ -12,25 +12,11 @@ import java.util.Map;
 public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
 
   String format = "chromium";
-   UniversalURLComponentsBuilder univcomp;
+  UniversalURLComponentsBuilder univcomp;
 
 
   public ChromiumURLComponentsBuilder(UniversalURLComponentsBuilder univcomp){
     
-    /*this.InternalComponentNames.add("input");
-    this.InternalComponentNames.add("scheme");
-    this.InternalComponentNames.add("username");
-    this.InternalComponentNames.add("password");
-    this.InternalComponentNames.add("host");
-    this.InternalComponentNames.add("port");
-    this.InternalComponentNames.add("path");
-    this.InternalComponentNames.add("query");
-    this.InternalComponentNames.add("ref");
-
-//components which need no further processing
-    translation.put("port", "URLport"); 
-    translation.put("ref", "URLfragment");
-    translation.put("input", "absoluteURLwithFragment");*/
   }
 
   /***
@@ -50,35 +36,21 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     //{"http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
     //{"http:foo.com",                        "http", "",  "",      "foo.com",    -1, "",      "",        ""}
 
-    Map<String, String> components=buildMapping(); 
     String result="{";
-    result+= "\""+fixEscaping(""+components.get("input"))+"\",";
-    result+= "\""+fixEscaping(""+components.get("scheme"))+"\",";
-    result+= "\""+fixEscaping(""+components.get("username"))+"\",";
-    result+= "\""+fixEscaping(""+components.get("password"))+"\",";
-    String tmp=components.get("host");
-    if (tmp != null){
-      if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: remove leading zeros and convert ipv4 pieces
-        tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
-        tmp="["+util.formatIPv6(tmp)+"]";
-      }
+    result+="\""+univcomp.getComponentContent("input")+"\",";
+    result+="\""+univcomp.getComponentContent("scheme")+"\",";
+    result+="\""+"\","; //username
+    result+="\""+"\","; //password
+    result+="\""+univcomp.getComponentContent("host")+"\",";
+    String p=univcomp.getComponentContent("port");
+    if(p==""){
+      p="-1";
     }
-    result+= "\""+fixEscaping(""+tmp)+"\",";
-    result+= fixEscaping(""+components.get("port"))+",";
-    String p=components.get("path");
-    if(p != null && p != ""){
-      result+= "\""+fixEscaping(""+p)+"\",";
-    }
-    else{
-      result+= "\""+fixEscaping("/")+"\","; //empty path
-    }
-
-    result+= "\""+fixEscaping(""+components.get("query"))+"\",";
-    result+= "\""+fixEscaping(""+components.get("ref"))+"\"";
-    result +="}";
-
-    String res=result.replaceAll("\"null\"", "\"\"");
-    result=res;
+    result+=p+",";
+    result+="\""+univcomp.getComponentContent("path")+"\",";
+    result+="\""+univcomp.getComponentContent("query")+"\",";
+    result+="\""+univcomp.getComponentContent("fragment")+"\"";
+    result+="}";
     return result;
 
   }

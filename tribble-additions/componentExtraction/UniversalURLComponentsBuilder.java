@@ -71,8 +71,14 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	    reshost=d.toLowerCase();
     	  }
     	  else{
-    	    if (ip!=null){ //TODO formatting
-    	      reshost=ip.toLowerCase();
+    	    if (ip!=null){
+    	      reshost=ip.toLowerCase();	
+    	      // in case of ipv6 address format the parts
+    	      if(ip.startsWith("[") && ip.endsWith("]")){
+    	      	tmp=ip.subSequence(1, ip.length()-1).toString(); 
+    	      	reshost="["+util.formatIPv6(tmp)+"]";
+    	      }	
+    	      
     	    }
     	  }
     	}
@@ -110,12 +116,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
 
     public String getComponentContents(String component){
-    	return null; 
+    	//TODO escape?
+    	return components.get(component); 
     }
 
 
     public String getSpecialComponentContent(String grammarrule){
-    	return null;
+    	return dict.get(grammarrule);
     }
 
 
