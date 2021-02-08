@@ -16,26 +16,6 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
     UniversalURLComponentsBuilder univcomp;
 
     public FirefoxURLComponentsBuilder(UniversalURLComponentsBuilder univcomp){
-       /* this.InternalComponentNames.add("spec");
-        this.InternalComponentNames.add("specIgnoringRef");
-        this.InternalComponentNames.add("scheme");
-//this.InternalComponentNames.add("hostPort");
-        this.InternalComponentNames.add("host");
-        this.InternalComponentNames.add("port");
-        this.InternalComponentNames.add("userPass");
-        this.InternalComponentNames.add("username");
-        this.InternalComponentNames.add("password");
-        this.InternalComponentNames.add("pathQueryRef");
-        this.InternalComponentNames.add("prePath");
-        this.InternalComponentNames.add("hasRef");
-        this.InternalComponentNames.add("ref");
-
-
-//components which need no further processing
-        translation.put("port", "URLport");
-        translation.put("userPass","userinfo" );
-        translation.put("ref", "URLfragment");
-        translation.put("spec", "absoluteURLwithFragment");*/
 
     }
 
@@ -47,28 +27,29 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
     }
 
     @Override
-    public String buildRepresentation() { //TODO use univcomp methods
-        //TODO escape quotation marks in content
-        Map<String, String> components=buildMapping();
+    public String buildRepresentation() { 
+
         String result="{";
-        for(String key:components.keySet()){
-            if(key != "hasRef") {
-                String content = components.get(key);
-                String tmp=content.replaceAll("\\\\", "\\\\\\\\");
-                tmp=tmp.replaceAll("\\\"", "\\\\\\\"");
-                if (key=="host"){
-                    if (tmp.startsWith("[") && tmp.endsWith("]")){ //ipv6: need to remove leading zeros and convert ipv4 pieces
-                        tmp=tmp.subSequence(1, tmp.length()-1).toString(); 
-                        tmp=util.formatIPv6(tmp);
-                    }
-                }
-                result += key + ":\"" + tmp + "\",\n";
-            }
-            else{
-                result += key + ":" + components.get(key) + ",\n";
-            }
+        result+="spec:\""+univcomp.getComponentContents("input")+"\",\n";
+        result+="scheme:\""+univcomp.getComponentContents("scheme")+"\",\n";
+        result+="host:\""+univcomp.getComponentContents("host")+"\",\n";
+        result+="port\""+univcomp.getComponentContents("port")+"\",\n";
+        result+="ref:\""+univcomp.getComponentContents("fragment")+"\",\n"; //TODO check if hasRef is necessary
+        String pqr="";
+        pqr+=univcomp.getComponentContents("path");
+        pqr+="?"+univcomp.getComponentContents("query");
+        pqr+="#"+univcomp.getComponentContents("fragment");
+
+        result+="pathQueryRef:\""+pqr+"\",\n";
+        String prp="";
+        prp+=univcomp.getComponentContents("scheme"); //TODO check :// etc
+        prp+=univcomp.getComponentContents("host");
+        String tmp=univcomp.getComponentContents("port");
+        if(tmp!=""){
+            prp+=":"+tmp;
         }
-        result=result.subSequence(0, result.length()-2).toString();
+
+        result+="prePath:\""+prp+"\",\n";
         result+="}\n";
         return result;
     }
