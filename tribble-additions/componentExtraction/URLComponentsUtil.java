@@ -65,5 +65,47 @@ public class URLComponentsUtil {
 	  return res.replaceAll("\"", "\\\\\"");
 	}
 
-	
+	public String normalizePath(String originalPath){
+		String result="";
+		String tmp=originalPath;
+		//TODO
+		// convert backslashes to forward slashes: \\=/
+		tmp=tmp.replaceAll("\\", "/");
+
+		//apply single-dot changes
+		tmp=tmp.replaceAll("/%2e/", "/./");
+		tmp=tmp.replaceAll("/%2E/", "/./");
+		tmp=tmp.replaceAll("/./", "/");
+
+		if(tmp.endsWith("/.")){
+			tmp=tmp.substring(0, tmp.length()-1);
+		}
+		if(tmp.endsWith("/%2e") || tmp.endsWith("/%2E")){
+			tmp=tmp.substring(0, tmp.length()-3);
+		}
+
+		//apply double-dot changes
+		String[] segments=tmp.split("/"); //TODO create correct segments: /foo/bar should become /foo /bar
+		String[] newsegments; //TODO initialize
+		int prev=0;
+		for(String current:segments){
+			if(current=="/.."){ //TODO include percent encoded versions
+				newsegments[prev]="";
+				prev=(prev>0) ? prev-1 : 0
+			}
+			else{
+				newsegments[prev+1]=current;
+				prev++;
+			}
+		}
+
+		// put remaining segments back together
+		for(String seg:newsegments){
+			result+=seg;
+		}
+
+
+		
+		return result;
+	}
 }

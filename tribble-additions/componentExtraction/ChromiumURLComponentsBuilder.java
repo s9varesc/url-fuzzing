@@ -43,7 +43,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     
     String frag=(univcomp.getComponentContents("fragment")!=null) ? univcomp.getComponentContents("fragment") : "";
     
-    String path=(univcomp.getComponentContents("path")!=null) ? univcomp.getComponentContents("path") : "/";
+    String path=(univcomp.getComponentContents("path")!=null) ? univcomp.getComponentContents("path") : "";
     String query=(univcomp.getComponentContents("query")!=null) ? univcomp.getComponentContents("query") : "";
     String fragment=(univcomp.getComponentContents("fragment")!=null) ? univcomp.getComponentContents("fragment") : "";
 
