@@ -17,7 +17,7 @@ public abstract class UniversalComponentsBuilder{
 	List<String> componentNames=new ArrayList<String>();
 	Map<String, String> components = new HashMap<String, String>();
 	
-	public ComponentsBuilder(){
+	public UniversalComponentsBuilder(){
 	  this.componentNames.add("");
 
 
