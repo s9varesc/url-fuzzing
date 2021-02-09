@@ -22,6 +22,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     HashMap<String, String> components=new HashMap<>();
 
     public UniversalURLComponentsBuilder(){
+    	super();
     	this.InternalComponentNames.add("scheme");
     	this.InternalComponentNames.add("host");
     	this.InternalComponentNames.add("port");
@@ -35,7 +36,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         translation.put("port", "URLport");
         translation.put("fragment", "URLfragment");
         translation.put("input", "absoluteURLwithFragment"); 
-        super();
+
 
     }
     
