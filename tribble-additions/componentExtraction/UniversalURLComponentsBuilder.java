@@ -28,13 +28,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	this.InternalComponentNames.add("path");
     	this.InternalComponentNames.add("query");
     	this.InternalComponentNames.add("fragment");
-    	//this.InternalComponentNames.add("base");  TODO revisit when introducing relative URLs to grammar
+    	
     	this.InternalComponentNames.add("input"); 
 
     	//components which need no further processing
         translation.put("port", "URLport");
         translation.put("fragment", "URLfragment");
-        translation.put("input", "absoluteURLwithFragment"); //TODO revisit when introducing relative URLs
+        translation.put("input", "absoluteURLwithFragment"); 
 
     }
     
