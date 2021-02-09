@@ -56,7 +56,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     result+=port+",";
     result+="\""+path+"\",";
     result+="\""+query+"\",";
-    result+="\""+fragment+"\"";
+    result+="\""+frag+"\"";
     result+="}";
     return result;
 

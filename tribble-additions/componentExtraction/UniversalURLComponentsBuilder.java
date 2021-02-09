@@ -50,7 +50,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	// path formatting, ...
 
     	// copy easy contents to the correct place
-    	for(String key:translation){
+    	for(String key:translation.keySet()){
     		components.put(key, dict.get(translation.get(key)));
     	}
 
