@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 public abstract class UniversalComponentsBuilder{
 
 	Map<String, String> dict = new HashMap<String, String>();
-	List<String> componentNames=new ArrayList<String>();
+	ArrayList<String> componentNames=new ArrayList<String>();
 	Map<String, String> components = new HashMap<String, String>();
 	
 	public UniversalComponentsBuilder(){
