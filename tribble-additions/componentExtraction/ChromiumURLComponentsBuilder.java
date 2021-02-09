@@ -16,7 +16,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
 
 
   public ChromiumURLComponentsBuilder(UniversalURLComponentsBuilder univcomp){
-    
+    super(univcomp);
   }
 
   /***
