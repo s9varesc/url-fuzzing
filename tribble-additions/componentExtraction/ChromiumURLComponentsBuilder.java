@@ -38,19 +38,19 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     //{"http:foo.com",                        "http", "",  "",      "foo.com",    -1, "",      "",        ""}
 
     String result="{";
-    result+="\""+univcomp.getComponentContent("input")+"\",";
-    result+="\""+univcomp.getComponentContent("scheme")+"\",";
+    result+="\""+univcomp.getComponentContents("input")+"\",";
+    result+="\""+univcomp.getComponentContents("scheme")+"\",";
     result+="\""+"\","; //username
     result+="\""+"\","; //password
-    result+="\""+univcomp.getComponentContent("host")+"\",";
-    String p=univcomp.getComponentContent("port");
+    result+="\""+univcomp.getComponentContents("host")+"\",";
+    String p=univcomp.getComponentContents("port");
     if(p==""){
       p="-1";
     }
     result+=p+",";
-    result+="\""+univcomp.getComponentContent("path")+"\",";
-    result+="\""+univcomp.getComponentContent("query")+"\",";
-    result+="\""+univcomp.getComponentContent("fragment")+"\"";
+    result+="\""+univcomp.getComponentContents("path")+"\",";
+    result+="\""+univcomp.getComponentContents("query")+"\",";
+    result+="\""+univcomp.getComponentContents("fragment")+"\"";
     result+="}";
     return result;
 
