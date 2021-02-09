@@ -65,27 +65,5 @@ public class URLComponentsUtil {
 	  return res.replaceAll("\"", "\\\\\"");
 	}
 
-	private String normalize(String pqr){ //TODO 
-
-        //pqr=pqr.replaceAll("%2e",".");
-        Path npqr=Paths.get(pqr);
-        String res=npqr.normalize().toString();
-        // add slashes that were removed during normalization
-        if(pqr.startsWith("//") && !res.startsWith("//")){
-            if (res.startsWith("/")){
-                String nres="/"+res;//TODO doesn't work
-                res=nres;
-            }
-            else {
-                String nres="//"+res;//TODO doesn't work
-                res=nres;
-            }
-
-        }
-        if(pqr.endsWith("/") && !res.endsWith("/")){
-            res+="/";
-        }
-        return res;
-
-    }
+	
 }

@@ -65,6 +65,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	String d=dict.get("domain"); 
     	String ip=dict.get("ipAddress");
     	String reshost="";
+    	String tmp="";
     	if(ophost !=null){
     	  reshost=ophost.toLowerCase();
     	}
