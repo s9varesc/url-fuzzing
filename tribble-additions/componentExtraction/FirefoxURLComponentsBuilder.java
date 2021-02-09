@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
 
     String format = "firefox";
-    UniversalURLComponentsBuilder univcomp;
+    
 
     public FirefoxURLComponentsBuilder(UniversalURLComponentsBuilder univcomp){
         super(univcomp);
