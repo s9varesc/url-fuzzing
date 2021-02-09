@@ -35,6 +35,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         translation.put("port", "URLport");
         translation.put("fragment", "URLfragment");
         translation.put("input", "absoluteURLwithFragment"); 
+        super();
 
     }
     
