@@ -6,10 +6,10 @@ import java.util.*;
 * abstract class for creating URL component representations
 */
 public abstract class URLComponentsBuilder extends ComponentsBuilder{
-  UniversalURLComponentsBuilder universalcomponentrep;
+  UniversalURLComponentsBuilder univcomp;
 
   public URLComponentsBuilder(UniversalURLComponentsBuilder univcomp){
-    this.universalcomponentrep=univcomp;
+    this.univcomp=univcomp;
   }
   
 }
