@@ -17,7 +17,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
 
     public FirefoxURLComponentsBuilder(UniversalURLComponentsBuilder univcomp){
         super(univcomp);
-        
+
     }
 
     /***
@@ -33,22 +33,25 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         String result="{";
         result+="spec:\""+univcomp.getComponentContents("input")+"\",\n";
         result+="scheme:\""+univcomp.getComponentContents("scheme")+"\",\n";
-        result+="host:\""+univcomp.getComponentContents("host")+"\",\n";
-        result+="port\""+univcomp.getComponentContents("port")+"\",\n";
-        result+="ref:\""+univcomp.getComponentContents("fragment")+"\",\n"; //TODO check if hasRef is necessary
+        String host=(univcomp.getComponentContents("host")!=null) ? univcomp.getComponentContents("host") : "";
+        result+="host:\""+host+"\",\n";
+        String port=(univcomp.getComponentContents("port")!=null) ? univcomp.getComponentContents("port") : "";
+        result+="port\""+port+"\",\n";
+        String ref=(univcomp.getComponentContents("fragment")!=null) ? univcomp.getComponentContents("fragment") : "";
+        result+="ref:\""+ref+"\",\n"; //TODO check if hasRef is necessary
         String pqr="";
-        pqr+=univcomp.getComponentContents("path");
-        pqr+="?"+univcomp.getComponentContents("query");
-        pqr+="#"+univcomp.getComponentContents("fragment");
+        pqr+=(univcomp.getComponentContents("path")!=null) ? univcomp.getComponentContents("path") : "/";
+        String query=(univcomp.getComponentContents("query")!=null) ? "?"+univcomp.getComponentContents("query") : "";
+        pqr+=query;
+        String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+univcomp.getComponentContents("fragment") : "";
+        pqr+=frag;
 
         result+="pathQueryRef:\""+pqr+"\",\n";
         String prp="";
-        prp+=univcomp.getComponentContents("scheme"); //TODO check :// etc
-        prp+=univcomp.getComponentContents("host");
-        String tmp=univcomp.getComponentContents("port");
-        if(tmp!=""){
-            prp+=":"+tmp;
-        }
+        prp+=univcomp.getComponentContents("scheme")+"://"; //TODO check :// etc
+        prp+=host;
+        prp+=(port!="") ? ":"+port : "";
+        
 
         result+="prePath:\""+prp+"\",\n";
         result+="}\n";

@@ -49,6 +49,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	// populate this.components from raw dict and apply necessary transformations i.e. escaping, ipv6 formatting, 
     	// path formatting, ...
 
+    	// copy easy contents to the correct place
+    	for(String key:translation){
+    		components.put(key, dict.get(translation.get(key)));
+    	}
+
     	// prepare scheme
     	String specialnf=dict.get("URLspecialSchemeNotFile");
     	String nonspecial=dict.get("URLnonSpecialScheme");
