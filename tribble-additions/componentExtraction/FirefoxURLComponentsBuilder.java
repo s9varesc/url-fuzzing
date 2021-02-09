@@ -17,6 +17,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
 
     public FirefoxURLComponentsBuilder(UniversalURLComponentsBuilder univcomp){
         super(univcomp);
+        
     }
 
     /***

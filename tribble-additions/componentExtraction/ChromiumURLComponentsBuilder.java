@@ -12,11 +12,12 @@ import java.util.Map;
 public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
 
   String format = "chromium";
-  
+  UniversalURLComponentsBuilder univcomp;
 
 
   public ChromiumURLComponentsBuilder(UniversalURLComponentsBuilder univcomp){
     super(univcomp);
+    this.univcomp=univcomp;
   }
 
   /***
