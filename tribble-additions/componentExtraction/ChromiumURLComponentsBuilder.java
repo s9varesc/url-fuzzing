@@ -45,7 +45,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     
     String path=(univcomp.getComponentContents("path")!=null) ? univcomp.getComponentContents("path") : "/";
     String query=(univcomp.getComponentContents("query")!=null) ? univcomp.getComponentContents("query") : "";
-    String frag=(univcomp.getComponentContents("fragment")!=null) ? univcomp.getComponentContents("fragment") : "";
+    String fragment=(univcomp.getComponentContents("fragment")!=null) ? univcomp.getComponentContents("fragment") : "";
 
     String result="{";
     result+="\""+univcomp.getComponentContents("input")+"\",";
@@ -56,7 +56,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     result+=port+",";
     result+="\""+path+"\",";
     result+="\""+query+"\",";
-    result+="\""+frag+"\"";
+    result+="\""+fragment+"\"";
     result+="}";
     return result;
 
