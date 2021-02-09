@@ -28,7 +28,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
     }
 
     @Override
-    public String buildRepresentation() { 
+    public String buildRepresentation() { //TODO escape any chars that could cause problems when using this representation
 
         String result="{";
         result+="spec:\""+univcomp.getComponentContents("input")+"\",\n";
@@ -36,11 +36,12 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         String host=(univcomp.getComponentContents("host")!=null) ? univcomp.getComponentContents("host") : "";
         result+="host:\""+host+"\",\n";
         String port=(univcomp.getComponentContents("port")!=null) ? univcomp.getComponentContents("port") : "";
-        result+="port\""+port+"\",\n";
+        result+="port:\""+port+"\",\n";
         String ref=(univcomp.getComponentContents("fragment")!=null) ? univcomp.getComponentContents("fragment") : "";
         result+="ref:\""+ref+"\",\n"; //TODO check if hasRef is necessary
+        
         String pqr="";
-        pqr+=(univcomp.getComponentContents("path")!=null) ? univcomp.getComponentContents("path") : "/";
+        pqr+=(univcomp.getComponentContents("path")!=null ) ? univcomp.getComponentContents("path") : "";
         String query=(univcomp.getComponentContents("query")!=null) ? "?"+univcomp.getComponentContents("query") : "";
         pqr+=query;
         String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+univcomp.getComponentContents("fragment") : "";
@@ -48,7 +49,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
 
         result+="pathQueryRef:\""+pqr+"\",\n";
         String prp="";
-        prp+=univcomp.getComponentContents("scheme")+"://"; //TODO check :// etc
+        prp+=univcomp.getComponentContents("scheme")+"://"; //TODO this is not always correct, maybe check with whole spec
         prp+=host;
         prp+=(port!="") ? ":"+port : "";
         
