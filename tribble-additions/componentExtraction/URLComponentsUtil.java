@@ -97,7 +97,7 @@ public class URLComponentsUtil {
 		for(String current:segments){
 			if(Arrays.asList(ddots).contains(current)){ 
 				// current segment is double-dot -> remove previous segment
-				newsegments.get(prev)="";
+				newsegments.set(prev,"");
 				prev=(prev>0) ? prev-1 : 0;
 			}
 			else{
