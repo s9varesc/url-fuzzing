@@ -28,28 +28,27 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
     }
 
     @Override
-    public String buildRepresentation() { //TODO escape any chars that could cause problems when using this representation
-
+    public String buildRepresentation() { 
         String result="{";
-        result+="spec:\""+univcomp.getComponentContents("input")+"\",\n";
-        result+="scheme:\""+univcomp.getComponentContents("scheme")+"\",\n";
-        String host=(univcomp.getComponentContents("host")!=null) ? univcomp.getComponentContents("host") : "";
+        result+="spec:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
+        result+="scheme:\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",\n";
+        String host=(univcomp.getComponentContents("host")!=null) ? escapeContent(univcomp.getComponentContents("host")) : "";
         result+="host:\""+host+"\",\n";
-        String port=(univcomp.getComponentContents("port")!=null) ? univcomp.getComponentContents("port") : "";
+        String port=(univcomp.getComponentContents("port")!=null) ? escapeContent(univcomp.getComponentContents("port")) : "";
         result+="port:\""+port+"\",\n";
-        String ref=(univcomp.getComponentContents("fragment")!=null) ? univcomp.getComponentContents("fragment") : "";
+        String ref=(univcomp.getComponentContents("fragment")!=null) ? escapeContent(univcomp.getComponentContents("fragment")) : "";
         result+="ref:\""+ref+"\",\n"; //TODO check if hasRef is necessary
         
         String pqr="";
-        pqr+=(univcomp.getComponentContents("path")!=null ) ? univcomp.getComponentContents("path") : "";
-        String query=(univcomp.getComponentContents("query")!=null) ? "?"+univcomp.getComponentContents("query") : "";
+        pqr+=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "";
+        String query=(univcomp.getComponentContents("query")!=null) ? "?"+escapeContent(univcomp.getComponentContents("query")) : "";
         pqr+=query;
-        String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+univcomp.getComponentContents("fragment") : "";
+        String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+escapeContent(univcomp.getComponentContents("fragment")) : "";
         pqr+=frag;
 
         result+="pathQueryRef:\""+pqr+"\",\n";
         String prp="";
-        prp+=univcomp.getComponentContents("scheme")+"://"; //TODO this is not always correct, maybe check with whole spec
+        prp+=escapeContent(univcomp.getComponentContents("scheme"))+"://"; //TODO this is not always correct, maybe check with whole spec
         prp+=host;
         prp+=(port!="") ? ":"+port : "";
         
@@ -57,6 +56,19 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="prePath:\""+prp+"\",\n";
         result+="}\n";
         return result;
+    }
+
+    /**
+    * escapes all chars that could cause problems when using this representation, 
+    * @return the string with all "dangerous" chars escaped
+    */
+    private String escapeContent(String input){
+        String result=input;
+        result=result.replaceAll("\"", "\\\\\"");
+        if(result.endsWith("\\")){
+            result+="\\";
+        }
+        return result; 
     }
 
 }

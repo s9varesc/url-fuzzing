@@ -45,8 +45,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * creates a dictonary of basic component names and component contents which can be accessed by
     * more specialized component builders
     */
-    public void prepareComponents(){ //TODO
-    	// populate this.components from raw dict and apply necessary transformations i.e. escaping, ipv6 formatting, 
+    public void prepareComponents(){ 
+    	// populate this.components from raw dict and apply necessary transformations i.e. ipv6 formatting, 
     	// path formatting, ...
 
     	// copy easy contents to the correct place
@@ -102,7 +102,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	}
     	for (String content: Arrays.asList(panW, pa, prsl)){
     	  if(content !=null){
-    	    components.put("path", content);  //TODO formatting
+    	    components.put("path", util.normalizePath(content));  
     	  }
     	}
 
@@ -124,7 +124,6 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
 
     public String getComponentContents(String component){
-    	//TODO escape?
     	return components.get(component); 
     }
 
