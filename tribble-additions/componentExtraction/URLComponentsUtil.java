@@ -1,5 +1,8 @@
 package saarland.cispa.se.tribble.execution.componentExtraction;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class URLComponentsUtil {
 
 	/***
@@ -112,7 +115,7 @@ public class URLComponentsUtil {
 		
 		return result;
 	}
-	
+
 	/***
 	* splits the given input into segments using / (forward slash) as separator
 	* while keeping all separators (concatenating all segments equals the input)
