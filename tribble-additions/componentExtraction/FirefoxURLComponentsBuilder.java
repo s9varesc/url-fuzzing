@@ -59,7 +59,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
     }
 
     /**
-    * escapes all chars that could cause problems when using this representation, 
+    * escapes all chars that could cause problems when using this representation 
     * @return the string with all "dangerous" chars escaped
     */
     private String escapeContent(String input){
