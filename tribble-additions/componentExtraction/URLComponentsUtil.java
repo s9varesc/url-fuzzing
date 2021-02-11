@@ -1,5 +1,6 @@
 package saarland.cispa.se.tribble.execution.componentExtraction;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
