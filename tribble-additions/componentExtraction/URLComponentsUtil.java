@@ -85,16 +85,20 @@ public class URLComponentsUtil {
 		}
 
 		//apply double-dot changes
-		String[] segments=tmp.split("/"); //TODO create correct segments: /foo/bar should become /foo /bar
-		String[] newsegments; //TODO initialize
+		List<String> segments=splitPath(tmp); 
+		List<String> newsegments=new ArrayList<String>(); 
+		newsegments.add(""); 
+		String[] ddots=new String[] {"/..", "/%2e%2e", "/%2E%2E", "/.%2e", "/.%2E", "/%2e.", "/%2E"};
 		int prev=0;
 		for(String current:segments){
-			if(current=="/.."){ //TODO include percent encoded versions
-				newsegments[prev]="";
-				prev=(prev>0) ? prev-1 : 0
+			if(Arrays.asList(ddots).contains(current)){ 
+				// current segment is double-dot -> remove previous segment
+				newsegments.get(prev)="";
+				prev=(prev>0) ? prev-1 : 0;
 			}
 			else{
-				newsegments[prev+1]=current;
+				// current segment is not double-dot -> add current segment
+				newsegments.set(prev+1, current);
 				prev++;
 			}
 		}
@@ -106,6 +110,26 @@ public class URLComponentsUtil {
 
 
 		
+		return result;
+	}
+	
+	/***
+	* splits the given input into segments using / (forward slash) as separator
+	* while keeping all separators (concatenating all segments equals the input)
+	* @return a list of strings containing the segments
+	*/
+	private List<String> splitPath(String input){
+		String slash="/";
+		ArrayList<String>result=new ArrayList<String>();
+		
+
+		int index=0;
+		while(index<input.length()){
+			int next=input.indexOf(slash, index+1); //exclude leading / from search
+			result.add(input.substring(index, next-1)); //exclude trailing / from segment
+			index=next;
+		}
+
 		return result;
 	}
 }
