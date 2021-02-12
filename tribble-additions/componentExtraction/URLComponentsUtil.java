@@ -106,7 +106,7 @@ public class URLComponentsUtil {
 				}
 				else{
 					// current segment is not double-dot -> add current segment
-					newsegments.set(prev+1, current); //TODO 
+					newsegments.set(prev+1, current); 
 					prev++;
 				}
 			}
@@ -136,7 +136,7 @@ public class URLComponentsUtil {
 		int index=0;
 		while(index<input.length() && index >= 0){
 			int next=input.indexOf(slash, index+1); //exclude leading / from search
-			result.add(input.substring(index, (next>=1 ? next-1 : input.length()-1))); //exclude trailing / from segment
+			result.add(input.substring(index, (next>=0 ? next : input.length()-1))); //exclude trailing / from segment
 			index=next;
 		}
 
