@@ -91,7 +91,10 @@ public class URLComponentsUtil {
 			//apply double-dot changes
 			List<String> segments=splitPath(tmp); 
 			List<String> newsegments=new ArrayList<String>(); 
-			newsegments.add(""); 
+			for(String s: segments){ //initialize newsegments
+				newsegments.add("");
+			}
+			 
 			String[] ddots=new String[] {"/..", "/%2e%2e", "/%2E%2E", "/.%2e", "/.%2E", "/%2e.", "/%2E"};
 			int prev=0;
 			for(String current:segments){
