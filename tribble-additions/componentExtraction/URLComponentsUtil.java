@@ -79,13 +79,16 @@ public class URLComponentsUtil {
 			//apply single-dot changes
 			tmp=tmp.replaceAll("/%2e/", "/./");
 			tmp=tmp.replaceAll("/%2E/", "/./");
-			tmp=tmp.replaceAll("/./", "/");
+			while(tmp.contains("/./")){
+				tmp=tmp.replaceAll("/./", "/");
+			}
+			
 
 			if(tmp.endsWith("/.")){
-				tmp=tmp.substring(0, tmp.length()-2);
+				tmp=tmp.substring(0, tmp.length()-1);
 			}
 			if(tmp.endsWith("/%2e") || tmp.endsWith("/%2E")){
-				tmp=tmp.substring(0, tmp.length()-4);
+				tmp=tmp.substring(0, tmp.length()-3);
 			}
 
 			//apply double-dot changes
