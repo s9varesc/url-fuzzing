@@ -70,51 +70,53 @@ public class URLComponentsUtil {
 	}
 
 	public String normalizePath(String originalPath){
-		String result="";
-		String tmp=originalPath;
-		//TODO
-		// convert backslashes to forward slashes: \\=/
-		tmp=tmp.replaceAll("\\", "/");
+		if (originalPath!=null){
+			String result="";
+			String tmp=originalPath;
+			// convert backslashes to forward slashes: \\=/
+			tmp=tmp.replaceAll("\\", "/");
 
-		//apply single-dot changes
-		tmp=tmp.replaceAll("/%2e/", "/./");
-		tmp=tmp.replaceAll("/%2E/", "/./");
-		tmp=tmp.replaceAll("/./", "/");
+			//apply single-dot changes
+			tmp=tmp.replaceAll("/%2e/", "/./");
+			tmp=tmp.replaceAll("/%2E/", "/./");
+			tmp=tmp.replaceAll("/./", "/");
 
-		if(tmp.endsWith("/.")){
-			tmp=tmp.substring(0, tmp.length()-1);
-		}
-		if(tmp.endsWith("/%2e") || tmp.endsWith("/%2E")){
-			tmp=tmp.substring(0, tmp.length()-3);
-		}
-
-		//apply double-dot changes
-		List<String> segments=splitPath(tmp); 
-		List<String> newsegments=new ArrayList<String>(); 
-		newsegments.add(""); 
-		String[] ddots=new String[] {"/..", "/%2e%2e", "/%2E%2E", "/.%2e", "/.%2E", "/%2e.", "/%2E"};
-		int prev=0;
-		for(String current:segments){
-			if(Arrays.asList(ddots).contains(current)){ 
-				// current segment is double-dot -> remove previous segment
-				newsegments.set(prev,"");
-				prev=(prev>0) ? prev-1 : 0;
+			if(tmp.endsWith("/.")){
+				tmp=tmp.substring(0, tmp.length()-1);
 			}
-			else{
-				// current segment is not double-dot -> add current segment
-				newsegments.set(prev+1, current);
-				prev++;
+			if(tmp.endsWith("/%2e") || tmp.endsWith("/%2E")){
+				tmp=tmp.substring(0, tmp.length()-3);
 			}
+
+			//apply double-dot changes
+			List<String> segments=splitPath(tmp); 
+			List<String> newsegments=new ArrayList<String>(); 
+			newsegments.add(""); 
+			String[] ddots=new String[] {"/..", "/%2e%2e", "/%2E%2E", "/.%2e", "/.%2E", "/%2e.", "/%2E"};
+			int prev=0;
+			for(String current:segments){
+				if(Arrays.asList(ddots).contains(current)){ 
+					// current segment is double-dot -> remove previous segment
+					newsegments.set(prev,"");
+					prev=(prev>0) ? prev-1 : 0;
+				}
+				else{
+					// current segment is not double-dot -> add current segment
+					newsegments.set(prev+1, current);
+					prev++;
+				}
+			}
+
+			// put remaining segments back together
+			for(String seg:newsegments){
+				result+=seg;
+			}
+
+
+			
+			return result;
 		}
-
-		// put remaining segments back together
-		for(String seg:newsegments){
-			result+=seg;
-		}
-
-
-		
-		return result;
+		return originalPath;
 	}
 
 	/***
