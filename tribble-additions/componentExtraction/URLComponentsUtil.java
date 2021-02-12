@@ -82,10 +82,10 @@ public class URLComponentsUtil {
 			tmp=tmp.replaceAll("/./", "/");
 
 			if(tmp.endsWith("/.")){
-				tmp=tmp.substring(0, tmp.length()-1);
+				tmp=tmp.substring(0, tmp.length()-2);
 			}
 			if(tmp.endsWith("/%2e") || tmp.endsWith("/%2E")){
-				tmp=tmp.substring(0, tmp.length()-3);
+				tmp=tmp.substring(0, tmp.length()-4);
 			}
 
 			//apply double-dot changes
