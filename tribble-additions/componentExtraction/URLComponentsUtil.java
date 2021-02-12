@@ -140,6 +140,7 @@ public class URLComponentsUtil {
 			index=next;
 		}
 
+		System.out.println(result);
 		return result;
 	}
 }
