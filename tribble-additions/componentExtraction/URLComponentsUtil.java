@@ -74,7 +74,7 @@ public class URLComponentsUtil {
 			String result="";
 			String tmp=originalPath;
 			// convert backslashes to forward slashes: \\=/
-			tmp=tmp.replaceAll("\\", "/");
+			tmp=tmp.replaceAll("\\\\", "/"); //TODO check if this does the right thing
 
 			//apply single-dot changes
 			tmp=tmp.replaceAll("/%2e/", "/./");
