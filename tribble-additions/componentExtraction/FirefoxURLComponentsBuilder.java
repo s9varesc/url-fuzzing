@@ -48,7 +48,14 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
 
         result+="pathQueryRef:\""+pqr+"\",\n";
         String prp="";
-        prp+=escapeContent(univcomp.getComponentContents("scheme"))+"://"; //TODO this is not always correct, maybe check with whole spec
+        prp+=escapeContent(univcomp.getComponentContents("scheme"))+"://";
+        String input=escapeContent(univcomp.getComponentContents("input"));
+        if(input.startsWith(prp+"://")){
+            prp+="://";
+        }
+        else{
+            prp+=":"; //TODO check if :/ is also possible
+        }
         prp+=host;
         prp+=(port!="") ? ":"+port : "";
         
