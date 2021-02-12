@@ -139,8 +139,6 @@ public class URLComponentsUtil {
 			result.add(input.substring(index, (next!=-1 ? next : input.length()))); //exclude trailing / from segment
 			index=next;
 		}
-
-		System.out.println(result);
 		return result;
 	}
 }
