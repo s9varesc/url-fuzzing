@@ -63,12 +63,15 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
     * @return the string with all "dangerous" chars escaped
     */
     private String escapeContent(String input){
-        String result=input;
-        result=result.replaceAll("\"", "\\\\\"");
-        if(result.endsWith("\\")){
-            result+="\\";
+        if(input != null){
+            String result=input;
+            result=result.replaceAll("\"", "\\\\\"");
+            if(result.endsWith("\\")){
+                result+="\\";
+            }
+            return result; 
         }
-        return result; 
+        return input;
     }
 
 }
