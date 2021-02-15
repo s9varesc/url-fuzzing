@@ -33,11 +33,13 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="spec:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
         result+="scheme:\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",\n";
         String host=(univcomp.getComponentContents("host")!=null) ? escapeContent(univcomp.getComponentContents("host")) : "";
+        String fullhost=host; //needed for prePath
         if(univcomp.getSpecialComponentContent("ipAddress")!=null){ 
             host=host.replaceAll("\\[", "");
             host=host.replaceAll("\\]", "");
         }
         result+="host:\""+host+"\",\n";
+
         String port=(univcomp.getComponentContents("port")!=null) ? escapeContent(univcomp.getComponentContents("port")) : "";
         result+="port:\""+port+"\",\n";
         String ref=(univcomp.getComponentContents("fragment")!=null) ? escapeContent(univcomp.getComponentContents("fragment")) : "";
@@ -60,7 +62,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         else{
             prp+=":"; //TODO check if :/ is also possible
         }
-        prp+=host;
+        prp+=fullhost;
         prp+=(port!="") ? ":"+port : "";
         
 
