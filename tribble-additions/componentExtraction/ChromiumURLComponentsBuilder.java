@@ -71,9 +71,6 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
         String result=input;
         result=result.replaceAll("\\\\", "\\\\\\\\");
         result=result.replaceAll("\"", "\\\\\"");
-        if(result.endsWith("\\")){
-            result+="\\";
-        }
         return result; 
     }
     return input;
