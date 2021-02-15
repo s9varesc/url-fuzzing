@@ -33,7 +33,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	this.InternalComponentNames.add("input"); 
 
     	//components which need no further processing
-        translation.put("port", "URLport");
+        translation.put("port", "URLport"); //TODO may need to check for leading zeros
         translation.put("fragment", "URLfragment");
         translation.put("input", "absoluteURLwithFragment"); 
 
