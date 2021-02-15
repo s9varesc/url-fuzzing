@@ -69,6 +69,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
   private String escapeContent(String input){
     if(input != null){
         String result=input;
+        result=result.replaceAll("\\", "\\\\\\");
         result=result.replaceAll("\"", "\\\\\"");
         if(result.endsWith("\\")){
             result+="\\";
