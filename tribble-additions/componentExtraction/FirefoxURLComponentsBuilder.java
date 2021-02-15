@@ -34,8 +34,8 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="scheme:\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",\n";
         String host=(univcomp.getComponentContents("host")!=null) ? escapeContent(univcomp.getComponentContents("host")) : "";
         if(univcomp.getSpecialComponentContent("ipAddress")!=null){ 
-            host=host.replaceAll("\[", "");
-            host=host.replaceAll("\]", "");
+            host=host.replaceAll("\\[", "");
+            host=host.replaceAll("\\]", "");
         }
         result+="host:\""+host+"\",\n";
         String port=(univcomp.getComponentContents("port")!=null) ? escapeContent(univcomp.getComponentContents("port")) : "";
