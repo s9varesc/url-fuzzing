@@ -28,7 +28,13 @@ final class GenerateTask extends Command("generate", "Generate sample inputs")
 
     for ((tree, i) <- trees.zipWithIndex) {
       reporter.processTree(i + 1, tree)
+      logger.debug(tree.depth)
+
+
       val input = tree.leaves.mkString
+
+      logger.debug(input)
+
       val outdir=Files.createDirectories(Paths.get(outputDir+"/plain"))
       val path = Files.write(Files.createTempFile(outdir, f"file${i + 1}%06d_${tree.size()}%d_${tree.depth()}%d_", suffix), input.getBytes(StandardCharsets.UTF_8))
       logger.debug(s"Generated $path")
