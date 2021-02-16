@@ -37,7 +37,7 @@ for chunk in testchunks:
 	for url in chunk:
 		urldata+="\n" + url + ","
 		inp=url[7:]
-		cutindex=url.find("\",\n")
+		cutindex=inp.find("\",\n")
 		allinputs+=inp[:cutindex]+"\n"
 	urldata=urldata[:-1]
 	urldata+="];"
