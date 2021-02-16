@@ -43,7 +43,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         String port=(univcomp.getComponentContents("port")!=null) ? escapeContent(univcomp.getComponentContents("port")) : "";
         result+="port:\""+port+"\",\n";
         String ref=(univcomp.getComponentContents("fragment")!=null) ? escapeContent(univcomp.getComponentContents("fragment")) : "";
-        result+="ref:\""+ref+"\",\n"; //TODO check if hasRef is necessary
+        result+="ref:\""+ref+"\",\n"; 
         
         String pqr="";
         pqr+=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "";

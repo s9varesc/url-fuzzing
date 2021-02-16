@@ -58,6 +58,14 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     result+="\""+query+"\",";
     result+="\""+fragment+"\"";
     result+="}";
+
+
+    //finding empty result, remove after solving
+    if(univcomp.getComponentContents("input")==""){
+      System.out.println(univcomp.getSpecialCommponentContent("absoluteURL"));
+
+    }
+    //
     return result;
 
   }

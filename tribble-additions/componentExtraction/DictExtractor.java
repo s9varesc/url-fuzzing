@@ -26,17 +26,8 @@ public class DictExtractor {
   * @return a list containing the formats and component representations e.g [["firefox", "{spec:...}"], ["chromium", "{input:..."], ["plain", "http://..."]]
   */
   public List<List<String>> extract(DTree root) {
-    // determine which components to extract
-    /*List<String> componentNames = new ArrayList<String>(); 
-    for (ComponentsBuilder cb : componentBuilders){
-      for(String name: cb.getComponentNames()){
-        if (!componentNames.contains(name)){
-          componentNames.add(name);
-        }
-      }
-    }*/ //unused
-
-    //extract specified components
+    
+    //extract components
     List<DTree> workList = new ArrayList<>();
     List<DTree> visitedList=new ArrayList<>();
     workList.add(root);
@@ -53,13 +44,11 @@ public class DictExtractor {
       if (decl instanceof Reference) {
         String name = ((Reference) decl).name();
         String content=current.leaves().mkString();
-        //for (ComponentsBuilder cb : componentBuilders){
         univcompBuilder.addComponent(name, content);
-        //}
-
       }
     }
 
+    //TODO somehow there is always 1 empty result created even though the grammar does not allow this
     // pre-format component contents
     univcompBuilder.prepareComponents();
     //use specified component builders to format components
