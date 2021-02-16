@@ -31,7 +31,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
   *
   * @return components and their contents in the Chromium component format
   */
-  public String buildRepresentation(){ //TODO use univcomp methods
+  public String buildRepresentation(){ 
     //build actual representation
     //{input, scheme, username, password, host, port, path, query, ref}
     //{"http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
@@ -63,7 +63,8 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     //finding empty result, remove after solving
     if(result.contains("null")){
       System.out.println(result);
-      System.out.println(univcomp.getSpecialComponentContent("absoluteURL"));
+      System.out.println(univcomp.getSpecialComponentContent("url"));
+      System.out.println(univcomp.getSpecialComponentContent("absoluteURLwithFragment"));
 
     }
     //
