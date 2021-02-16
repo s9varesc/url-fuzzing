@@ -28,7 +28,7 @@ final class GenerateTask extends Command("generate", "Generate sample inputs")
 
     for ((tree, i) <- trees.zipWithIndex) {
       reporter.processTree(i + 1, tree)
-      logger.debug(tree.depth)
+      logger.debug(s""+tree.depth)
 
 
       val input = tree.leaves.mkString
