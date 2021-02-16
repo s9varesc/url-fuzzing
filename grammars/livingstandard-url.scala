@@ -5,7 +5,7 @@ import saarland.cispa.se.tribble.dsl._
 //(whenever the living standard documentation was not sufficient to formulate a grammar)
 
 Grammar(
-  'url := "" ~ 'absoluteURLwithFragment,
+  'url := 'absoluteURLwithFragment,
   'absoluteURLwithFragment :=('absoluteURL ~ ("#" ~ 'URLfragment).?).?,
   'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?)  
     | ('URLnonSpecialScheme ~ ":" ~ ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL ) ~ ("?" ~ 'URLquery ).?)//'relativeURL ) // relativeURL includes driveletter

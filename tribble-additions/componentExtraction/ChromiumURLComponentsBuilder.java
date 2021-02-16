@@ -61,7 +61,6 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
 
 
     //finding empty result, remove after solving
-    System.out.println(univcomp.getSpecialComponentContent("url"));
     if(result.contains("null")){
       System.out.println(result);
 
