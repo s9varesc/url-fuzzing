@@ -144,13 +144,12 @@ for parser in parsers:
 
 #url ranking
 for url in urls:
-	#urlranking[url]=[]
+	if url not in urlranking:
+		urlranking[url]=[]
 	for parser in parsers:
 		if url in parsers[parser]:
-			#print(url)
-			if url not in urlranking:
-				urlranking[url]=[]
 			urlranking[url]+=[parser]
+
 
 
 
