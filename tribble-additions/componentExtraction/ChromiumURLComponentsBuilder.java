@@ -59,15 +59,6 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     result+="\""+fragment+"\"";
     result+="}";
 
-
-    //finding empty result, remove after solving
-    if(result.contains("null")){
-      System.out.println(result);
-
-      System.out.println(univcomp.getSpecialComponentContent("absoluteURLwithFragment"));
-
-    }
-    //
     return result;
 
   }
