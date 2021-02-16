@@ -47,9 +47,6 @@ public abstract class UniversalComponentsBuilder{
 		if(components.containsKey(component)){
 			return components.get(component);
 		}
-		if(component=="scheme"){
-			System.out.println(components);
-		}
 		return null;
 
 	}

@@ -62,6 +62,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
 
     //finding empty result, remove after solving
     if(univcomp.getComponentContents("input")==""){
+      System.out.println(result);
       System.out.println(univcomp.getSpecialComponentContent("absoluteURL"));
 
     }
