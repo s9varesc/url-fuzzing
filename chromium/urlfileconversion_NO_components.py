@@ -36,7 +36,7 @@ f=open("url_parsing_unittest.cc","w")
 f.write(prefix+urldata[:-2]+"};\n"+suffix)
 f.close()
 
-allinputs=allinputs[:-2]
+allinputs=allinputs[:-1]
 f=open("allinputURLs", "w")
 f.write(allinputs)
 f.close()

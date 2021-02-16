@@ -29,7 +29,7 @@ for filename in os.listdir(dir):
 
 
 
-
+allinputs=""
 #create test files with ~n test cases per file
 n=1
 testnames=[]
@@ -39,7 +39,8 @@ for chunk in testchunks:
 	testid+=1
 	urldata="var gTests = ["
 	for url in chunk:
-		urldata+="\n {spec: \"" + url + "\"},"  
+		urldata+="\n {spec: \"" + url + "\"},"  #TODO: check for escaping
+		allinputs+=url+"\n"
 	urldata=urldata[:-1]
 	urldata+="];"
 	testname="test_URIs_"+str(testid)+".js"
@@ -56,6 +57,12 @@ for test in testnames:
 f=open("URLTestFiles/xpcshell.ini","w")
 f.write(xpcshellinicontent)
 #print(xpcshellinicontent[:300])
+f.close()
+
+
+allinputs=allinputs[:-1]
+f=open("allinputURLs", "w")
+f.write(allinputs)
 f.close()
 
 	
