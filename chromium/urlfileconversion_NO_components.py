@@ -19,14 +19,16 @@ suffix=f.read()
 i=2
 
 urldata="\nstatic URLParseCase parse_cases[]={"
-
+allinputs=""
 for filename in os.listdir(dir):
 	i+=1
 	f=open(dir+"/"+filename, "r")
-	urlcontents=f.read()
+	urlcontents=f.read()  				
+	allinputs+=urlcontents+"\n"
+
+	urlcontents=urlcontents.replace("\\\\", "\\\\\\")	#TODO: check this again
+	urlcontents=urlcontents.replace("\\\"", "\\\\\"")
 	url="{\""+ urlcontents +"\"}"
-	url.replace("\\\\", "\\\\\\")
-	url.replace("\\\"", "\\\\\"")
 	
 	urldata += url+",\n"
 
@@ -34,6 +36,10 @@ f=open("url_parsing_unittest.cc","w")
 f.write(prefix+urldata[:-2]+"};\n"+suffix)
 f.close()
 
+allinputs=allinputs[:-2]
+f=open("allinputURLs", "w")
+f.write(allinputs)
+f.close()
 
 	
 
