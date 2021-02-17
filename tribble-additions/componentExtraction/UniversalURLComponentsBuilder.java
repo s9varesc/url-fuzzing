@@ -86,7 +86,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	  }
     	}
         if(dict.get("ipv6address")!=null){
-            inp=reshost
+            inp=reshost;
             // in case of ipv6 address format the parts
             if(inp.startsWith("[") && inp.endsWith("]")){
                 tmp=inp.subSequence(1, inp.length()-1).toString(); 
