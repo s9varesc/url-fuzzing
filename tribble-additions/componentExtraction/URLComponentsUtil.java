@@ -121,7 +121,7 @@ public class URLComponentsUtil {
 			
 			// check if the original path ended in a double-dot-segment: new path ending should then be /
 			Boolean endsindots=false;
-			for( String dots in Arrays.asList(ddots)){
+			for( String dots : Arrays.asList(ddots)){
 				if(originalPath.endsWith(dots)){
 					endsindots=true;
 				}
