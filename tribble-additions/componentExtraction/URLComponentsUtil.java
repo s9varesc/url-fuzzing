@@ -59,7 +59,7 @@ public class URLComponentsUtil {
 		   	//remove additional : at the end
 		   	return result.subSequence(0, result.length()-1).toString();
 		}
-		System.out.println(result);
+		
 		return result;
 	}
 
