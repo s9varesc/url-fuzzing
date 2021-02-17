@@ -12,6 +12,7 @@ public class URLComponentsUtil {
     */
     public String formatIPv6(String original){
     	System.out.println("formatIPv6");
+    	System.out.println(original);
 		if(original.startsWith("::") && original.endsWith("::")){
 		   return original;
 		}
