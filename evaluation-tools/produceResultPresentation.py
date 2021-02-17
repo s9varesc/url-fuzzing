@@ -32,10 +32,15 @@ def escape_md(data):
 
 def url_escape_md(data):
 	#escaping for urls(=displayed as code blocks)
-	#note: if a url contains 3 or more backticks in a row this breaks the formatting
 	res=data
+	#make sure to use enough escaping backticks
+	allbt=res.count("`")
+	escbt="`"
+	for i in range(1, allbt):
+		if escbt in res:
+			escbt+="`"
 	res=res.replace("|", "\|")#"&#124;")
-	return "``` "+res+" ```"
+	return escbt+" "+res+" "+escbt
 
 
 parser = argparse.ArgumentParser()
