@@ -24,10 +24,10 @@ Grammar(
   'opaqueHost := 'opaqueHostCodePoint.rep(1) | ("[" ~ 'ipv6address ~ "]"), 
   'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress).? ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
-  'pathAbsoluteURL := "/" ~ 'pathRelativeURL,
-  'pathAbsoluteNonWindowsFileURL := ('windowsDriveLetter).? ~ 'pathAbsoluteURL, 
+  'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURL,
+  'pathAbsoluteNonWindowsFileURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
-  'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
+  'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,  
   'pathRelativeSchemelessURL := ('pathRelativeURL ~ ":").?,
   //pathRelativeURL can't start with URLscheme
   'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment, 
