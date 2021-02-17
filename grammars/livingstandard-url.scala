@@ -16,7 +16,7 @@ Grammar(
   'URLschemeFile := "file",
 
  
-  'schemeRelativeSpecialURL := "//" ~ 'domain ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, //replace host by domain
+  'schemeRelativeSpecialURL := "//" ~ 'domain ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, 
 
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
