@@ -34,12 +34,22 @@ def url_escape_md(data):
 	#escaping for urls(=displayed as code blocks)
 	res=data
 	#make sure to use enough escaping backticks
-	allbt=res.count("`")
+	currentnrbt=0
+	maxnrbt=0
+	lastchar=None
+	for c in res:
+		if c == lastchar:
+			if c =="`":
+				currentnrbt+=1
+				maxnrbt=max(maxnrbt, currentnrbt)
+		else:
+			currentnrbt=0
+		lastchar=c
+
 	escbt="`"
-	for i in range(1, allbt):
-		if escbt in res:
-			escbt+="`"
-	res=res.replace("|", "\|")#"&#124;")
+	for i in range(1, maxnrbt):
+		escbt+="`"
+	res=res.replace("|", "&#124;")
 	return escbt+" "+res+" "+escbt
 
 
