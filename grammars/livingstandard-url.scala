@@ -16,7 +16,7 @@ Grammar(
   'URLschemeFile := "file",
 
  
-  'schemeRelativeSpecialURL := "//" ~ 'domain ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, 
+  'schemeRelativeSpecialURL := "//" ~ ('domain | 'ipAddress) ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, 
 
   
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
@@ -51,7 +51,7 @@ Grammar(
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
   //'host := ('userinfo ~ "@").? ~ 'domain,  //TODO userinfo is deprecated
-  'domain := 'internationalHost | 'hostAllowed.rep(1) | 'ipAddress, 
+  'domain := 'internationalHost | 'hostAllowed.rep(1), 
   'internationalHost := (("xn--").? ~ 'hostAllowed.rep(1)).rep(1),
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
