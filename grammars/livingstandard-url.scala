@@ -22,7 +22,7 @@ Grammar(
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
   'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?).?, 
   'opaqueHost := 'opaqueHostCodePoint.rep(1) | ("[" ~ 'ipv6address ~ "]"), 
-  'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress).? ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
+  'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
