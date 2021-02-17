@@ -85,7 +85,6 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	      if(ip.startsWith("[") && ip.endsWith("]")){
     	      	tmp=ip.subSequence(1, ip.length()-1).toString(); 
     	      	reshost="["+util.formatIPv6(tmp)+"]";
-                System.out.println(reshost);
     	      }	
     	      
     	    }

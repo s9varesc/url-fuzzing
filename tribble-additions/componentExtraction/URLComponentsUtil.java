@@ -11,8 +11,6 @@ public class URLComponentsUtil {
     * @return the given IPv6 address without IPv4 formatting
     */
     public String formatIPv6(String original){
-    	System.out.println("formatIPv6");
-    	System.out.println(original);
 		if(original.startsWith("::") && original.endsWith("::")){
 		   return original;
 		}
