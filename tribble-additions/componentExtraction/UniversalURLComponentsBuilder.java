@@ -101,8 +101,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	  pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
     	}
     	for (String content: Arrays.asList(panW, pa, prsl)){
-    	  if(content !=null){
-    	    components.put("path", util.normalizePath(content));  
+    	  if(content !=null){ // only normalize path if a special scheme is used
+    	    components.put("path", (nonspecial !=null ? content : util.normalizePath(content)));  
     	  }
     	}
 
