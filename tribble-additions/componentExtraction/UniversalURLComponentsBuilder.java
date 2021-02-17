@@ -81,15 +81,19 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	  else{
     	    if (ip!=null){
     	      reshost=ip.toLowerCase();	
-    	      // in case of ipv6 address format the parts
-    	      if(ip.startsWith("[") && ip.endsWith("]")){
-    	      	tmp=ip.subSequence(1, ip.length()-1).toString(); 
-    	      	reshost="["+util.formatIPv6(tmp)+"]";
-    	      }	
     	      
     	    }
     	  }
     	}
+        if(dict.get("ipv6address")!=null){
+            inp=reshost
+            // in case of ipv6 address format the parts
+            if(inp.startsWith("[") && inp.endsWith("]")){
+                tmp=inp.subSequence(1, inp.length()-1).toString(); 
+                reshost="["+util.formatIPv6(tmp)+"]";
+            }   
+            
+        }
     	components.put("host", reshost);
 
     	// prepare path
