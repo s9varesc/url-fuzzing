@@ -153,8 +153,8 @@ for bname in errdata:
 	for erdata in elist:   
 		u=url_escape_md(erdata["url"])
 		c=escape_md(erdata["error"]["component"])
-		exp=escape_md(erdata["error"]["expected"])
-		a=escape_md(erdata["error"]["actual"])
+		exp=url_escape_md(erdata["error"]["expected"])
+		a=url_escape_md(erdata["error"]["actual"])
 		vtable+=u+ " | "+c+" | "+exp+" | "+ a+"\n"
 	vtables+=[vtable]
 
