@@ -116,6 +116,9 @@ public class URLComponentsUtil {
 						newsegments.set(prev,"");
 						prev=(prev>0) ? prev-1 : 0;
 					}
+					else{
+						System.out.println("driveletter in fron of ddots");
+					}
 					
 				}
 				else{
@@ -128,7 +131,7 @@ public class URLComponentsUtil {
 			// put remaining segments back together
 			for(String seg:newsegments){
 				if(seg == "/"+driveletter){
-					seg=seg.replaceFirst("|", ":");
+					seg=seg.replaceFirst("\|", ":");
 				}
 				result+=seg;
 			}
