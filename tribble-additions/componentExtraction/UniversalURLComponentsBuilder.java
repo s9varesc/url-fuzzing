@@ -104,6 +104,9 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String rel=dict.get("schemeRelativeURL"); 
         String ohp=dict.get("opaqueHostAndPort");
         if(nonspecial!=null){
+            System.out.println(ohp);
+            System.out.println(pa);
+            System.out.println(rel);
             if(! "".equals(ohp)){
                 if( ohp != null){
                     pa=pa;
@@ -115,6 +118,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             else{
                 pa=rel;
             }
+            System.out.println(pa);
             
         }
     	String pathcontent="";
