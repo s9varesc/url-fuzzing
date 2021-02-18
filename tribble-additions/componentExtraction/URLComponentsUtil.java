@@ -77,7 +77,7 @@ public class URLComponentsUtil {
 	* @param driveletter a string containing the drive letter contained in the path if any
 	* @return the normalized path
 	*/
-	public String normalizePath(String originalPath, , String driveletter){
+	public String normalizePath(String originalPath, String driveletter){
 		if (originalPath!=null){
 			String result="";
 			String tmp=originalPath;
