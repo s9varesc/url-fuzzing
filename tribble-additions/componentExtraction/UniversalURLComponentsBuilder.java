@@ -102,8 +102,9 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	String prsl=dict.get("pathRelativeSchemelessURL");
         // include all leading slashes in non special urls without host
         String rel=dict.get("schemeRelativeURL"); 
+        String ohp=dict.get("opaqueHostAndPort");
         if(nonspecial!=null){
-            pa=(ophost!=null ? pa : rel);
+            pa=(ohp != null ? pa : rel);
         }
     	String pathcontent="";
         String driveletter=dict.get("windowsDriveLetter");
