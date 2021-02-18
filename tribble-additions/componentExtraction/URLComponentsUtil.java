@@ -128,7 +128,7 @@ public class URLComponentsUtil {
 			// put remaining segments back together
 			for(String seg:newsegments){
 				if(seg == "/"+driveletter){
-					seg=seg.replaceAll("|", ":");
+					seg=seg.replaceFirst("|", ":");
 				}
 				result+=seg;
 			}
@@ -148,6 +148,8 @@ public class URLComponentsUtil {
 			if(driveletter!=null){
 				System.out.println(originalPath);
 				System.out.println(driveletter);
+				System.out.println(segments);
+				System.out.println(newsegments);
 				System.out.println(result);
 			}
 			return result;
