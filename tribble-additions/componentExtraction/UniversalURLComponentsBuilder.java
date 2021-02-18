@@ -97,14 +97,16 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	components.put("host", reshost);
 
     	// prepare path
-    	String pa=dict.get("pathAbsoluteURL");
+    	//String pa=dict.get("pathAbsoluteURL");
     	String panW=dict.get("pathAbsoluteNonWindowsFileURL");
     	String prsl=dict.get("pathRelativeSchemelessURL");
+        // include all leading slashes in non special urls without host
+        String pa=(ophost!= null ? dict.get("pathAbsoluteURL") :dict.get("schemeRelativeURL")); 
     	String pathcontent="";
         String driveletter=dict.get("windowsDriveLetter");
-    	if (panW != null){
+    	/*if (panW != null){
     	  pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
-    	}
+    	}*/
     	for (String content: Arrays.asList(panW, pa, prsl)){
     	  if(content !=null){ // only normalize path if a special scheme is used
     	    components.put("path", (nonspecial !=null ? content : util.normalizePath(content, driveletter)));  
