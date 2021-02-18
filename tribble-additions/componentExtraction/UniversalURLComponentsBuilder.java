@@ -107,17 +107,12 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             System.out.println(ohp);
             System.out.println(pa);
             System.out.println(rel);
-            if(! "".equals(ohp)){
-                if( ohp != null){
-                    pa=pa;
-                }
-                else{
-                    pa=rel;
-                }
+
+
+            if(rel!=null){
+                pa=(ohp != null ? pa : rel);
             }
-            else{
-                pa=rel;
-            }
+
             System.out.println(pa);
             
         }
