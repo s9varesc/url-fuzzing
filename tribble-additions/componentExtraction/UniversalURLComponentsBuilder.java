@@ -101,9 +101,9 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	String panW=dict.get("pathAbsoluteNonWindowsFileURL");
     	String prsl=dict.get("pathRelativeSchemelessURL");
         // include all leading slashes in non special urls without host
-        String rel=(ophost!= null ? dict.get("pathAbsoluteURL") :dict.get("schemeRelativeURL")); 
+        String rel=dict.get("schemeRelativeURL"); 
         if(nonspecial!=null){
-            pa=rel;
+            pa=(ophost!=null ? pa : rel);
         }
     	String pathcontent="";
         String driveletter=dict.get("windowsDriveLetter");
