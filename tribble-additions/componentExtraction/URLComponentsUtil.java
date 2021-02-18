@@ -145,7 +145,9 @@ public class URLComponentsUtil {
 				result+="/";
 			}
 
-			
+			if(driveletter!=null){
+				System.out.println(result);
+			}
 			return result;
 		}
 		return originalPath;
