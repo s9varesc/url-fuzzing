@@ -46,7 +46,7 @@ def url_escape_md(data):
 			currentnrbt=0
 		lastchar=c
 
-	escbt="``"
+	escbt="```"
 	for i in range(1, maxnrbt):
 		escbt+="`"
 	#res=res.replace("|", "\|")
