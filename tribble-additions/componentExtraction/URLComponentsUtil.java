@@ -118,9 +118,6 @@ public class URLComponentsUtil {
 						prev=(prev>0) ? prev-1 : 0;
 
 					}
-					else{
-						System.out.println("driveletter in fron of ddots");
-					}
 					
 				}
 				else{
@@ -150,12 +147,6 @@ public class URLComponentsUtil {
 				result+="/";
 			}
 
-			if(driveletter!=null){
-				System.out.println(originalPath);
-				System.out.println(segments);
-				System.out.println(newsegments);
-				System.out.println(result);
-			}
 			return result;
 		}
 		return originalPath;
