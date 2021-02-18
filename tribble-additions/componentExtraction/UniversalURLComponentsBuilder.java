@@ -101,12 +101,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	String panW=dict.get("pathAbsoluteNonWindowsFileURL");
     	String prsl=dict.get("pathRelativeSchemelessURL");
     	String pathcontent="";
+        String driveletter=dict.get("windowsDriveLetter");
     	if (panW != null){
     	  pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
     	}
     	for (String content: Arrays.asList(panW, pa, prsl)){
     	  if(content !=null){ // only normalize path if a special scheme is used
-    	    components.put("path", (nonspecial !=null ? content : util.normalizePath(content)));  //TODO use boolean driveletter
+    	    components.put("path", (nonspecial !=null ? content : util.normalizePath(content, driveletter)));  
     	  }
     	}
 
