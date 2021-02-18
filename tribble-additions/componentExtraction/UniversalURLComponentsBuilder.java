@@ -104,7 +104,18 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String rel=dict.get("schemeRelativeURL"); 
         String ohp=dict.get("opaqueHostAndPort");
         if(nonspecial!=null){
-            pa=((ohp != null && ohp!="") ? pa : rel);
+            if(! "".equals(ohp)){
+                if( ohp != null){
+                    pa=pa;
+                }
+                else{
+                    pa=rel;
+                }
+            }
+            else{
+                pa=rel;
+            }
+            
         }
     	String pathcontent="";
         String driveletter=dict.get("windowsDriveLetter");
