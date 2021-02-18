@@ -106,7 +106,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	}
     	for (String content: Arrays.asList(panW, pa, prsl)){
     	  if(content !=null){ // only normalize path if a special scheme is used
-    	    components.put("path", (nonspecial !=null ? content : util.normalizePath(content)));  
+    	    components.put("path", (nonspecial !=null ? content : util.normalizePath(content)));  //TODO use boolean driveletter
     	  }
     	}
 

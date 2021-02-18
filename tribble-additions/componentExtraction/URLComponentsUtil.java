@@ -70,12 +70,19 @@ public class URLComponentsUtil {
 	  return res.replaceAll("\"", "\\\\\"");
 	}
 
-	public String normalizePath(String originalPath){
+	/***
+	* removes dot and double-dot segments where applicable and fixes drive letter representation
+	*
+	* @param originalPath the path as extracted from the tree representation
+	* @param driveletter a string containing the drive letter contained in the path if any
+	* @return the normalized path
+	*/
+	public String normalizePath(String originalPath, , String driveletter){
 		if (originalPath!=null){
 			String result="";
 			String tmp=originalPath;
 			// convert backslashes to forward slashes: \\=/
-			tmp=tmp.replaceAll("\\\\", "/"); //TODO check if this does the right thing
+			tmp=tmp.replaceAll("\\\\", "/"); 
 
 			//apply single-dot changes
 			tmp=tmp.replaceAll("/%2e/", "/./");
@@ -104,9 +111,12 @@ public class URLComponentsUtil {
 			int prev=0;
 			for(String current:segments){
 				if(Arrays.asList(ddots).contains(current)){ 
-					// current segment is double-dot -> remove previous segment
-					newsegments.set(prev,"");
-					prev=(prev>0) ? prev-1 : 0;
+					// current segment is double-dot -> remove previous segment if not drive letter
+					if( newsegments.get(prev)!= "/"+driveletter){
+						newsegments.set(prev,"");
+						prev=(prev>0) ? prev-1 : 0;
+					}
+					
 				}
 				else{
 					// current segment is not double-dot -> add current segment
@@ -117,6 +127,9 @@ public class URLComponentsUtil {
 
 			// put remaining segments back together
 			for(String seg:newsegments){
+				if(seg == "/"+driveletter){
+					seg=seg.replaceAll("|", ":");
+				}
 				result+=seg;
 			}
 			
