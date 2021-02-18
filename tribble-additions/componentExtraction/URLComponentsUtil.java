@@ -114,8 +114,12 @@ public class URLComponentsUtil {
 				if(Arrays.asList(ddots).contains(current)){ 
 					// current segment is double-dot -> remove previous segment if not drive letter
 					if( newsegments.get(prev)!= drive){
+						System.out.println(newsegments.get(prev));
+						System.out.println(drive);
+
 						newsegments.set(prev,"");
 						prev=(prev>0) ? prev-1 : 0;
+
 					}
 					else{
 						System.out.println("driveletter in fron of ddots");
@@ -152,7 +156,7 @@ public class URLComponentsUtil {
 			if(driveletter!=null){
 				System.out.println(originalPath);
 				System.out.println(driveletter);
-				System.out.println(driveletter.replaceFirst("|", ":"));
+				System.out.println(driveletter.replaceFirst("\\|", ":"));
 				System.out.println(segments);
 				System.out.println(newsegments);
 				System.out.println(result);
