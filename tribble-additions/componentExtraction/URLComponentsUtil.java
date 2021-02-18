@@ -113,10 +113,7 @@ public class URLComponentsUtil {
 			for(String current:segments){
 				if(Arrays.asList(ddots).contains(current)){ 
 					// current segment is double-dot -> remove previous segment if not drive letter
-					if( newsegments.get(prev)!= drive){
-						System.out.println(newsegments.get(prev));
-						System.out.println(drive);
-
+					if( !(newsegments.get(prev).equals(drive))){
 						newsegments.set(prev,"");
 						prev=(prev>0) ? prev-1 : 0;
 
@@ -135,8 +132,8 @@ public class URLComponentsUtil {
 
 			// put remaining segments back together
 			for(String seg:newsegments){
-				if(seg == drive){
-					seg=seg.replaceFirst("|", ":");
+				if(seg.equals(drive)){
+					seg=seg.replaceFirst("\\|", ":");
 				}
 				result+=seg;
 			}
@@ -155,8 +152,6 @@ public class URLComponentsUtil {
 
 			if(driveletter!=null){
 				System.out.println(originalPath);
-				System.out.println(driveletter);
-				System.out.println(driveletter.replaceFirst("\\|", ":"));
 				System.out.println(segments);
 				System.out.println(newsegments);
 				System.out.println(result);
