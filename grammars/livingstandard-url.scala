@@ -52,7 +52,7 @@ Grammar(
   
   //'host := ('userinfo ~ "@").? ~ 'domain,  //TODO userinfo is deprecated
   'domain := 'internationalHost | 'hostAllowed.rep(1), 
-  'internationalHost := (("xn--").? ~ 'hostAllowed.rep(1)).rep(1),
+  'internationalHost := ("xn--").? ~ ('alphanum | "-").rep(1), 
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
@@ -82,6 +82,7 @@ Grammar(
   'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded,
 
   'hostAllowed := 'unreserved | "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|",
+  //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=" | "|",
   'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO c0percent encoding above %7f
 
   'unicodeUtil := "%" ~ ("8"|"9"|"a"|"b") ~ 'hexdig,
