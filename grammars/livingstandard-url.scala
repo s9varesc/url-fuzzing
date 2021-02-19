@@ -52,7 +52,7 @@ Grammar(
   
   //'host := ('userinfo ~ "@").? ~ 'domain,  //TODO userinfo is deprecated
   'domain := 'internationalHost | 'hostAllowed.rep(1), 
-  'internationalHost := ("xn--").? ~ ('alphanum | "-").rep(1), 
+  'internationalHost := ("xn--").? ~ ('alphanum ~ ("-" | 'alphanum)).rep(1),///('alphanum | "-").rep(1), 
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
