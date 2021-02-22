@@ -39,6 +39,38 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
 
     }
+
+    @Override
+    public void addComponent(String name, String content){
+        // on the URL grammar specialized: handling duplicates
+        addAndKeepOldEntry(name, 0, content);
+    }
+
+    private void addAndKeepOldEntry(String name,int id, String content){
+        if(id>=5){
+            // relevant rules are not present that often, and we are not interested 
+            // in keeping track of single digits or characters 
+            return; 
+        }
+        //check for other entries for the same rule
+        String suffix=(id!=0 ? id.toString() : "");
+        String oldcontent=dict.get(name+suffix);
+        if(oldcontent!=null){
+            //save old entry with smaller id
+            dict.put(name+id.toString(), oldcontent);
+            //remove old entry but keep the original name as key
+            if(id!=0){
+                dict.remove(name+suffix);
+            }
+            // try to place the new entry with a higher id
+            id++;
+            return addAndKeepOldEntry(name, id, content);
+        }
+        else{
+            dict.put(name+suffix, content);
+        }
+        return;
+    }
     
 
     /***

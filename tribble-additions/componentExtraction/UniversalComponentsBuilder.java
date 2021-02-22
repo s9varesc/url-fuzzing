@@ -24,12 +24,12 @@ public abstract class UniversalComponentsBuilder{
 	}
 	/***
 	* Adds a name, content pair to the dictionary
+	* @param name name of the grammar rule
+	* @param content the string corresponding to the instantiation of the specified rule
 	 */
-	public void addComponent(String name, String content){
-	  if (content != ""){
-	    dict.put(name, content);
-	  }
-
+	public abstract void addComponent(String name, String content){
+		dict.put(name, content);
+		return;
 	}
 
 	/***
