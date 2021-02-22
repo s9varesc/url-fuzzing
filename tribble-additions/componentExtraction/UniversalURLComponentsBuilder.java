@@ -59,7 +59,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             if(! oldcontent.equals(content)){
                 //save old entry with smaller id
                 dict.put(name+String.valueOf(id), oldcontent);
-                //remove old entry but keep the original name as key
+                //remove old entry but keep the original name as key: content of rule and rule0 should be identical
                 if(id!=0){
                     dict.remove(name+suffix);
                 }
@@ -86,96 +86,15 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * more specialized component builders
     */
     public void prepareComponents(){ 
-    	// populate this.components from raw dict and apply necessary transformations i.e. ipv6 formatting, 
-    	// path formatting, ...
-
-    	// copy easy contents to the correct place
-    	for(String key:translation.keySet()){
-    		components.put(key, dict.get(translation.get(key)));
-    	}
-
-    	// prepare scheme
-    	String specialnf=dict.get("URLspecialSchemeNotFile");
-    	String nonspecial=dict.get("URLnonSpecialScheme");
-    	String file=dict.get("URLschemeFile");
-
-    	for (String content: Arrays.asList(specialnf, nonspecial, file)){
-    	  if(content !=null){
-    	    components.put("scheme", content.toLowerCase());
-    	  }
-    	}
-
-    	// prepare host
-    	String ophost=dict.get("opaqueHost");
-    	String d=dict.get("domain"); 
-    	String ip=dict.get("ipAddress");
-    	String reshost="";
-    	String tmp="";
-    	if(ophost !=null){
-    	  reshost=ophost.toLowerCase();
-    	}
-    	else{
-    	  if(d !=null){
-    	    reshost=d.toLowerCase();
-    	  }
-    	  else{
-    	    if (ip!=null){
-    	      reshost=ip.toLowerCase();	
-    	      
-    	    }
-    	  }
-    	}
-        if(dict.get("ipv6address")!=null){
-            String inp=reshost;
-            // in case of ipv6 address format the parts
-            if(inp.startsWith("[") && inp.endsWith("]")){
-                tmp=inp.subSequence(1, inp.length()-1).toString(); 
-                reshost="["+util.formatIPv6(tmp)+"]";
-            }   
-            
+    	//determine which method to use
+        if(dict.get("baseAndRelativeURL")!=null){
+            prepareBaseComponents();
+            prepareRelativeComponents();
+            combineBaseAndRelativeComponents();
         }
-    	components.put("host", reshost);
-
-    	// prepare path
-    	String pa=dict.get("pathAbsoluteURL");
-    	String panW=dict.get("pathAbsoluteNonWindowsFileURL");
-    	String prsl=dict.get("pathRelativeSchemelessURL");
-        // include all leading slashes in non special urls without host
-        String rel=dict.get("schemeRelativeURL"); 
-        String ohp=dict.get("opaqueHostAndPort");
-        if(nonspecial!=null){
-            if(rel!=null){
-                if(ohp !=null){
-                    pa=(! ohp.equals("") ? pa : rel);
-                }
-                
-            }
-   
+        else{
+            prepareBasicComponents();
         }
-    	String pathcontent="";
-        String driveletter=dict.get("windowsDriveLetter");
-    	/*if (panW != null){
-    	  pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
-    	}*/
-    	for (String content: Arrays.asList(panW, pa, prsl)){
-    	  if(content !=null){ // only normalize path if a special scheme is used
-    	    components.put("path", (nonspecial !=null ? content : util.normalizePath(content, driveletter)));  
-    	  }
-    	}
-
-    	// prepare query
-    	String query;
-    	String qs=dict.get("URLSpecialquery");
-    	String qns=dict.get("URLquery");
-
-    	if(qs != null){
-    	  query=qs; 
-    	}
-    	else{
-    	  query=qns; 
-    	}
-    	components.put("query", query);
-    	
         System.out.println(dict);
     	return;
     }
@@ -190,5 +109,125 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	return dict.get(grammarrule);
     }
 
+
+    /***
+    * prepare the components of the produced base URL
+    * note: normalization and formatting are applied when combining base and relative URL
+    ***/
+    private void prepareBaseComponents(){
+        return;
+    }
+
+    /***
+    * dual to prepareBaseComponents; prepare the components of the relative URL
+    ***/
+    private void prepareRelativeComponents(){
+        return;
+    }
+
+    /***
+    * utilizes the prepared components of base and relative URL to create the final component representation
+    ***/
+    private void combineBaseAndRelativeComponents(){
+        components.put("input", dict.get("baseAndRelativeURL"));
+        return;
+    }
+
+
+    /***
+    * prepares the components of an absolute URL without base
+    ***/
+    private void prepareBasicComponents(){
+        // populate this.components from raw dict and apply necessary transformations i.e. ipv6 formatting, 
+        // path formatting, ...
+
+        // copy easy contents to the correct place
+        for(String key:translation.keySet()){
+            components.put(key, dict.get(translation.get(key)));
+        }
+
+        // prepare scheme
+        String specialnf=dict.get("URLspecialSchemeNotFile");
+        String nonspecial=dict.get("URLnonSpecialScheme");
+        String file=dict.get("URLschemeFile");
+
+        for (String content: Arrays.asList(specialnf, nonspecial, file)){
+          if(content !=null){
+            components.put("scheme", content.toLowerCase());
+          }
+        }
+
+        // prepare host
+        String ophost=dict.get("opaqueHost");
+        String d=dict.get("domain"); 
+        String ip=dict.get("ipAddress");
+        String reshost="";
+        String tmp="";
+        if(ophost !=null){
+          reshost=ophost.toLowerCase();
+        }
+        else{
+          if(d !=null){
+            reshost=d.toLowerCase();
+          }
+          else{
+            if (ip!=null){
+              reshost=ip.toLowerCase(); 
+              
+            }
+          }
+        }
+           if(dict.get("ipv6address")!=null){
+               String inp=reshost;
+               // in case of ipv6 address format the parts
+               if(inp.startsWith("[") && inp.endsWith("]")){
+                   tmp=inp.subSequence(1, inp.length()-1).toString(); 
+                   reshost="["+util.formatIPv6(tmp)+"]";
+               }   
+               
+           }
+        components.put("host", reshost);
+
+        // prepare path
+        String pa=dict.get("pathAbsoluteURL");
+        String panW=dict.get("pathAbsoluteNonWindowsFileURL");
+        String prsl=dict.get("pathRelativeSchemelessURL");
+           // include all leading slashes in non special urls without host
+           String rel=dict.get("schemeRelativeURL"); 
+           String ohp=dict.get("opaqueHostAndPort");
+           if(nonspecial!=null){
+               if(rel!=null){
+                   if(ohp !=null){
+                       pa=(! ohp.equals("") ? pa : rel);
+                   }
+                   
+               }
+       
+           }
+        String pathcontent="";
+           String driveletter=dict.get("windowsDriveLetter");
+        /*if (panW != null){
+          pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
+        }*/
+        for (String content: Arrays.asList(panW, pa, prsl)){
+          if(content !=null){ // only normalize path if a special scheme is used
+            components.put("path", (nonspecial !=null ? content : util.normalizePath(content, driveletter)));  
+          }
+        }
+
+        // prepare query
+        String query;
+        String qs=dict.get("URLSpecialquery");
+        String qns=dict.get("URLquery");
+
+        if(qs != null){
+          query=qs; 
+        }
+        else{
+          query=qns; 
+        }
+        components.put("query", query);
+        
+    }
 
 }
