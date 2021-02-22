@@ -27,7 +27,7 @@ public abstract class UniversalComponentsBuilder{
 	* @param name name of the grammar rule
 	* @param content the string corresponding to the instantiation of the specified rule
 	 */
-	public abstract void addComponent(String name, String content){
+	public void addComponent(String name, String content){
 		dict.put(name, content);
 		return;
 	}
