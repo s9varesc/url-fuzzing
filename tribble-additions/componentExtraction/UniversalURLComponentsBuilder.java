@@ -55,17 +55,24 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         //check for other entries for the same rule
         String suffix=(id!=0 ? String.valueOf(id) : "");
         String oldcontent=dict.get(name+suffix);
-        if(oldcontent!=null && oldcontent!=content){
-            //save old entry with smaller id
-            dict.put(name+String.valueOf(id), oldcontent);
-            //remove old entry but keep the original name as key
-            if(id!=0){
-                dict.remove(name+suffix);
+        if(oldcontent!=null ){
+            if(oldcontent!=content){
+                //save old entry with smaller id
+                dict.put(name+String.valueOf(id), oldcontent);
+                //remove old entry but keep the original name as key
+                if(id!=0){
+                    dict.remove(name+suffix);
+                }
+                // try to place the new entry with a higher id
+                id++;
+                addAndKeepOldEntry(name, id, content);
+                return;
             }
-            // try to place the new entry with a higher id
-            id++;
-            addAndKeepOldEntry(name, id, content);
-            return;
+            else{
+                //no need to save the same content more than once
+                return;
+            }
+            
         }
         else{
             dict.put(name+suffix, content);
