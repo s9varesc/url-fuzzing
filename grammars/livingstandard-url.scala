@@ -7,23 +7,23 @@ import saarland.cispa.se.tribble.dsl._
 Grammar(
   'url := 'baseAndRelativeURL | 'absoluteURLwithFragment,
   'absoluteURLwithFragment :='absoluteURL ~ ("#" ~ 'URLfragment).?,
-  'absoluteURL := ('specialAbsoluteURL | 'fileAbsoluteURL | 'otherAbsoluteURL),
+  'absoluteURL := 'specialAbsoluteURL | 'fileAbsoluteURL | 'otherAbsoluteURL,
 
   'URLspecialSchemeNotFile := "ftp" | "http" | "https" | "ws" | "wss", 
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  'baseAndRelativeURL := ('specialBaseURL ~ ("<"~'specialRelativeURL).?)
-                          | ('fileBaseURL ~ ("<"~'fileRelativeURL).?)  //might need to differentiate between empty/nonempty host
-                          | ('otherBaseURL ~ ("<"~'otherRelativeURL).?),
+  'baseAndRelativeURL := ('specialBaseURL ~ ( "<" ~ 'specialRelativeURL).?)
+                          | ('fileBaseURL ~ ( "<" ~ 'fileRelativeURL).?)  //might need to differentiate between empty/nonempty host
+                          | ('otherBaseURL ~ ( "<" ~ 'otherRelativeURL).?),
 
   'specialAbsoluteURLwFragment := 'specialAbsoluteURL ~ ("#" ~ 'URLfragment).?,
   'fileAbsoluteURLwFragment := 'fileAbsoluteURL ~ ("#" ~ 'URLfragment).?,
   'otherAbsoluteURLwFragment := 'otherAbsoluteURL ~ ("#" ~ 'URLfragment).?,
 
-  'specialAbsoluteURL := ('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?),  
-  'fileAbsoluteURL := ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , 
-  'otherAbsoluteURL := ('URLnonSpecialScheme ~ ":" ~ ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL ) ~ ("?" ~ 'URLquery ).?),
+  'specialAbsoluteURL := 'URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?,  
+  'fileAbsoluteURL := 'URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?) , 
+  'otherAbsoluteURL := 'URLnonSpecialScheme ~ ":" ~ ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL ) ~ ("?" ~ 'URLquery ).?,
 
   'specialRelativeURL := ('schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL) ~ ("?" ~ 'URLSpecialquery).? ~ ("#" ~ 'URLfragment).?,
   'fileRelativeURL := ('schemeRelativeFileURL | 'pathAbsoluteURL | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL) ~ ("?" ~ 'URLSpecialquery).? ~ ("#" ~ 'URLfragment).?,
