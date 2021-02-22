@@ -95,7 +95,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         else{
             prepareBasicComponents();
         }
-        System.out.println(dict);
+        System.out.println(components);
     	return;
     }
 
