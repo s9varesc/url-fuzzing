@@ -21,6 +21,9 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     URLComponentsUtil util=new URLComponentsUtil();
     HashMap<String, String> components=new HashMap<>();
 
+    HashMap<String, String> basecomponents=new HashMap<>();
+    HashMap<String, String> relcomponents=new HashMap<>();
+
     public UniversalURLComponentsBuilder(){
     	super();
     	this.InternalComponentNames.add("scheme");
@@ -32,10 +35,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	
     	this.InternalComponentNames.add("input"); 
 
-    	//components which need no further processing
-        translation.put("port", "URLport"); //TODO may need to check for leading zeros
-        translation.put("fragment", "URLfragment");
-        translation.put("input", "absoluteURLwithFragment"); 
+    	
 
 
     }
@@ -88,11 +88,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     public void prepareComponents(){ 
     	//determine which method to use
         if(dict.get("baseAndRelativeURL")!=null){
+            // there are base and/or relative URLs present
             prepareBaseComponents();
             prepareRelativeComponents();
             combineBaseAndRelativeComponents();
         }
         else{
+            // there is only a absolute URL present
             prepareBasicComponents();
         }
         System.out.println(components);
@@ -141,10 +143,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // populate this.components from raw dict and apply necessary transformations i.e. ipv6 formatting, 
         // path formatting, ...
 
-        // copy easy contents to the correct place
-        for(String key:translation.keySet()){
-            components.put(key, dict.get(translation.get(key)));
-        }
+        //components which need no further processing
+        components.put("port", "URLport"); 
+        components.put("fragment", "URLfragment");
+        components.put("input", "absoluteURLwithFragment"); 
+
 
         // prepare scheme
         String specialnf=dict.get("URLspecialSchemeNotFile");
