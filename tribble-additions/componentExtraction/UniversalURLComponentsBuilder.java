@@ -64,7 +64,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
             // try to place the new entry with a higher id
             id++;
-            return addAndKeepOldEntry(name, id, content);
+            addAndKeepOldEntry(name, id, content);
+            return;
         }
         else{
             dict.put(name+suffix, content);
