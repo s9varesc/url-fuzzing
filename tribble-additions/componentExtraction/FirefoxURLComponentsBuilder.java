@@ -69,8 +69,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="prePath:\""+prp+"\",\n";
         result+="}\n";
 
-        System.out.println(fullhost);
-        System.out.println(univcomp.getSpecialComponentContent("h16"));
+        
         return result;
     }
 

@@ -136,6 +136,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	}
     	components.put("query", query);
     	
+        System.out.println(dict);
     	return;
     }
 
