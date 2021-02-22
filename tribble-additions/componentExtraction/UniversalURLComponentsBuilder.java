@@ -53,11 +53,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             return; 
         }
         //check for other entries for the same rule
-        String suffix=(id!=0 ? id.toString() : "");
+        String suffix=(id!=0 ? String.valueOf(id) : "");
         String oldcontent=dict.get(name+suffix);
         if(oldcontent!=null){
             //save old entry with smaller id
-            dict.put(name+id.toString(), oldcontent);
+            dict.put(name+String.valueOf(id), oldcontent);
             //remove old entry but keep the original name as key
             if(id!=0){
                 dict.remove(name+suffix);
