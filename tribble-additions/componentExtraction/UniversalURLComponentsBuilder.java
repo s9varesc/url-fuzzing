@@ -55,7 +55,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         //check for other entries for the same rule
         String suffix=(id!=0 ? String.valueOf(id) : "");
         String oldcontent=dict.get(name+suffix);
-        if(oldcontent!=null){
+        if(oldcontent!=null && oldcontent!=content){
             //save old entry with smaller id
             dict.put(name+String.valueOf(id), oldcontent);
             //remove old entry but keep the original name as key
