@@ -74,7 +74,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
         result=result.replaceAll("\"", "\\\\\"");
         return result; 
     }
-    return input;
+    return "";
   }
 
 }

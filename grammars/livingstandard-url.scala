@@ -13,9 +13,9 @@ Grammar(
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  'baseAndRelativeURL := ('specialBaseURL ~ ( "<" ~ 'specialRelativeURL).?)
-                          | ('fileBaseURL ~ ( "<" ~ 'fileRelativeURL).?)  //might need to differentiate between empty/nonempty host
-                          | ('otherBaseURL ~ ( "<" ~ 'otherRelativeURL).?),
+  'baseAndRelativeURL := ('specialBaseURL ~  "<" ~ 'specialRelativeURL)
+                          | ('fileBaseURL ~  "<" ~ 'fileRelativeURL)  //might need to differentiate between empty/nonempty host
+                          | ('otherBaseURL ~ "<" ~ 'otherRelativeURL),
 
 
 

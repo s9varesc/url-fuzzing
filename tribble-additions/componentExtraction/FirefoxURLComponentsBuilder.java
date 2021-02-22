@@ -84,7 +84,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
             result=result.replaceAll("\"", "\\\\\"");
             return result; 
         }
-        return input;
+        return "";
     }
 
 }
