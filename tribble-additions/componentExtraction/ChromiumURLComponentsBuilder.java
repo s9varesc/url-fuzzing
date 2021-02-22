@@ -40,7 +40,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     String host=(univcomp.getComponentContents("host")!=null) ? escapeContent(univcomp.getComponentContents("host")) : "";
     
     String port=(univcomp.getComponentContents("port")!=null) ? escapeContent(univcomp.getComponentContents("port")) : "-1";
-    
+    port=port.s.replaceFirst("^0+(?!$)", "");
     String frag=(univcomp.getComponentContents("fragment")!=null) ? escapeContent(univcomp.getComponentContents("fragment")) : "";
     
     String path=(univcomp.getComponentContents("path")!=null) ? escapeContent(univcomp.getComponentContents("path")) : "/";
