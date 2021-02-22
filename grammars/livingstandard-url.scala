@@ -5,20 +5,31 @@ import saarland.cispa.se.tribble.dsl._
 //(whenever the living standard documentation was not sufficient to formulate a grammar)
 
 Grammar(
-  'url := 'absoluteURLwithFragment,
+  'url := 'baseAndRelativeURL | 'absoluteURLwithFragment,
   'absoluteURLwithFragment :='absoluteURL ~ ("#" ~ 'URLfragment).?,
-  'absoluteURL := (('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?)  
-    | ('URLnonSpecialScheme ~ ":" ~ ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL ) ~ ("?" ~ 'URLquery ).?)//'relativeURL ) // relativeURL includes driveletter
-    | ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , 
+  'absoluteURL := ('specialAbsoluteURL | 'fileAbsoluteURL | 'otherAbsoluteURL),
 
   'URLspecialSchemeNotFile := "ftp" | "http" | "https" | "ws" | "wss", 
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
- 
-  'schemeRelativeSpecialURL := "//" ~ ('domain | 'ipAddress) ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, 
+  'baseAndRelativeURL := ('specialBaseURL ~ ("<"~'specialRelativeURL).?)
+                          | ('fileBaseURL ~ ("<"~'fileRelativeURL).?)  //might need to differentiate between empty/nonempty host
+                          | ('otherBaseURL ~ ("<"~'otherRelativeURL).?),
 
-  
+  'specialAbsoluteURLwFragment := 'specialAbsoluteURL ~ ("#" ~ 'URLfragment).?,
+  'fileAbsoluteURLwFragment := 'fileAbsoluteURL ~ ("#" ~ 'URLfragment).?,
+  'otherAbsoluteURLwFragment := 'otherAbsoluteURL ~ ("#" ~ 'URLfragment).?,
+
+  'specialAbsoluteURL := ('URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?),  
+  'fileAbsoluteURL := ('URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).?)) , 
+  'otherAbsoluteURL := ('URLnonSpecialScheme ~ ":" ~ ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL ) ~ ("?" ~ 'URLquery ).?),
+
+  'specialRelativeURL := ('schemeRelativeSpecialURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL) ~ ("?" ~ 'URLSpecialquery).? ~ ("#" ~ 'URLfragment).?,
+  'fileRelativeURL := ('schemeRelativeFileURL | 'pathAbsoluteURL | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL) ~ ("?" ~ 'URLSpecialquery).? ~ ("#" ~ 'URLfragment).?,
+  'otherRelativeURL := ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL) ~ ("?" ~ 'URLquery).? ~ ("#" ~ 'URLfragment).?,
+
+  'schemeRelativeSpecialURL := "//" ~ ('domain | 'ipAddress) ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, 
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
   'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?).?, 
   'opaqueHost := 'opaqueHostCodePoint.rep(1) | ("[" ~ 'ipv6address ~ "]"), 
