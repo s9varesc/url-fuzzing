@@ -17,9 +17,11 @@ Grammar(
                           | ('fileBaseURL ~ ( "<" ~ 'fileRelativeURL).?)  //might need to differentiate between empty/nonempty host
                           | ('otherBaseURL ~ ( "<" ~ 'otherRelativeURL).?),
 
-  'specialAbsoluteURLwFragment := 'specialAbsoluteURL ~ ("#" ~ 'URLfragment).?,
-  'fileAbsoluteURLwFragment := 'fileAbsoluteURL ~ ("#" ~ 'URLfragment).?,
-  'otherAbsoluteURLwFragment := 'otherAbsoluteURL ~ ("#" ~ 'URLfragment).?,
+
+
+  'specialBaseURL := 'specialAbsoluteURL ~ ("#" ~ 'URLfragment).?,
+  'fileBaseURL := 'fileAbsoluteURL ~ ("#" ~ 'URLfragment).?,
+  'otherBaseURL := 'otherAbsoluteURL ~ ("#" ~ 'URLfragment).?,
 
   'specialAbsoluteURL := 'URLspecialSchemeNotFile ~ ":" ~ 'schemeRelativeSpecialURL ~ ("?" ~ 'URLSpecialquery).?,  
   'fileAbsoluteURL := 'URLschemeFile ~ ":" ~ 'schemeRelativeFileURL ~ ("?" ~ 'URLSpecialquery).? , 
