@@ -115,7 +115,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     */
     public String getSpecialComponentContent(String grammarrule, String containedIn){ //TODO
         int candidates=0;
-        ArrayList candidatekeys=new ArrayList<String>();
+        ArrayList<String> candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
             if(key.startsWith(grammarrule)){
                 candidates++;
