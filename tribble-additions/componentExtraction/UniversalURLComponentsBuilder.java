@@ -102,13 +102,22 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     }
 
 
-    public String getComponentContents(String component){
-    	return components.get(component); 
-    }
-
-
-    public String getSpecialComponentContent(String grammarrule){
-    	return dict.get(grammarrule);
+    public String getSpecialComponentContent(String grammarrule, String containedIn){ //TODO
+        int candidates=0;
+        for(String key :dict.keySet()){
+            if(key.startsWith(grammarrule)){
+                candidates++;
+            }
+        }
+        // check if multiple entries
+        if(candidates<=1){
+            return dict.get(grammarrule);
+        }
+        if(containedIn != null && !(containedIn.equals(""))){
+            //collect all candidate contents and compare them to containedIn 
+        } 
+        //containedIn is empty or none of the candidates match
+    	return null;
     }
 
 
