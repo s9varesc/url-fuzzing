@@ -23,6 +23,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
     HashMap<String, String> basecomponents=new HashMap<>();
     HashMap<String, String> relcomponents=new HashMap<>();
+    int max_dict_entries=5;
 
     public UniversalURLComponentsBuilder(){
     	super();
@@ -47,7 +48,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     }
 
     private void addAndKeepOldEntry(String name,int id, String content){
-        if(id>=5){
+        if(id>=max_dict_entries){
             // relevant rules are not present that often, and we are not interested 
             // in keeping track of single digits or characters 
             return; 
@@ -102,11 +103,23 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     }
 
 
+    /***
+    *  method to access components outside the basic prepared components,
+    *  utilizes an additional string to select the correct instantiation in case a rule is used more than once
+    *  note1: at most max_dict_entries are present
+    *  note2: using a high level rule to access components is preferable
+    *
+    * @param grammarrule the rule whose instantiation is requested
+    * @param containedIn a string which contains the desired content (returned content is a substring of containedIn)
+    * @return the instantiation of the specified rule
+    */
     public String getSpecialComponentContent(String grammarrule, String containedIn){ //TODO
         int candidates=0;
+        ArrayList candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
             if(key.startsWith(grammarrule)){
                 candidates++;
+                candidatekeys.add(key);
             }
         }
         // check if multiple entries
@@ -115,6 +128,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         if(containedIn != null && !(containedIn.equals(""))){
             //collect all candidate contents and compare them to containedIn 
+            for(String ck : candidatekeys){
+                String content=dict.get(ck);
+                if(containedIn.contains(content)){
+                    return content;
+                }
+            }
+
         } 
         //containedIn is empty or none of the candidates match
     	return null;
