@@ -82,7 +82,7 @@ Grammar(
   'h16 := 'hexdig ~ 'hexdig ~ 'hexdig ~ 'hexdig,
   'ls32 := ('h16 ~ ":" ~ 'h16) | 'ipv4address,
   'digit := "[0-9]".regex,
-  'alphanum := "[a-zA-Z0-9]".regex,
+  'alphanum :='alpha | 'digit,
   'alpha := "[a-zA-Z]".regex,
   'hexdig := ("[a-f]".regex) | 'digit,
   
