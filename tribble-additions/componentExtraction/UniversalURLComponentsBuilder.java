@@ -173,9 +173,9 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // path formatting, ...
 
         //components which need no further processing
-        components.put("port", "URLport"); 
-        components.put("fragment", "URLfragment");
-        components.put("input", "absoluteURLwithFragment"); 
+        components.put("port", dict.get("URLport")); 
+        components.put("fragment", dict.get("URLfragment"));
+        components.put("input", dict.get("absoluteURLwithFragment")); 
 
 
         // prepare scheme
