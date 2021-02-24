@@ -114,17 +114,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * @return the instantiation of the specified rule
     */
     public String getSpecialComponentContent(String grammarrule, String containedIn){ 
-        int candidates=0;
+        //int candidates=0;
         ArrayList<String> candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
             if(key.startsWith(grammarrule)){
                 candidates++;
                 candidatekeys.add(key);
             }
-        }
-        // check if multiple entries
-        if(candidates<=1){
-            return dict.get(grammarrule);
         }
         if(containedIn != null && !(containedIn.equals(""))){
             //collect all candidate contents and compare them to containedIn 
