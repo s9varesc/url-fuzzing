@@ -217,7 +217,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String dl=getSpecialComponentContent("windowsDriveLetter", bp);
 
         if(specialbase || filebase){
-            components.put("base_path", util.normalize(bp));
+            components.put("base_path", util.normalizePath(bp, dl));
         }
         else{
             components.put("base_path", bp);
