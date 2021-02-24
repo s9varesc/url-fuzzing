@@ -180,7 +180,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
         }
         components.put("base_scheme", bscheme);
-        String bhost="";
+        String bhost=null;
         String ophost=getSpecialComponentContent("opaqueHost", base);
         String d=getSpecialComponentContent("domain", base); 
         String ip=getSpecialComponentContent("ipAddress", base);
@@ -189,6 +189,9 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             if(ip.startsWith("[") && ip.endsWith("]")){
                 tmp=ip.subSequence(1, ip.length()-1).toString(); 
                 bhost="["+util.formatIPv6(tmp)+"]";
+            }
+            else{
+                bhost=ip;
             }   
         }
         else{
