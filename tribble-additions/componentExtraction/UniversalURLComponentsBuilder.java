@@ -113,7 +113,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * @param containedIn a string which contains the desired content (returned content is a substring of containedIn)
     * @return the instantiation of the specified rule
     */
-    public String getSpecialComponentContent(String grammarrule, String containedIn){ //TODO
+    public String getSpecialComponentContent(String grammarrule, String containedIn){ 
         int candidates=0;
         ArrayList<String> candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
@@ -145,7 +145,100 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * prepare the components of the produced base URL
     * note: normalization and formatting are applied when combining base and relative URL
     ***/
-    private void prepareBaseComponents(){
+    private void prepareBaseComponents(){ //TODO enforce lowercase?
+        //get full base URL
+        String base="";
+        boolean specialbase=false;
+        boolean filebase=false;
+        String tmp=dict.get("specialBaseURL");
+        if(tmp != null){
+            base=tmp;
+            specialbase=true;
+        }
+        else{
+            tmp=dict.get("fileBaseURL");
+            if(tmp != null){
+                base=tmp;
+                filebase=true;
+            }
+            else{
+                base=dict.get("otherBaseURL");
+            }
+        }
+        components.put("base", base);
+        // collect base components
+        String bscheme="";
+        if(specialbase){
+            bscheme=getSpecialComponentContent("URLspecialSchemeNotFile", base);
+        }
+        else{
+            if(filebase){
+                bscheme=getSpecialComponentContent("URLschemeFile", base);
+            }
+            else{
+                bscheme=getSpecialComponentContent("URLnonSpecialScheme", base);
+            }
+        }
+        components.put("base_scheme", bscheme);
+        String bhost="";
+        String ophost=getSpecialComponentContent("opaqueHost", base);
+        String d=getSpecialComponentContent("domain", base); 
+        String ip=getSpecialComponentContent("ipAddress", base);
+
+        if(ip!=null){
+            if(ip.startsWith("[") && ip.endsWith("]")){
+                tmp=ip.subSequence(1, ip.length()-1).toString(); 
+                bhost="["+util.formatIPv6(tmp)+"]";
+            }   
+        }
+        else{
+            if(ophost!=null){
+                bhost=ophost;
+            }
+            else{
+                bhost=d;
+            }
+        }
+        components.put("base_host", bhost.toLowerCase());
+        String bp=getSpecialComponentContent("URLport", base); //TODO port digits could be in ip
+        if(bp!=null){
+            components.put("base_port", bp);
+        }
+        String bp="";
+        String pa=getSpecialComponentContent("pathAbsoluteURL", base);
+        String panW=getSpecialComponentContent("pathAbsoluteNonWindowsFileURL", base);
+        String prsl=getSpecialComponentContent("pathRelativeSchemelessURL", base);
+        //TODO check standard again about nonspecial URLs
+        for(String p:Arrays.asList(pa, panW, prsl)){
+            if(p!=null){
+                bp=p;
+            }
+        }
+        String dl=getSpecialComponentContent("windowsDriveLetter", bp);
+
+        if(specialbase || filebase){
+            components.put("base_path", util.normalize(bp));
+        }
+        else{
+            components.put("base_path", bp);
+        }
+        
+        String bq=null;
+        if(specialbase || filebase){
+            bq=getSpecialComponentContent("URLSpecialquery", base);
+        }
+        else{
+            bq=getSpecialComponentContent("URLquery", base);
+        }
+        if(bq != null){
+            components.put("base_query", bq);
+        }
+        
+        String bf=getSpecialComponentContent("URLfragment", base);
+        if(bf!=null){
+            components.put("base_fragment", bf);
+        }
+
         return;
     }
 
