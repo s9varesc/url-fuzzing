@@ -15,7 +15,7 @@ Grammar(
 
   'baseAndRelativeURL := ('specialBaseURL ~  "<" ~ ('specialRelativeURL | 'absoluteURLwithFragment))
                           | ('fileBaseURL ~  "<" ~ ('fileRelativeURL | 'absoluteURLwithFragment))  //might need to differentiate between empty/nonempty host
-                          | ('otherBaseURL ~ "<" ~ ('otherRelativeURL | 'absoluteURLwithFragment)),
+                          | ('otherBaseURL ~ "<" ~ ('otherRelativeURL | 'absoluteURLwithFragment)), //maybe remove absolute alternative
 
 
 
@@ -33,20 +33,22 @@ Grammar(
 
   'schemeRelativeSpecialURL := "//" ~ ('domain | 'ipAddress) ~ ((":" ~ 'URLport).? ~ 'pathAbsoluteURL).?, 
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
+  'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
+  
   'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?).?, 
   'opaqueHost := 'opaqueHostCodePoint.rep(1) | ("[" ~ 'ipv6address ~ "]"), 
-  'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
+  
   'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
-  'windowsDriveLetter := 'alpha ~ (":" | "|"),
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,  
   'pathRelativeSchemelessURL := ('pathRelativeURL ~ ":").?,
-  //pathRelativeURL can't start with URLscheme
-  'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment, 
-  // URLunit can't be /,?, singleDotPathSegment, doubleDotPathSegment
+
+  'windowsDriveLetter := 'alpha ~ (":" | "|"),
+  'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
   'singleDotPathSegment := "." | "%2e",
   'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", 
+  
   'URLquery := 'queryCodePoint.rep(1),
   'URLSpecialquery := 'specialQueryCodePoint.rep(1),
   'URLfragment := 'fragmentCodePoint.rep,
@@ -63,9 +65,9 @@ Grammar(
   //'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
-  //'host := ('userinfo ~ "@").? ~ 'domain,  //TODO userinfo is deprecated
+  //'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated
   'domain := 'internationalHost | 'hostAllowed.rep(1), 
-  'internationalHost := ("xn--").? ~ 'punycodeHost,
+  'internationalHost := "xn--" ~ 'punycodeHost,
   'punycodeHost := 'alphanum ~ ('alphanum.rep | ("-" ~ 'alphanum.rep)).rep,
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
