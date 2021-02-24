@@ -199,7 +199,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 bhost=d;
             }
         }
-        components.put("base_host", bhost.toLowerCase());
+        if(bhost!=null){
+            components.put("base_host", bhost.toLowerCase());
+        }
+        
         String bp=getSpecialComponentContent("URLport", base); //TODO port digits could be in ip
         if(bp!=null){
             components.put("base_port", bp);
