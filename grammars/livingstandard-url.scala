@@ -51,7 +51,7 @@ Grammar(
   
   'URLquery := 'queryCodePoint.rep(1),
   'URLSpecialquery := 'specialQueryCodePoint.rep(1),
-  'URLfragment := 'fragmentCodePoint.rep,
+  'URLfragment := 'fragmentCodePoint.rep(1),
    // 0<=port<=65535
   'URLport := ('digit.rep(1,4))		
 		| (( "1" | "2" | "3" | "4"| "5") ~ 'digit.rep(4,4))
@@ -84,7 +84,7 @@ Grammar(
   'h16 := 'hexdig ~ 'hexdig ~ 'hexdig ~ 'hexdig,
   'ls32 := ('h16 ~ ":" ~ 'h16) | 'ipv4address,
   'digit := "[0-9]".regex,
-  'alphanum :='alpha | 'digit,
+  'alphanum := 'alpha | 'digit,
   'alpha := "[a-zA-Z]".regex,
   'hexdig := ("[a-f]".regex) | 'digit,
   
