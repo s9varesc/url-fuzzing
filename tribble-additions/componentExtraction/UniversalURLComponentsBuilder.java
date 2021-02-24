@@ -204,23 +204,23 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         if(bp!=null){
             components.put("base_port", bp);
         }
-        String bp="";
+        String bpa="";
         String pa=getSpecialComponentContent("pathAbsoluteURL", base);
         String panW=getSpecialComponentContent("pathAbsoluteNonWindowsFileURL", base);
         String prsl=getSpecialComponentContent("pathRelativeSchemelessURL", base);
         //TODO check standard again about nonspecial URLs
         for(String p:Arrays.asList(pa, panW, prsl)){
             if(p!=null){
-                bp=p;
+                bpa=p;
             }
         }
-        String dl=getSpecialComponentContent("windowsDriveLetter", bp);
+        String dl=getSpecialComponentContent("windowsDriveLetter", bpa);
 
         if(specialbase || filebase){
-            components.put("base_path", util.normalizePath(bp, dl));
+            components.put("base_path", util.normalizePath(bpa, dl));
         }
         else{
-            components.put("base_path", bp);
+            components.put("base_path", bpa);
         }
         
         String bq=null;
