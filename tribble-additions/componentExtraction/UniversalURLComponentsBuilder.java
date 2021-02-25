@@ -318,32 +318,33 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String host=null;
         String ophost=getSpecialComponentContent("opaqueHost", parent);
         String d=getSpecialComponentContent("domain", parent); 
-        String ip=getSpecialComponentContent("ipAddress", parent);
+        String ip4=getSpecialComponentContent("ipv4address", parent);
+        String ip=getSpecialComponentContent("ipv6address", parent);
 
         String originalip=ip;
 
-        if(ip!=null){
-            if(ip.startsWith("[") && ip.endsWith("]")){
-                String tmp=ip.subSequence(1, ip.length()-1).toString(); 
-                host="["+util.formatIPv6(tmp)+"]";
-            }
-            else{
-                host=ip;
-            }   
+        if(ip!=null){ 
+            host="["+util.formatIPv6(tmp)+"]";   
         }
         else{
-            if(ophost!=null){
-                host=ophost;
+            if(ipv4 != null){
+                host=ipv4;
             }
             else{
-                if(d!=null){
-                    host=d;
+                if(ophost!=null){
+                    host=ophost;
                 }
                 else{
-                    System.out.println(dict.get("ipv6address"));
-                    return "NOHOSTCANDIDATE"; //no host candidate
+                    if(d!=null){
+                        host=d;
+                    }
+                    else{
+                        System.out.println(dict.get("ipv6address"));
+                        return "NOHOSTCANDIDATE"; //no host candidate
+                    }
                 }
             }
+            
         }
         // make sure this is the full host and not a substring of it
         for(String ending: Arrays.asList("/", ":", "?", "#")){
