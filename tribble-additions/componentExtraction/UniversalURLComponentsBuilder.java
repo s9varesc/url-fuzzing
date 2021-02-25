@@ -132,7 +132,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     private ArrayList<String> getAllCandidates(String grammarrule){
         ArrayList<String> candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
-            if(key.startsWith(grammarrule)){
+            if(key.startsWith(grammarrule+"[0-9]")){
+                //TODO only numbers after rule allowed
                 candidatekeys.add(key);
             }
         }
