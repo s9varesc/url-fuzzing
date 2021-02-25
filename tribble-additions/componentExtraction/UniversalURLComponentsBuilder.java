@@ -331,7 +331,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 host=ipv4;
             }
             else{
-                if(ophost!=null){
+                if(ophost!=null && ophost !=ip){
                     host=ophost;
                 }
                 else{
