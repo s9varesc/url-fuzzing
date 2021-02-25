@@ -324,7 +324,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 return host;
             }
         }
-        if(parent.endsWith(host)){
+        if(parent.endsWith("//"+host)){
             return host;
         }
         
