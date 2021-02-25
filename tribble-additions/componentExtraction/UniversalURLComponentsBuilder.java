@@ -129,6 +129,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
         } 
         //containedIn is empty or none of the candidates match
+        System.out.println(grammarrule+ "inside"+ containedIn);
+        System.out.println(dict);
+        System.out.println("candidates:");
+        System.out.println(candidatekeys);
     	return null;
     }
 
