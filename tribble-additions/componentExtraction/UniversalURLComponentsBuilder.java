@@ -259,7 +259,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                     rscheme=s;
                 }
             }
-            components.put("relative_scheme", rscheme);
+            if(rscheme!= null){
+                components.put("relative_scheme", rscheme);
+            }
+            else{
+                System.out.println(rel);
+                System.out.println(dict);
+            }
         }
         // prepare host
         String rhost=prepareHost(rel);
