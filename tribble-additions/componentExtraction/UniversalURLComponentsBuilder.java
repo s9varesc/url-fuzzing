@@ -129,7 +129,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     	return null;
     }
 
-    private List<String> getAllCandidates(String grammarrule){
+    private ArrayList<String> getAllCandidates(String grammarrule){
         ArrayList<String> candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
             if(key.startsWith(grammarrule)){
