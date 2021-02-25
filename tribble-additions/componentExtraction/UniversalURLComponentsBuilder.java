@@ -255,7 +255,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             String ot=getSpecialComponentContent("URLnonSpecialScheme", rel);
             System.out.println(Arrays.asList(sp, fi, ot));
             for(String s: Arrays.asList(sp, fi, ot)){
-                if(s != null && rel.startsWith(s)){
+                if(s != null && rel.startsWith(s+":")){
                     rscheme=s;
                 }
             }
