@@ -11,8 +11,7 @@ Mode | nr URLs | Firefox | Chromium | whatwg-url |
 4-path-30 | 580 |  parsing errors: 12<br> component errors: 209 <br> coverage: 67,8% | parsing errors: 33 <br> component errors: 130 <br> coverage: 37,03% |parsing errors: 19 <br> coverage: 58,38% |
 4-path-50 | 562 |  parsing errors: 17<br> component errors: 181<br> coverage:  67,8% | parsing errors: 18 <br> component errors: 121 <br> coverage: 37,03% |parsing errors: 23 <br> coverage:  58,38%|
 4-path-70 | 541 | parsing errors: 19<br> component errors: 179 <br> coverage: 67,8% | parsing errors: 19 <br> component errors: 120 <br> coverage: 37,03% |parsing errors: 16 <br> coverage:  58,38|
-5-path-30 |  
-
+5-path-30 | 765 | parsing errors: 17 <br> component errors: 354 <br> coverage: 67,8% | parsing errors: 24 <br> component errors: 250 <br> coverage: 37,22% |parsing errors: 8<br> coverage:  57,93% |  
 5-path-50 | 757 | parsing errors: 12 <br> component errors: 374 <br> coverage: 67,8% | parsing errors: 36 <br> component errors: 252 <br> coverage: 37,03% |parsing errors: 23 <br>coverage: 58,38%|
 
 
