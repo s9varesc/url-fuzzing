@@ -231,10 +231,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     private void prepareRelativeComponents(){
         String bar=dict.get("baseAndRelativeURL");
         String rel;
-        boolean woscheme=true;
+        boolean scheme=true;
         rel=dict.get("absoluteURLwithFragment"); //base is special/file/other/absolute
         if(rel!=null){
-            woscheme=false;
+            scheme=false;
         }
         else{
             String sprel=dict.get("specialRelativeURL");
@@ -248,7 +248,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         components.put("relative", rel);
         // prepare scheme
-        //if(!woscheme){
+        if(scheme){
             String rscheme=null;
             String sp=getSpecialComponentContent("URLspecialSchemeNotFile", rel);
             String fi=getSpecialComponentContent("URLschemeFile", rel);
@@ -259,7 +259,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 }
             }
             components.put("relative_scheme", rscheme);
-        //}
+        }
         // prepare host
         String rhost=prepareHost(rel);
         if(rhost != null){
