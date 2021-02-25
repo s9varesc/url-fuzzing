@@ -139,7 +139,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 candidatekeys.add(key);
             }
         }
-        if(candidatekeys.size()>1 || grammarrule.startsWith("URL*cheme")){
+        if(candidatekeys.size()>1 || grammarrule.startsWith("URLs") || grammarrule.startsWith("URLnon") ){
             System.out.println(grammarrule);
             System.out.println(candidatekeys);
             System.out.println(dict);
