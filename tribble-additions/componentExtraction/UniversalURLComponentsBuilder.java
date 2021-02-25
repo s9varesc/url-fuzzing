@@ -236,7 +236,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         components.put("relative", rel);
         // prepare scheme
         if(!woscheme){
-            String rscheme;
+            String rscheme=null;
             String sp=getSpecialComponentContent("URLspecialSchemeNotFile", rel);
             String fi=getSpecialComponentContent("URLschemeFile", rel);
             String ot=getSpecialComponentContent("URLnonSpecialScheme", rel);
@@ -258,7 +258,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("relative_path", rpath);
         }
         // prepare query
-        String rq;
+        String rq=null;
         String rsq=getSpecialComponentContent("URLSpecialquery", rel);
         String rnsq=getSpecialComponentContent("URLquery", rel);
         if( rsq != null){
