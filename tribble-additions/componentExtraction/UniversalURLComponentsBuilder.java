@@ -174,50 +174,20 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
         }
         components.put("base_scheme", bscheme);
-        String bhost=null;
-        String ophost=getSpecialComponentContent("opaqueHost", base);
-        String d=getSpecialComponentContent("domain", base); 
-        String ip=getSpecialComponentContent("ipAddress", base);
-
-        if(ip!=null){
-            if(ip.startsWith("[") && ip.endsWith("]")){
-                tmp=ip.subSequence(1, ip.length()-1).toString(); 
-                bhost="["+util.formatIPv6(tmp)+"]";
-            }
-            else{
-                bhost=ip;
-            }   
-        }
-        else{
-            if(ophost!=null){
-                bhost=ophost;
-            }
-            else{
-                bhost=d;
-            }
-        }
-        if(bhost!=null){
-            components.put("base_host", bhost.toLowerCase());
+        String bhost=prepareHost(base);
+        if(bhost != null){
+            components.put("base_host", bhost);
         }
         
         String bp=getSpecialComponentContent("URLport", base); //TODO port digits could be in ip
         if(bp!=null){
             components.put("base_port", bp);
         }
-        String bpa="";
-        String pa=getSpecialComponentContent("pathAbsoluteURL", base);
-        String panW=getSpecialComponentContent("pathAbsoluteNonWindowsFileURL", base);
-        String prsl=getSpecialComponentContent("pathRelativeSchemelessURL", base);
-        //TODO check standard again about nonspecial URLs
-        for(String p:Arrays.asList(pa, panW, prsl)){
-            if(p!=null){
-                bpa=p;
-            }
-        }
+        String bpa=preparePath(base);
         String dl=getSpecialComponentContent("windowsDriveLetter", bpa);
 
         if(specialbase || filebase){
-            components.put("base_path", util.normalizePath(bpa, dl));
+            components.put("base_path", util.normalizePath(bpa, dl)); //TODO wait for combining before normalization?
         }
         else{
             components.put("base_path", bpa);
@@ -246,6 +216,69 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * dual to prepareBaseComponents; prepare the components of the relative URL
     ***/
     private void prepareRelativeComponents(){
+        String bar=dict.get("baseAndRelativeURL");
+        String rel;
+        boolean woscheme=true;
+        rel=dict.get("absoluteURLwithFragment"); //base is special/file/other/absolute
+        if(rel!=null){
+            woscheme=false;
+        }
+        else{
+            String sprel=dict.get("specialRelativeURL");
+            String firel=dict.get("fileRelativeURL");
+            String otrel=dict.get("otherRelativeURL");
+            for(String r: Arrays.asList(sprel, firel, otrel)){
+                if(r!=null){
+                    rel=r;
+                }
+            }
+        }
+        components.put("relative", rel);
+        // prepare scheme
+        if(!woscheme){
+            String rscheme;
+            String sp=getSpecialComponentContent("URLspecialSchemeNotFile", rel);
+            String fi=getSpecialComponentContent("URLschemeFile", rel);
+            String ot=getSpecialComponentContent("URLnonSpecialScheme", rel);
+            for(String s: Arrays.asList(sp, fi, ot)){
+                if(s != null){
+                    rscheme=s;
+                }
+            }
+            components.put("relative_scheme", rscheme);
+        }
+        // prepare host
+        String rhost=prepareHost(rel);
+        if(rhost != null){
+            components.put("relative_host", rhost);
+        }
+        //prepare path
+        String rpath=preparePath(rel); //TODO make preparePath stronger
+        if(rpath != null){
+            components.put("relative_path", rpath);
+        }
+        // prepare query
+        String rq;
+        String rsq=getSpecialComponentContent("URLSpecialquery", rel);
+        String rnsq=getSpecialComponentContent("URLquery", rel);
+        if( rsq != null){
+            rq=rsq;
+        }
+        else{
+            if( rnsq != null){
+                rq=rnsq;
+            }
+        }
+        if(rq != null){
+            components.put("relative_query", rq);
+        }
+        // prepare fragment
+        String rf=getSpecialComponentContent("URLfragment", rel);
+        if(rf != null){
+            components.put("relative_fragment", rf);
+        }
+
+
         return;
     }
 
@@ -255,6 +288,47 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     private void combineBaseAndRelativeComponents(){
         components.put("input", dict.get("baseAndRelativeURL"));
         return;
+    }
+
+    private String prepareHost(String parent){
+        String host=null;
+        String ophost=getSpecialComponentContent("opaqueHost", parent);
+        String d=getSpecialComponentContent("domain", parent); 
+        String ip=getSpecialComponentContent("ipAddress", parent);
+
+        if(ip!=null){
+            if(ip.startsWith("[") && ip.endsWith("]")){
+                String tmp=ip.subSequence(1, ip.length()-1).toString(); 
+                host="["+util.formatIPv6(tmp)+"]";
+            }
+            else{
+                host=ip;
+            }   
+        }
+        else{
+            if(ophost!=null){
+                host=ophost;
+            }
+            else{
+                host=d;
+            }
+        }
+        return host;
+    }
+
+    private String preparePath(String parent){ //TODO check if these are enough
+        String path=null;
+        String pa=getSpecialComponentContent("pathAbsoluteURL", parent);
+        String panW=getSpecialComponentContent("pathAbsoluteNonWindowsFileURL", parent);
+        String prsl=getSpecialComponentContent("pathRelativeSchemelessURL", parent);
+        
+        for(String p:Arrays.asList(pa, panW, prsl)){
+            if(p!=null){
+                path=p;
+            }
+        }
+        return path;
+
     }
 
 
@@ -283,35 +357,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
 
         // prepare host
-        String ophost=dict.get("opaqueHost");
-        String d=dict.get("domain"); 
-        String ip=dict.get("ipAddress");
-        String reshost="";
-        String tmp="";
-        if(ophost !=null){
-          reshost=ophost.toLowerCase();
+        String reshost=prepareHost(components.get("input"));
+        if(reshost != null){
+            components.put("host", reshost);
         }
-        else{
-          if(d !=null){
-            reshost=d.toLowerCase();
-          }
-          else{
-            if (ip!=null){
-              reshost=ip.toLowerCase(); 
-              
-            }
-          }
-        }
-           if(dict.get("ipv6address")!=null){
-               String inp=reshost;
-               // in case of ipv6 address format the parts
-               if(inp.startsWith("[") && inp.endsWith("]")){
-                   tmp=inp.subSequence(1, inp.length()-1).toString(); 
-                   reshost="["+util.formatIPv6(tmp)+"]";
-               }   
-               
-           }
-        components.put("host", reshost);
+        
 
         // prepare path
         String pa=dict.get("pathAbsoluteURL");
