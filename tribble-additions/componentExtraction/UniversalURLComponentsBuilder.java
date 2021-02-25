@@ -300,11 +300,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String sq=getSpecialComponentContent("URLSpecialquery", rel);
         String nsq=getSpecialComponentContent("URLquery", rel);
         if( sq != null){
-            rq=rsq;
+            rq=sq;
         }
         else{
             if( nsq != null){
-                rq=rnsq;
+                rq=nsq;
             }
         }
         if(parent.contains("\\?"+rq)){
