@@ -113,13 +113,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * @param containedIn a string which contains the desired content (returned content is a substring of containedIn)
     * @return the instantiation of the specified rule
     */
-    public String getSpecialComponentContent(String grammarrule, String containedIn){ 
-        ArrayList<String> candidatekeys=new ArrayList<String>();
-        for(String key :dict.keySet()){
-            if(key.startsWith(grammarrule)){
-                candidatekeys.add(key);
-            }
-        }
+    public String getSpecialComponentContent(String grammarrule, String containedIn){  //TODO
+        ArrayList<String> candidatekeys=getAllCandidates(grammarrule);
         if(containedIn != null && !(containedIn.equals(""))){
             //collect all candidate contents and compare them to containedIn 
             for(String ck : candidatekeys){
@@ -132,6 +127,16 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         } 
         //containedIn is empty or none of the candidates match
     	return null;
+    }
+
+    private List<String> getAllCandidates(String grammarrule){
+        ArrayList<String> candidatekeys=new ArrayList<String>();
+        for(String key :dict.keySet()){
+            if(key.startsWith(grammarrule)){
+                candidatekeys.add(key);
+            }
+        }
+        return candidatekeys;
     }
 
 
@@ -290,7 +295,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         return;
     }
 
-    private String prepareHost(String parent){
+    private String prepareHost(String parent){//TODO make sure that the returned host is not a real substring of the actual host
         String host=null;
         String ophost=getSpecialComponentContent("opaqueHost", parent);
         String d=getSpecialComponentContent("domain", parent); 
@@ -313,6 +318,12 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 host=d;
             }
         }
+        // make sure this is the full host and not a substring of it
+        if(parent.contains("//"+host+"/") || parent.contains("//"+host+":")){
+            return host;
+        }
+        // overlapping hosts, need some extra work
+        host="OVERLAP";
         return host;
     }
 
