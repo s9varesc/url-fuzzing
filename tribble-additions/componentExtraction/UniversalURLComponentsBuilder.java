@@ -300,6 +300,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String ophost=getSpecialComponentContent("opaqueHost", parent);
         String d=getSpecialComponentContent("domain", parent); 
         String ip=getSpecialComponentContent("ipAddress", parent);
+        String originalip=ip;
 
         if(ip!=null){
             if(ip.startsWith("[") && ip.endsWith("]")){
@@ -315,18 +316,24 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 host=ophost;
             }
             else{
-                host=d;
+                if(d!=null){
+                    host=d;
+                }
+                else{
+                    return null; //no host candidate
+                }
             }
         }
         // make sure this is the full host and not a substring of it
         for(String ending: Arrays.asList("/", ":", "?", "#")){
-            if(parent.contains("//"+host+ending)){
+            if(parent.contains("//"+host+ending) || parent.contains("//"+originalip+ending)){
                 return host;
             }
         }
-        if(parent.endsWith("//"+host)){
+        if(parent.endsWith("//"+host) || || parent.endsWith("//"+originalip)){
             return host;
         }
+
         
         // overlapping hosts, need some extra work
         host="OVERLAP";
