@@ -330,7 +330,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 return host;
             }
         }
-        if(parent.endsWith("//"+host) || || parent.endsWith("//"+originalip)){
+        if(parent.endsWith("//"+host) || parent.endsWith("//"+originalip)){
             return host;
         }
 
