@@ -295,6 +295,25 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         return;
     }
 
+    private String prepareQuery(String parent){
+        String rq=null;
+        String sq=getSpecialComponentContent("URLSpecialquery", rel);
+        String nsq=getSpecialComponentContent("URLquery", rel);
+        if( sq != null){
+            rq=rsq;
+        }
+        else{
+            if( nsq != null){
+                rq=rnsq;
+            }
+        }
+        if(parent.contains("\\?"+rq)){
+            return rq;
+        }
+        //TODO
+        return "query";
+    }
+
     private String prepareHost(String parent){//TODO make sure that the returned host is not a real substring of the actual host
         String host=null;
         String ophost=getSpecialComponentContent("opaqueHost", parent);
