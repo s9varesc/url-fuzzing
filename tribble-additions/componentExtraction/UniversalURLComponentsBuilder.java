@@ -129,10 +129,6 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
         } 
         //containedIn is empty or none of the candidates match
-        System.out.println(grammarrule+ "inside"+ containedIn);
-        System.out.println(dict);
-        System.out.println("candidates:");
-        System.out.println(candidatekeys);
     	return null;
     }
 
@@ -142,6 +138,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             if(key.startsWith(grammarrule+"[0-9]") || key.equals(grammarrule)){
                 candidatekeys.add(key);
             }
+        }
+        if(candidatekeys.size()>1){
+            System.out.println(grammarrule);
+            System.ou.println(candidatekeys);
+            System.out.println(dict);
         }
         return candidatekeys;
     }
