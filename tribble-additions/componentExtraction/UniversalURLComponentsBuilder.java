@@ -340,7 +340,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                     host=d;
                 }
                 else{
-
+                    System.out.println(dict.get("ipv6address"));
                     return "NOHOSTCANDIDATE"; //no host candidate
                 }
             }
