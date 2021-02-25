@@ -318,13 +318,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String host=null;
         String ophost=getSpecialComponentContent("opaqueHost", parent);
         String d=getSpecialComponentContent("domain", parent); 
-        String ip4=getSpecialComponentContent("ipv4address", parent);
+        String ipv4=getSpecialComponentContent("ipv4address", parent);
         String ip=getSpecialComponentContent("ipv6address", parent);
 
         String originalip=ip;
 
         if(ip!=null){ 
-            host="["+util.formatIPv6(tmp)+"]";   
+            host="["+util.formatIPv6(ip)+"]";   
         }
         else{
             if(ipv4 != null){
