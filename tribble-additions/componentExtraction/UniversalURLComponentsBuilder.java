@@ -231,10 +231,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     private void prepareRelativeComponents(){
         String bar=dict.get("baseAndRelativeURL");
         String rel;
-        boolean scheme=true;
+        boolean scheme=fase;
         rel=dict.get("absoluteURLwithFragment"); //base is special/file/other/absolute
         if(rel!=null){
-            scheme=false;
+            scheme=true;
         }
         else{
             String sprel=dict.get("specialRelativeURL");
