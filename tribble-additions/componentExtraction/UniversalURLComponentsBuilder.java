@@ -355,7 +355,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         
         // overlapping hosts, need some extra work
         //host="XXX";
-        System.out.println("parent");
+        System.out.println(parent);
         return host;
     }
 
