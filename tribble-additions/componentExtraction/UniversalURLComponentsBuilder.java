@@ -240,7 +240,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         components.put("relative", rel);
         // prepare scheme
-        if(!woscheme){
+        //if(!woscheme){
             String rscheme=null;
             String sp=getSpecialComponentContent("URLspecialSchemeNotFile", rel);
             String fi=getSpecialComponentContent("URLschemeFile", rel);
@@ -251,7 +251,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 }
             }
             components.put("relative_scheme", rscheme);
-        }
+        //}
         // prepare host
         String rhost=prepareHost(rel);
         if(rhost != null){
@@ -310,8 +310,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         if(parent.contains("\\?"+rq)){
             return rq;
         }
-        //TODO
-        return "query";
+        //TODO may need to check for other query entries
+        return null;
     }
 
     private String prepareHost(String parent){//TODO make sure that the returned host is not a real substring of the actual host
@@ -339,7 +339,6 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                         host=d;
                     }
                     else{
-                        System.out.println(dict.get("ipv6address"));
                         return "NOHOSTCANDIDATE"; //no host candidate
                     }
                 }
@@ -358,7 +357,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
         
         // overlapping hosts, need some extra work
-        host="OVERLAP";
+        host="XXX";
         return host;
     }
 
