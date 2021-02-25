@@ -324,6 +324,9 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 return host;
             }
         }
+        if(parent.endsWith(host)){
+            return host;
+        }
         
         // overlapping hosts, need some extra work
         host="OVERLAP";
