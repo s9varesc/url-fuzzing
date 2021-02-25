@@ -135,15 +135,15 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     private ArrayList<String> getAllCandidates(String grammarrule){
         ArrayList<String> candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
-            if((key.startsWith(grammarrule) && key.endsWith("[0-9]")) || key.equals(grammarrule)){
+            if((key.startsWith(grammarrule) && Character.isDigit(key.charAt(key.length()-1))) || key.equals(grammarrule)){
                 candidatekeys.add(key);
             }
         }
-        if(candidatekeys.size()>1 || grammarrule.startsWith("URLs") || grammarrule.startsWith("URLnon") ){
+        /*if(candidatekeys.size()>1 || grammarrule.startsWith("URLs") || grammarrule.startsWith("URLnon") ){
             System.out.println(grammarrule);
             System.out.println(candidatekeys);
             System.out.println(dict);
-        }
+        }*/
         return candidatekeys;
     }
 
