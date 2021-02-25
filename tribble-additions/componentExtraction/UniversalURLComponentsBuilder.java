@@ -328,27 +328,21 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
         String originalip=ip;
 
-        if(ip!=null){ 
-            host="["+util.formatIPv6(ip)+"]";   
+        if(d != null){
+            host=d;
         }
         else{
-            if(ipv4 != null){
-                host=ipv4;
+            if(ip != null){
+                host="["+util.formatIPv6(ip)+"]";
             }
             else{
-                if(ophost!=null && ophost !=ip){
-                    host=ophost;
+                if(ipv4 != null){
+                    host=ipv4;
                 }
                 else{
-                    if(d!=null){
-                        host=d;
-                    }
-                    else{
-                        return "NOHOSTCANDIDATE"; //no host candidate
-                    }
+                    host=ophost;
                 }
             }
-            
         }
         // make sure this is the full host and not a substring of it
         for(String ending: Arrays.asList("/", ":", "?", "#")){
