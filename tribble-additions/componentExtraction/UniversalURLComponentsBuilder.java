@@ -297,8 +297,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
     private String prepareQuery(String parent){
         String rq=null;
-        String sq=getSpecialComponentContent("URLSpecialquery", rel);
-        String nsq=getSpecialComponentContent("URLquery", rel);
+        String sq=getSpecialComponentContent("URLSpecialquery", parent);
+        String nsq=getSpecialComponentContent("URLquery", parent);
         if( sq != null){
             rq=sq;
         }
