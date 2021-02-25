@@ -319,9 +319,12 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
         }
         // make sure this is the full host and not a substring of it
-        if(parent.contains("//"+host+"/") || parent.contains("//"+host+":")){
-            return host;
+        for(String ending: Arrays.asList("/", ":", "?", "#")){
+            if(parent.contains("//"+host+ending)){
+                return host;
+            }
         }
+        
         // overlapping hosts, need some extra work
         host="OVERLAP";
         return host;
