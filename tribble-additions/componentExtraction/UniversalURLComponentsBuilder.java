@@ -93,12 +93,17 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             prepareBaseComponents();
             prepareRelativeComponents();
             combineBaseAndRelativeComponents();
+
+            System.out.println(components);
+            if(components.get("relative_host").equals("NOHOSTCANDIDATE")){
+                System.out.println(dict);
+            }
         }
         else{
             // there is only a absolute URL present
             prepareBasicComponents();
         }
-        System.out.println(components);
+        
     	return;
     }
 
