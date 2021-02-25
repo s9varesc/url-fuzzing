@@ -139,11 +139,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 candidatekeys.add(key);
             }
         }
-        if(candidatekeys.size()>1){
+        //if(candidatekeys.size()>1){
             System.out.println(grammarrule);
             System.out.println(candidatekeys);
             System.out.println(dict);
-        }
+        //}
         return candidatekeys;
     }
 
