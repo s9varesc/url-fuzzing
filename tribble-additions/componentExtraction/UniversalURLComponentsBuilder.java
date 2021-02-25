@@ -132,7 +132,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     private ArrayList<String> getAllCandidates(String grammarrule){
         ArrayList<String> candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
-            if(key.startsWith(grammarrule+"[0-9]") || key.endsWith(grammarrule)){
+            if(key.startsWith(grammarrule+"[0-9]") || key.equals(grammarrule)){
                 candidatekeys.add(key);
             }
         }
@@ -319,6 +319,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String ophost=getSpecialComponentContent("opaqueHost", parent);
         String d=getSpecialComponentContent("domain", parent); 
         String ip=getSpecialComponentContent("ipAddress", parent);
+
         String originalip=ip;
 
         if(ip!=null){
