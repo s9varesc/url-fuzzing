@@ -141,7 +141,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         if(candidatekeys.size()>1){
             System.out.println(grammarrule);
-            System.ou.println(candidatekeys);
+            System.out.println(candidatekeys);
             System.out.println(dict);
         }
         return candidatekeys;
