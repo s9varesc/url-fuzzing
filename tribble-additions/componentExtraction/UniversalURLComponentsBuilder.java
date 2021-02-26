@@ -351,11 +351,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             return host;
         }
 
-        
-        // overlapping hosts, need some extra work
-        host="XXX"+host;
-        //System.out.println(parent);
-        return host;
+        return null;
     }
 
     private String preparePath(String parent){ //TODO check if these are enough
