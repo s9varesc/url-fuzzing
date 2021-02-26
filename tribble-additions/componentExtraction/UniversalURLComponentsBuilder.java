@@ -253,7 +253,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             String sp=getSpecialComponentContent("URLspecialSchemeNotFile", rel);
             String fi=getSpecialComponentContent("URLschemeFile", rel);
             String ot=getSpecialComponentContent("URLnonSpecialScheme", rel);
-            System.out.println(Arrays.asList(sp, fi, ot));
+            
             for(String s: Arrays.asList(sp, fi, ot)){
                 if(s != null && rel.startsWith(s+":")){
                     rscheme=s;
@@ -262,10 +262,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             if(rscheme!= null){
                 components.put("relative_scheme", rscheme);
             }
-            else{
-                System.out.println(rel);
-                System.out.println(dict);
-            }
+            
         }
         // prepare host
         String rhost=prepareHost(rel);
@@ -278,17 +275,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("relative_path", rpath);
         }
         // prepare query
-        String rq=null;
-        String rsq=getSpecialComponentContent("URLSpecialquery", rel);
-        String rnsq=getSpecialComponentContent("URLquery", rel);
-        if( rsq != null){
-            rq=rsq;
-        }
-        else{
-            if( rnsq != null){
-                rq=rnsq;
-            }
-        }
+        String rq=prepareQuery(rel);
         if(rq != null){
             components.put("relative_query", rq);
         }
@@ -366,8 +353,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
         
         // overlapping hosts, need some extra work
-        //host="XXX";
-        System.out.println(parent);
+        host="XXX"+host;
+        //System.out.println(parent);
         return host;
     }
 
@@ -435,7 +422,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
        
            }
         String pathcontent="";
-           String driveletter=dict.get("windowsDriveLetter");
+        String driveletter=dict.get("windowsDriveLetter");
         /*if (panW != null){
           pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
         }*/
