@@ -334,7 +334,6 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 if(parent.contains("//"+h)){
                     host=h;
                     if(h.equals(originalip)){
-                        System.out.println("ipv6 formatting");
                         host=ip;
                     }
                 }
