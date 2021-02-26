@@ -321,7 +321,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String ophost=getSpecialComponentContent("opaqueHost", parent);
         String d=getSpecialComponentContent("domain", parent); 
         String ipv4=getSpecialComponentContent("ipv4address", parent);
-        String ip="["+util.formatIPv6(getSpecialComponentContent("ipv6address", parent))+"]";
+        String ip=getSpecialComponentContent("ipv6address", parent);
+        if(ip != null){
+            ip="["+util.formatIPv6(ip)+"]";
+        }
 
         String originalip=ip;
 
