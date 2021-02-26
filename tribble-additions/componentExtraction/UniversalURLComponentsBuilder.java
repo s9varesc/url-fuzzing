@@ -322,11 +322,12 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String d=getSpecialComponentContent("domain", parent); 
         String ipv4=getSpecialComponentContent("ipv4address", parent);
         String ip=getSpecialComponentContent("ipv6address", parent);
+        String originalip=ip;
         if(ip != null){
             ip="["+util.formatIPv6(ip)+"]";
         }
 
-        String originalip=ip;
+        
 
         for(String h: Arrays.asList(ophost, d, ipv4, originalip)){
             if(h != null){
