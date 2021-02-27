@@ -194,12 +194,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String bpa=preparePath(base);
         String dl=getSpecialComponentContent("windowsDriveLetter", bpa);
 
-        if(specialbase || filebase){
-            components.put("base_path", util.normalizePath(bpa, dl));
-        }
-        else{
-            components.put("base_path", bpa);
-        }
+        components.put("base_path", bpa);
+        components.put("base_driveletter", dl); //needed for normalization later
         
         String bq=null;
         if(specialbase || filebase){
@@ -259,16 +255,21 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
             
         }
-        // prepare host
+        // prepare host and port
         String rhost=prepareHost(rel);
         if(rhost != null){
             components.put("relative_host", rhost);
+            String rp=getSpecialComponentContent("URLport", rel); 
+            if(rp!=null){
+                components.put("relative_port", rp);
+            }
         }
         //prepare path
         String rpath=preparePath(rel); 
         String dl=getSpecialComponentContent("windowsDriveLetter", rpath);
-        if(rpath != null){
-            components.put("relative_path", util.normalizePath(rpath, dl));
+        if(rpath != null){ 
+            components.put("relative_path", rpath);
+            components.put("relative_driveletter", dl); //needed for normalization later
         }
         // prepare query
         String rq=prepareQuery(rel);
@@ -290,6 +291,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     ***/
     private void combineBaseAndRelativeComponents(){
         // make accessing components for relative and base similar to absolute URLs
+        components.put("input", components.get("relative"));
         if(components.get("relative_scheme")!=null){
             components.put("scheme", components.get("relative_scheme"));
         }
@@ -309,11 +311,26 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("host", components.get("base_host"));
             components.put("port", components.get("base_port"));
         }
-        String path=components.get("relative_path"); 
+        String path=components.get("relative_path"); //TODO if relp does not start with / -> replace last base segment
+        String basepath=components.get("base_path");
         boolean relpath=false;
         if(path != null ){
-            components.put("path", path); //TODO this is always normalized, check that this is right
             relpath=true;
+            if(path.startsWith("/")){
+                components.put("path", path); //TODO normalization ?
+            }
+            else{
+                //replace last base path segment with relative path and normalize
+                if(basepath != null){
+                    int index=basepath.lastIndexOf("/");
+                    basepath=basepath.substring(0, index);
+                }
+                basepath+="/"+path;
+                // drive letters always follow after a / and are always at the beginning of a path
+                // so if there is a drive letter in the combined path, it originates from the base path
+                components.put("path", util.normalizePath(basepath, components.get("base_driveletter"))); 
+            }
+            
         }
         else{ 
             if(! relhost){ //only use base path if relative has neither host nor path

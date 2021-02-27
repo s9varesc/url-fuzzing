@@ -30,7 +30,15 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
     @Override
     public String buildRepresentation() { 
         String result="{";
-        result+="spec:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
+        String spec=univcomp.getSpecialComponentContent("base");
+        if(spec != null){
+            result+="spec:\""+escapeContent(spec)+"\",\n";
+            result+="relativeURi:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
+        }
+        else{
+            result+="spec:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
+        }
+       
         result+="scheme:\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",\n";
         String host=(univcomp.getComponentContents("host")!=null) ? escapeContent(univcomp.getComponentContents("host")) : "";
         String fullhost=host; //needed for prePath
