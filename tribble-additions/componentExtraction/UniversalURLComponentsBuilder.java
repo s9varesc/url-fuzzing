@@ -139,9 +139,16 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     private ArrayList<String> getAllCandidates(String grammarrule){
         ArrayList<String> candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
-            if((key.startsWith(grammarrule) && Character.isDigit(key.charAt(grammarrule.length()))) || key.equals(grammarrule)){
-                candidatekeys.add(key);
+            try{
+                if((key.startsWith(grammarrule) && Character.isDigit(key.charAt(grammarrule.length()))) || key.equals(grammarrule)){
+                    candidatekeys.add(key); 
+                }
             }
+            catch (Exeception e){
+                // char at might throw string index out of bounds
+                continue;
+            }
+            
         }
         return candidatekeys;
     }
