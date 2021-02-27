@@ -124,7 +124,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             for(String ck : candidatekeys){
                 String content=dict.get(ck);
                 if(containedIn.contains(content)){ 
-                    if(content.length()>longestmatch.lentgh()){ //make sure to return the best match
+                    if(content.length()>longestmatch.length()){ //make sure to return the best match
                         longestmatch=content; 
                     }
                 }
