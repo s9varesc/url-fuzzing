@@ -140,7 +140,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         ArrayList<String> candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
             try{
-                if((key.startsWith(grammarrule) && Character.isDigit(key.charAt(grammarrule.length()))) || key.equals(grammarrule)){
+                if(key.equals(grammarrule) || (key.startsWith(grammarrule) && Character.isDigit(key.charAt(grammarrule.length()))) ){
                     candidatekeys.add(key); 
                 }
             }
