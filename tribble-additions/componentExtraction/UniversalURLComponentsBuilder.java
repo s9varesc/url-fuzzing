@@ -120,12 +120,16 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         ArrayList<String> candidatekeys=getAllCandidates(grammarrule);
         if(containedIn != null && !(containedIn.equals(""))){
             //collect all candidate contents and compare them to containedIn 
+            String longestmatch="";
             for(String ck : candidatekeys){
                 String content=dict.get(ck);
-                if(containedIn.contains(content)){
-                    return content;
+                if(containedIn.contains(content)){ 
+                    if(content.length()>longestmatch.lentgh()){ //make sure to return the best match
+                        longestmatch=content; 
+                    }
                 }
             }
+            return (! longestmatch.equals("")? longestmatch : null);
 
         } 
         //containedIn is empty or none of the candidates match
@@ -383,7 +387,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         return null;
     }
 
-    private String prepareHost(String parent){//TODO make sure that the returned host is not a real substring of the actual host
+    private String prepareHost(String parent){
         String host=null;
         String ophost=getSpecialComponentContent("opaqueHost", parent);
         String d=getSpecialComponentContent("domain", parent); 
@@ -430,6 +434,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 path=p;
             }
         }
+
         return path;
 
     }
