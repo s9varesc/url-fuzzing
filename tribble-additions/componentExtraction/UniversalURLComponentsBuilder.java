@@ -323,7 +323,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 //replace last base path segment with relative path and normalize
                 if(basepath != null){
                     int index=basepath.lastIndexOf("/");
-                    basepath=basepath.substring(0, index);
+                    basepath=basepath.substring(0, (index >=0 ? index: 0));
                 }
                 basepath+="/"+path;
                 // drive letters always follow after a / and are always at the beginning of a path
