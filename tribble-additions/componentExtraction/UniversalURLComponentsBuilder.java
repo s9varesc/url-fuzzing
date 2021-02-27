@@ -144,7 +144,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                     candidatekeys.add(key); 
                 }
             }
-            catch (Exeception e){
+            catch (Exception e){
                 // char at might throw string index out of bounds
                 continue;
             }

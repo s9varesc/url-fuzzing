@@ -59,13 +59,6 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     result+="\""+fragment+"\"";
     result+="}";
 
-    String bar=univcomp.getSpecialComponentContent("baseAndRelativeURL", "");
-    String base=univcomp.getSpecialComponentContent("specialBaseURL", "");
-    if(base != null){
-      System.out.println(base);
-      System.out.println(univcomp.getSpecialComponentContent("absoluteURLwithFragment", bar));
-      System.out.println(univcomp.getSpecialComponentContent("specialRelativeURL", bar));
-      
 
     }
 
