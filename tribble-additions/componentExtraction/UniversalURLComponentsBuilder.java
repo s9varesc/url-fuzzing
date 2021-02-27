@@ -337,6 +337,9 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                     int index=basepath.lastIndexOf("/");
                     basepath=basepath.substring(0, (index >=0 ? index: 0));
                 }
+                else{
+                    basepath="";
+                }
                 basepath+="/"+path;
                 // drive letters always follow after a / and are always at the beginning of a path
                 // so if there is a drive letter in the combined path, it originates from the base path
