@@ -139,11 +139,6 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 candidatekeys.add(key);
             }
         }
-        /*if(candidatekeys.size()>1 || grammarrule.startsWith("URLs") || grammarrule.startsWith("URLnon") ){
-            System.out.println(grammarrule);
-            System.out.println(candidatekeys);
-            System.out.println(dict);
-        }*/
         return candidatekeys;
     }
 
@@ -192,7 +187,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("base_host", bhost);
         }
         
-        String bp=getSpecialComponentContent("URLport", base); //TODO port digits could be in ip
+        String bp=getSpecialComponentContent("URLport", base); 
         if(bp!=null){
             components.put("base_port", bp);
         }
@@ -200,7 +195,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String dl=getSpecialComponentContent("windowsDriveLetter", bpa);
 
         if(specialbase || filebase){
-            components.put("base_path", util.normalizePath(bpa, dl)); //TODO wait for combining before normalization?
+            components.put("base_path", util.normalizePath(bpa, dl));
         }
         else{
             components.put("base_path", bpa);
@@ -270,9 +265,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("relative_host", rhost);
         }
         //prepare path
-        String rpath=preparePath(rel); //TODO make preparePath stronger
+        String rpath=preparePath(rel); 
+        String dl=getSpecialComponentContent("windowsDriveLetter", rpath);
         if(rpath != null){
-            components.put("relative_path", rpath);
+            components.put("relative_path", util.normalizePath(rpath, dl));
         }
         // prepare query
         String rq=prepareQuery(rel);
@@ -293,7 +289,61 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * utilizes the prepared components of base and relative URL to create the final component representation
     ***/
     private void combineBaseAndRelativeComponents(){
-        components.put("input", dict.get("baseAndRelativeURL"));
+        // make accessing components for relative and base similar to absolute URLs
+        if(components.get("relative_scheme")!=null){
+            components.put("scheme", components.get("relative_scheme"));
+        }
+        else{
+            components.put("scheme", components.get("base_scheme"));
+        }
+        String host=components.get("relative_host");
+        boolean relhost=false;
+        if(host != null){
+            components.put("host", host);
+            relhost=true;
+            if(components.get("relative_port")!= null){
+                components.put("port", components.get("relative_port")); //TODO actually get port in preparations!!
+            }
+        }
+        else{
+            components.put("host", components.get("base_host"));
+            components.put("port", components.get("base_port"));
+        }
+        String path=components.get("relative_path"); 
+        boolean relpath=false;
+        if(path != null ){
+            components.put("path", path); //TODO this is always normalized, check that this is right
+            relpath=true;
+        }
+        else{ 
+            if(! relhost){ //only use base path if relative has neither host nor path
+                components.put("path", components.get("base_path"));
+            }
+            
+        }
+
+        String query=components.get("relative_query");
+        if(query != null){
+            components.put("query", query);
+        }
+        else{
+            if(! relpath){ //only use base query if we also use base path
+                components.put("query", components.get("base_query"));
+            }
+
+        }
+        String fragment=components.get("relative_fragment");
+        if(fragment != null){
+            components.put("fragment", fragment);
+        }
+        else{
+            if(! relpath){ //only use base fragment if we also use base path
+                components.put("fragment", components.get("base_fragment"));
+            }
+
+        }
+
+
         return;
     }
 
