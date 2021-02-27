@@ -277,10 +277,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         //prepare path
         String rpath=preparePath(rel); 
-        String dl=getSpecialComponentContent("windowsDriveLetter", rpath);
+        String dl=getSpecialComponentContent("windowsDriveLetter", rpath); 
+        components.put("relative_driveletter", dl); //needed for normalization later
         if(rpath != null){ 
             components.put("relative_path", rpath);
-            components.put("relative_driveletter", dl); //needed for normalization later
+           
         }
         // prepare query
         String rq=prepareQuery(rel);
@@ -345,7 +346,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         else{ 
             if(! relhost){ //only use base path if relative has neither host nor path
-                components.put("path", components.get("base_path"));
+                components.put("path", components.get("base_path")); //TODO normalization ?
             }
             
         }
