@@ -60,8 +60,6 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     result+="}";
 
 
-    }
-
     return result;
 
   }
