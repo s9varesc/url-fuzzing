@@ -139,7 +139,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     private ArrayList<String> getAllCandidates(String grammarrule){
         ArrayList<String> candidatekeys=new ArrayList<String>();
         for(String key :dict.keySet()){
-            if((key.startsWith(grammarrule) && Character.isDigit(key.charAt(key.length()-1))) || key.equals(grammarrule)){
+            if((key.startsWith(grammarrule) && Character.isDigit(key.charAt(grammarrule.length()))) || key.equals(grammarrule)){
                 candidatekeys.add(key);
             }
         }
@@ -308,7 +308,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("host", host);
             relhost=true;
             if(components.get("relative_port")!= null){
-                components.put("port", components.get("relative_port")); //TODO actually get port in preparations!!
+                components.put("port", components.get("relative_port")); 
             }
         }
         else{
