@@ -129,7 +129,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                     }
                 }
             }
-            return (! longestmatch.equals("")? longestmatch : null);
+            return (longestmatch.equals("")? null : longestmatch);
 
         } 
         //containedIn is empty or none of the candidates match
