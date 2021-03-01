@@ -41,7 +41,7 @@ void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
 void CheckComponents(const URLParseCase& parse_case, const GURL& parsed_url) { 
   const char* url;
   if(strcmp(parse_case.base, "") != 0){
-    url=parse_case.base + "<"+parse_case.input;
+    url=parse_case.base << "<" << parse_case.input;
   }
   else{
     url=parse_case.input;
