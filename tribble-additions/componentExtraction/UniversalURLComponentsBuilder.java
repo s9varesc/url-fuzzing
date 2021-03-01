@@ -189,10 +189,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 bscheme=getSpecialComponentContent("URLnonSpecialScheme", base);
             }
         }
-        components.put("base_scheme", bscheme);
+        components.put("base_scheme", bscheme.toLowerCase());
         String bhost=prepareHost(base);
         if(bhost != null){
-            components.put("base_host", bhost);
+            components.put("base_host", bhost.toLowerCase());
         }
         
         String bp=getSpecialComponentContent("URLport", base); 
@@ -213,12 +213,12 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             bq=getSpecialComponentContent("URLquery", base);
         }
         if(bq != null){
-            components.put("base_query", bq);
+            components.put("base_query", bq.toLowerCase());
         }
         
         String bf=getSpecialComponentContent("URLfragment", base);
         if(bf!=null){
-            components.put("base_fragment", bf);
+            components.put("base_fragment", bf.toLowerCase());
         }
 
         return;
@@ -259,7 +259,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 }
             }
             if(rscheme!= null){
-                components.put("relative_scheme", rscheme);
+                components.put("relative_scheme", rscheme.toLowerCase());
             }
             
         }
@@ -283,12 +283,12 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // prepare query
         String rq=prepareQuery(rel);
         if(rq != null){
-            components.put("relative_query", rq);
+            components.put("relative_query", rq.toLowerCase());
         }
         // prepare fragment
         String rf=getSpecialComponentContent("URLfragment", rel);
         if(rf != null){
-            components.put("relative_fragment", rf);
+            components.put("relative_fragment", rf.toLowerCase());
         }
 
 
@@ -302,22 +302,22 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // make accessing components for relative and base similar to absolute URLs
         components.put("input", components.get("relative"));
         if(components.get("relative_scheme")!=null){
-            components.put("scheme", components.get("relative_scheme"));
+            components.put("scheme", components.get("relative_scheme").toLowerCase());
         }
         else{
-            components.put("scheme", components.get("base_scheme"));
+            components.put("scheme", components.get("base_scheme").toLowerCase());
         }
         String host=components.get("relative_host");
         boolean relhost=false;
         if(host != null){
-            components.put("host", host);
+            components.put("host", host.toLowerCase());
             relhost=true;
             if(components.get("relative_port")!= null){
                 components.put("port", components.get("relative_port")); 
             }
         }
         else{
-            components.put("host", components.get("base_host"));
+            components.put("host", components.get("base_host").toLowerCase());
             components.put("port", components.get("base_port"));
         }
         String path=components.get("relative_path"); //TODO if relp does not start with / -> replace last base segment
