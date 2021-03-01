@@ -28,9 +28,13 @@ for filename in os.listdir(dir):
 	#url.replace("\\\"", "\\\\\"")
 
 	inp=url[2:]
-	cutindex=inp.find("\",\"")
-	inp=inp[:cutindex]
-	allinputs+=inp+"\n"
+	cutindex=inp.find("\",\"") #TODO base and relative
+	bas=inp[:cutindex] #=base
+	nextcut=inp.find("\",\"",cutindex+3 )
+	rel=inp[cutindex+3:nextcut]
+	if(rel != "" and bas != ""):
+		rel="<"+rel
+	allinputs+=bas+rel+"\n"
 
 
 	urldata+=url+",\n"
