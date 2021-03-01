@@ -2,9 +2,9 @@
 TEST(URLParser, Parsing){
 	for (size_t i = 0; i < base::size(parse_cases); i++) {
 		GURL parsed_url;
-		if(parse_case.base != ""){
+		if(parse_cases[i].base != ""){
 			GURL parsed_base(parse_cases[i].base);
-			GURL parsed_url=parsed_base.resolve(parse_cases[i].input);
+			GURL parsed_url=parsed_base.Resolve(parse_cases[i].input);
 		}
 		else{
 			GURL parsed_url(parse_cases[i].input);
