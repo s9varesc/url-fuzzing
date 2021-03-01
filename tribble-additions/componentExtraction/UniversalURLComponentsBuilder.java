@@ -368,8 +368,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("query", query);
         }
         else{
-            if(! relpath){ //only use base query if we also use base path
-                components.put("query", components.get("base_query"));
+            if(components.get("relative").startsWith("#")){ //only use base query if relative contains only fragment
+                components.put("query", components.get("base_query"));  
             }
 
         }
