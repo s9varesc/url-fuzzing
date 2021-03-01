@@ -7,7 +7,7 @@ TEST(URLParser, Parsing){
 			parsed_url=parsed_base.Resolve(parse_cases[i].input);
 		}
 		else{
-			parsed_url(parse_cases[i].input);
+			parsed_url= GURL(parse_cases[i].input);
 		}
 						
 		CheckValidity(parse_cases[i], parsed_url);
