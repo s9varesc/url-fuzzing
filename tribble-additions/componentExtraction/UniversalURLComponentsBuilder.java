@@ -358,7 +358,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 String sp=getSpecialComponentContent("URLspecialSchemeNotFile", components.get("base_scheme"));
                 String f=getSpecialComponentContent("URLschemeFile", components.get("base_scheme"));
                 
-                components.put("path", ((sp != null || f != null)? util.normalizePath(components.get("base_path")):components.get("base_path"))); 
+                components.put("path", ((sp != null || f != null)? util.normalizePath(basepath, components.get("base_driveletter")):components.get("base_path"))); 
             }
             
         }
