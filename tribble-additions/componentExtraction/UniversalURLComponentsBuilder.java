@@ -99,7 +99,6 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             // there is only a absolute URL present
             prepareBasicComponents();
         }
-        System.out.println(components);
     	return;
     }
 
