@@ -48,7 +48,7 @@ public class DictExtractor {
       }
     }
 
-    //TODO somehow there is always 1 empty result created even though the grammar does not allow this
+    
     // pre-format component contents
     univcompBuilder.prepareComponents();
     //use specified component builders to format components

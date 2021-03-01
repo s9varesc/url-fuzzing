@@ -30,7 +30,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
     @Override
     public String buildRepresentation() { 
         String result="{";
-        String spec=univcomp.getSpecialComponentContent("base");
+        String spec=univcomp.getComponentContents("base");
         if(spec != null){
             result+="spec:\""+escapeContent(spec)+"\",\n";
             result+="relativeURI:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
@@ -42,7 +42,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="scheme:\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",\n";
         String host=(univcomp.getComponentContents("host")!=null) ? escapeContent(univcomp.getComponentContents("host")) : "";
         String fullhost=host; //needed for prePath
-        if(univcomp.getSpecialComponentContent("ipv6address")!=null){ 
+        if(univcomp.getSpecialComponentContent("ipv6address")!=null){ //TODO might not work for relative
             host=host.replaceAll("\\[", "");
             host=host.replaceAll("\\]", "");
         }
