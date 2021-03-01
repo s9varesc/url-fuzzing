@@ -3,11 +3,11 @@ TEST(URLParser, Parsing){
 	for (size_t i = 0; i < base::size(parse_cases); i++) {
 		GURL parsed_url;
 		if(strcmp(parse_cases[i].base, "") != 0){
-			GURL parsed_url(parse_cases[i].base);
-			parsed_url.Resolve(parse_cases[i].input); //TODO
+			GURL parsed_base(parse_cases[i].base);
+			parsed_url=parsed_base.Resolve(parse_cases[i].input);
 		}
 		else{
-			GURL parsed_url(parse_cases[i].input);
+			parsed_url(parse_cases[i].input);
 		}
 						
 		CheckValidity(parse_cases[i], parsed_url);
