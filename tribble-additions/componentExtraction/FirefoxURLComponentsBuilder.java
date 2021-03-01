@@ -33,7 +33,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         String spec=univcomp.getSpecialComponentContent("base");
         if(spec != null){
             result+="spec:\""+escapeContent(spec)+"\",\n";
-            result+="relativeURi:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
+            result+="relativeURI:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
         }
         else{
             result+="spec:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
@@ -63,7 +63,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="pathQueryRef:\""+pqr+"\",\n";
         String prp="";
         prp+=escapeContent(univcomp.getComponentContents("scheme"));
-        String input=escapeContent(univcomp.getComponentContents("input"));
+        String input=escapeContent(univcomp.getComponentContents("input")); //TODO check what this does to relative URLs
         if(input.startsWith(prp+"://")){
             prp+="://";
         }

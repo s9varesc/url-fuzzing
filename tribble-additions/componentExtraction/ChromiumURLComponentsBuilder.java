@@ -47,7 +47,10 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     String query=(univcomp.getComponentContents("query")!=null) ? escapeContent(univcomp.getComponentContents("query")) : "";
     String fragment=(univcomp.getComponentContents("fragment")!=null) ? escapeContent(univcomp.getComponentContents("fragment")) : "";
 
+    String base=(univcomp.getComponentContents("base")!=null )? escapeContent(univcomp.getComponentContents("base")):"";
+
     String result="{";
+    result+="\""+base+"\",";
     result+="\""+escapeContent(univcomp.getComponentContents("input"))+"\",";
     result+="\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",";
     result+="\""+"\","; //username
