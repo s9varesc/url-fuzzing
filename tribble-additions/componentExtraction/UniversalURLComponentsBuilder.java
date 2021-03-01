@@ -335,7 +335,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 String sp=getSpecialComponentContent("URLspecialSchemeNotFile", components.get("relative_scheme"));
                 String f=getSpecialComponentContent("URLschemeFile", components.get("relative_scheme"));
                 
-                components.put("path",((sp != null || f != null)? univcomp.normalizePath(path, components.get("relative_driveletter")): path)); 
+                components.put("path",((sp != null || f != null)? util.normalizePath(path, components.get("relative_driveletter")): path)); 
             }
             else{
                 //replace last base path segment with relative path and normalize
@@ -358,7 +358,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 String sp=getSpecialComponentContent("URLspecialSchemeNotFile", components.get("base_scheme"));
                 String f=getSpecialComponentContent("URLschemeFile", components.get("base_scheme"));
                 
-                components.put("path", ((sp != null || f != null)? univcomp.normalizePath(components.get("base_path")):components.get("base_path"))); 
+                components.put("path", ((sp != null || f != null)? util.normalizePath(components.get("base_path")):components.get("base_path"))); 
             }
             
         }
