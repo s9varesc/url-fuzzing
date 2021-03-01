@@ -39,12 +39,14 @@ void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
 }
 
 void CheckComponents(const URLParseCase& parse_case, const GURL& parsed_url) { 
-  const char* url;
+  char* url[300];
   if(strcmp(parse_case.base, "") != 0){
-    url=parse_case.base << "<" << parse_case.input;
+    strcat(url, parse_case.base);
+    strcat(url, "<");
+    strcat(url, parse_case.input);
   }
   else{
-    url=parse_case.input;
+    strcat(url, parse_case.input);
   }
   ASSERT_EQ(parse_case.scheme, parsed_url.scheme()) << "{\"url\":\""<< url <<"\", \"error\":{\"component\":\"scheme\", \"expected\":\""<<parse_case.scheme <<"\", \"actual\":\""<<parsed_url.scheme()<<"\"}}";
     ASSERT_EQ(parse_case.username, parsed_url.username())<< "{\"url\":\""<< url <<"\", \"error\":{\"component\":\"username\", \"expected\":\""<<parse_case.username <<"\", \"actual\":\""<<parsed_url.username()<<"\"}}";
