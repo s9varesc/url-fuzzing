@@ -335,7 +335,22 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 String sp=getSpecialComponentContent("URLspecialSchemeNotFile", components.get("relative_scheme"));
                 String f=getSpecialComponentContent("URLschemeFile", components.get("relative_scheme"));
                 
-                components.put("path",((sp != null || f != null)? util.normalizePath(path, components.get("relative_driveletter")): path)); 
+                if(sp != null || f != null){ //relative has  special scheme
+                   components.put("path", util.normalizePath(path, components.get("relative_driveletter"))); 
+ 
+                }
+                else{ 
+                    if(getSpecialComponentContent("URLnonSpecialScheme", components.get("relative_scheme"))!= null){
+                        components.put("path", path); //relative has a nonspecial scheme
+                    }
+                    else{ //relative has no scheme, decide whether to normalize by checking bases scheme
+                        String sp=getSpecialComponentContent("URLspecialSchemeNotFile", components.get("base_scheme"));
+                        String f=getSpecialComponentContent("URLschemeFile", components.get("base_scheme"));
+                        components.put("path", ((sp != null || f != null)? util.normalizePath(path, components.get("relative_driveletter")):path)); 
+
+                    }
+                }
+                
             }
             else{
                 //replace last base path segment with relative path and normalize
