@@ -93,15 +93,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             prepareBaseComponents();
             prepareRelativeComponents();
             combineBaseAndRelativeComponents();
-
-            System.out.println(components);
         
         }
         else{
             // there is only a absolute URL present
             prepareBasicComponents();
         }
-        
+        System.out.println(components);
     	return;
     }
 
@@ -522,6 +520,14 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         components.put("query", query);
         
+    }
+
+    public String getComponentContents(String component){
+        if(components.containsKey(component)){
+            return components.get(component);
+        }
+        return null;
+
     }
 
 }
