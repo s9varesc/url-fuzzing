@@ -317,7 +317,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
         }
         else{
-            if(components.getComponentContents("relative_scheme")!= null){
+            if(components.get("relative_scheme")!= null){
                 components.put("host", "");
             }
             else{
