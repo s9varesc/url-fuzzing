@@ -415,11 +415,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 rq=nsq;
             }
         }
-        if(parent.contains("\\?"+rq)){
-            return rq;
-        }
-        //TODO may need to check for other query entries
-        return null;
+        return rq;
     }
 
     private String prepareHost(String parent){
