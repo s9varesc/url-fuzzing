@@ -40,6 +40,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     String host=(univcomp.getComponentContents("host")!=null) ? escapeContent(univcomp.getComponentContents("host")) : "";
     
     String port=(univcomp.getComponentContents("port")!=null) ? escapeContent(univcomp.getComponentContents("port")) : "-1";
+    port=port.replaceFirst("^0+(?!$)", "");
     
     String frag=(univcomp.getComponentContents("fragment")!=null) ? escapeContent(univcomp.getComponentContents("fragment")) : "";
     
@@ -56,7 +57,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     result+="\""+"\","; //username
     result+="\""+"\","; //password
     result+="\""+host+"\",";
-    result+=port.replaceFirst("^0+(?!$)", "")+","; //TODO strip leading 0s
+    result+=port+","; //TODO strip leading 0s
     result+="\""+path+"\",";
     result+="\""+query+"\",";
     result+="\""+fragment+"\"";
