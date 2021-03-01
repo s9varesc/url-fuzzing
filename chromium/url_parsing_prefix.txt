@@ -14,7 +14,7 @@ namespace {
 // describes the structure of inputs
 
 struct URLParseCase {
-  const char* base;
+  const char* baseurl;
   const char* input;
 
   const char* scheme;
@@ -28,8 +28,8 @@ struct URLParseCase {
 };
 
 void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
-  if(strcmp(parse_case.base, "") != 0){
-    ASSERT_TRUE(parsed_url.is_valid()) << "{\"url\":\""<< parse_case.base << "<" << parse_case.input<<"\", \"exception\":\"invalid URL\"}"; //if base is present, add base to output
+  if(strcmp(parse_case.baseurl, "") != 0){
+    ASSERT_TRUE(parsed_url.is_valid()) << "{\"url\":\""<< parse_case.baseurl << "<" << parse_case.input<<"\", \"exception\":\"invalid URL\"}"; //if base is present, add base to output
   }
   else{
     ASSERT_TRUE(parsed_url.is_valid()) << "{\"url\":\""<< parse_case.input<<"\", \"exception\":\"invalid URL\"}"; 
@@ -40,8 +40,8 @@ void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
 
 void CheckComponents(const URLParseCase& parse_case, const GURL& parsed_url) { 
   char url[300];
-  if(strcmp(parse_case.base, "") != 0){
-    strcat(url, parse_case.base);
+  if(strcmp(parse_case.baseurl, "") != 0){
+    strcat(url, parse_case.baseurl);
     strcat(url, "<");
     strcat(url, parse_case.input);
   }
