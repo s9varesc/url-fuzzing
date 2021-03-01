@@ -302,10 +302,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // make accessing components for relative and base similar to absolute URLs
         components.put("input", components.get("relative"));
         if(components.get("relative_scheme")!=null){
-            components.put("scheme", components.get("relative_scheme").toLowerCase());
+            components.put("scheme", components.get("relative_scheme"));
         }
         else{
-            components.put("scheme", components.get("base_scheme").toLowerCase());
+            components.put("scheme", components.get("base_scheme"));
         }
         String host=components.get("relative_host");
         boolean relhost=false;
@@ -317,7 +317,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
         }
         else{
-            components.put("host", components.get("base_host").toLowerCase());
+            components.put("host", components.get("base_host"));
             components.put("port", components.get("base_port"));
         }
         String path=components.get("relative_path"); //TODO if relp does not start with / -> replace last base segment
