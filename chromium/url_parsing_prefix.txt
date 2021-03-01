@@ -28,7 +28,7 @@ struct URLParseCase {
 };
 
 void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
-  if(strcmp(parse_cases[i].base, "") != 0){
+  if(strcmp(parse_case.base, "") != 0){
     ASSERT_TRUE(parsed_url.is_valid()) << "{\"url\":\""<< parse_case.base << "<" << parse_case.input<<"\", \"exception\":\"invalid URL\"}"; //if base is present, add base to output
   }
   else{
@@ -40,7 +40,7 @@ void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
 
 void CheckComponents(const URLParseCase& parse_case, const GURL& parsed_url) { 
   const char* url;
-  if(strcmp(parse_cases[i].base, "") != 0){
+  if(strcmp(parse_case.base, "") != 0){
     url=parse_case.base + "<"+parse_case.input;
   }
   else{
