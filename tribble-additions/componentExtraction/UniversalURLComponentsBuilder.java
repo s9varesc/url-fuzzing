@@ -529,4 +529,12 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
     }
 
+    public String getSpecialComponentContent(String grammarrule){
+        if(dict.containsKey(grammarrule)){
+            return dict.get(grammarrule);
+        }
+        return null;
+    }
+    }
+
 }

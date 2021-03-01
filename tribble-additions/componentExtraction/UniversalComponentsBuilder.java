@@ -52,4 +52,5 @@ public abstract class UniversalComponentsBuilder{
 	* @return a string containing the instantiation of the specified rule, null = unknown rule
 	*/
 	public abstract String getSpecialComponentContent(String grammarrule);
+
 }
