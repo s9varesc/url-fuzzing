@@ -535,6 +535,5 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         return null;
     }
-    }
 
 }
