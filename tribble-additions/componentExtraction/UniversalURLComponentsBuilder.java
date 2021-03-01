@@ -317,16 +317,25 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
         }
         else{
-            components.put("host", components.get("base_host"));
-            components.put("port", components.get("base_port"));
+            if(components.getComponentContents("relative_scheme")!= null){
+                components.put("host", "");
+            }
+            else{
+                components.put("host", components.get("base_host")); //only use base host if relative has no scheme
+                components.put("port", components.get("base_port"));
+            }
+            
         }
-        String path=components.get("relative_path"); //TODO if relp does not start with / -> replace last base segment
+        String path=components.get("relative_path"); 
         String basepath=components.get("base_path");
         boolean relpath=false;
         if(path != null ){
             relpath=true;
             if(path.startsWith("/")){
-                components.put("path", path); //TODO normalization ?
+                String sp=getSpecialComponentContent("URLspecialSchemeNotFile", components.get("relative_scheme"));
+                String f=getSpecialComponentContent("URLschemeFile", components.get("relative_scheme"));
+                
+                components.put("path",((sp != null || f != null)? univcomp.normalizePath(path, components.get("relative_driveletter")): path)); 
             }
             else{
                 //replace last base path segment with relative path and normalize
@@ -346,7 +355,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         else{ 
             if(! relhost){ //only use base path if relative has neither host nor path
-                components.put("path", components.get("base_path")); //TODO normalization ?
+                String sp=getSpecialComponentContent("URLspecialSchemeNotFile", components.get("base_scheme"));
+                String f=getSpecialComponentContent("URLschemeFile", components.get("base_scheme"));
+                
+                components.put("path", ((sp != null || f != null)? univcomp.normalizePath(components.get("base_path")):components.get("base_path"))); 
             }
             
         }
