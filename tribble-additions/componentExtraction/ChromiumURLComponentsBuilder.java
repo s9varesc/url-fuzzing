@@ -56,13 +56,13 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     result+="\""+"\","; //username
     result+="\""+"\","; //password
     result+="\""+host+"\",";
-    result+=port+",";
+    result+=port.replaceFirst("^0+(?!$)", "")+","; //TODO strip leading 0s
     result+="\""+path+"\",";
     result+="\""+query+"\",";
     result+="\""+fragment+"\"";
     result+="}";
 
-    
+
     return result;
 
   }
