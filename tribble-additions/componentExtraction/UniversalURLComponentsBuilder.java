@@ -295,6 +295,31 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         return;
     }
 
+    private boolean isSpecialScheme(String scheme){
+        String sp=getSpecialComponentContent("URLspecialSchemeNotFile", scheme);
+        String f=getSpecialComponentContent("URLschemeFile", scheme);
+        String o=getSpecialComponentContent("URLnonSpecialScheme", scheme);
+        if(o != null){
+            return false;
+        }
+        if(sp != null || f != null){
+            return true;
+        }
+        return false;
+    }
+
+    private String combinePaths(String base, String relative){
+        if(base != null){
+            int index=base.lastIndexOf("/");
+            base=base.substring(0, (index >=0 ? index: 0));
+            base+="/"+relative;
+        }
+        else{
+            base=relative;
+        }
+        return base;
+    }
+
     /***
     * utilizes the prepared components of base and relative URL to create the final component representation
     ***/
@@ -307,98 +332,78 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         else{
             components.put("scheme", components.get("base_scheme"));
         }
-        String host=components.get("relative_host");
-        boolean relhost=false;
-        if(host != null){
-            components.put("host", host.toLowerCase());
-            relhost=true;
-            if(components.get("relative_port")!= null){
-                components.put("port", components.get("relative_port")); 
-            }
-        }
-        else{
-            if(components.get("relative_scheme")!= null){
-                components.put("host", "");
+        String relative=components.get("relative").toLowerCase();
+        if(! relative.startsWith(components.get("scheme"))){
+            //relative does not contain scheme
+            String host=components.get("relative_host");
+            if(host != null){
+                components.put("host", host);
+                components.put("port", components.get("relative_port"));
             }
             else{
-                components.put("host", components.get("base_host")); //only use base host if relative has no scheme
-                components.put("port", components.get("base_port"));
-            }
-            
-        }
-        String path=components.get("relative_path"); 
-        String basepath=components.get("base_path");
-        boolean relpath=false;
-        if(path != null ){
-            relpath=true;
-            if(path.startsWith("/")){
-                String sp=getSpecialComponentContent("URLspecialSchemeNotFile", components.get("relative_scheme"));
-                String f=getSpecialComponentContent("URLschemeFile", components.get("relative_scheme"));
-                
-                if(sp != null || f != null){ //relative has  special scheme
-                   components.put("path", util.normalizePath(path, components.get("relative_driveletter"))); 
- 
+                if(! relative.startsWith("///") ){
+                    //only use base host if relative contains only path
+                    components.put("host", components.get("base_host"));
+                    components.put("port", components.get("base_port"));
                 }
-                else{ 
-                    if(getSpecialComponentContent("URLnonSpecialScheme", components.get("relative_scheme"))!= null){
-                        components.put("path", path); //relative has a nonspecial scheme
-                    }
-                    else{ //relative has no scheme, decide whether to normalize by checking bases scheme
-                        sp=getSpecialComponentContent("URLspecialSchemeNotFile", components.get("base_scheme"));
-                        f=getSpecialComponentContent("URLschemeFile", components.get("base_scheme"));
-                        components.put("path", ((sp != null || f != null)? util.normalizePath(path, components.get("relative_driveletter")):path)); 
 
+            }
+            String path=null;
+            if(! relative.startsWith("/")){
+                //replace last base segment
+                path=combinePaths(components.get("base_path"), components.get("relative_path"));
+                if(isSpecialScheme(components.get("scheme"))){
+                    path=util.normalizePath(path, components.get("base_driveletter")); //driveletter can only be at the beginning and after a /
+                    if(! path.startsWith("/")){
+                        path="/"+path;   //paths in special urls start with / in components
                     }
-                }
-                
+                } 
             }
             else{
-                //replace last base path segment with relative path and normalize
-                if(basepath != null){
-                    int index=basepath.lastIndexOf("/");
-                    basepath=basepath.substring(0, (index >=0 ? index: 0));
-                    basepath+="/"+path;
-                }
-                else{
-                    basepath=path;
-                }
-                // drive letters always follow after a / and are always at the beginning of a path
-                // so if there is a drive letter in the combined path, it originates from the base path
-                components.put("path", util.normalizePath(basepath, components.get("base_driveletter"))); 
+                // use relative path
+                path=components.get("relative_path");
+                if(isSpecialScheme(components.get("scheme"))){
+                    path=util.normalizePath(path, components.get("relative_driveletter"));
+                    if(! path.startsWith("/")){
+                        path="/"+path;   //paths in special urls start with / in components
+                    }
+                } 
+
             }
-            
-        }
-        else{ 
-            if(! relhost){ //only use base path if relative has neither host nor path
-                String sp=getSpecialComponentContent("URLspecialSchemeNotFile", components.get("base_scheme"));
-                String f=getSpecialComponentContent("URLschemeFile", components.get("base_scheme"));
+            components.put("path", path);
+            String rpath=components.get("relative_path");
+            if(rpath != null || relative.startsWith("\\?")){ //there is a relative path or relative contains only query (and fragment)
+                components.put("query", components.get("relative_query"));
+                components.put("fragment", components.get("relative_fragment"));
+            }
+            else{ //no path, no query in relative
+                if(relative.startsWith("#")){ //relative contains only fragment
+                    components.put("query", components.get("base_query"));
+                    components.put("fragment", components.get("relative_fragment"));
+                }
+                else{ // relative contains neither path nor query nor fragment
+                    components.put("query", components.get("base_query"));
+                    components.put("fragment", components.get("base_fragment"));
+                }
                 
-                components.put("path", ((sp != null || f != null)? util.normalizePath(basepath, components.get("base_driveletter")):components.get("base_path"))); 
             }
-            
-        }
 
-        String query=components.get("relative_query");
-        if(query != null){
-            components.put("query", query);
         }
         else{
-            if(components.get("relative").startsWith("#")){ //only use base query if relative contains only fragment
-                components.put("query", components.get("base_query"));  
+            //relative does contain a scheme: use all of relative
+            components.put("host", components.get("relative_host"));
+            components.put("port", components.get("relative_port"));
+            String path=components.get("relative_path");
+            if(isSpecialScheme(components.get("scheme"))){
+                path=util.normalizePath(path, components.get("relative_driveletter"));
+                if(! path.startsWith("/")){
+                    path="/"+path;   //paths in special urls start with / in components
+                }
             }
-
+            components.put("path", path); //TODO lower case?
+            components.put("query", components.get("relative_query"));
+            components.put("fragment", components.get("relative_fragment"));
         }
-        String fragment=components.get("relative_fragment");
-        if(fragment != null){
-            components.put("fragment", fragment);
-        }
-        else{
-            if(! relpath){ //only use base fragment if we also use base path
-                components.put("fragment", components.get("base_fragment"));
-            }
-
-        }
-
 
         return;
     }
