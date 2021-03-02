@@ -145,7 +145,7 @@ for parser in parsers:
 #url ranking
 for url in urls:
 	if url not in urlranking:
-		urlranking[url]=[]
+		urlranking[url]=[""]
 	else:
 		for parser in parsers:
 			if url in parsers[parser]:
