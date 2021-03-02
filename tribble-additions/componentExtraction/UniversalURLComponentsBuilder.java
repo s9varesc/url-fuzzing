@@ -354,7 +354,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 path=combinePaths(components.get("base_path"), components.get("relative_path"));
                 if(isSpecialScheme(components.get("scheme"))){
                     path=util.normalizePath(path, components.get("base_driveletter")); //driveletter can only be at the beginning and after a /
-                    if(! path.startsWith("/")){
+                    if(path != null && ! path.startsWith("/")){
                         path="/"+path;   //paths in special urls start with / in components
                     }
                 } 
@@ -364,7 +364,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 path=components.get("relative_path");
                 if(isSpecialScheme(components.get("scheme"))){
                     path=util.normalizePath(path, components.get("relative_driveletter"));
-                    if(! path.startsWith("/")){
+                    if(path != null && ! path.startsWith("/")){
                         path="/"+path;   //paths in special urls start with / in components
                     }
                 } 
@@ -396,7 +396,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             String path=components.get("relative_path");
             if(isSpecialScheme(components.get("scheme"))){
                 path=util.normalizePath(path, components.get("relative_driveletter"));
-                if(! path.startsWith("/")){
+                if(path != null && ! path.startsWith("/")){
                     path="/"+path;   //paths in special urls start with / in components
                 }
             }
