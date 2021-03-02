@@ -385,8 +385,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                     components.put("fragment", components.get("relative_fragment"));
                 }
                 else{ // relative contains neither path nor query nor fragment
+
                     components.put("query", components.get("base_query"));
                     components.put("fragment", components.get("base_fragment"));
+                    System.out.println(relative);
+                    System.out.println(components);
                 }
                 
             }
