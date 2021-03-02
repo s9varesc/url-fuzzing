@@ -498,7 +498,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // prepare host
         String reshost=prepareHost(components.get("input"));
         if(reshost != null){
-            components.put("host", reshost);
+            components.put("host", reshost.toLowerCase());
         }
         
 
