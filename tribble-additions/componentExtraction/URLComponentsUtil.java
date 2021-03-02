@@ -132,7 +132,7 @@ public class URLComponentsUtil {
 			}
 
 			// put remaining segments back together
-			if(Arrays.asList(ddots).contains(newsegments.get(0))){
+			if(Arrays.asList(["..", "%2e%2e", "%2E%2E", ".%2e", ".%2E", "%2e.", "%2E"]).contains(newsegments.get(0))){
 				newsegments.set(0, "");
 			}
 			for(String seg:newsegments){
