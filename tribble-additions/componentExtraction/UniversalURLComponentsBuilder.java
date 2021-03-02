@@ -375,7 +375,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
             components.put("path", path);
             String rpath=components.get("relative_path");
-            if(relative.startsWith("?")|| relative.startsWith("/")){ // relative contains path or host or  query (and fragment)
+            if(relative.startsWith("?")|| rpath!=null || relative.startsWith("/")){ // relative contains path or host or  query (and fragment)
                 components.put("query", components.get("relative_query"));
                 components.put("fragment", components.get("relative_fragment"));
             }
