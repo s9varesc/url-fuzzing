@@ -213,12 +213,12 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             bq=getSpecialComponentContent("URLquery", base);
         }
         if(bq != null){
-            components.put("base_query", bq.toLowerCase());
+            components.put("base_query", bq);
         }
         
         String bf=getSpecialComponentContent("URLfragment", base);
         if(bf!=null){
-            components.put("base_fragment", bf.toLowerCase());
+            components.put("base_fragment", bf);
         }
 
         return;
@@ -266,10 +266,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // prepare host and port
         String rhost=prepareHost(rel);
         if(rhost != null){
-            components.put("relative_host", rhost);
+            components.put("relative_host", rhost.toLowerCase());
             String rp=getSpecialComponentContent("URLport", rel); 
             if(rp!=null){
-                components.put("relative_port", rp);
+                if(rel.contains(":"+rp)){ //avoid adding a port if the digit appears in the ip address
+                    components.put("relative_port", rp);
+                }
+                
             }
         }
         //prepare path
@@ -283,12 +286,12 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // prepare query
         String rq=prepareQuery(rel);
         if(rq != null){
-            components.put("relative_query", rq.toLowerCase());
+            components.put("relative_query", rq);
         }
         // prepare fragment
         String rf=getSpecialComponentContent("URLfragment", rel);
         if(rf != null){
-            components.put("relative_fragment", rf.toLowerCase());
+            components.put("relative_fragment", rf);
         }
 
 
@@ -312,7 +315,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         if(base != null){
             int index=base.lastIndexOf("/");
             base=base.substring(0, (index >=0 ? index: 0));
-            base+="/"+relative;
+            base=(relative != null ? base + "/"+relative : base) ;
         }
         else{
             base=relative;
@@ -372,7 +375,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
             components.put("path", path);
             String rpath=components.get("relative_path");
-            if(rpath != null || relative.startsWith("\\?")){ //there is a relative path or relative contains only query (and fragment)
+            if(rpath != null || relative.startsWith("?")){ //there is a relative path or relative contains only query (and fragment)
                 components.put("query", components.get("relative_query"));
                 components.put("fragment", components.get("relative_fragment"));
             }
