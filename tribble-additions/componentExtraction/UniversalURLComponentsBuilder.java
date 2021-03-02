@@ -388,8 +388,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
                     components.put("query", components.get("base_query"));
                     components.put("fragment", components.get("base_fragment"));
-                    System.out.println(relative);
-                    System.out.println(components);
+                    
                 }
                 
             }
