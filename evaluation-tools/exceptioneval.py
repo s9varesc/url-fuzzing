@@ -71,7 +71,7 @@ if dir[-1:]!="/":dir+="/"
 
 
 for file in os.listdir(dir):   
-	if file.endswith('URLs'):
+	if file.endswith('URL'):
 		with open(dir +"/"+ file) as f:
 			plainURLs=f.read()   
 		
@@ -146,9 +146,11 @@ for parser in parsers:
 for url in urls:
 	if url not in urlranking:
 		urlranking[url]=[]
-	for parser in parsers:
-		if url in parsers[parser]:
-			urlranking[url]+=[parser]
+	else:
+		for parser in parsers:
+			if url in parsers[parser]:
+				urlranking[url]+=[parser]
+	
 
 
 
