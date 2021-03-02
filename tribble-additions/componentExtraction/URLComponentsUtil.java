@@ -132,6 +132,9 @@ public class URLComponentsUtil {
 			}
 
 			// put remaining segments back together
+			if(Arrays.asList(ddots).contains(newsegments.get(0))){
+				newsegments.set(0, "");
+			}
 			for(String seg:newsegments){
 				if(seg.equals(drive)){
 					seg=seg.replaceFirst("\\|", ":");
@@ -150,6 +153,8 @@ public class URLComponentsUtil {
 			if((originalPath!="" && result=="")|| endsindots){ 
 				result+="/";
 			}
+			
+
 
 			return result;
 		}
