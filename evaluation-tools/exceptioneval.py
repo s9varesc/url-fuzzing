@@ -71,7 +71,7 @@ if dir[-1:]!="/":dir+="/"
 
 
 for file in os.listdir(dir):   
-	if file.endswith('URL'):
+	if file.endswith('URLs'):
 		with open(dir +"/"+ file) as f:
 			plainURLs=f.read()   
 		
