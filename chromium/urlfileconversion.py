@@ -28,7 +28,7 @@ for filename in os.listdir(dir):
 	#url.replace("\\\"", "\\\\\"")
 
 	inp=url[2:]
-	cutindex=inp.find("\",\"") #TODO base and relative
+	cutindex=inp.find("\",\"") 
 	bas=inp[:cutindex] #=base
 	nextcut=inp.find("\",\"",cutindex+3 )
 	rel=inp[cutindex+3:nextcut]

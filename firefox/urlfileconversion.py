@@ -48,7 +48,7 @@ for chunk in testchunks:
 		if(rel != "" and bas != ""):
 			rel="<"+rel
 		allinputs+=bas+rel+"\n"
-		allinputs+=inp[:cutindex]+"\n"			
+				
 	urldata=urldata[:-1]
 	urldata+="];"
 	testname="test_URIs_"+str(testid)+".js"
