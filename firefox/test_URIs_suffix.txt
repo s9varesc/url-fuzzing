@@ -37,7 +37,8 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     try {
       comp=aURI[aPropertyName];
     } catch(e) {
-      dump("\n{\"url\":\""+ aTest.spec+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}"); 
+      var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
+      dump("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}"); 
       do_throw(e.result);
     }
     do_info(
