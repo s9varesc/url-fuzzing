@@ -64,7 +64,8 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         String prp="";
         prp+=escapeContent(univcomp.getComponentContents("scheme"));
         String input=escapeContent(univcomp.getComponentContents("input")); //TODO check what this does to relative URLs
-        if(input.startsWith(prp+"://")){
+        
+        if(input.startsWith(prp+"://")||spec.startsWith(prp+"://")){
             prp+="://";
         }
         else{
