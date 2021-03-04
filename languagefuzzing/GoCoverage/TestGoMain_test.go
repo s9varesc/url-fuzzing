@@ -32,8 +32,8 @@ func TestURLs(t *testing.T) {
 	for _, eachline := range fileTextLines {
 		//split eachline into base and relative
 		baseandrel:= strings.Split(eachline, "<")
-		err1:=nil;
-		err2:=nil;
+		err1;
+		err2;
 
 		if len(baseandrel)>1 {
 			base, err1:=url.Parse(baseandrel[0])
