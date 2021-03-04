@@ -30,8 +30,12 @@ while(! feof($file))
   $url=substr($url, 0, -1);
   $base="";
   $rel="";
-  list($base, $rel)=explode("<", $url);
-  
+  try{
+  	list($base, $rel)=explode("<", $url);
+  } catch(Exception $e){
+  	$base="";
+  	$rel="";
+  }
   
 try {
 	if(!empty($rel)){
