@@ -12,17 +12,17 @@ for line in lines:
     #print(line)
 
 for url in urls:
-	(base, rel)=url.split("<")
+    (base, rel)=url.split("<")
     try:
-    	if (rel != ""):
-    		urljoin(base, rel)
-    	else:
-			urlparse(url)
+        if (rel != ""):
+            urljoin(base, rel)
+        else:
+            urlparse(url)
     except Exception as e:
         exceptions+="\n{\"url\":\""+url+"\", \"exception\":\""+str(e)+"\"}"
 
 f=open('PythonExceptions.txt', 'w')
 f.write(exceptions)
 f.close()
-	
+    
 

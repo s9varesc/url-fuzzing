@@ -81,7 +81,7 @@ main(void)
 		if(relative != NULL){
 			UriUriA relUri;
 			stateA.uri = &relUri;
-			res = uriParseUriA(&stateA, relative);
+			int res = uriParseUriA(&stateA, relative);
 			if (res != URI_SUCCESS) {
 				char rcstr[6];
 				sprintf(rcstr, "%i",stateA.errorCode);

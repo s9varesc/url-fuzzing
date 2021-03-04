@@ -50,7 +50,7 @@ class ParsingHandler {
         try {
             URL url=new URL(baserel[0]);
             if(baserel[1]!=null){
-                URL result=url.resolve(baserel[1]);
+                URL result=new URL(url, baserel[1]);
             }
         } catch (Exception e) {
             exceptions+="\n{\"url\":\""+input+"\", \"exception\":\""+e.toString()+"\"}";

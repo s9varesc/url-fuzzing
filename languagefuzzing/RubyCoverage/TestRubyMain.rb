@@ -8,7 +8,8 @@ IO.foreach("../urls/plainURLs"){|block|
 		if baseandrel.length()>1
 			uri=URI.join(baseandrel[0], baseandrel[1]);
 		else
-			uri = URI(block[0..-2]); 
+			uri = URI(block[0..-2]);
+		end 
 	    
 	    
 	rescue URI::InvalidURIError => e

@@ -57,10 +57,11 @@ int main()
 				
 			}	
 			//split line into base and relative	
-			std::stringstream inputcopy=line;
+			std::stringstream inputcopy;
+			inputcopy<<line;
 			std::string segment;
 			std::vector<std::string> baseandrel;
-			while(std::getline(line, segment, '<'))
+			while(std::getline(line, segment, '<')
 			{
 			   baseandrel.push_back(segment);
 			}	
@@ -68,8 +69,8 @@ int main()
 			try
 			{
 				if(baseandrel[1].size()>0){
-					Poco::URI base = uri1(baseandrel[0]);
-					Poco::URI rel= uri1(base, baseandrel[1]);
+					Poco::URI base =Poco::URI uri1(baseandrel[0]);
+					Poco::URI rel= Poco::URI uri1(base, baseandrel[1]);
 				}
 				else{
 					Poco::URI uri1(line);

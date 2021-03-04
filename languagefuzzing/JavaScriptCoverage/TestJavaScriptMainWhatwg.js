@@ -20,7 +20,7 @@ rd
 		    else{
 		      const url = new whatwg.URL(line)
 		    }
-	     
+	    }
 	    catch(err){
 		//console.log(err);
 		exceptions+= "\n{\"url\":\""+line+"\", \"exception\":\""+err.message+"\"}";
