@@ -1,5 +1,6 @@
 <?php
 require "./vendor/league/uri/src/UriString.php";
+require "./vendor/league/uri/src/Uri.php";
 require "./vendor/league/uri/src/UriResolver.php";
 require "./vendor/league/uri-interfaces/src/Contracts/UriException.php";
 
@@ -39,9 +40,9 @@ while(! feof($file))
   
 try {
 	if(!empty($rel)){
-	    $b=Uri::createFromString($base);
-	    $r=Uri::createFromString($rel);
-	    $res=UriResolver::resolve($r, $b);
+	    
+	    $r=Uri::createFromBaseUri($rel, $base);
+	    
 	}else{
 	    Uri::createFromString($url);
 	}
