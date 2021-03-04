@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"testing"
 	"fmt"
+	"strings"
 	//"io/ioutil"
 )
 func TestURLs(t *testing.T) {
@@ -29,9 +30,18 @@ func TestURLs(t *testing.T) {
 	readFile.Close()
  	exceptions:=""
 	for _, eachline := range fileTextLines {
+		//split eachline into base and relative
+		baseandrel:= strings.Split(eachline, "<")
+		if(len(baseandrel)>1){
+			base, err1=url.Parse(baseandrel[0])
+			rel, err2=url.Parse(baseandrel[1])
+			res, err3=base.ResolveReference(rel)
+		}
+		else{
+			_, err1 :=url.Parse(eachline)
+		}
 		
-		_, err :=url.Parse(eachline)
-		if err != nil {
+		if (err1 != nil) || (err2 != nil) || (err3 != nil) {
 		    exceptions+="\n{\"url\":\""+eachline+"\", \"exception\":\""+err.Error()+"\"}"
 		}
 

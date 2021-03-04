@@ -42,8 +42,23 @@ main(void)
 	
 	int rc;
 	
+	//split into base<relative 
+	char *inputcopy=line;
+	char *base=strtok(inputcopy, "<");
+	char *relative=NULL;
 
-	if ((rc=uriParseUriA(&stateA, line)) != URI_SUCCESS) {
+	if(base != NULL){
+		//relative is present
+		relative=strtok(NULL, "<");
+	}
+	else{
+		base=line;
+	}
+
+
+
+
+	if ((rc=uriParseUriA(&stateA, base)) != URI_SUCCESS) {
     	    //write url + rc to string
 		char rcstr[6];
 		sprintf(rcstr, "%i",stateA.errorCode);
@@ -62,6 +77,32 @@ main(void)
 		strcat(exceptions,addstr);
 
 	} else{
+		//check if there is a relative
+		if(relative != NULL){
+			UriUriA relUri;
+			stateA.uri = &relUri;
+			res = uriParseUriA(&stateA, relative);
+			if (res != URI_SUCCESS) {
+				char rcstr[6];
+				sprintf(rcstr, "%i",stateA.errorCode);
+				addsize+=strlen(line)+strlen(rcstr);
+				addstr=(char*)calloc(addsize+1,sizeof(char));
+				strcat(addstr,before);
+				strcat(addstr,line);
+				strcat(addstr,middle);
+				strcat(addstr,rcstr);
+				strcat(addstr,end);
+				//printf("%s", addstr);
+				if (strlen(exceptions)+addsize >= max_size){
+				    max_size+=ADD_SPACE;
+				    exceptions=realloc(exceptions, max_size*sizeof(char));
+				}
+				strcat(exceptions,addstr);
+				
+			}
+			uriFreeUriMembersA(&relUri);
+
+		}
 		uriFreeUriMembersA(&uriA);
 	}
 

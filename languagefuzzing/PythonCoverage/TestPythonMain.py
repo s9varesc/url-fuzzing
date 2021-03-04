@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+from urllib.parse import urljoin
 
 
 file=open("../urls/plainURLs","r")
@@ -11,8 +12,12 @@ for line in lines:
     #print(line)
 
 for url in urls:
+	(base, rel)=url.split("<")
     try:
-       urlparse(url)
+    	if (rel != ""):
+    		urljoin(base, rel)
+    	else:
+			urlparse(url)
     except Exception as e:
         exceptions+="\n{\"url\":\""+url+"\", \"exception\":\""+str(e)+"\"}"
 

@@ -26,9 +26,18 @@ while(! feof($file))
   $url= fgets($file);
   //parse_url($url);
   $url=substr($url, 0, -1);
+  list($base, $rel)=explode("<", $url);
+  
   
 try {
-    UriString::parse($url);
+	if(!empty($rel)){
+	    $b=Uri::createFromString($base);
+	    $r=Uri::createFromString($rel);
+	    $res=UriResolver::resolve($r, $b);
+	}else{
+	    UriString::parse($url);
+	}
+    
 } catch (Exception $e) {
    $exceptions.="\n{\"url\":\"".$url."\", \"exception\":\"".$e->getMessage()."\"}";
 }
