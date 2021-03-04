@@ -6,6 +6,7 @@ require "./vendor/league/uri-interfaces/src/Contracts/UriException.php";
 
 
 
+
 foreach (glob("./vendor/league/uri-interfaces/src/Exceptions/*.php") as $filename)
 {
     require $filename;
@@ -17,6 +18,7 @@ foreach (glob("./vendor/league/uri-interfaces/src/Exceptions/*.php") as $filenam
 use PHPUnit\Framework\TestCase;
 use League\Uri\Uri;
 use League\Uri\UriResolver;
+use League\Uri\Contracts\UriInterface;
 use League\Uri\Exceptions\SyntaxError;
 
 class PHPMainTest extends TestCase {
