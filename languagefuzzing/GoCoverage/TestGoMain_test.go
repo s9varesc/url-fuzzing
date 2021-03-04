@@ -38,14 +38,17 @@ func TestURLs(t *testing.T) {
 			rel, err2:=url.Parse(baseandrel[1])
 			base.ResolveReference(rel)
 
-			if err1 != nil || err2 != nil {
-			    exceptions+="\n{\"url\":\""+eachline+"\", \"exception\":\""+err.Error()+"\"}"
+			if err1 != nil {
+			    exceptions+="\n{\"url\":\""+eachline+"\", \"exception\":\""+err1.Error()+"\"}"
+			}
+			if err2 != nil {
+				exceptions+="\n{\"url\":\""+eachline+"\", \"exception\":\""+err2.Error()+"\"}"
 			}
 		} else {
 			_, err1 :=url.Parse(eachline)
 
 			if err1 != nil {
-			    exceptions+="\n{\"url\":\""+eachline+"\", \"exception\":\""+err.Error()+"\"}"
+			    exceptions+="\n{\"url\":\""+eachline+"\", \"exception\":\""+err1.Error()+"\"}"
 			}
 		}
 		

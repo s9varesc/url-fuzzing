@@ -3,7 +3,7 @@ require "./vendor/league/uri/src/UriString.php";
 require "./vendor/league/uri/src/Uri.php";
 require "./vendor/league/uri/src/UriResolver.php";
 require "./vendor/league/uri-interfaces/src/Contracts/UriException.php";
-require "./vendor/league/uri-interfaces/src/Contracts/UriInterface.php";
+
 
 
 
@@ -21,7 +21,6 @@ foreach (glob("./vendor/league/uri-interfaces/src/Exceptions/*.php") as $filenam
 use PHPUnit\Framework\TestCase;
 use League\Uri\Uri;
 use League\Uri\UriResolver;
-use League\Uri\Contracts\UriInterface;
 use League\Uri\Exceptions\SyntaxError;
 
 class PHPMainTest extends TestCase {
