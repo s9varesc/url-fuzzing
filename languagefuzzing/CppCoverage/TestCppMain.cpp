@@ -68,8 +68,8 @@ int main()
 			//parse urls
 			try
 			{
-				if(baseandrel[1].size()>0){
-					Poco::URI base (baseandrel[0]);
+				if(baseandrel.size()>1){
+					Poco::URI base(baseandrel[0]);
 					Poco::URI rel(base, baseandrel[1]);
 				}
 				else{

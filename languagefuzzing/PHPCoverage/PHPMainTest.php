@@ -14,7 +14,7 @@ foreach (glob("./vendor/league/uri-interfaces/src/Exceptions/*.php") as $filenam
 
 
 use PHPUnit\Framework\TestCase;
-use League\Uri\UriString;
+use League\Uri\Uri;
 use League\Uri\UriResolver;
 use League\Uri\Exceptions\SyntaxError;
 
@@ -43,7 +43,7 @@ try {
 	    $r=Uri::createFromString($rel);
 	    $res=UriResolver::resolve($r, $b);
 	}else{
-	    UriS::createFromString($url);
+	    Uri::createFromString($url);
 	}
     
 } catch (Exception $e) {
