@@ -39,11 +39,11 @@ while(! feof($file))
   
 try {
 	if(!empty($rel)){
-	    $b=UriString::parse($base);
-	    $r=UriString::parse($rel);
+	    $b=Uri::createFromString($base);
+	    $r=Uri::createFromString($rel);
 	    $res=UriResolver::resolve($r, $b);
 	}else{
-	    UriString::parse($url);
+	    UriS::createFromString($url);
 	}
     
 } catch (Exception $e) {

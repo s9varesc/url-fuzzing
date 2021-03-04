@@ -69,8 +69,8 @@ int main()
 			try
 			{
 				if(baseandrel[1].size()>0){
-					Poco::URI base =Poco::URI uri1(baseandrel[0]);
-					Poco::URI rel= Poco::URI uri1(base, baseandrel[1]);
+					Poco::URI base (baseandrel[0]);
+					Poco::URI rel(base, baseandrel[1]);
 				}
 				else{
 					Poco::URI uri1(line);
