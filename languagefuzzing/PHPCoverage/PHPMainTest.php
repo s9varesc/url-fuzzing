@@ -15,6 +15,7 @@ foreach (glob("./vendor/league/uri-interfaces/src/Exceptions/*.php") as $filenam
 
 use PHPUnit\Framework\TestCase;
 use League\Uri\UriString;
+use League\Uri\UriResolver;
 use League\Uri\Exceptions\SyntaxError;
 
 class PHPMainTest extends TestCase {

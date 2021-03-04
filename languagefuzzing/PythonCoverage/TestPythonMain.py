@@ -12,7 +12,10 @@ for line in lines:
     #print(line)
 
 for url in urls:
-    (base, rel)=url.split("<")
+    try:
+        (base, rel)=url.split("<")
+    except Exception as e:
+        rel=""
     try:
         if (rel != ""):
             urljoin(base, rel)

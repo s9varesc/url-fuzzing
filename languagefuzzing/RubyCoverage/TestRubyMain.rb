@@ -12,7 +12,8 @@ IO.foreach("../urls/plainURLs"){|block|
 		end 
 	    
 	    
-	rescue URI::InvalidURIError => e
+	rescue Exception => e
+	   #URI::InvalidURIError
 	   exceptions+="\n{\"url\":\""+block[0..-2]+"\", \"exception\":\""+e.message+"\"}";
 	end
 }

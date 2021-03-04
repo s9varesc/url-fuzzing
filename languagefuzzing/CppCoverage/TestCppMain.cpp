@@ -61,8 +61,7 @@ int main()
 			inputcopy<<line;
 			std::string segment;
 			std::vector<std::string> baseandrel;
-			while(std::getline(line, segment, '<')
-			{
+			while(std::getline(line, segment, '<')){
 			   baseandrel.push_back(segment);
 			}	
 			//parse urls
