@@ -18,9 +18,9 @@ foreach (glob("./vendor/league/uri-interfaces/src/Exceptions/*.php") as $filenam
 
 
 
-namespace League\Uri;
+
 use PHPUnit\Framework\TestCase;
-use League\Uri\Contracts\UriInterface;
+use League\Uri\UriInterface;
 use League\Uri\Uri;
 use League\Uri\UriResolver;
 use League\Uri\Exceptions\SyntaxError;
