@@ -36,7 +36,7 @@ func TestURLs(t *testing.T) {
 		if len(baseandrel)>1 {
 			base, err1:=url.Parse(baseandrel[0])
 			rel, err2:=url.Parse(baseandrel[1])
-			res:=base.ResolveReference(rel)
+			base.ResolveReference(rel)
 
 			if err1 != nil || err2 != nil {
 			    exceptions+="\n{\"url\":\""+eachline+"\", \"exception\":\""+err.Error()+"\"}"

@@ -3,6 +3,9 @@ require "./vendor/league/uri/src/UriString.php";
 require "./vendor/league/uri/src/Uri.php";
 require "./vendor/league/uri/src/UriResolver.php";
 require "./vendor/league/uri-interfaces/src/Contracts/UriException.php";
+require "./vendor/league/uri-interfaces/src/Contracts/UriInterface.php";
+
+
 
 
 
