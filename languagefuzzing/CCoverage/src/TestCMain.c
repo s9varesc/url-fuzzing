@@ -22,8 +22,9 @@ main(void)
   
 
     fp = fopen("../../urls/plainURLs", "r");
-    if (fp == NULL)
+    if (fp == NULL){
         exit(EXIT_FAILURE);
+    }
 
     char before[] = "\n{\"url\":\"";
     char middle[] = "\", \"exception\":\"";
