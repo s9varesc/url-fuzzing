@@ -87,6 +87,8 @@ for exfile in os.listdir(dir):
 		parsername=exfile.replace("Exceptions","").replace(".txt","")
 		with open(dir +"/"+ exfile) as f:
 			data=f.read()
+
+		print("evaluating "+parsername)
 		
 		#data = data.replace("{ url:", "{ \"url\":") 
 		#data = data.replace("exception:", "\"exception\":")
