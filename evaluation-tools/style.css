@@ -4,36 +4,42 @@ table.simpletable {
   text-align: left;
   border-collapse: collapse;
   overflow: auto;
-  padding: 5px 0px 10px 20px
+  padding: 5px 5px 10px 20px
   font-family: "Arial Black", Gadget, sans-serif;
   color: #353535;
+  
+  
 }
-table.simpletable td, table.simpletable th {
-  border: 1px solid #DBD7DF;
-  padding: 3px 2px;
-}
+
 table.simpletable tbody td {
   font-size: 13px;
   font-family: "Arial Black", Gadget, sans-serif;
   color: #353535;
+  padding: 5px 8px 5px 8px;
+  border: 1px solid #DBD7DF;
+
 }
 table.simpletable tr:nth-child(even) {
-  background: #F6F8FA;
+  background-color: #F6F8FA;
+  border: 1px solid #DBD7DF;
+  
 }
-table.simpletable thead {
-    border-bottom: 1px solid #000000;
-}
+
 table.simpletable thead th {
   font-size: 15px;
   font-weight: bold;
   color: #000000;
-  border-left: 1px solid #000000;
+  border: 1px solid #DBD7DF;
   font-family: "Arial Black", Gadget, sans-serif;
   color: #353535;
+  padding: 5px 8px 5px 8px;
 }
 table.simpletable thead th:first-child {
-  border-left: none;
+  border: 1px solid #DBD7DF;
 }
+
+
+
 p {
   padding: 5px 25px 0px 40px;
   font-family: "Arial Black", Gadget, sans-serif;
