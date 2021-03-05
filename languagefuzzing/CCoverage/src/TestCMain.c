@@ -119,6 +119,6 @@ main(void)
        fclose(nfp);
        
    }
-   free(line);
+   //free(line);
    exit(EXIT_SUCCESS);
 }
