@@ -135,7 +135,7 @@ for url in urldata:
 		if uline[:-1]==">":	
 			utable+=uline[:-4]+"\n"
 		else:
-			utable+=uline++"\n"
+			utable+=uline+"\n"
 
 # Browsers
 errdata=json.loads(eranking)
