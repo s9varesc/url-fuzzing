@@ -86,7 +86,7 @@ main(void)
 			if (res != URI_SUCCESS) {
 				char rcstr[6];
 				sprintf(rcstr, "%i",stateA.errorCode);
-				addsize+=strlen(line)+strlen(rcstr);
+				addsize+=strlen(base)+strlen("<")+strlen(relative)+strlen(rcstr);
 				addstr=(char*)calloc(addsize+1,sizeof(char));
 				strcat(addstr,before);
 				strcat(addstr,base);
