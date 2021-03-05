@@ -106,8 +106,9 @@ main(void)
 			uriFreeUriMembersA(&relUri);
 
 		}
-		uriFreeUriMembersA(&uriA);
+		
 	}
+	uriFreeUriMembersA(&uriA);
 
     }
 
