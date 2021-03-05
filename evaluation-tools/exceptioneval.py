@@ -122,7 +122,7 @@ for exfile in os.listdir(dir):
 parserranking={} # {parsername: { errorcount: , nrerrtypes: ,
 #						 errtypes: {errtype:[url, url,...]} ]
 
-urlranking={} # {url: , nrerrors: , parsers: []}
+urlranking={} # {url: , parsers: []}
 # basic counting & parser ranking
 for parser in parsers:
 	countresults={}
@@ -146,12 +146,11 @@ for parser in parsers:
 
 #url ranking
 for url in urls:
+	for parser in parsers:
+		if url in parsers[parser]:
+			urlranking[url]+=[parser]
 	if url not in urlranking:
-		urlranking[url]+=[]
-	else:
-		for parser in parsers:
-			if url in parsers[parser]:
-				urlranking[url]+=[parser]
+		urlranking[url]=[]
 	
 
 
