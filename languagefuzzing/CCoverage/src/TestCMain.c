@@ -88,7 +88,9 @@ main(void)
 				addsize+=strlen(line)+strlen(rcstr);
 				addstr=(char*)calloc(addsize+1,sizeof(char));
 				strcat(addstr,before);
-				strcat(addstr,line);
+				strcat(addstr,base);
+				strcat(addstr, "<");
+				strcat(addstr, relative);
 				strcat(addstr,middle);
 				strcat(addstr,rcstr);
 				strcat(addstr,end);
