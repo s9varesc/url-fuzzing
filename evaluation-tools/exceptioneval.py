@@ -107,7 +107,8 @@ for exfile in os.listdir(dir):
 			
 			if datapoint[-2:]=="}}":datapoint=datapoint[:-1]
 			datapoint=fixdatapoint(datapoint)
-			
+			if parsername=="PHP":
+				print(datapoint)
 			tempdict=json.loads(datapoint)
 			
 			datadict[tempdict["url"]]=tempdict["exception"]
