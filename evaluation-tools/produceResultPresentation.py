@@ -131,7 +131,7 @@ for url in urldata:
 	else:
 		uline=url_escape_md(url)+" | "
 		for p in parsers:
-			uline += p + "<br>"
+			uline += p + " <br>"
 		if uline[:-1]==">":	
 			utable+=uline[:-4]+"\n"
 		else:
