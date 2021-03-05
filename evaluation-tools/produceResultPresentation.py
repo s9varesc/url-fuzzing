@@ -132,7 +132,10 @@ for url in urldata:
 		uline=url_escape_md(url)+" | "
 		for p in parsers:
 			uline += p + "<br>"
-		utable+=uline[:-4]+"\n"
+		if uline[:-1]==">":	
+			utable+=uline[:-4]+"\n"
+		else:
+			utable+=uline++"\n"
 
 # Browsers
 errdata=json.loads(eranking)
