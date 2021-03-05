@@ -109,7 +109,7 @@ for exfile in os.listdir(dir):
 			datapoint=fixdatapoint(datapoint)
 			if parsername=="PHP":
 				print(datapoint)
-			tempdict=json.loads(datapoint)
+			tempdict=json.loads(datapoint, strict=False)
 			
 			datadict[tempdict["url"]]=tempdict["exception"]
 
