@@ -222,6 +222,7 @@ htmlhead="<!DOCTYPE html>\
 htmltail="</body>\
 </html>"
 htmlresult=htmlresult.replace("<table>", "<table class=\"simpletable\">")
+htmlresult=htmlresult.replace("<br-->", "<br>")
 	
 
 htmlfile=open( datadir+"../resultoverview.html", "w")
