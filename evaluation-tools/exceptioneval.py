@@ -148,9 +148,10 @@ for parser in parsers:
 for url in urls:
 	for parser in parsers:
 		if url in parsers[parser]:
+			if url not in urlranking:
+				urlranking[url]=[]
 			urlranking[url]+=[parser]
-	if url not in urlranking:
-		urlranking[url]=[]
+
 	
 
 
