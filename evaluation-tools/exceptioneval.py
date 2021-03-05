@@ -88,7 +88,7 @@ for exfile in os.listdir(dir):
 		with open(dir +"/"+ exfile) as f:
 			data=f.read()
 
-		print("evaluating "+parsername)
+		
 		
 		#data = data.replace("{ url:", "{ \"url\":") 
 		#data = data.replace("exception:", "\"exception\":")
@@ -107,8 +107,7 @@ for exfile in os.listdir(dir):
 			
 			if datapoint[-2:]=="}}":datapoint=datapoint[:-1]
 			datapoint=fixdatapoint(datapoint)
-			if parsername=="PHP":
-				print(datapoint)
+			
 			tempdict=json.loads(datapoint, strict=False)
 			
 			datadict[tempdict["url"]]=tempdict["exception"]
