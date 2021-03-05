@@ -47,9 +47,15 @@ class ParsingHandler {
 	}
 	
     String[] baserel=input.split("<");
+    boolean rel=true;
+    try{
+        String tmp=baserel[1];
+    } catch (Exception e){
+        rel=false;
+    }
         try {
             URL url=new URL(baserel[0]);
-            if(baserel[1]!=null){
+            if(rel){
                 URL result=new URL(url, baserel[1]);
             }
         } catch (Exception e) {
