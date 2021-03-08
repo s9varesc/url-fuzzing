@@ -365,10 +365,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                     if("file".equals(components.get("scheme"))){
                         dl=components.get("base_driveletter");
                     }
-                    path=util.normalizePath(path,dl ); //driveletter can only be at the beginning and after a /
                     if(path != null && ! path.startsWith("/")){
                         path="/"+path;   //paths in special urls start with / in components
                     }
+                    path=util.normalizePath(path,dl ); //driveletter can only be at the beginning and after a /
+                    
                 } 
             }
             else{
@@ -379,10 +380,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                     if("file".equals(components.get("scheme"))){
                         dl=components.get("relative_driveletter");
                     }
-                    path=util.normalizePath(path, dl);
                     if(path != null && ! path.startsWith("/")){
                         path="/"+path;   //paths in special urls start with / in components
                     }
+                    path=util.normalizePath(path, dl);
+                    
                 } 
 
             }
@@ -542,7 +544,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
        
            }
         String pathcontent="";
-        String driveletter=dict.get("windowsDriveLetter");
+        String driveletter=(file != null ? dict.get("windowsDriveLetter"):"");
         /*if (panW != null){
           pa=null; //pathAbsoluteNonWindowsFileURL contains pathAbsoluteURL
         }*/

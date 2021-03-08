@@ -72,7 +72,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
             prp+=":"; //TODO check if :/ is also possible
         }
         prp+=fullhost;
-        prp+=(port!="") ? ":"+port : "";
+        prp+=(port!="") ? ":"+port.replaceFirst("^0+(?!$)", "") : "";
         
 
         result+="prePath:\""+prp+"\",\n";

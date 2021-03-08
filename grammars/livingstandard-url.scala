@@ -14,8 +14,8 @@ Grammar(
   'URLschemeFile := "file",
 
   'baseAndRelativeURL := ('specialBaseURL ~  "<" ~ ('specialRelativeURL | 'absoluteURLwithFragment))
-                          | ('fileBaseURL ~  "<" ~ ('fileRelativeURL | 'absoluteURLwithFragment))  //might need to differentiate between empty/nonempty host
-                          | ('otherBaseURL ~ "<" ~ ('otherRelativeURL | 'absoluteURLwithFragment)), //maybe remove absolute alternative
+                          | ('fileBaseURL ~  "<" ~ ('fileRelativeURL | 'absoluteURLwithFragment))  //TODO might need to differentiate between empty/nonempty host
+                          | ('otherBaseURL ~ "<" ~ ('otherRelativeURL | 'absoluteURLwithFragment)), //TODO maybe remove absolute alternative
 
 
 
@@ -42,7 +42,7 @@ Grammar(
   'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,  
-  'pathRelativeSchemelessURL := ('pathRelativeURL ~ ":").?,
+  'pathRelativeSchemelessURL := 'pathRelativeURL, // not allowed to start with scheme:
 
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
   'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
