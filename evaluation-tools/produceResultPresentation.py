@@ -173,10 +173,12 @@ result+="Total number of Parsers: "+str(len(pnames))+"\n\n"
 
 
 result +="## Parser Comparison \n\n"
-result +=parsertable+"\n"
+result +=parsertable+"\n\n"
+
+result += "*note:*  base and relative URLs are represented as \"base<relative\" in this document for readabilty, the actually parsed inputs do not contain \"<\" \n\n"
 
 for ptable in ptables:
-	result+=ptable+"\n"
+	result+=ptable+"\n\n"
 
 result +="## URL Comparison \n\n"
 result += utable+"\n"
