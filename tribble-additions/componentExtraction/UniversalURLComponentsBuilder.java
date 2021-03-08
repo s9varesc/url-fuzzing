@@ -414,7 +414,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("host", components.get("relative_host"));
             components.put("port", components.get("relative_port"));
             String path=components.get("relative_path");
-            String scheme=components.get("scheme")
+            String scheme=components.get("scheme");
             if(isSpecialScheme(scheme)){
                 if(path != null && ! path.startsWith("/")){
                     path="/"+path;   //paths in special urls start with / in components
