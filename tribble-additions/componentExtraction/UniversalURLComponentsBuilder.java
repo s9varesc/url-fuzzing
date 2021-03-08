@@ -320,7 +320,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         if(base != null){
             int index=base.lastIndexOf("/");
             base=base.substring(0, (index >=0 ? index: 0));
-            base=(relative != null ? base + "/"+relative : base) ;
+            base=(relative != null ? (base + "/"+relative ): base) ;
         }
         else{
             base=relative;
@@ -420,7 +420,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                     path="/"+path;   //paths in special urls start with / in components
                 }
                 String dl=components.get("relative_driveletter");
-                if(scheme.equals("file")){ //only preserve drive letters in file urls
+                if(!scheme.equals("file")){ //only preserve drive letters in file urls
                     dl="";
                 }
                 path=util.normalizePath(path, dl);
@@ -435,18 +435,16 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     }
 
     private String prepareQuery(String parent){
-        String rq=null;
         String sq=getSpecialComponentContent("URLSpecialquery", parent);
         String nsq=getSpecialComponentContent("URLquery", parent);
-        if( sq != null){
-            rq=sq;
+        
+        if(parent.contains("?"+sq)){
+            return sq;
         }
-        else{
-            if( nsq != null){
-                rq=nsq;
-            }
+        if(parent.contains("?"+nsq)){
+            return nsq;
         }
-        return rq;
+        return null;
     }
 
     private String prepareHost(String parent){
