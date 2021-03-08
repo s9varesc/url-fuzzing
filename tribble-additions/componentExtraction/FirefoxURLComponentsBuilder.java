@@ -54,16 +54,16 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="ref:\""+ref+"\",\n"; 
         
         String pqr="";
-        pqr+=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "";
+        pqr+=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "/";
         String query=(univcomp.getComponentContents("query")!=null) ? "?"+escapeContent(univcomp.getComponentContents("query")) : "";
-        pqr+=query;
+        pqr+=(!query.equals("?") ? query : "");//avoid adding a ? if the query is empty
         String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+escapeContent(univcomp.getComponentContents("fragment")) : "";
-        pqr+=frag;
+        pqr+=(!frag.equals("#") ? frag :""); //avoid adding a # if the fragment is empty
 
         result+="pathQueryRef:\""+pqr+"\",\n";
         String prp="";
         prp+=escapeContent(univcomp.getComponentContents("scheme"));
-        String input=escapeContent(univcomp.getComponentContents("input")); //TODO check what this does to relative URLs
+        String input=escapeContent(univcomp.getComponentContents("input")); 
         spec=(spec!=null)?spec:"";
         if(input.startsWith(prp+"://")||spec.startsWith(prp+"://")){
             prp+="://";

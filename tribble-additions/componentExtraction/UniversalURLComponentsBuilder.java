@@ -260,6 +260,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
             if(rscheme!= null){
                 components.put("relative_scheme", rscheme.toLowerCase());
+                //fill dict entries so base components are ignored
+                components.put("relative_path", ""); 
+                components.put("relative_query", "");
+                components.put("relative_fragment", "");
             }
             
         }
@@ -283,6 +287,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("relative_path", rpath);
            
         }
+
         // prepare query
         String rq=prepareQuery(rel);
         if(rq != null){
@@ -356,7 +361,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 //replace last base segment
                 path=combinePaths(components.get("base_path"), components.get("relative_path"));
                 if(isSpecialScheme(components.get("scheme"))){
-                    path=util.normalizePath(path, components.get("base_driveletter")); //driveletter can only be at the beginning and after a /
+                    String dl="";
+                    if("file".equals(components.get("scheme"))){
+                        dl=components.get("base_driveletter");
+                    }
+                    path=util.normalizePath(path,dl ); //driveletter can only be at the beginning and after a /
                     if(path != null && ! path.startsWith("/")){
                         path="/"+path;   //paths in special urls start with / in components
                     }
@@ -366,7 +375,11 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 // use relative path
                 path=components.get("relative_path");
                 if(isSpecialScheme(components.get("scheme"))){
-                    path=util.normalizePath(path, components.get("relative_driveletter"));
+                    String dl="";
+                    if("file".equals(components.get("scheme"))){
+                        dl=components.get("relative_driveletter");
+                    }
+                    path=util.normalizePath(path, dl);
                     if(path != null && ! path.startsWith("/")){
                         path="/"+path;   //paths in special urls start with / in components
                     }

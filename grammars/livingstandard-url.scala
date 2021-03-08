@@ -68,7 +68,7 @@ Grammar(
   //'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated
   'domain := 'internationalHost | 'hostAllowed.rep(1), 
   'internationalHost := "xn--" ~ 'punycodeHost,
-  'punycodeHost := 'alphanum ~ ('alphanum.rep | ("-" ~ 'alphanum.rep)).rep,
+  'punycodeHost := 'alphanum.rep ~ "-" ~ 'alphanum.rep, //TODO simplfy to ensure validity, //this does not cover punycode entirely 
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
