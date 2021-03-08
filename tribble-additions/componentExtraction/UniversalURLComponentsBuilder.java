@@ -349,8 +349,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 components.put("port", components.get("relative_port"));
             }
             else{
-                if(! relative.startsWith("///") ){
-                    //only use base host if relative contains only path
+                if(! relative.startsWith("//") ){
+                    //only use base host if relative starts with path (i.e. max one /)
                     components.put("host", components.get("base_host"));
                     components.put("port", components.get("base_port"));
                 }
@@ -414,11 +414,17 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("host", components.get("relative_host"));
             components.put("port", components.get("relative_port"));
             String path=components.get("relative_path");
-            if(isSpecialScheme(components.get("scheme"))){
-                path=util.normalizePath(path, components.get("relative_driveletter"));
+            String scheme=components.get("scheme")
+            if(isSpecialScheme(scheme)){
                 if(path != null && ! path.startsWith("/")){
                     path="/"+path;   //paths in special urls start with / in components
                 }
+                String dl=components.get("relative_driveletter");
+                if(scheme.equals("file")){ //only preserve drive letters in file urls
+                    dl="";
+                }
+                path=util.normalizePath(path, dl);
+                
             }
             components.put("path", path); //TODO lower case?
             components.put("query", components.get("relative_query"));
