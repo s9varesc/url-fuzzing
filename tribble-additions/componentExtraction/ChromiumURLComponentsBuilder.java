@@ -41,23 +41,28 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     
     String port=(univcomp.getComponentContents("port")!=null) ? escapeContent(univcomp.getComponentContents("port")) : "-1";
     port=port.replaceFirst("^0+(?!$)", "");
+    
     String frag=(univcomp.getComponentContents("fragment")!=null) ? escapeContent(univcomp.getComponentContents("fragment")) : "";
     
     String path=(univcomp.getComponentContents("path")!=null) ? escapeContent(univcomp.getComponentContents("path")) : "/";
     String query=(univcomp.getComponentContents("query")!=null) ? escapeContent(univcomp.getComponentContents("query")) : "";
     String fragment=(univcomp.getComponentContents("fragment")!=null) ? escapeContent(univcomp.getComponentContents("fragment")) : "";
 
+    String base=(univcomp.getComponentContents("base")!=null )? escapeContent(univcomp.getComponentContents("base")):"";
+
     String result="{";
+    result+="\""+base+"\",";
     result+="\""+escapeContent(univcomp.getComponentContents("input"))+"\",";
     result+="\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",";
     result+="\""+"\","; //username
     result+="\""+"\","; //password
     result+="\""+host+"\",";
-    result+=port+",";
+    result+=port+","; //TODO strip leading 0s
     result+="\""+path+"\",";
     result+="\""+query+"\",";
     result+="\""+fragment+"\"";
     result+="}";
+
 
     return result;
 
@@ -74,7 +79,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
         result=result.replaceAll("\"", "\\\\\"");
         return result; 
     }
-    return input;
+    return "";
   }
 
 }

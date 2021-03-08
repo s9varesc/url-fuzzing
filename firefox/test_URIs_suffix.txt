@@ -37,7 +37,8 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     try {
       comp=aURI[aPropertyName];
     } catch(e) {
-      dump("\n{\"url\":\""+ aTest.spec+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}"); 
+      var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
+      dump("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}"); 
       do_throw(e.result);
     }
     do_info(
@@ -52,7 +53,8 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     );
 
     if (aURI[aPropertyName] != expectedVal){ //needed to display custom format, adding assertion message spams output
-      dump("\n{\"url\":\""+ aTest.spec+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}");
+      var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
+      dump("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}");
     }
 
     Assert.equal(aURI[aPropertyName], expectedVal);
@@ -66,13 +68,47 @@ function do_test_uri_basic(aTest) {
   try {
     URI = gIoService.newURI(aTest.spec);
   } catch (e) {
+    var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
     do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
-    dump("\n{\"url\":\""+ aTest.spec+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
+    dump("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
     if (aTest.fail) {
       Assert.equal(e.result, aTest.result);
       return;
     }
     do_throw(e.result);
+  }
+
+  if (aTest.relativeURI) {
+    var relURI;
+
+    try {
+      relURI = gIoService.newURI(aTest.relativeURI, null, URI);
+    } catch (e) {
+      do_info(
+        "Caught error on Relative parse of " +
+          aTest.spec +
+          " + " +
+          aTest.relativeURI +
+          " Error: " +
+          e.result
+      );
+      var url=aTest.spec +"<"+aTest.relativeURI;
+      do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
+      dump("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
+      if (aTest.relativeFail) {
+        Assert.equal(e.result, aTest.relativeFail);
+        return;
+      }
+      do_throw(e.result);
+    }
+    do_info(
+      "relURI.pathQueryRef = " +
+        relURI.pathQueryRef +
+        ", was " +
+        URI.pathQueryRef
+    );
+    URI = relURI;
+    do_info("URI.pathQueryRef now = " + URI.pathQueryRef);
   }
 
   

@@ -30,11 +30,19 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
     @Override
     public String buildRepresentation() { 
         String result="{";
-        result+="spec:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
+        String spec=univcomp.getComponentContents("base");
+        if(spec != null){
+            result+="spec:\""+escapeContent(spec)+"\",\n";
+            result+="relativeURI:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
+        }
+        else{
+            result+="spec:\""+escapeContent(univcomp.getComponentContents("input"))+"\",\n";
+        }
+       
         result+="scheme:\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",\n";
         String host=(univcomp.getComponentContents("host")!=null) ? escapeContent(univcomp.getComponentContents("host")) : "";
         String fullhost=host; //needed for prePath
-        if(univcomp.getSpecialComponentContent("ipv6address")!=null){ 
+        if(univcomp.getSpecialComponentContent("ipv6address")!=null){ //TODO might not work for relative
             host=host.replaceAll("\\[", "");
             host=host.replaceAll("\\]", "");
         }
@@ -46,7 +54,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="ref:\""+ref+"\",\n"; 
         
         String pqr="";
-        pqr+=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "/";
+        pqr+=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "";
         String query=(univcomp.getComponentContents("query")!=null) ? "?"+escapeContent(univcomp.getComponentContents("query")) : "";
         pqr+=query;
         String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+escapeContent(univcomp.getComponentContents("fragment")) : "";
@@ -55,8 +63,9 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="pathQueryRef:\""+pqr+"\",\n";
         String prp="";
         prp+=escapeContent(univcomp.getComponentContents("scheme"));
-        String input=escapeContent(univcomp.getComponentContents("input"));
-        if(input.startsWith(prp+"://")){
+        String input=escapeContent(univcomp.getComponentContents("input")); //TODO check what this does to relative URLs
+        spec=(spec!=null)?spec:"";
+        if(input.startsWith(prp+"://")||spec.startsWith(prp+"://")){
             prp+="://";
         }
         else{
@@ -68,6 +77,8 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
 
         result+="prePath:\""+prp+"\",\n";
         result+="}\n";
+
+        
         return result;
     }
 
@@ -82,7 +93,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
             result=result.replaceAll("\"", "\\\\\"");
             return result; 
         }
-        return input;
+        return "";
     }
 
 }

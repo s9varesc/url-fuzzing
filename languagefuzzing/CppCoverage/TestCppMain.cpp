@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 
 
@@ -50,17 +51,31 @@ int main()
  
 	if(result)
 	{
-		// Print the vector contents
 		for(std::string & line : vecOfStr){
 			try {
 			    line=line.substr(0,line.length());
 			} catch(const std::exception& e){
 				
-			}			
+			}	
+			//split line into base and relative	
+			std::stringstream inputcopy;
+			inputcopy<<line;
+			std::string segment;
+			std::vector<std::string> baseandrel;
+			while(std::getline(inputcopy, segment, '<')){
+			   baseandrel.push_back(segment);
+			}	
 			//parse urls
 			try
 			{
-			    Poco::URI uri1(line);
+				if(baseandrel.size()>1){
+					Poco::URI base(baseandrel[0]);
+					Poco::URI rel(base, baseandrel[1]);
+				}
+				else{
+					Poco::URI uri1(line);
+				}
+			    
 			}
 			catch(const std::exception& e)
 			{

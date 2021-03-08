@@ -131,8 +131,11 @@ for url in urldata:
 	else:
 		uline=url_escape_md(url)+" | "
 		for p in parsers:
-			uline += p + "<br>"
-		utable+=uline[:-4]+"\n"
+			uline += p + " <br>"
+		if uline[:-1]==">":	
+			utable+=uline[:-4]+"\n"
+		else:
+			utable+=uline+"\n"
 
 # Browsers
 errdata=json.loads(eranking)
@@ -219,6 +222,7 @@ htmlhead="<!DOCTYPE html>\
 htmltail="</body>\
 </html>"
 htmlresult=htmlresult.replace("<table>", "<table class=\"simpletable\">")
+htmlresult=htmlresult.replace("<br-->", "<br>")
 	
 
 htmlfile=open( datadir+"../resultoverview.html", "w")

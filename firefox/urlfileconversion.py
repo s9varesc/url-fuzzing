@@ -38,7 +38,17 @@ for chunk in testchunks:
 		urldata+="\n" + url + ","
 		inp=url[7:]
 		cutindex=inp.find("\",\n")
-		allinputs+=inp[:cutindex]+"\n"
+
+		bas=inp[:cutindex] #=base
+		relcut=inp.find("relativeURI" );
+		rel=""
+		if(relcut>=0):
+			nextcut=inp.find("\",\n", relcut)
+			rel=inp[relcut+13:nextcut]
+		if(rel != "" and bas != ""):
+			rel="<"+rel
+		allinputs+=bas+rel+"\n"
+				
 	urldata=urldata[:-1]
 	urldata+="];"
 	testname="test_URIs_"+str(testid)+".js"

@@ -13,8 +13,15 @@ var rd = readline.createInterface({
 
 rd
   .on('line', function(line) {
+    var baseandrel=line.split("<");
     try {
-        const url=new URI(line);
+        if(baseandrel[1]!=undefined){
+          const url=new URI(baseandrel[1], baseandrel[0]);
+        }
+        else{
+          const url=new URI(line);
+        }
+        
     }
     catch(err){
 	exceptions+="\n{\"url\":\""+line+"\", \"exception\":\""+err.message+"\"}";

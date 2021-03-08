@@ -87,6 +87,8 @@ for exfile in os.listdir(dir):
 		parsername=exfile.replace("Exceptions","").replace(".txt","")
 		with open(dir +"/"+ exfile) as f:
 			data=f.read()
+
+		
 		
 		#data = data.replace("{ url:", "{ \"url\":") 
 		#data = data.replace("exception:", "\"exception\":")
@@ -106,7 +108,7 @@ for exfile in os.listdir(dir):
 			if datapoint[-2:]=="}}":datapoint=datapoint[:-1]
 			datapoint=fixdatapoint(datapoint)
 			
-			tempdict=json.loads(datapoint)
+			tempdict=json.loads(datapoint, strict=False)
 			
 			datadict[tempdict["url"]]=tempdict["exception"]
 
@@ -120,7 +122,7 @@ for exfile in os.listdir(dir):
 parserranking={} # {parsername: { errorcount: , nrerrtypes: ,
 #						 errtypes: {errtype:[url, url,...]} ]
 
-urlranking={} # {url: , nrerrors: , parsers: []}
+urlranking={} # {url: , parsers: []}
 # basic counting & parser ranking
 for parser in parsers:
 	countresults={}
@@ -144,11 +146,13 @@ for parser in parsers:
 
 #url ranking
 for url in urls:
-	if url not in urlranking:
-		urlranking[url]=[]
 	for parser in parsers:
 		if url in parsers[parser]:
+			if url not in urlranking:
+				urlranking[url]=[]
 			urlranking[url]+=[parser]
+
+	
 
 
 

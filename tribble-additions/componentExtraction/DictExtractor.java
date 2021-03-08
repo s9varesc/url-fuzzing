@@ -48,7 +48,6 @@ public class DictExtractor {
       }
     }
 
-   
     // pre-format component contents
     univcompBuilder.prepareComponents();
     //use specified component builders to format components

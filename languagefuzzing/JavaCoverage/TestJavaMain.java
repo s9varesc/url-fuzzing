@@ -46,8 +46,18 @@ class ParsingHandler {
 	    input=input.substring(0,input.length());
 	}
 	
+    String[] baserel=input.split("<");
+    boolean rel=true;
+    try{
+        String tmp=baserel[1];
+    } catch (Exception e){
+        rel=false;
+    }
         try {
-            URL url=new URL(input);
+            URL url=new URL(baserel[0]);
+            if(rel){
+                URL result=new URL(url, baserel[1]);
+            }
         } catch (Exception e) {
             exceptions+="\n{\"url\":\""+input+"\", \"exception\":\""+e.toString()+"\"}";
         }

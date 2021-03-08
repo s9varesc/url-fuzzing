@@ -1,7 +1,15 @@
 //test execution
 TEST(URLParser, Parsing){
 	for (size_t i = 0; i < base::size(parse_cases); i++) {
-		GURL parsed_url(parse_cases[i].input);
+		GURL parsed_url;
+		if(strcmp(parse_cases[i].baseurl, "") != 0){
+			GURL parsed_base(parse_cases[i].baseurl);
+			parsed_url=parsed_base.Resolve(parse_cases[i].input);
+		}
+		else{
+			parsed_url= GURL(parse_cases[i].input);
+		}
+						
 		CheckValidity(parse_cases[i], parsed_url);
 		if ( parsed_url.is_valid()) {
 			CheckComponents(parse_cases[i], parsed_url);

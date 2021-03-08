@@ -24,12 +24,12 @@ public abstract class UniversalComponentsBuilder{
 	}
 	/***
 	* Adds a name, content pair to the dictionary
+	* @param name name of the grammar rule
+	* @param content the string corresponding to the instantiation of the specified rule
 	 */
 	public void addComponent(String name, String content){
-	  if (content != ""){
-	    dict.put(name, content);
-	  }
-
+		dict.put(name, content);
+		return;
 	}
 
 	/***
@@ -43,13 +43,7 @@ public abstract class UniversalComponentsBuilder{
 	* @param component the name of the component whose content is requested
 	* @return a string containing the contents of the specified component,  null = unknown component
 	*/
-	public String getComponentContents(String component){
-		if(components.containsKey(component)){
-			return components.get(component);
-		}
-		return null;
-
-	}
+	public abstract String getComponentContents(String component);
 
 	/***
 	* method to access component contents not contained in the basic components
@@ -57,10 +51,6 @@ public abstract class UniversalComponentsBuilder{
 	* @param grammarrule the name of the rule whose instantiation is requested
 	* @return a string containing the instantiation of the specified rule, null = unknown rule
 	*/
-	public String getSpecialComponentContent(String grammarrule){
-		if(dict.containsKey(grammarrule)){
-			return dict.get(grammarrule);
-		}
-		return null;
-	}
+	public abstract String getSpecialComponentContent(String grammarrule);
+
 }

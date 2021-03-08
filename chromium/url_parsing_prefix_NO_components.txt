@@ -14,7 +14,7 @@ namespace {
 // describes the structure of inputs
 
 struct URLParseCase {
-  //TODO might need to include inner_... fields (see url_parse_unittest.cc:81-86)
+  const char* baseurl;
   const char* input;
 
   const char* scheme;

@@ -12,11 +12,14 @@ var rd = readline.createInterface({
 });
 rd
 	.on('line', function(line) { 
-	     
-	    try {
-		//line=line.substring(0,line.length-1)
-		const url = new whatwg.URL(line)
-		//console.log(url)
+		var baseandrel=line.split("<");
+		try {
+		    if(baseandrel[1]!=undefined){
+		      const url=new whatwg.URL(baseandrel[1], baseandrel[0]);
+		    }
+		    else{
+		      const url = new whatwg.URL(line)
+		    }
 	    }
 	    catch(err){
 		//console.log(err);
