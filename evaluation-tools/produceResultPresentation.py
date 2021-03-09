@@ -181,7 +181,7 @@ result += "*note:*  base and relative URLs are represented as \"base<relative\" 
 
 for ptable in ptables:
 	#result+=ptable+"\n\n"
-	if "### C" in ptable:
+	if "### C" in ptable or "### R" in ptable:
 		result+=ptable+"\n\n"
 
 result +="## URL Comparison \n\n"
