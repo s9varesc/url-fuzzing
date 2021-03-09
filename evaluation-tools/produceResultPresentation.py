@@ -92,7 +92,6 @@ parsertable=" Parsername | Number of Exceptions | Number of Different Exceptions
 parserdata=json.loads(pranking)
 
 for pname in parserdata:
-	print (pname)
 	edata=parserdata[pname]
 	ptuple=(pname, edata["errorcount"], edata["nrerrtypes"])
 	ptuples+=[ptuple]
@@ -226,6 +225,7 @@ htmltail="</body>\
 </html>"
 htmlresult=htmlresult.replace("<table>", "<table class=\"simpletable\">")
 htmlresult=htmlresult.replace("<br-->", "<br>")
+htmlresult=htmlresult.replace("<--br>", "<br>")
 	
 
 htmlfile=open( datadir+"../resultoverview.html", "w")
