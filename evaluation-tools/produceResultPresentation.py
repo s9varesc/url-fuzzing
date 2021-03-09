@@ -50,7 +50,7 @@ def url_escape_md(data):
 	for i in range(1, maxnrbt):
 		escbt+="`"
 	#res=res.replace("|", "\|")
-	return escbt+" "+res+" "+escbt
+	return " "+escbt+" "+res+" "+escbt+" "
 
 
 parser = argparse.ArgumentParser()
