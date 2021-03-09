@@ -103,7 +103,7 @@ for pname in parserdata:
 		etline=""
 		etline+=escape_md(et)+ " | "
 		for eurl in eurls:
-			etline += url_escape_md(eurl) +"<br>"
+			etline += url_escape_md(eurl) +" <br>"
 		ptable+=etline[:-4]+"\n"
 
 	ptables+=[ptable]
