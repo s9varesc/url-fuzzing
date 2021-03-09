@@ -92,6 +92,7 @@ parsertable=" Parsername | Number of Exceptions | Number of Different Exceptions
 parserdata=json.loads(pranking)
 
 for pname in parserdata:
+	print (pname)
 	edata=parserdata[pname]
 	ptuple=(pname, edata["errorcount"], edata["nrerrtypes"])
 	ptuples+=[ptuple]
@@ -106,9 +107,7 @@ for pname in parserdata:
 		ptable+=etline[:-4]+"\n"
 
 	ptables+=[ptable]
-	if pname=="C":
-		print(ptable)
-		print(edata)
+
 
 # sort ptubles and create overview table
 
