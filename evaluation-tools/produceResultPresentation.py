@@ -27,7 +27,7 @@ def escape_md(data):
 	#escaping for exception messages
 	res=data
 	res=res.replace("|", "&#124;")
-	res=res.replace("`", "\`")
+	#res=res.replace("`", "\\`")
 	return res
 
 def url_escape_md(data):
