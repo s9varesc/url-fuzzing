@@ -100,7 +100,7 @@ for pname in parserdata:
 	for et in edata["errtypes"]:
 		eurls=edata["errtypes"][et]
 		etline=""
-		etline+=escape_md(et)+ " | "
+		etline+=url_escape_md(et)+ " | "
 		for eurl in eurls:
 			etline += url_escape_md(eurl) +" <br>"
 		ptable+=etline+"\n"
