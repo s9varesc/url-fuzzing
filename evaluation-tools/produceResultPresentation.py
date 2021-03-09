@@ -106,6 +106,9 @@ for pname in parserdata:
 		ptable+=etline[:-4]+"\n"
 
 	ptables+=[ptable]
+	if pname=="C":
+		print(ptable)
+		print(edata)
 
 # sort ptubles and create overview table
 
