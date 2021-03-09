@@ -183,6 +183,8 @@ for ptable in ptables:
 	#result+=ptable+"\n\n"
 	if "### C" in ptable or "### R" in ptable:
 		result+=ptable+"\n\n"
+	if "### R" in ptable:
+		print(ptable)
 
 result +="## URL Comparison \n\n"
 result += utable+"\n"
