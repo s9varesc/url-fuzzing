@@ -99,9 +99,6 @@ for pname in parserdata:
 	ptable="### "+pname+"\n\n"+ptableheader+"\n"
 	
 	for et in edata["errtypes"]:
-		if pname=="C" and et != "1":
-			print(edata)
-			print(edata["errtypes"])
 		eurls=edata["errtypes"][et]
 		etline=""
 		etline+=escape_md(et)+ " | "
@@ -183,7 +180,9 @@ result +=parsertable+"\n\n"
 result += "*note:*  base and relative URLs are represented as \"base<relative\" in this document for readabilty, the actually parsed inputs do not contain \"<\" \n\n"
 
 for ptable in ptables:
-	result+=ptable+"\n\n"
+	#result+=ptable+"\n\n"
+	if "### C" in ptable:
+		result+=ptable+"\n\n"
 
 result +="## URL Comparison \n\n"
 result += utable+"\n"
