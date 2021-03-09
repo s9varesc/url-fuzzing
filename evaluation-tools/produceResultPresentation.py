@@ -99,6 +99,9 @@ for pname in parserdata:
 	ptable="### "+pname+"\n\n"+ptableheader+"\n"
 	
 	for et in edata["errtypes"]:
+		if pname=="C" and et != "1":
+			print(edata)
+			print(edata["errtypes"])
 		eurls=edata["errtypes"][et]
 		etline=""
 		etline+=escape_md(et)+ " | "
