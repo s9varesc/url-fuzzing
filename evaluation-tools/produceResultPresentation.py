@@ -134,10 +134,7 @@ for url in urldata:
 		uline=url_escape_md(url)+" | "
 		for p in parsers:
 			uline += p + " <br>"
-		if uline[:-1]==">":	
-			utable+=uline[:-4]+"\n"
-		else:
-			utable+=uline+"\n"
+		utable+=uline+"\n"
 
 # Browsers
 errdata=json.loads(eranking)
@@ -180,9 +177,8 @@ result +=parsertable+"\n\n"
 result += "*note:*  base and relative URLs are represented as \"base<relative\" in this document for readabilty, the actually parsed inputs do not contain \"<\" \n\n"
 
 for ptable in ptables:
-	#result+=ptable+"\n\n"
-	if "### C" not in ptable:
-		result+=ptable+"\n\n"
+	result+=ptable+"\n\n"
+	
 	
 
 result +="## URL Comparison \n\n"
