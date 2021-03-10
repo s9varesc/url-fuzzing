@@ -361,7 +361,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 //replace last base segment
                 path=combinePaths(components.get("base_path"), components.get("relative_path"));
                 if(isSpecialScheme(components.get("scheme"))){
-                    String dl="";
+                    String dl=""; 
                     if("file".equals(components.get("scheme"))){
                         dl=components.get("base_driveletter");
                     }
@@ -376,8 +376,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 // use relative path
                 path=components.get("relative_path");
                 if(isSpecialScheme(components.get("scheme"))){
-                    String dl="";
-                    if("file".equals(components.get("scheme"))){
+                    String dl=""; 
+                    if(components.get("scheme").equals("file")){
                         dl=components.get("relative_driveletter");
                     }
                     if(path != null && ! path.startsWith("/")){

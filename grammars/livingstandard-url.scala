@@ -13,9 +13,9 @@ Grammar(
   'URLnonSpecialScheme := 'alpha ~ ('alphanum | "+" | "-" | ".").rep,
   'URLschemeFile := "file",
 
-  'baseAndRelativeURL := ('specialBaseURL ~  "<" ~ ('specialRelativeURL | 'absoluteURLwithFragment))
-                          | ('fileBaseURL ~  "<" ~ ('fileRelativeURL | 'absoluteURLwithFragment))  //TODO might need to differentiate between empty/nonempty host
-                          | ('otherBaseURL ~ "<" ~ ('otherRelativeURL | 'absoluteURLwithFragment)), //TODO maybe remove absolute alternative
+  'baseAndRelativeURL := ('specialBaseURL ~  "<" ~ 'specialRelativeURL )
+                          | ('fileBaseURL ~  "<" ~ 'fileRelativeURL )  //TODO might need to differentiate between empty/nonempty host
+                          | ('otherBaseURL ~ "<" ~ 'otherRelativeURL ), 
 
 
 
@@ -68,7 +68,7 @@ Grammar(
   //'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated
   'domain := 'internationalHost | 'hostAllowed.rep(1), 
   'internationalHost := 'punycodeHost, //"xn--" ~ 'punycodeHost, //TODO find a better solution
-  'punycodeHost := 'alphanum.rep(1) ~ "-" ~ 'alphanum.rep(2), //TODO simplfy to ensure validity, //this does not cover punycode entirely 
+  'punycodeHost := 'alphanum.rep(1) ~ "-" ~ 'alphanum.rep(2), // simplfied to ensure validity, //this does not cover punycode 
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
@@ -99,7 +99,7 @@ Grammar(
 
   'hostAllowed := 'unreserved | "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|",
   //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=" | "|",
-  'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO c0percent encoding above %7f
+  'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), 
 
   'unicodeUtil := "%" ~ ("8"|"9"|"a"|"b") ~ 'hexdig,
 
