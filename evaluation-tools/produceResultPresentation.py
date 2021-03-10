@@ -49,7 +49,7 @@ def url_escape_md(data):
 	escbt="```"
 	for i in range(1, maxnrbt):
 		escbt+="`"
-	#res=res.replace("|", "\|")
+	res=res.replace("<", " < ")
 	return " "+escbt+" "+res+" "+escbt+" "
 
 

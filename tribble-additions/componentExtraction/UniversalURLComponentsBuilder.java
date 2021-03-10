@@ -295,7 +295,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         // prepare fragment
         String rf=getSpecialComponentContent("URLfragment", rel);
-        if(rf != null){
+        if(rel.contains("#"+rf)){
             components.put("relative_fragment", rf);
         }
 
@@ -323,7 +323,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             base=(relative != null ? (base + "/"+relative ): base) ;
         }
         else{
-            base=relative;
+            if(relative!= null && ! relative.startsWith("/")){
+                base="/"+relative;
+            }
+            else{
+                base=relative;
+            }
+            
         }
         return base;
     }
