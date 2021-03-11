@@ -366,32 +366,35 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             if(! relative.startsWith("/")){
                 //replace last base segment
                 path=combinePaths(components.get("base_path"), components.get("relative_path"));
+                String dl="";
                 if(isSpecialScheme(components.get("scheme"))){
-                    String dl=""; 
+                     
                     if("file".equals(components.get("scheme"))){
                         dl=components.get("base_driveletter");
                     }
                     if(path != null && ! path.startsWith("/")){
                         path="/"+path;   //paths in special urls start with / in components
                     }
-                    path=util.normalizePath(path,dl ); //driveletter can only be at the beginning and after a /
+                     //driveletter can only be at the beginning and after a /
                     
                 } 
+                path=util.normalizePath(path,dl ); //always normalize after combining paths
             }
             else{
                 // use relative path
                 path=components.get("relative_path");
+                String dl="";
                 if(isSpecialScheme(components.get("scheme"))){
-                    String dl=""; 
+                     
                     if(components.get("scheme").equals("file")){
                         dl=components.get("relative_driveletter");
                     }
                     if(path != null && ! path.startsWith("/")){
                         path="/"+path;   //paths in special urls start with / in components
                     }
-                    path=util.normalizePath(path, dl);
                     
                 } 
+                path=util.normalizePath(path, dl); //always normalize for relative paths
 
             }
             components.put("path", path);

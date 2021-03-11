@@ -45,7 +45,7 @@ Grammar(
   'pathRelativeSchemelessURL := 'pathRelativeURL, // not allowed to start with scheme:
 
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
-  'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
+  'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment, //TODO maybe explicitly include filenames?
   'singleDotPathSegment := "." | "%2e",
   'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", 
   
