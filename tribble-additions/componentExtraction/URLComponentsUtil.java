@@ -126,8 +126,12 @@ public class URLComponentsUtil {
 				}
 				else{
 					// current segment is not double-dot -> add current segment
-					newsegments.set(prev+1, current); 
-					prev++;
+					if(!current.equals("/.") && ! current.equals("/%2e") && ! current.equals("/%2E")){
+						//there should be no single dot segments left, but some are not removed in the previous checks
+						newsegments.set(prev+1, current); 
+						prev++;
+					}
+					
 				}
 			}
 

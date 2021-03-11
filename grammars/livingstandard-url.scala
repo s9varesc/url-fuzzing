@@ -35,14 +35,16 @@ Grammar(
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
   'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   
-  'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?).?, 
+  'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?, 
   'opaqueHost := 'opaqueHostCodePoint.rep(1) | ("[" ~ 'ipv6address ~ "]"), 
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   
   'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
-  'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,  
-  'pathRelativeSchemelessURL := 'pathRelativeURL, // not allowed to start with scheme:
+  'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
+  'pathRelativeURLstart := (('pathCodePoint.rep(1)) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ "/".? ~ 'pathRelativeURL,  
+  'pathRelativeSchemelessURL := 'pathRelativeURLstart, // not allowed to start with scheme:
+  
 
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
   'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment, //TODO maybe explicitly include filenames?
