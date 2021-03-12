@@ -42,7 +42,7 @@ Grammar(
   'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'pathRelativeURL := ('URLpathSegment ~ ("/" ~ 'pathRelativeURL).? ) | ("/".? ~ 'filename).?,
-  'pathRelativeURLstart := (('pathCodePoint.rep(1)) | 'singleDotPathSegment | 'doubleDotPathSegment | 'filename) ~ "/".? ~ 'pathRelativeURL,  
+  'pathRelativeURLstart := (('pathCodePoint.rep(1)) | 'singleDotPathSegment | 'doubleDotPathSegment | 'filename) ~ ("/" ~ 'pathRelativeURL).?,  
   'pathRelativeSchemelessURL := 'pathRelativeURLstart, // not allowed to start with scheme:
   
 
