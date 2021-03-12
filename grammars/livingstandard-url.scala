@@ -41,7 +41,7 @@ Grammar(
   
   'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
-  'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
+  'pathRelativeURL := 'URLpathSegment ~ (("/" ~ 'pathRelativeURL).? | ("/" ~ 'filename).?),
   'pathRelativeURLstart := (('pathCodePoint.rep(1)) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ "/".? ~ 'pathRelativeURL,  
   'pathRelativeSchemelessURL := 'pathRelativeURLstart, // not allowed to start with scheme:
   
@@ -50,6 +50,7 @@ Grammar(
   'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment, //TODO maybe explicitly include filenames?
   'singleDotPathSegment := "." | "%2e",
   'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", 
+  'filename := 'pathCodePoint.rep ~ 'singleDotPathSegment ~ 'pathCodePoint.rep,
   
   'URLquery := 'queryCodePoint.rep(1),
   'URLSpecialquery := 'specialQueryCodePoint.rep(1),
