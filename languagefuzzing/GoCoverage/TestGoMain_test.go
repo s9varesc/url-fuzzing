@@ -1,4 +1,4 @@
-package main
+package url_test
  
 import (
 	"bufio"
@@ -13,7 +13,7 @@ import (
 func TestURLs(t *testing.T) {
 	
 	//file reading from https://webdamn.com/read-file-line-by-line-using-golang/
-	readFile, err := os.Open("../urls/plainURLs")
+	readFile, err := os.Open("/home/url-fuzzing/languagefuzzing/urls/plainURLs")
  	
 	if err != nil {
 		log.Fatalf("failed to open file: %s", err)
