@@ -440,7 +440,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("fragment", components.get("relative_fragment"));
         }
 
-        //TODO hosts that are all digits should be interpreted as ipv4 i.e. 0->0.0.0.0 in well-known schemes
+        // hosts that are all digits should be interpreted as ipv4 i.e. 0->0.0.0.0 in well-known schemes
         if(isSpecialScheme(components.get("scheme"))){
             String host=components.get("host");
             try{
