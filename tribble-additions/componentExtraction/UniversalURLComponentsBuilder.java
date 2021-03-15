@@ -446,7 +446,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             try{
                 int nr=Integer.valueOf(host);
                 //TODO display as ipv4 and put back into components
-                if(nr<0 || (long) nr > (long) 4294967295){
+                if(nr<0 || (long) nr > (long) 4294967295L){
                     //can't be interpreted as ipv4 address
                     // in theory this should never happen, but: exactly restricting allowed hosts is complicated
                     return;
