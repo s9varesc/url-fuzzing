@@ -99,7 +99,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             // there is only a absolute URL present
             prepareBasicComponents();
         }
-    	return;
+    	return; 
     }
 
 
@@ -440,6 +440,25 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("fragment", components.get("relative_fragment"));
         }
 
+        //TODO hosts that are all digits should be interpreted as ipv4 i.e. 0->0.0.0.0 in well-known schemes
+        if(isSpecialScheme(components.get("scheme"))){
+            String host=components.get("host");
+            try{
+                int nr=Integer.valueOf(host);
+                //TODO display as ipv4 and put back into components
+                if(nr<0 || nr > 4294967295){
+                    //can't be interpreted as ipv4 address
+                    // in theory this should never happen, but: exactly restricting allowed hosts is complicated
+                    return;
+                }
+                //put nr in ipv4 format
+                String ip=((nr >> 24 ) & 0xFF) + "." +((nr >> 16 ) & 0xFF) + "." + ((nr >>  8 ) & 0xFF) + "." +( nr & 0xFF);
+                components.put("host", ip);
+            } catch(Exception e){
+                // host is not all digits
+                return; 
+            }
+        }
         return;
     }
 
@@ -456,7 +475,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         return null;
     }
 
-    private String prepareHost(String parent){
+    private String prepareHost(String parent){ 
         String host=null;
         String ophost=getSpecialComponentContent("opaqueHost", parent);
         String d=getSpecialComponentContent("domain", parent); 
