@@ -70,7 +70,7 @@ Grammar(
   
   //'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated
   'domain := 'internationalHost |  'basicHost,
-  'basicHost := ('alpha ~ 'hostAllowed.rep) | ('hostnonAlphaNum ~ 'hostAllowed.rep) | ('digit.rep(1) ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
+  'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum | ".") ~ 'hostAllowed.rep) | ('digit.rep(1) ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
   'internationalHost := 'punycodeHost, //"xn--" ~ 'punycodeHost, //TODO find a better solution
   'punycodeHost := 'alphanum.rep(1) ~ "-" ~ 'alphanum.rep(2), // simplfied to ensure validity, //this does not cover punycode 
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
@@ -101,8 +101,8 @@ Grammar(
   //'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
   'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded,
 
-  'hostAllowed := 'alphanum | 'hostnonAlphaNum,
-  'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|" |  "-" | "." | "_" | "~",
+  'hostAllowed := 'alphanum | 'hostnonAlphaNum | ".",
+  'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|" |  "-"  | "_" | "~",
   //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=" | "|",
   'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), 
 
