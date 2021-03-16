@@ -72,7 +72,7 @@ Grammar(
   'domain := 'internationalHost |  'basicHost,
   'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum | ".") ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
   'internationalHost := 'punycodeHost, //"xn--" ~ 'punycodeHost, //TODO find a better solution
-  'punycodeHost := ('alphanum.rep(1) ~ "-" ~ 'alphanum.rep(2)).rep, //this does not cover punycode 
+  'punycodeHost := ('alphanum.rep(1) ~ "-" ~ 'alphanum.rep(2)).rep(1), //this does not cover punycode 
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
