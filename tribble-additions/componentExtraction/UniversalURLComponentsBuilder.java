@@ -439,26 +439,6 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("query", components.get("relative_query"));
             components.put("fragment", components.get("relative_fragment"));
         }
-
-        // hosts that are all digits should be interpreted as ipv4 i.e. 0->0.0.0.0 in well-known schemes
-        if(isSpecialScheme(components.get("scheme"))){
-            String host=components.get("host");
-            try{
-                int nr=Integer.valueOf(host);
-                //TODO display as ipv4 and put back into components
-                if(nr<0 || (long) nr > (long) 4294967295L){
-                    //can't be interpreted as ipv4 address
-                    // in theory this should never happen, but: exactly restricting allowed hosts is complicated
-                    return;
-                }
-                //put nr in ipv4 format
-                String ip=((nr >> 24 ) & 0xFF) + "." +((nr >> 16 ) & 0xFF) + "." + ((nr >>  8 ) & 0xFF) + "." +( nr & 0xFF);
-                components.put("host", ip);
-            } catch(Exception e){
-                // host is not all digits
-                return; 
-            }
-        }
         return;
     }
 
