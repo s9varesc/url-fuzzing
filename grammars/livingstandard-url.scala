@@ -41,10 +41,10 @@ Grammar(
   
   'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURL,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
-  'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? ,
-  'pathRelativeURLstart := (('pathCodePoint.rep(1)) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ ("/" ~ 'pathRelativeURL).?,  
+  'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? , //not allowed to start with /
+  'pathRelativeURLstart := (('pathCodePointwoSlash ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ ("/" ~ 'pathRelativeURL).?,  
   'pathRelativeSchemelessURL := 'pathRelativeURLstart, // not allowed to start with scheme:
-  
+
 
   'windowsDriveLetter := 'alpha ~ (":" | "|"),
   'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
@@ -70,9 +70,9 @@ Grammar(
   
   //'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated
   'domain := 'internationalHost |  'basicHost,
-  'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum | ".") ~ 'hostAllowed.rep) | ('digit.rep(1) ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
+  'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum | ".") ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
   'internationalHost := 'punycodeHost, //"xn--" ~ 'punycodeHost, //TODO find a better solution
-  'punycodeHost := 'alphanum.rep(1) ~ "-" ~ 'alphanum.rep(2), // simplfied to ensure validity, //this does not cover punycode 
+  'punycodeHost := ('alphanum.rep(1) ~ "-" ~ 'alphanum.rep(2)).rep, //this does not cover punycode 
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
@@ -95,6 +95,7 @@ Grammar(
 
   //'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded,
   'pathCodePoint := 'pathAllowed | 'pathPercentEncoded,
+  'pathCodePointwoSlash:= 'userinfoAllowed  | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|" | 'pathPercentEncoded,
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded,
   'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "%27",
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded,
@@ -141,7 +142,7 @@ Grammar(
   //'userinfoPercentEncoded := 'pathPercentEncoded | ("%" ~ ("2f" | "3a" | "3b" | "3d" | "40" | "5b"| "5c" | "5d" | "5e" | "7c")),
 
   'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
-  'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|",
+  'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|", //TODO / causes problems if it is the first path char
   'specialQueryAllowed := 'unreserved | "!" | "$" | "&" | "%"  | "(" | ")" | "*" | "+" | "," | "?" | "{" | "}" |"`" | "/" | ":" | ";" | "=" | "@" | "[" | "]" | "\\" | "^" | "|", 
   'fragmentAllowed := 'pathAllowed | "?" | "{" | "}" | "#",
   //'c0Allowed := 'fragmentAllowed | " " | "\"" | "<" | ">" | "`",

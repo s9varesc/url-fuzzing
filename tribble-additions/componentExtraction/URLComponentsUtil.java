@@ -126,7 +126,7 @@ public class URLComponentsUtil {
 				}
 				else{
 					// current segment is not double-dot -> add current segment
-					if(!current.equals("/.") && ! current.equals("/%2e") && ! current.equals("/%2E")){
+					if(!current.equals("/.") && !current.equals("/%2e") && !current.equals("/%2E")){
 						//there should be no single dot segments left, but some are not removed in the previous checks
 						newsegments.set(prev+1, current); 
 						prev++;
@@ -136,7 +136,7 @@ public class URLComponentsUtil {
 			}
 
 			// put remaining segments back together
-			if(Arrays.asList(new String []{"..", "%2e%2e", "%2E%2E", ".%2e", ".%2E", "%2e.", "%2E"}).contains(newsegments.get(0))){
+			if(Arrays.asList(new String []{"..", "%2e%2e", "%2E%2E", ".%2e", ".%2E", "%2e.", "%2E."}).contains(newsegments.get(0))){
 				newsegments.set(0, "");
 			}
 			for(String seg:newsegments){
