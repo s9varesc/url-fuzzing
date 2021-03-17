@@ -36,7 +36,7 @@ Grammar(
   'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   
   'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?, 
-  'opaqueHost := ('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep | ("[" ~ 'ipv6address ~ "]"), 
+  'opaqueHost := (('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | ("[" ~ 'ipv6address ~ "]"), 
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   
   'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURLstart,
