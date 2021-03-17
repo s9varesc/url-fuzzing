@@ -39,10 +39,10 @@ Grammar(
   'opaqueHost := 'opaqueHostCodePoint.rep(1) | ("[" ~ 'ipv6address ~ "]"), 
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   
-  'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURL,
+  'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURLstart,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? , //not allowed to start with /
-  'pathRelativeURLstart := (('pathCodePointwoSlash ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ ("/" ~ 'pathRelativeURL).?,  
+  'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ ("/" ~ 'pathRelativeURL).?,  
   'pathRelativeSchemelessURL := 'pathRelativeURLstart, // not allowed to start with scheme:
 
 
@@ -95,7 +95,7 @@ Grammar(
 
   //'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded,
   'pathCodePoint := 'pathAllowed | 'pathPercentEncoded,
-  'pathCodePointwoSlash:= 'userinfoAllowed  | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|" | 'pathPercentEncoded,
+  'firstPathCodePoint:= 'userinfoAllowed  | ";" | "=" | "@" | "[" | "]" |  "^" | "|" | 'pathPercentEncoded, //excludes / (forward slash) and : (colon)
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded,
   'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "%27",
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded,
