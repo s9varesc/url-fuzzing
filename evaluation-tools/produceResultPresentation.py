@@ -297,7 +297,7 @@ for url in urldata:
 
 
 
-htmlresult=markdown.markdown(result, extensions=['extra'])
+htmlresult=markdown.markdown(bcomptable, extensions=['extra'])
 
 htmlhead="<!DOCTYPE html>\
 <html lang=\"en\">\
