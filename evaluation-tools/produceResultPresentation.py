@@ -246,7 +246,7 @@ htmlfile.close()
 # create mappings of url : result for each browser
 bres=[]
 for bname in errdata:
-	elist=erdata[bname]
+	elist=errdata[bname]
 	blist={}
 	blist["name"]=bname
 	for erdata in elist:   
