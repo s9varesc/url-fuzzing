@@ -254,7 +254,7 @@ for bname in errdata:
 		c=escape_md(erdata["error"]["component"])
 		exp=url_escape_md(erdata["error"]["expected"])
 		a=url_escape_md(erdata["error"]["actual"])
-		message="STYLEC "c+ " is "+a+ "!="+ exp
+		message="STYLEC "+c+ " is "+a+ "!="+ exp
 
 		blist[u]=message
 	bres+=blist
