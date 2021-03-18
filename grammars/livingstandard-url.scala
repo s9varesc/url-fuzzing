@@ -39,10 +39,10 @@ Grammar(
   'opaqueHost := (('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | ("[" ~ 'ipv6address ~ "]"), 
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   
-  'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~"/" ~ 'pathRelativeURLstart,
-  'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
+  'pathAbsoluteURL := ("/"~'windowsDriveLetter).? ~("/" ~ 'pathRelativeURLstart).?,
+  'pathAbsoluteNonWindowsFileURL := "/".? ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? , //not allowed to start with /
-  'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ ("/" ~ 'pathRelativeURL).?,  //maybe firstPathCodePoint.rep(1)
+  'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ ("/" ~ 'pathRelativeURL).?,  
   'pathRelativeSchemelessURL := 'pathRelativeURLstart, // not allowed to start with scheme:
 
 
