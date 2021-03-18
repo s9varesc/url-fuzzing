@@ -38,6 +38,16 @@ table.simpletable thead th:first-child {
   border: 1px solid #DBD7DF;
 }
 
+td.pfail {
+  background-color: red;
+}
+td.psucc {
+  background-color: green;
+}
+td.cfail {
+  background-color: yellow;
+}
+
 
 
 p {

@@ -185,6 +185,8 @@ result += utable+"\n"
 
 result +="## Browsers\n\n" # TODO include only if browsers present
 result+=otable+"\n"
+
+result += "[full browser comparison](./browseroverview.html)\n\n"
 for vtable in vtables:
 	result+=vtable+"\n"
 
@@ -233,6 +235,103 @@ htmlfile.write(htmlhead + htmlresult +htmltail)
 htmlfile.close()
 
 
+# produce colorful browser table with all urls
+
+#url | firefox | chromium
+
+# green for pass, yellow for component, red for parsing 
+
+
+
+# create mappings of url : result for each browser
+bres=[]
+for bname in errdata:
+	elist=erdata[bname]
+	blist={}
+	blist["name"]=bname
+	for erdata in elist:   
+		u=erdata["url"]
+		c=escape_md(erdata["error"]["component"])
+		exp=url_escape_md(erdata["error"]["expected"])
+		a=url_escape_md(erdata["error"]["actual"])
+		message="STYLEC "c+ " is "+a+ "!="+ exp
+
+		blist[u]=message
+	bres+=blist
+
+for url in urldata: 
+	parsers=urldata[url]	
+	for b in bres:
+		name=b["name"]
+		if parsers:
+			if name in parsers:
+				#place parsing failure in results
+				b[url]="STYLEF PARSING FAIL"
+		#place parsing success in results if there is no entry for a failure
+		comp=b[url]
+		if not comp:
+			b[url]="STYLEP PASS"
+
+
+bsize=len(bres)
+bcomptable="URLs "
+bcomphelp="--- "
+
+for i in range(0, bsize):
+	bcomptable+=" | "+ bres[i]["name"]
+	bcomphelp+="| ---"
+bcomptable+=" \n"+bcomphelp+"\n"
+
+for url in urldata:
+	uline = url_escape_md(url)
+	for i in range(0, bsize):
+		br=bres[i]
+		uline+= " | "+ br[url]
+	uline+="\n"
+	bcomptable+=uline
+
+
+
+
+
+htmlresult=markdown.markdown(result, extensions=['extra'])
+
+htmlhead="<!DOCTYPE html>\
+<html lang=\"en\">\
+\
+<head>\
+<meta charset=\"utf-8\">\
+<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\
+<title>Browser Results</title>\
+</head>\
+\
+<body>\n"
+htmltail="</body>\
+</html>"
+htmlresult=htmlresult.replace("<table>", "<table class=\"simpletable\">")
+htmlresult=htmlresult.replace("<br-->", "<br>")
+htmlresult=htmlresult.replace("<--br>", "<br>")
+
+htmlresult=htmlresult.replace("<td>STYLEP", "<td class=\"psucc\">")
+htmlresult=htmlresult.replace("<td>STYLEF", "<td class=\"pfail\">")
+htmlresult=htmlresult.replace("<td>STYLEC", "<td class=\"cfail\">")
+
+#TODO color cells
+	
+
+htmlfile=open( datadir+"../browseroverview.html", "w")
+htmlfile.write(htmlhead + htmlresult +htmltail)
+htmlfile.close()
+
+
+
+
+
+
+				
+			
+
+		
 
 
 
