@@ -248,7 +248,6 @@ bres=[]
 for bname in errdata:
 	elist=errdata[bname]
 	blist={}
-	print(bname)
 	blist["name"]=bname
 	for erdata in elist:   
 		u=erdata["url"]
@@ -263,6 +262,7 @@ for bname in errdata:
 for url in urldata: 
 	parsers=urldata[url]	
 	for b in bres:
+		print(b)
 		name=b["name"]
 		if parsers:
 			if name in parsers:
