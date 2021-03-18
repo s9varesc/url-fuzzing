@@ -262,15 +262,17 @@ for bname in errdata:
 for url in urldata: 
 	parsers=urldata[url]	
 	for b in bres:
-		print(b)
 		name=b["name"]
 		if parsers:
 			if name in parsers:
 				#place parsing failure in results
 				b[url]="STYLEF PARSING FAIL"
 		#place parsing success in results if there is no entry for a failure
-		comp=b[url]
-		if not comp:
+		try:
+			comp=b[url]
+		except KeyError:
+			comp=""
+		if comp=="":
 			b[url]="STYLEP PASS"
 
 
