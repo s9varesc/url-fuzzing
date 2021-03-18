@@ -257,7 +257,7 @@ for bname in errdata:
 		message="STYLEC "+c+ " is "+a+ "!="+ exp
 
 		blist[u]=message
-	bres+=blist
+	bres+=[blist]
 
 for url in urldata: 
 	parsers=urldata[url]	
