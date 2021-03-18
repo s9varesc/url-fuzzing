@@ -76,6 +76,10 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         
 
         result+="prePath:\""+prp+"\",\n";
+
+        resutl+="username:\"\",\n";
+        resutl+="password:\"\",\n";
+  
         result+="}\n";
 
         
