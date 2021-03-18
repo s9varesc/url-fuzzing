@@ -248,6 +248,7 @@ bres=[]
 for bname in errdata:
 	elist=errdata[bname]
 	blist={}
+	print(bname)
 	blist["name"]=bname
 	for erdata in elist:   
 		u=erdata["url"]
