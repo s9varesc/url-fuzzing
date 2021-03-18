@@ -39,13 +39,13 @@ table.simpletable thead th:first-child {
 }
 
 td.pfail {
-  background-color: red;
+  background-color: lightcoral;
 }
 td.psucc {
-  background-color: green;
+  background-color: #c8f7bc;
 }
 td.cfail {
-  background-color: yellow;
+  background-color: lightyellow;
 }
 
 
