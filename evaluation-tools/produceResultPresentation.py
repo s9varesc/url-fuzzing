@@ -254,7 +254,7 @@ for bname in errdata:
 		c=escape_md(erdata["error"]["component"])
 		exp=url_escape_md(erdata["error"]["expected"])
 		a=url_escape_md(erdata["error"]["actual"])
-		message="STYLEC "+c+ " is \""+a+ "\" != \""+ exp+"\""
+		message="STYLEC "+c+ " is \""+a[1:-1]+ "\" != \""+ exp[1:-1]+"\""
 
 		blist[u]=message
 	bres+=[blist]
@@ -266,7 +266,7 @@ for url in urldata:
 		if parsers:
 			if name in parsers:
 				#place parsing failure in results
-				m="STYLEF PARSING FAIL"
+				m="STYLEF"
 				message=" "
 				#find error message in parserdata
 				pd=parserdata[name]["errtypes"]
