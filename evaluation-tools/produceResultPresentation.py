@@ -287,7 +287,9 @@ for url in urldata:
 
 
 bsize=len(bres)
-bcomptable="URLs "
+
+
+bcomptable+="URLs "
 bcomphelp="--- "
 
 for i in range(0, bsize):
@@ -335,9 +337,15 @@ htmlresult=htmlresult.replace("<td>STYLEW", "<td class=\"wgfail\">")
 
 
 	
+pagestart="<h1>Browser Results</h1>\n"
+
+pagestart+="<tr><td> Legend:</td><td class=\"wgfail\">Parsing error in whatwg-url parser</td>"
+pagestart+="<td class=\"pfail\">Parsing error</td>"
+pagestart+="<td class=\"cfail\">Component is \"contentt\" != \"expected\"</td>"
+pagestart+="<td class=\"psucc\">Success</td></tr>\n"
 
 htmlfile=open( datadir+"../browseroverview.html", "w")
-htmlfile.write(htmlhead + htmlresult +htmltail)
+htmlfile.write(htmlhead +pagestart+ htmlresult +htmltail)
 htmlfile.close()
 
 

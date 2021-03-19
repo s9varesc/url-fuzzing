@@ -48,6 +48,10 @@ td.cfail {
   background-color: lightyellow;
 }
 
+td.wgfail {
+  background-color: rgb(194,172,255 );
+}
+
 
 
 p {
