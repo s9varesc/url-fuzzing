@@ -289,7 +289,7 @@ for url in urldata:
 bsize=len(bres)
 
 
-bcomptable+="URLs "
+bcomptable="URLs "
 bcomphelp="--- "
 
 for i in range(0, bsize):
