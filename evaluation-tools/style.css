@@ -44,7 +44,7 @@ table.legendtable tbody td {
   overflow: hidden; 
   text-overflow: ellipsis; 
   word-wrap: break-word;
-  border: 13px solid white
+  border: 13px solid white;
 
 }
 
@@ -69,17 +69,27 @@ table.simpletable thead th:first-child {
 
 td.pfail {
   background-color: lightcoral;
+  padding: 5px 5px 10px 20px
+  font-family: "Arial Black", Gadget, sans-serif;
 }
 td.psucc {
   background-color: #c8f7bc;
+  padding: 5px 5px 10px 20px
+  font-family: "Arial Black", Gadget, sans-serif;
 }
 td.cfail {
   background-color: lightyellow;
+  padding: 5px 5px 10px 20px
+  font-family: "Arial Black", Gadget, sans-serif;
 }
 
 td.wgfail {
+  padding: 5px 5px 10px 20px
+  font-family: "Arial Black", Gadget, sans-serif;
   background-color: rgb(194,172,255 );
 }
+
+
 
 
 
