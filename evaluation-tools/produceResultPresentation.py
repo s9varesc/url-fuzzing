@@ -338,7 +338,7 @@ htmlresult=htmlresult.replace("<td>STYLEW", "<td class=\"wgfail\">")
 
 	
 pagestart="<h1>Browser Results</h1>\n"
-pagestart+="<table><thead><tr></tr></thead><tbody>"
+pagestart+="<table class=\"legendtable\"><thead><tr></tr></thead><tbody>"
 pagestart+="<tr><td> Legend:</td><td class=\"wgfail\">Parsing error in whatwg-url parser</td>"
 pagestart+="<td class=\"pfail\">Parsing error</td>"
 pagestart+="<td class=\"cfail\">Component is \"content\" != \"expected\"</td>"
