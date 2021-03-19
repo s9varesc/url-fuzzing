@@ -296,7 +296,10 @@ for i in range(0, bsize):
 bcomptable+=" \n"+bcomphelp+"\n"
 
 for url in urldata:
-	uline = url_escape_md(url)
+	uline=""
+	if "" in urldata[url]:
+		uline="STYLEW "
+	uline += url_escape_md(url)
 	for i in range(0, bsize):
 		br=bres[i]
 		uline+= " | "+ br[url]
@@ -328,8 +331,9 @@ htmlresult=htmlresult.replace("<--br>", "<br>")
 htmlresult=htmlresult.replace("<td>STYLEP", "<td class=\"psucc\">")
 htmlresult=htmlresult.replace("<td>STYLEF", "<td class=\"pfail\">")
 htmlresult=htmlresult.replace("<td>STYLEC", "<td class=\"cfail\">")
+htmlresult=htmlresult.replace("<td>STYLEW", "<td class=\"wgfail\">")
 
-#TODO color cells
+
 	
 
 htmlfile=open( datadir+"../browseroverview.html", "w")
