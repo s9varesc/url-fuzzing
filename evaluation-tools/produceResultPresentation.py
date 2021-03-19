@@ -297,7 +297,7 @@ bcomptable+=" \n"+bcomphelp+"\n"
 
 for url in urldata:
 	uline=""
-	if "" in urldata[url]:
+	if "JavaScriptwhatwg-url" in urldata[url]:
 		uline="STYLEW "
 	uline += url_escape_md(url)
 	for i in range(0, bsize):
