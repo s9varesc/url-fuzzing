@@ -338,10 +338,10 @@ htmlresult=htmlresult.replace("<td>STYLEW", "<td class=\"wgfail\">")
 
 	
 pagestart="<h1>Browser Results</h1>\n"
-pagestart+="<table class=\"simpletable\"><thead><tr><td></td><td></td><td></td><td></td><td></td></thead><tbody>"
+pagestart+="<table><thead><tr></tr></thead><tbody>"
 pagestart+="<tr><td> Legend:</td><td class=\"wgfail\">Parsing error in whatwg-url parser</td>"
 pagestart+="<td class=\"pfail\">Parsing error</td>"
-pagestart+="<td class=\"cfail\">Component is \"contentt\" != \"expected\"</td>"
+pagestart+="<td class=\"cfail\">Component is \"content\" != \"expected\"</td>"
 pagestart+="<td class=\"psucc\">Success</td></tr></tbody></table>\n"
 
 htmlfile=open( datadir+"../browseroverview.html", "w")
