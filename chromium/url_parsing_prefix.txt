@@ -39,7 +39,7 @@ void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
 }
 
 void CheckComponents(const URLParseCase& parse_case, const GURL& parsed_url) { 
-  char url[strlen(parse_case.baseurl)+strlen(parse_case.input)+1];
+  char url[1000]; //TODO make size dependent on content
   if(strcmp(parse_case.baseurl, "") != 0){
     strcpy(url, parse_case.baseurl);
     strcat(url, "<");
