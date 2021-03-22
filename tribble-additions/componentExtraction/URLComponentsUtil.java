@@ -3,6 +3,7 @@ package saarland.cispa.se.tribble.execution.componentExtraction;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 
 public class URLComponentsUtil {
 	//C0_PERCENT_ENCODE is the default encoding set and thus does not need to be defined explicitly here
@@ -205,7 +206,7 @@ public class URLComponentsUtil {
 				for(int codePoint:input.codePoints().toArray()){
 					if(codePoint<=127&&codePoint>=32){
 						// no encoding required unless specified otherwise
-						String c=(char) codePoint;
+						String c=Character.toString((char)codePoint);
 						boolean needsEncoding=false;
 						for(String encode:additionallyEncode){
 							if(encode.contains(c)){
