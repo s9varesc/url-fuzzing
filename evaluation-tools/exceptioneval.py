@@ -62,7 +62,7 @@ def escapebetween(s1, s2, data):
 #
 
 # the diretory containing the collected exceptions as *Exceptions.txt 
-# as well as the generated URLs as plainURLs.txt
+# as well as the generated URLs as plainURLs
 parser = argparse.ArgumentParser()
 parser.add_argument("-dir")
 args = parser.parse_args()
@@ -151,6 +151,8 @@ for url in urls:
 			if url not in urlranking:
 				urlranking[url]=[]
 			urlranking[url]+=[parser]
+
+print(len(urls))
 
 	
 
