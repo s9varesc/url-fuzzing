@@ -200,7 +200,8 @@ public class URLComponentsUtil {
 	* @param additionallyEncode a list of characters that should be encoded as well (their values may be lower than u+007f)
 	*/
 	public String escapeUnicodeChars(String input, String[] additionallyEncode){
-		String res="";
+		if(input != null){
+			String res="";
 				for(int codePoint:input.codePoints().toArray()){
 					if(codePoint<=127&&codePoint>=32){
 						// no encoding required unless specified otherwise
@@ -225,7 +226,8 @@ public class URLComponentsUtil {
 					}
 				}
 				return res;
-
+		}
+		return input;
 	}
 
 	/***

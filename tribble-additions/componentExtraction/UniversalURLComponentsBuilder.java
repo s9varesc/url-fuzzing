@@ -192,7 +192,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         components.put("base_scheme", bscheme.toLowerCase());
         String bhost=prepareHost(base);
         if(bhost != null){
-            components.put("base_host", bhost.toLowerCase());
+            components.put("base_host", util.escapeUnicodeChars(bhost.toLowerCase(), new String[]{}));
         }
         
         String bp=getSpecialComponentContent("URLport", base); 
@@ -202,15 +202,18 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String bpa=preparePath(base);
         String dl=getSpecialComponentContent("windowsDriveLetter", bpa);
 
-        components.put("base_path", bpa);
+        components.put("base_path", util.escapeUnicodeChars(bpa, util.PATH_PERCENT_ENCODE));
         components.put("base_driveletter", dl); //needed for normalization later
         
         String bq=null;
+        boolean special=false;
         if(specialbase || filebase){
             bq=getSpecialComponentContent("URLSpecialquery", base);
+            bq=util.escapeUnicodeChars(bq, util.SPECIAL_QUERY_PERCENT_ENCODE);
         }
         else{
             bq=getSpecialComponentContent("URLquery", base);
+            bq=util.escapeUnicodeChars(bq, util.QUERY_PERCENT_ENCODE);
         }
         if(bq != null){
             components.put("base_query", bq);
@@ -218,7 +221,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         
         String bf=getSpecialComponentContent("URLfragment", base);
         if(bf!=null){
-            components.put("base_fragment", bf);
+            components.put("base_fragment", util.escapeUnicodeChars(bf, util.FRAGMENT_PERCENT_ENCODE));
         }
 
         return;
@@ -270,7 +273,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // prepare host and port
         String rhost=prepareHost(rel);
         if(rhost != null){
-            components.put("relative_host", rhost.toLowerCase());
+            components.put("relative_host", util.escapeUnicodeChars(rhost.toLowerCase()), new String[]{});
             String rp=getSpecialComponentContent("URLport", rel); 
             if(rp!=null){
                 if(rel.contains(":"+rp)){ //avoid adding a port if the digit appears in the ip address
@@ -284,7 +287,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String dl=getSpecialComponentContent("windowsDriveLetter", rpath); 
         components.put("relative_driveletter", dl); //needed for normalization later
         if(rpath != null){ 
-            components.put("relative_path", rpath);
+            components.put("relative_path", util.escapeUnicodeChars( rpath, util.PATH_PERCENT_ENCODE));
            
         }
 
@@ -296,7 +299,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // prepare fragment
         String rf=getSpecialComponentContent("URLfragment", rel);
         if(rel.contains("#"+rf)){
-            components.put("relative_fragment", rf);
+            components.put("relative_fragment", util.escapeUnicodeChars(rf, util.FRAGMENT_PERCENT_ENCODE));
         }
 
 
@@ -447,10 +450,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String nsq=getSpecialComponentContent("URLquery", parent);
         
         if(parent.contains("?"+sq)){
-            return sq;
+            return util.escapeUnicodeChars( sq, util.SPECIAL_QUERY_PERCENT_ENCODE);
         }
         if(parent.contains("?"+nsq)){
-            return nsq;
+            return util.escapeUnicodeChars(nsq, util.QUERY_PERCENT_ENCODE);
         }
         return null;
     }
@@ -535,7 +538,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // prepare host
         String reshost=prepareHost(components.get("input"));
         if(reshost != null){
-            components.put("host", reshost.toLowerCase());
+            components.put("host", util.escapeUnicodeChars( reshost.toLowerCase(), new String[]{}));
         }
         
 
@@ -562,7 +565,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }*/
         for (String content: Arrays.asList(panW, pa, prsl)){
           if(content !=null){ // only normalize path if a special scheme is used
-            components.put("path", (nonspecial !=null ? content : util.normalizePath(content, driveletter)));  
+            String p=(nonspecial !=null ? content : util.normalizePath(content, driveletter))
+            components.put("path",util.escapeUnicodeChars(p, util.PATH_PERCENT_ENCODE) );  
           }
         }
 
@@ -572,12 +576,15 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String qns=dict.get("URLquery");
 
         if(qs != null){
-          query=qs; 
+          query=util.escapeUnicodeChars(qs, util.SPECIAL_QUERY_PERCENT_ENCODE); 
         }
         else{
-          query=qns; 
+          query=util.escapeUnicodeChars(qns, util.QUERY_PERCENT_ENCODE); 
         }
         components.put("query", query);
+
+        String f=util.escapeUnicodeChars(components.get("fragment"), util.FRAGMENT_PERCENT_ENCODE);
+        components.put("fragment", f);
         
     }
 
