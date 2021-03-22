@@ -85,6 +85,7 @@ parsers={}
 for exfile in os.listdir(dir):
 	if 'Exceptions' in exfile: 
 		parsername=exfile.replace("Exceptions","").replace(".txt","")
+		print(parsername)
 		with open(dir +"/"+ exfile) as f:
 			data=f.read()
 
