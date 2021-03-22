@@ -127,7 +127,7 @@ nrurls=0
 for url in urldata: 
 	parsers=urldata[url]	
 	nrurls+=1
-	if len(parsers)==1 && parsers[0]!="":
+	if len(parsers)==1 and not parsers[0]=="":
 		if not parsers:
 			succURLs+=[escape_md(url)]
 		else:
