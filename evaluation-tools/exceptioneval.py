@@ -117,7 +117,7 @@ for exfile in os.listdir(dir):
 		# {parsername1 : {url1:exception1, url2:...},
 		#  parsername2 : {...}}
 		parsers[parsername]=datadict 
-		print(parsers)
+		
 
 
 #evaluate
@@ -149,7 +149,7 @@ for parser in parsers:
 #url ranking
 for url in urls:
 	for parser in parsers:
-		urlranking[url]=[]
+		#urlranking[url]=[]
 		if url in parsers[parser]:
 			if url not in urlranking:
 				urlranking[url]=[]
