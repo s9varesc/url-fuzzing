@@ -156,7 +156,9 @@ for url in urls:
 			urlranking[url]+=[parser]
 
 
-	
+for url in urls:
+	if url not in urlranking:
+		urlranking[url]=[]
 
 
 
