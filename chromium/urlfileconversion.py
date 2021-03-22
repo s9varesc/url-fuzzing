@@ -20,6 +20,7 @@ i=2
 
 urldata="\nstatic URLParseCase parse_cases[]={"
 allinputs=""
+nr=0
 for filename in os.listdir(dir):
 	i+=1
 	f=open(dir+"/"+filename, "r")
@@ -36,11 +37,11 @@ for filename in os.listdir(dir):
 		rel="<"+rel
 	allinputs+=bas+rel+"\n"
 
-
+	nr+=1
 	urldata+=url+",\n"
 	
 
-
+print(nr)
 f=open("url_parsing_unittest.cc","w")
 f.write(prefix+urldata[:-2]+"};\n"+suffix)
 f.close()
