@@ -97,7 +97,7 @@ Grammar(
   'pathCodePoint := 'pathAllowed | 'pathPercentEncoded,
   'firstPathCodePoint:= 'userinfoAllowed  | ";" | "=" | "@" | "[" | "]" |  "^" | "|" | 'pathPercentEncoded, //excludes / (forward slash) and : (colon)
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded,
-  'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "%27",
+  'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "\\u0027",
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded,
   //'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
   'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded,
@@ -105,41 +105,33 @@ Grammar(
   'hostAllowed := 'alphanum | 'hostnonAlphaNum | ".",
   'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|" |  "-"  | "_" | "~",
   //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=" | "|",
-  'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), 
+  'opaqueHostPercentEncoded := 'c0PercentEncoded, //"%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO
 
-  'unicodeUtil := "%" ~ ("8"|"9"|"a"|"b") ~ 'hexdig,
 
-  'c0PercentEncoded:= "%" ~ ((("0"|"1") ~ 'hexdig)  //c0 control
-                            | ("7f")
-                            | ("c" ~ "[2-9a-f]".regex ~ 'unicodeUtil) //U+0080-U+03FF
-                            | ("d" ~ 'hexdig ~ 'unicodeUtil) //U+0400-U+07ff
-                            | ("e" ~ (("0"~ "%"~("a"|"b") ~ 'hexdig ~ 'unicodeUtil)
-                                        | (("[1-9a-c]".regex | "e") ~ 'unicodeUtil.rep(2,2))
-                                        | ("d" ~ "%" ~ ("8"|"9") ~ 'hexdig ~ 'unicodeUtil) //excludes surrogates
-                                        | ("f" ~ "%" ~ ((("8"|"9"|"a") ~ 'hexdig ~ 'unicodeUtil)
-                                                          | ("b" ~ ((("[0-6a-f]".regex | "8" | "9") ~ 'unicodeUtil)
-                                                                      | ("7" ~ "%" ~ ("[0-8]".regex | "b") ~ 'hexdig) //excludes noncharachters
-                                                                    )
-                                                            )
-                                                        )
+  'c0PercentEncoded:= "\\u" ~ (("00" ~ ("0"| "1") ~ 'hexdig)      //c0 control
+                                |("007f")
+                                |(('digit | "[a-c]".regex) ~ 'hexdig.rep(3,3))
+                                |("d" ~ "[0-7]".regex ~ 'hexdig.rep(2,2))
+                                |("e" ~ ("[0-9a-e]".regex ~ 'hexdig.rep(2,2))
+                                        | ("f" ~ (("[0-9a-e]".regex ~ 'hexdig )
+                                                  | ("f" ~"[0-9a-d]".regex)
+                                                )
                                           )
-                                      )
-                              )
-                            | ("f0" ~ "%90" ~("%" ~ ((("8"|"9"|"a") ~ 'hexdig ~ 'unicodeUtil)
-                                                    | ("b" ~ "[0-9a-e]".regex ~ 'unicodeUtil)
-                                                    | ("bf" ~ "%" ~ ((('digit | "a") ~ 'hexdig)
-                                                                      | ("b" ~ "[0-9a-c]".regex) //stop at U+10FFFD
-                                                                    )
-                                                      )
-                                                  )
-                                             )
-                              )
-                          ),
+                                  )
+                                |("f" ~ ((("[0-9a-c]".regex | "e") ~ 'hexdig.rep(2,2))
+                                        | ("d" ~("[0-9a-c]".regex | "f") ~ 'hexdig)
+                                        )
+                                  )
+                                | 'noncharexclude
+                                | (("[1-9a-f]".regex | "10") ~ 'noncharexclude)
+                      ),
+
+  'noncharexclude := ("ff" ~ "[0-9a-e]".regex ~ 'hexdig ) | ("fff" ~ "[0-9a-d]".regex),
   
-  'fragmentPercentEncoded := 'c0PercentEncoded | ( "%" ~ ("20" | "22" | "3c" | "3e" | "60")),
-  'queryPercentEncoded := 'c0PercentEncoded | ("%" ~ ("20" | "22" | "23" | "3c" | "3e" )),
-  'pathPercentEncoded := 'queryPercentEncoded | ("%" ~ ("3f" | "60" | "7b" | "7d")),
-  //'userinfoPercentEncoded := 'pathPercentEncoded | ("%" ~ ("2f" | "3a" | "3b" | "3d" | "40" | "5b"| "5c" | "5d" | "5e" | "7c")),
+  'fragmentPercentEncoded := 'c0PercentEncoded | ( "\\u00" ~ ("20" | "22" | "3c" | "3e" | "60")),
+  'queryPercentEncoded := 'c0PercentEncoded | ("\\u00" ~ ("20" | "22" | "23" | "3c" | "3e" )),
+  'pathPercentEncoded := 'queryPercentEncoded | ("\\u00" ~ ("3f" | "60" | "7b" | "7d")),
+  //'userinfoPercentEncoded := 'pathPercentEncoded | ("\\u00" ~ ("2f" | "3a" | "3b" | "3d" | "40" | "5b"| "5c" | "5d" | "5e" | "7c")),
 
   'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
   'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|", 
