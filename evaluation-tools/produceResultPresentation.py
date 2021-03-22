@@ -127,16 +127,13 @@ nrurls=0
 for url in urldata: 
 	parsers=urldata[url]	
 	nrurls+=1
-	if len(parsers)==1 and not parsers[0]=="":
-		if not parsers:
-			succURLs+=[escape_md(url)]
-		else:
-			uline=url_escape_md(url)+" | "
-			for p in parsers:
-				if p!= "":
-					uline += p + " <br>"
-			utable+=uline+"\n"
-	
+	if not parsers:
+		succURLs+=[escape_md(url)]
+	else:
+		uline=url_escape_md(url)+" | "
+		for p in parsers:
+			uline += p + " <br>"
+		utable+=uline+"\n"
 
 # Browsers
 errdata=json.loads(eranking)
