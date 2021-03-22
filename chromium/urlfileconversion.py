@@ -47,7 +47,7 @@ f.close()
 
 
 allinputs=allinputs[:-1]
-f=open("allinputURLs", "w")
+f=open("../../coverageReports/Exceptions/allinputURLs", "w") #TODO copy this file in fuzzchr.sh
 f.write(allinputs)
 f.close()
 
