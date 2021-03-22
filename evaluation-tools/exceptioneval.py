@@ -79,7 +79,7 @@ for file in os.listdir(dir):
 # all urls that were tested
 
 urls=plainURLs.split("\n")
-print(urls)
+print(len(urls))
 
 parsers={}
 # read the exceptions into dictionaries
