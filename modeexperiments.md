@@ -1,4 +1,5 @@
-### Tribble mode Experiments (without relative URLs)
+### Tribble mode Experiments 
+#### without relative URLs
 
 Mode | nr URLs | Firefox | Chromium | whatwg-url |
 --- | --- | --- | --- | --- |
@@ -15,7 +16,16 @@ Mode | nr URLs | Firefox | Chromium | whatwg-url |
 5-path-50 | 757 | parsing errors: 12 <br> component errors: 374 <br> coverage: 67,8% | parsing errors: 36 <br> component errors: 252 <br> coverage: 37,03% |parsing errors: 23 <br>coverage: 58,38%|
 
 
+#### with relative URLs
 
+Mode | nr URLs | Firefox | Chromium | whatwg-url |
+--- | --- | --- | --- | --- |
+2-path-50 | 192 | parsing errors: 17 <br> component errors: 89<br> coverage:  69,1% | parsing errors: 34<br> component errors: 82 <br> coverage: - |parsing errors: 2 <br> coverage: 65,42% |
+2-path-50 | 237 | - |parsing errors: 43 <br> component errors:  70 <br> coverage: 49,25%| -|
+3-path-50 | 371 | parsing errors:26 <br> component errors: 170 <br> coverage: 69,1% | parsing errors: 75 <br> component errors: 132 <br> coverage: - | parsing errors: 4 <br>  coverage: 65,72%
+3-path-50 | 428 | - |parsing errors: 92 <br> component errors: 141 <br> coverage: 49,25% | -|
+4-path-50 | 
+4-path-50 |  | - |parsing errors: <br> component errors: <br> coverage: | -|
 
 
 
