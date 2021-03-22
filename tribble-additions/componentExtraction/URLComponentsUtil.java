@@ -8,9 +8,9 @@ public class URLComponentsUtil {
 	//C0_PERCENT_ENCODE is the default encoding set and thus does not need to be defined explicitly here
 	public String[] FRAGMENT_PERCENT_ENCODE={" ", "\"", ">", "<", "`"};
 	public String[] QUERY_PERCENT_ENCODE={" ", "\"", ">", "<", "#"};
-	public String[] SPECIAL_QUERY_PERCENT_ENCODE=QUERY_PERCENT_ENCODE+{"\'"};
-	public String[] PATH_PERCENT_ENCODE=QUERY_PERCENT_ENCODE+{"?", "`", "{", "}"};
-	public String[] USERINFO_PERCENT_ENCODE=PATH_PERCENT_ENCODE+{"/", ":", "=", "@", "[", "\\", "]", "^", "|"};
+	public String[] SPECIAL_QUERY_PERCENT_ENCODE={" ", "\"", ">", "<", "#","\'"};
+	public String[] PATH_PERCENT_ENCODE={ " ", "\"", ">", "<", "#","?", "`", "{", "}"};
+	public String[] USERINFO_PERCENT_ENCODE={ " ", "\"", ">", "<", "#","?", "`", "{", "}","/", ":", "=", "@", "[", "\\", "]", "^", "|"};
 	
 
 	/***
