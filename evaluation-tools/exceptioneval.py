@@ -158,7 +158,6 @@ for url in urls:
 
 for url in urls:
 	if url not in urlranking:
-		print("added some url")
 		urlranking[url]=[]
 
 

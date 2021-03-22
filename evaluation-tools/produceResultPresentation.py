@@ -134,7 +134,7 @@ for url in urldata:
 		for p in parsers:
 			uline += p + " <br>"
 		utable+=uline+"\n"
-print(urldata)
+
 # Browsers
 errdata=json.loads(eranking)
 ## create overview table: browser | nr fails | nr exceptions | nr errors
