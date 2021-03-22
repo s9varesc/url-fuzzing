@@ -153,7 +153,7 @@ for url in urls:
 				urlranking[url]=[]
 			urlranking[url]+=[parser]
 
-print(parsers)
+print(parserranking)
 #print(urlranking)
 
 	
