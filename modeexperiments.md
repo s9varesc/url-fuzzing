@@ -18,14 +18,16 @@ Mode | nr URLs | Firefox | Chromium | whatwg-url |
 
 #### with relative URLs
 
+due to problems with generating a coverage report for chromium  in one build, there is a isolated run for chromium with a different build for each mode
+
 Mode | nr URLs | Firefox | Chromium | whatwg-url |
 --- | --- | --- | --- | --- |
 2-path-50 | 192 | parsing errors: 17 <br> component errors: 89<br> coverage:  69,1% | parsing errors: 34<br> component errors: 82 <br> coverage: - |parsing errors: 2 <br> coverage: 65,42% |
 2-path-50 | 237 | - |parsing errors: 43 <br> component errors:  70 <br> coverage: 49,25%| -|
 3-path-50 | 371 | parsing errors:26 <br> component errors: 170 <br> coverage: 69,1% | parsing errors: 75 <br> component errors: 132 <br> coverage: - | parsing errors: 4 <br>  coverage: 65,72%
 3-path-50 | 428 | - |parsing errors: 92 <br> component errors: 141 <br> coverage: 49,25% | -|
-4-path-50 | 
-4-path-50 |  | - |parsing errors: <br> component errors: <br> coverage: | -|
+4-path-50 | 739	| parsing errors: 52 <br> component errors: 420<br> coverage: 69,7% |parsing errors: 182<br> component errors:  232<br> coverage: - | parsing errors: 13 <br> coverage: 66,02% |
+4-path-50 | 928 | - |parsing errors: 183 <br> component errors: 237 <br> coverage: 49,25%| -|
 
 
 
