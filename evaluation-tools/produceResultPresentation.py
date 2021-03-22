@@ -310,7 +310,7 @@ for url in urldata:
 
 
 
-
+print(nrurls)
 
 htmlresult=markdown.markdown(bcomptable, extensions=['extra'])
 
