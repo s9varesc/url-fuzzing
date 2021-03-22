@@ -565,7 +565,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }*/
         for (String content: Arrays.asList(panW, pa, prsl)){
           if(content !=null){ // only normalize path if a special scheme is used
-            String p=(nonspecial !=null ? content : util.normalizePath(content, driveletter))
+            String p=(nonspecial !=null ? content : util.normalizePath(content, driveletter));
             components.put("path",util.escapeUnicodeChars(p, util.PATH_PERCENT_ENCODE) );  
           }
         }
