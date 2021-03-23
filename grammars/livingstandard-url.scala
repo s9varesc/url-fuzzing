@@ -97,13 +97,12 @@ Grammar(
   'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|" |  "-"  | "_" | "~",
 
   
-  'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded,
+  'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded | 'unicode,
   //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=" | "|",
-  'opaqueHostPercentEncoded := "opaquehostencoded", //'c0PercentEncoded, //"%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO
-
+  'opaqueHostPercentEncoded := "%00" | "%09" | "%20" | "%23" | "%25" | "%2f" | "%3a" | "%3c" | "%3e" | "%3f" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c" ,
   
 
-  'unicode := "[\u00a0-\ud7ff]".regex,
+  'unicode := "[\u00a0-\ud7ff]".regex | "[\uc000-\ufdef]".regex | "[\ufdf0-\ufffd]".regex , //TODO full enumeration
   
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded | 'unicode,
   'queryPercentEncoded := "%20" | "%22" | "%23" | "%3c" | "%3e",
