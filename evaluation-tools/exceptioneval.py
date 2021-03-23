@@ -155,10 +155,10 @@ for url in urls:
 				urlranking[url]=[]
 			urlranking[url]+=[parser]
 
-
-for url in urls:
-	if url not in urlranking:
-		urlranking[url]=[]
+if len(parsers)<= 2:
+	for url in urls:
+		if url not in urlranking:
+			urlranking[url]=[]
 
 
 
