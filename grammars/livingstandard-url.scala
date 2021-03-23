@@ -108,7 +108,7 @@ Grammar(
   'opaqueHostPercentEncoded := 'c0PercentEncoded, //"%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO
 
 
-  'c0PercentEncoded:= "\\u" ~ (("00" ~ ("0"| "1") ~ 'hexdig)      //c0 control
+  'c0PercentEncoded:= "\\u" ~ (("00" ~ ("0"| "1") ~ 'hexdig)      //c0 control //TODO find some way around enumerating all of them
                                 |("007f")
                                 |(('digit | "[a-c]".regex) ~ 'hexdig.rep(3,3))
                                 |("d" ~ "[0-7]".regex ~ 'hexdig.rep(2,2))
@@ -128,9 +128,9 @@ Grammar(
 
   'noncharexclude := ("ff" ~ "[0-9a-e]".regex ~ 'hexdig ) | ("fff" ~ "[0-9a-d]".regex),
   
-  'fragmentPercentEncoded := 'c0PercentEncoded | ( "\\u00" ~ ("20" | "22" | "3c" | "3e" | "60")),
-  'queryPercentEncoded := 'c0PercentEncoded | ("\\u00" ~ ("20" | "22" | "23" | "3c" | "3e" )),
-  'pathPercentEncoded := 'queryPercentEncoded | ("\\u00" ~ ("3f" | "60" | "7b" | "7d")),
+  'fragmentPercentEncoded := 'c0PercentEncoded | ( "\u0020" | "\u0022" | "\u003c" | "\u003e" | "\u0060"),
+  'queryPercentEncoded := 'c0PercentEncoded | ("\u0020" | "\u0022" | "\u0023" | "\u003c" | "\u003e"),
+  'pathPercentEncoded := 'queryPercentEncoded | ("\u003f" | "\u0060" | "\u007b" | "\u007d"),
   //'userinfoPercentEncoded := 'pathPercentEncoded | ("\\u00" ~ ("2f" | "3a" | "3b" | "3d" | "40" | "5b"| "5c" | "5d" | "5e" | "7c")),
 
   'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
