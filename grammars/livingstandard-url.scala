@@ -103,7 +103,7 @@ Grammar(
 
   
 
-  'unicode := "[\\u{00a0}-\\u{d7ff}]".regex,
+  'unicode := "[\u00a0-\ud7ff]".regex,
   
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded | 'unicode,
   'queryPercentEncoded := "%20" | "%22" | "%23" | "%3c" | "%3e",
