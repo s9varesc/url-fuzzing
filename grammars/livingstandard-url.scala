@@ -108,7 +108,7 @@ Grammar(
   'opaqueHostPercentEncoded := 'c0PercentEncoded, //"%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), //TODO
 
 
-  'c0PercentEncoded:= "u" | 'noncharexclude ,
+  'c0PercentEncoded:= "\u003d" | 'noncharexclude ,
 
   'noncharexclude := ("ff" ~ "[0-9a-e]".regex ~ 'hexdig ) | ("fff" ~ "[0-9a-d]".regex),
   
