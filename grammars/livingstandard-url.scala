@@ -107,6 +107,8 @@ Grammar(
   
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded | 'unicode,
   'queryPercentEncoded := "%20" | "%22" | "%23" | "%3c" | "%3e",
+  'specialQueryAllowed := 'pathAllowed | "?" | "{" | "}" | "`" ,
+  'specialQueryCodePoint := 'specialQueryAllowed |'queryPercentEncoded | 'unicode, //check if ' should be percent encoded
   
   //'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded | 'unicode,
   'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
@@ -115,6 +117,8 @@ Grammar(
   'pathCodePoint := 'pathAllowed | 'pathPercentEncoded | 'unicode,
   'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|",
   'pathPercentEncoded := 'queryPercentEncoded | "%3f" | "%60" | "%7b" | "%7d",
+
+  'firstPathCodePoint := 'userinfoAllowed |  ";" | "=" | "@" | "[" | "]" |  "^" | "|" | 'pathPercentEncoded | 'unicode, //check if / and : should be percent encoded 
 
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded | 'unicode,
   'fragmentAllowed := 'pathAllowed | "?" | "{" | "}" | "#",
