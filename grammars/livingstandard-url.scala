@@ -97,7 +97,7 @@ Grammar(
   'pathCodePoint := 'pathAllowed | 'pathPercentEncoded,
   'firstPathCodePoint:= 'userinfoAllowed  | ";" | "=" | "@" | "[" | "]" |  "^" | "|" | 'pathPercentEncoded, //excludes / (forward slash) and : (colon)
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded,
-  'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "\\u0027",
+  'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "\u0027",
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded,
   //'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
   'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded,
