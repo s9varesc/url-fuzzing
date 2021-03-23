@@ -123,13 +123,12 @@ Grammar(
                                         )
                                   )
                                 | 'noncharexclude
-                                | (("[1-9a-f]".regex | "10") ~ 'noncharexclude)
-                      ),
+                                | (("[1-9a-f]".regex | "10") ~ 'noncharexclude)),
 
   'noncharexclude := ("ff" ~ "[0-9a-e]".regex ~ 'hexdig ) | ("fff" ~ "[0-9a-d]".regex),
   
   'fragmentPercentEncoded := 'c0PercentEncoded | ( "\u0020" | "\u0022" | "\u003c" | "\u003e" | "\u0060"),
-  'queryPercentEncoded := "pretendthisisunicode",//'c0PercentEncoded | ("\u0020" | "\u0022" | "\u0023" | "\u003c" | "\u003e"),
+  'queryPercentEncoded := 'c0PercentEncoded | ("\u0020" | "\u0022" | "\u0023" | "\u003c" | "\u003e"),
   'pathPercentEncoded := 'queryPercentEncoded | ("\u003f" | "\u0060" | "\u007b" | "\u007d"),
   //'userinfoPercentEncoded := 'pathPercentEncoded | ("\\u00" ~ ("2f" | "3a" | "3b" | "3d" | "40" | "5b"| "5c" | "5d" | "5e" | "7c")),
 
