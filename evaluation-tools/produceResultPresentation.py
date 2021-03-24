@@ -207,7 +207,7 @@ if prep != "":
 	result+="### Stand-Alone Parsers\n\n"+prep
 
 
-resfile=open( datadir+"../resultoverview.md", "w")
+resfile=open( datadir+"../resultoverview.md", "w", encoding='utf-8')
 resfile.write(result)
 resfile.close()
 
