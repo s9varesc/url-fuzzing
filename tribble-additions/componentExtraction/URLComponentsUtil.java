@@ -242,7 +242,7 @@ public class URLComponentsUtil {
 		byte[] bytes=(new String(codeunits, 0, 1)).getBytes(StandardCharsets.UTF_8);
 		//convert each byte into hex
 		for(int i=0; i<bytes.length; i++){
-			res+="%"+Integer.toHexString(bytes[i]&0xff);
+			res+="%"+Integer.toHexString(bytes[i]&0xff).toUpperCase();
 		}
 		return res;
 	}
