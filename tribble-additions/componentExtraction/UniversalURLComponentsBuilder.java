@@ -273,7 +273,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // prepare host and port
         String rhost=prepareHost(rel);
         if(rhost != null){
-            components.put("relative_host", util.escapeUnicodeChars(rhost.toLowerCase(), new String[]{}));
+            components.put("relative_host", util.encodeHost(rhost.toLowerCase())); //TODO use for base host and basic host too
             String rp=getSpecialComponentContent("URLport", rel); 
             if(rp!=null){
                 if(rel.contains(":"+rp)){ //avoid adding a port if the digit appears in the ip address
