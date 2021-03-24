@@ -165,7 +165,7 @@ for url in urls:
 errorranking={}
 for file in os.listdir(dir):
 	if 'Errors' in file:
-		with open(dir +"/"+ file) as f:
+		with open(dir +"/"+ file, "r", encoding='utf-8') as f:
 			errdata=f.read()   
 			name=file.replace("Errors.txt", "")
 			rawesplit=errdata.split("\n")
