@@ -230,7 +230,7 @@ htmlresult=htmlresult.replace("<br-->", "<br>")
 htmlresult=htmlresult.replace("<--br>", "<br>")
 	
 
-htmlfile=open( datadir+"../resultoverview.html", "w")
+htmlfile=open( datadir+"../resultoverview.html", "w", encoding='utf-8')
 htmlfile.write(htmlhead + htmlresult +htmltail)
 htmlfile.close()
 
@@ -344,7 +344,7 @@ pagestart+="<td class=\"pfail\">Parsing error</td>"
 pagestart+="<td class=\"cfail\">Component is \"content\" != \"expected\"</td>"
 pagestart+="<td class=\"psucc\">Success</td></tr></tbody></table>\n"
 
-htmlfile=open( datadir+"../browseroverview.html", "w")
+htmlfile=open( datadir+"../browseroverview.html", "w", encoding='utf-8')
 htmlfile.write(htmlhead +pagestart+ htmlresult +htmltail)
 htmlfile.close()
 
