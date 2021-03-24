@@ -72,7 +72,7 @@ if dir[-1:]!="/":dir+="/"
 
 for file in os.listdir(dir):   
 	if file.endswith('URLs'):
-		with open(dir +"/"+ file) as f:
+		with open(dir +"/"+ file, "r", encoding='utf-8') as f:
 			plainURLs=f.read()   
 		
 
@@ -85,7 +85,7 @@ parsers={}
 for exfile in os.listdir(dir):
 	if 'Exceptions' in exfile: 
 		parsername=exfile.replace("Exceptions","").replace(".txt","")
-		with open(dir +"/"+ exfile) as f:
+		with open(dir +"/"+ exfile, "r", encoding='utf-8') as f:
 			data=f.read()
 
 		
