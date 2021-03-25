@@ -70,7 +70,7 @@ Grammar(
   
   //'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated
   'domain := 'internationalHost |  'basicHost,
-  'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum | ".") ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
+  'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum) ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
   'internationalHost := ('hostAllowed ).rep(1) | 'hostunicode, //TODO check length allowed in idn
    
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
@@ -105,9 +105,10 @@ Grammar(
   'unicode := "[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd]".regex , //this also contains rtl chars
              // | "[\u10000-\u1fffd]".regex, //TODO also use unicode above ffff
 
-  'hostunicode := ("[\u0591-\u07ff\ufb1d-\ufdef\ufefc]".regex ~ ("[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd]".regex | 'hostAllowed).rep ~"[\u0591-\u07ff\ufb1d-\ufdef\ufefc]".regex )
-                  | ("[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd-[\u0591-\u07ff\ufb1d-\ufdef\ufefc]]".regex | 'hostAllowed).rep(1), // ensures bidi rules for hosts
-  
+  'hostunicode := ("[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd-[\u0591-\u07ff\ufb1d-\ufdef\ufefc]]".regex | 'hostAllowed).rep(1), // avoid rtl unicode chars
+  //("[\u0591-\u07ff\ufb1d-\ufdef\ufefc]".regex ~ ("[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd]".regex | 'hostAllowed).rep ~"[\u0591-\u07ff\ufb1d-\ufdef\ufefc]".regex )
+
+
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded | 'unicode,
   'queryPercentEncoded := "%20" | "%22" | "%23" | "%3c" | "%3e",
   'specialQueryAllowed := 'pathAllowed | "?" | "{" | "}" | "`" ,
