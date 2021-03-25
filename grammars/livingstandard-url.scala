@@ -105,8 +105,8 @@ Grammar(
   'unicode := "[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd]".regex , //this also contains rtl chars
              // | "[\u10000-\u1fffd]".regex, //TODO also use unicode above ffff
 
-  'hostunicode := ("""[\u0591-\u07ff\ufb1d-\ufdef\ufefc-[\p{Cn}]]""".regex ~ ("""[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd-[\p{Cn}]]""".regex | 'hostAllowed).rep ~"""[\u0591-\u07ff\ufb1d-\ufdef\ufefc-[\p{Cn}]]""".regex )
-                  | ("""[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd-[\u0591-\u07ff\ufb1d-\ufdef\ufefc\p{Cn}]]""".regex | 'hostAllowed).rep(1), // ensures bidi rules for hosts
+  'hostunicode := ("[\u0591-\u07ff\ufb1d-\ufdef\ufefc]".regex ~ ("[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd]".regex | 'hostAllowed).rep ~"[\u0591-\u07ff\ufb1d-\ufdef\ufefc]".regex )
+                  | ("[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd-[\u0591-\u07ff\ufb1d-\ufdef\ufefc]]".regex | 'hostAllowed).rep(1), // ensures bidi rules for hosts
   
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded | 'unicode,
   'queryPercentEncoded := "%20" | "%22" | "%23" | "%3c" | "%3e",

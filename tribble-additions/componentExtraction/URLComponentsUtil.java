@@ -250,6 +250,13 @@ public class URLComponentsUtil {
 
 	public String encodeHost(String input){
 		System.out.println("encoding host: "+input);
-		return IDN.toASCII(input);
+		try{
+			return IDN.toASCII(input);
+		} catch (Exception e){
+			for(int codePoint:input.codePoints().toArray()){
+				System.out.println(codePoint);
+			}
+		}
+		
 	}
 }
