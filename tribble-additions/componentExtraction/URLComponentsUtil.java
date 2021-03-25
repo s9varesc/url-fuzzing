@@ -257,6 +257,6 @@ public class URLComponentsUtil {
 				System.out.println(codePoint);
 			}
 		}
-		
+		return input;
 	}
 }
