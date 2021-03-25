@@ -71,7 +71,7 @@ Grammar(
   //'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated
   'domain := 'internationalHost |  'basicHost,
   'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum | ".") ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
-  'internationalHost := ('hostAllowed | 'unicode).rep(1,10), //TODO check length allowed in idn
+  'internationalHost := ('hostAllowed ).rep(1) | 'hostunicode, //TODO check length allowed in idn
    
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
@@ -93,7 +93,7 @@ Grammar(
   'hexdig := ("[a-f]".regex) | 'digit,
   
 
-  'hostAllowed := 'alphanum | 'hostnonAlphaNum | ".",
+  'hostAllowed := 'alphanum | 'hostnonAlphaNum,// | ".", TODO allow dot in host but not .host or host. or h..ost
   'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|" |  "-"  | "_" | "~",
 
   
