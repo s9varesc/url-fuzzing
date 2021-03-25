@@ -249,6 +249,7 @@ public class URLComponentsUtil {
 	}
 
 	public String encodeHost(String input){
+		System.out.println("encoding host: "+input);
 		return IDN.toASCII(input);
 	}
 }
