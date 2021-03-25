@@ -155,7 +155,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * prepare the components of the produced base URL
     * note: normalization and formatting are applied when combining base and relative URL
     ***/
-    private void prepareBaseComponents(){ //TODO enforce lowercase?
+    private void prepareBaseComponents(){ 
         //get full base URL
         String base="";
         boolean specialbase=false;
@@ -192,7 +192,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         components.put("base_scheme", bscheme.toLowerCase());
         String bhost=prepareHost(base);
         if(bhost != null){
-            components.put("base_host", util.escapeUnicodeChars(bhost.toLowerCase(), new String[]{}));
+            components.put("base_host", util.encodeHost(bhost.toLowerCase()));
         }
         
         String bp=getSpecialComponentContent("URLport", base); 
@@ -538,7 +538,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         // prepare host
         String reshost=prepareHost(components.get("input"));
         if(reshost != null){
-            components.put("host", util.escapeUnicodeChars( reshost.toLowerCase(), new String[]{}));
+            components.put("host", util.encodeHost( reshost.toLowerCase()));
         }
         
 

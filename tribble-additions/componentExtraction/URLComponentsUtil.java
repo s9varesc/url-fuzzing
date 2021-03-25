@@ -253,10 +253,7 @@ public class URLComponentsUtil {
 		try{
 			return IDN.toASCII(input);
 		} catch (Exception e){
-			for(int codePoint:input.codePoints().toArray()){
-				System.out.println(codePoint);
-			}
-			System.out.println(e);
+			System.out.println(e); //this should never happen
 		}
 		return input;
 	}
