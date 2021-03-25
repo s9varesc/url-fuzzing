@@ -256,6 +256,7 @@ public class URLComponentsUtil {
 			for(int codePoint:input.codePoints().toArray()){
 				System.out.println(codePoint);
 			}
+			System.out.println(e);
 		}
 		return input;
 	}
