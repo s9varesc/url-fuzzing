@@ -105,7 +105,7 @@ Grammar(
   'unicode := "[\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd]".regex , //this also contains rtl chars
              // | "[\u10000-\u1fffd]".regex, //TODO also use unicode above ffff
 
-  'hostunicode := "[\u0980-\u1aaf\u20a0-\u23ff\u2460-\u2c7f]".regex, // this is far from exhaustive
+  'hostunicode := "[\u0d12-\u0d44\u0e01-\u0e3a\u0f00-\u0f47\u1000-\u10c5\u10d0-\u1248\u1780-\u17dd\u2100-\u218b\u2190-\u2426\u2460-\u2b73]".regex, // this is far from exhaustive
   //("[\u0591-\u07ff\ufb1d-\ufdef\ufefc]".regex ~ ("[\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd]".regex | 'hostAllowed).rep ~"[\u0591-\u07ff\ufb1d-\ufdef\ufefc]".regex )
 
 
