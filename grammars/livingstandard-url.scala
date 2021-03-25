@@ -36,7 +36,7 @@ Grammar(
   'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   
   'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?, 
-  'opaqueHost := (('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | ("[" ~ 'ipv6address ~ "]"), 
+  'opaqueHost := ((('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | 'hostunicode) | ("[" ~ 'ipv6address ~ "]"), 
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   
   'pathAbsoluteURL := ("/"~'windowsDriveLetter.?).? ~ (("/" ~ 'pathRelativeURLstart.?) | "/"),
@@ -97,7 +97,7 @@ Grammar(
   'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|" |  "-"  | "_" | "~",
 
   
-  'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded | 'hostunicode,
+  'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded ,
   //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=" | "|",
   'opaqueHostPercentEncoded := "%00" | "%09" | "%20" | "%23" | "%25" | "%2f" | "%3a" | "%3c" | "%3e" | "%3f" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c" ,
   
