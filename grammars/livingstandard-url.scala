@@ -105,7 +105,7 @@ Grammar(
   'unicode := "[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd]".regex , //this also contains rtl chars
              // | "[\u10000-\u1fffd]".regex, //TODO also use unicode above ffff
 
-  'hostunicode := ("[\u0591-\u07ff\ufb1d-\ufdfd\ufefc]".regex ~ "[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd]".regex "[\u0591-\u07ff\ufb1d-\ufdfd\ufefc]".regex )
+  'hostunicode := ("[\u0591-\u07ff\ufb1d-\ufdfd\ufefc]".regex ~ "[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd]".regex ~"[\u0591-\u07ff\ufb1d-\ufdfd\ufefc]".regex )
                   | "[\u00a0-\ud7ff\uc000-\ufdef\ufdf0-\ufffd-[\u0591-\u07ff\ufb1d-\ufdfd\ufefc]]".regex, // ensures bidi rules for hosts
   
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded | 'unicode,
