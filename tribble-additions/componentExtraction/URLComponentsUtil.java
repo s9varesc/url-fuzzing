@@ -250,6 +250,15 @@ public class URLComponentsUtil {
 
 	public String encodeHost(String input){
 		System.out.println("encoding host: "+input);
+		boolean encode=false;
+		for(int codePoint:input.codePoints().toArray()){
+			if(codePoint>127){
+				encode=true;
+			}
+		}
+		if(! encode){
+			return input; //avoid trying to encode names with nonalphanum chars in them
+		}
 		try{
 			return IDN.toASCII(input, IDN.USE_STD3_ASCII_RULES);
 		} catch (Exception e){
