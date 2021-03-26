@@ -251,7 +251,7 @@ public class URLComponentsUtil {
 	public String encodeHost(String input){
 		System.out.println("encoding host: "+input);
 		try{
-			return IDN.toASCII(input);
+			return IDN.toASCII(input, IDN.USE_STD3_ASCII_RULES);
 		} catch (Exception e){
 			System.out.println(e); //this should never happen
 		}
