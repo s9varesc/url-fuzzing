@@ -105,7 +105,8 @@ Grammar(
   'unicode := "[\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd]".regex , //this also contains rtl chars
              // | "[\u10000-\u1fffd]".regex, //TODO also use unicode above ffff
 
-  'hostunicode := "[\u024f-\u02af\u1050-\u1090\u10d0-\u10fa\u1200-\u1248\u1780-\u17b3\u1820-\u1877\ua000-\ua4fd\ua980-\ua9c0]".regex, 
+  'hostunicode := "[\uff01-\uffbe]".regex,
+    //"[\u024f-\u02af\u1050-\u1090\u10d0-\u10fa\u1200-\u1248\u1780-\u17b3\u1820-\u1877\ua000-\ua4fd\ua980-\ua9c0]".regex, 
   // this is a subset of code points allowed in hosts and far from exhaustive
 
 
