@@ -24,7 +24,7 @@ for url in urls:
     except Exception as e:
         exceptions+="\n{\"url\":\""+url+"\", \"exception\":\""+str(e)+"\"}"
 
-f=open('PythonExceptions.txt', 'w')
+f=open('PythonExceptions.txt', 'w', encoding='utf-8')
 f.write(exceptions)
 f.close()
     
