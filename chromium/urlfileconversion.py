@@ -22,7 +22,7 @@ urldata="\nstatic URLParseCase parse_cases[]={"
 allinputs=""
 for filename in os.listdir(dir):
 	i+=1
-	f=open(dir+"/"+filename, "r")
+	f=open(dir+"/"+filename, "r", encoding='utf-8')
 	url=f.read()					
 	#url.replace("\\\\", "\\\\\\")
 	#url.replace("\\\"", "\\\\\"")

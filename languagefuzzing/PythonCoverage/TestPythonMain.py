@@ -2,7 +2,7 @@ from urllib.parse import urlparse
 from urllib.parse import urljoin
 
 
-file=open("../urls/plainURLs","r")
+file=open("../urls/plainURLs","r", encoding='utf-8')
 
 lines=file.readlines()
 urls=[]

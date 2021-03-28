@@ -65,13 +65,13 @@ eranking=""
 # read json file
 for file in os.listdir(datadir):
 	if "parser" in file:
-		with open(datadir+"/"+file) as f:
+		with open(datadir+"/"+file, encoding='utf-8') as f:
 			pranking=f.read()
 	if "url" in file:
-		with open(datadir+"/"+file) as f:
+		with open(datadir+"/"+file, encoding='utf-8') as f:
 			uranking=f.read()
 	if "error" in file: 
-		with open(datadir+"/"+file) as f:
+		with open(datadir+"/"+file, encoding='utf-8') as f:
 			eranking=f.read()
 
 
