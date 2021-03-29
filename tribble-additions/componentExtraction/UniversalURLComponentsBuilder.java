@@ -319,23 +319,6 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         return false;
     }
 
-    private String combinePaths(String base, String relative){
-        if(base != null){
-            int index=base.lastIndexOf("/");
-            base=base.substring(0, (index >=0 ? index: 0));
-            base=(relative != null ? (base + "/"+relative ): base) ;
-        }
-        else{
-            if(relative!= null && ! relative.startsWith("/")){
-                base="/"+relative;
-            }
-            else{
-                base=relative;
-            }
-            
-        }
-        return base;
-    }
 
     /***
     * utilizes the prepared components of base and relative URL to create the final component representation
@@ -368,7 +351,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             String path=null;
             if(! relative.startsWith("/")){
                 //replace last base segment
-                path=combinePaths(components.get("base_path"), components.get("relative_path"));
+                path=util.combinePaths(components.get("base_path"), components.get("relative_path"));
                 String dl="";
                 if(isSpecialScheme(components.get("scheme"))){
                      

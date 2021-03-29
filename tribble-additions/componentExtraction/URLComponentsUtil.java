@@ -248,8 +248,12 @@ public class URLComponentsUtil {
 		return res;
 	}
 
+	/***
+	* encodes a host string according to IDNA rules by using IDN.toASCII with IDN.USE_STD3_ASCII_RULES
+	* @param input the host string to be encoded
+	* @return the encoded host if input contains non-ascii code-points, input otherwise
+	*/
 	public String encodeHost(String input){
-		System.out.println("encoding host: "+input);
 		boolean encode=false;
 		for(int codePoint:input.codePoints().toArray()){
 			if(codePoint>127){
@@ -265,5 +269,29 @@ public class URLComponentsUtil {
 			System.out.println(e); //this should never happen
 		}
 		return input;
+	}
+
+	/***
+	* utility method to combine two paths
+	* @param base a path-string representing the base path
+	* @param relative a path-string representing the relative path
+	* @return a string containing the result of path-combining the given inputs
+	*/
+	public String combinePaths(String base, String relative){
+	    if(base != null){
+	        int index=base.lastIndexOf("/");
+	        base=base.substring(0, (index >=0 ? index: 0));
+	        base=(relative != null ? (base + "/"+relative ): base) ;
+	    }
+	    else{
+	        if(relative!= null && ! relative.startsWith("/")){
+	            base="/"+relative;
+	        }
+	        else{
+	            base=relative;
+	        }
+	        
+	    }
+	    return base;
 	}
 }
