@@ -23,7 +23,7 @@ allinputs=""
 nr=0
 for filename in os.listdir(dir):
 	i+=1
-	f=open(dir+"/"+filename, "r", encoding='utf-8')
+	f=open(dir+"/"+filename, "r")
 	url=f.read()					
 	#url.replace("\\\\", "\\\\\\")
 	#url.replace("\\\"", "\\\\\"")
