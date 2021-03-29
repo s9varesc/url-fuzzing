@@ -65,13 +65,13 @@ eranking=""
 # read json file
 for file in os.listdir(datadir):
 	if "parser" in file:
-		with open(datadir+"/"+file) as f:
+		with open(datadir+"/"+file, encoding='utf-8') as f:
 			pranking=f.read()
 	if "url" in file:
-		with open(datadir+"/"+file) as f:
+		with open(datadir+"/"+file, encoding='utf-8') as f:
 			uranking=f.read()
 	if "error" in file: 
-		with open(datadir+"/"+file) as f:
+		with open(datadir+"/"+file, encoding='utf-8') as f:
 			eranking=f.read()
 
 
@@ -207,7 +207,7 @@ if prep != "":
 	result+="### Stand-Alone Parsers\n\n"+prep
 
 
-resfile=open( datadir+"../resultoverview.md", "w")
+resfile=open( datadir+"../resultoverview.md", "w", encoding='utf-8')
 resfile.write(result)
 resfile.close()
 
@@ -230,7 +230,7 @@ htmlresult=htmlresult.replace("<br-->", "<br>")
 htmlresult=htmlresult.replace("<--br>", "<br>")
 	
 
-htmlfile=open( datadir+"../resultoverview.html", "w")
+htmlfile=open( datadir+"../resultoverview.html", "w", encoding='utf-8')
 htmlfile.write(htmlhead + htmlresult +htmltail)
 htmlfile.close()
 
@@ -344,7 +344,7 @@ pagestart+="<td class=\"pfail\">Parsing error</td>"
 pagestart+="<td class=\"cfail\">Component is \"content\" != \"expected\"</td>"
 pagestart+="<td class=\"psucc\">Success</td></tr></tbody></table>\n"
 
-htmlfile=open( datadir+"../browseroverview.html", "w")
+htmlfile=open( datadir+"../browseroverview.html", "w", encoding='utf-8')
 htmlfile.write(htmlhead +pagestart+ htmlresult +htmltail)
 htmlfile.close()
 

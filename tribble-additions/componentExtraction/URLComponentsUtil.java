@@ -3,8 +3,17 @@ package saarland.cispa.se.tribble.execution.componentExtraction;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
+import java.net.IDN;
 
 public class URLComponentsUtil {
+	//C0_PERCENT_ENCODE is the default encoding set and thus does not need to be defined explicitly here
+	public String[] FRAGMENT_PERCENT_ENCODE={" ", "\"", ">", "<", "`"};
+	public String[] QUERY_PERCENT_ENCODE={" ", "\"", ">", "<", "#"};
+	public String[] SPECIAL_QUERY_PERCENT_ENCODE={" ", "\"", ">", "<", "#","\'"};
+	public String[] PATH_PERCENT_ENCODE={ " ", "\"", ">", "<", "#","?", "`", "{", "}"};
+	public String[] USERINFO_PERCENT_ENCODE={ " ", "\"", ">", "<", "#","?", "`", "{", "}","/", ":", "=", "@", "[", "\\", "]", "^", "|"};
+	
 
 	/***
     * formats the original IPv6 address(given without brackets) by converting the IPv4 part to hex
@@ -182,5 +191,79 @@ public class URLComponentsUtil {
 			index=next;
 		}
 		return result;
+	}
+
+
+
+	/***
+	* replaces all unicode chars (anything above \u007f) by their percent encoding
+	* @return  the string with percent encoded unicode chars
+	* @param input the string whose content should be encoded
+	* @param additionallyEncode a list of characters that should be encoded as well (their values may be lower than u+007f)
+	*/
+	public String escapeUnicodeChars(String input, String[] additionallyEncode){
+		if(input != null){
+			String res="";
+				for(int codePoint:input.codePoints().toArray()){
+					if(codePoint<=127&&codePoint>=32){
+						// no encoding required unless specified otherwise
+						String c=Character.toString((char)codePoint);
+						boolean needsEncoding=false;
+						for(String encode:additionallyEncode){
+							if(encode.contains(c)){
+								needsEncoding=true;
+							}
+						}
+						if(needsEncoding){
+							res+=percentEncode(codePoint);
+						}
+						else{
+							res+=(char) codePoint;
+						}
+						 
+					}
+					else{
+						// encoding required
+						res+=percentEncode(codePoint);
+					}
+				}
+				return res;
+		}
+		return input;
+	}
+
+	/***
+	* utility method that encodes a given codePoint in percent encoding
+	* @return a string containing the percent encoded representaion of the give codePoint
+	* @param codePoint the integer representing the unicode symbol to be encoded
+	*/
+	private String percentEncode(int codePoint){
+		String res="";
+		int[] codeunits={codePoint};
+		byte[] bytes=(new String(codeunits, 0, 1)).getBytes(StandardCharsets.UTF_8);
+		//convert each byte into hex
+		for(int i=0; i<bytes.length; i++){
+			res+="%"+Integer.toHexString(bytes[i]&0xff).toUpperCase();
+		}
+		return res;
+	}
+
+	public String encodeHost(String input){
+		System.out.println("encoding host: "+input);
+		boolean encode=false;
+		for(int codePoint:input.codePoints().toArray()){
+			if(codePoint>127){
+				encode=true;
+			}
+		}
+		if(! encode){
+			return input; //avoid trying to encode names with nonalphanum chars in them
+		}
+		try{
+			return IDN.toASCII(input, IDN.USE_STD3_ASCII_RULES);
+		} catch (Exception e){
+			System.out.println(e); //this should never happen
+		}
+		return input;
 	}
 }

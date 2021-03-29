@@ -36,7 +36,7 @@ Grammar(
   'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   
   'opaqueHostAndPort := 'opaqueHost ~ (":" ~ 'URLport).?, 
-  'opaqueHost := (('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | ("[" ~ 'ipv6address ~ "]"), 
+  'opaqueHost := ((('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | 'hostunicode) | ("[" ~ 'ipv6address ~ "]"), 
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   
   'pathAbsoluteURL := ("/"~'windowsDriveLetter.?).? ~ (("/" ~ 'pathRelativeURLstart.?) | "/"),
@@ -70,9 +70,9 @@ Grammar(
   
   //'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated
   'domain := 'internationalHost |  'basicHost,
-  'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum | ".") ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
-  'internationalHost := 'punycodeHost, //"xn--" ~ 'punycodeHost, //TODO find a better solution
-  'punycodeHost := ('alphanum.rep(1) ~ "-" ~ 'alphanum.rep(2)).rep(1), //this does not cover punycode 
+  'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum) ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
+  'internationalHost := (('alphanum | 'hostunicode).rep(1, 5) ~ ("."|"-").? ).rep(1) ~ ('alphanum | 'hostunicode).rep(1, 3) , //TODO check length allowed in idn
+   
   //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
@@ -93,58 +93,41 @@ Grammar(
   'hexdig := ("[a-f]".regex) | 'digit,
   
 
-  //'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded,
-  'pathCodePoint := 'pathAllowed | 'pathPercentEncoded,
-  'firstPathCodePoint:= 'userinfoAllowed  | ";" | "=" | "@" | "[" | "]" |  "^" | "|" | 'pathPercentEncoded, //excludes / (forward slash) and : (colon)
-  'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded,
-  'specialQueryCodePoint := 'specialQueryAllowed | 'queryPercentEncoded | "%27",
-  'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded,
-  //'c0CodePoint := 'c0Allowed | 'c0PercentEncoded,
-  'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded,
-
-  'hostAllowed := 'alphanum | 'hostnonAlphaNum | ".",
+  'hostAllowed := 'alphanum | 'hostnonAlphaNum,// | ".", TODO allow dot in host but not .host or host. or h..ost
   'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|" |  "-"  | "_" | "~",
-  //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=" | "|",
-  'opaqueHostPercentEncoded := "%" ~ (("0" ~ ("[1-8]".regex | "b" | "c" | "e" | "f") )| ("1" ~ 'hexdig)), 
 
-  'unicodeUtil := "%" ~ ("8"|"9"|"a"|"b") ~ 'hexdig,
-
-  'c0PercentEncoded:= "%" ~ ((("0"|"1") ~ 'hexdig)  //c0 control
-                            | ("7f")
-                            | ("c" ~ "[2-9a-f]".regex ~ 'unicodeUtil) //U+0080-U+03FF
-                            | ("d" ~ 'hexdig ~ 'unicodeUtil) //U+0400-U+07ff
-                            | ("e" ~ (("0"~ "%"~("a"|"b") ~ 'hexdig ~ 'unicodeUtil)
-                                        | (("[1-9a-c]".regex | "e") ~ 'unicodeUtil.rep(2,2))
-                                        | ("d" ~ "%" ~ ("8"|"9") ~ 'hexdig ~ 'unicodeUtil) //excludes surrogates
-                                        | ("f" ~ "%" ~ ((("8"|"9"|"a") ~ 'hexdig ~ 'unicodeUtil)
-                                                          | ("b" ~ ((("[0-6a-f]".regex | "8" | "9") ~ 'unicodeUtil)
-                                                                      | ("7" ~ "%" ~ ("[0-8]".regex | "b") ~ 'hexdig) //excludes noncharachters
-                                                                    )
-                                                            )
-                                                        )
-                                          )
-                                      )
-                              )
-                            | ("f0" ~ "%90" ~("%" ~ ((("8"|"9"|"a") ~ 'hexdig ~ 'unicodeUtil)
-                                                    | ("b" ~ "[0-9a-e]".regex ~ 'unicodeUtil)
-                                                    | ("bf" ~ "%" ~ ((('digit | "a") ~ 'hexdig)
-                                                                      | ("b" ~ "[0-9a-c]".regex) //stop at U+10FFFD
-                                                                    )
-                                                      )
-                                                  )
-                                             )
-                              )
-                          ),
   
-  'fragmentPercentEncoded := 'c0PercentEncoded | ( "%" ~ ("20" | "22" | "3c" | "3e" | "60")),
-  'queryPercentEncoded := 'c0PercentEncoded | ("%" ~ ("20" | "22" | "23" | "3c" | "3e" )),
-  'pathPercentEncoded := 'queryPercentEncoded | ("%" ~ ("3f" | "60" | "7b" | "7d")),
-  //'userinfoPercentEncoded := 'pathPercentEncoded | ("%" ~ ("2f" | "3a" | "3b" | "3d" | "40" | "5b"| "5c" | "5d" | "5e" | "7c")),
+  'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded ,
+  //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=" | "|",
+  'opaqueHostPercentEncoded := "%00" | "%09" | "%20" | "%23" | "%25" | "%2f" | "%3a" | "%3c" | "%3e" | "%3f" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c" ,
+  
 
+  'unicode := "[\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd]".regex , //this also contains rtl chars
+             // | "[\u10000-\u1fffd]".regex, //TODO also use unicode above ffff
+
+  'hostunicode := "[\u0100-\u0148\u0148-\u017f]".regex,
+    //"[\u024f-\u02af\u1050-\u1090\u10d0-\u10fa\u1200-\u1248\u1780-\u17b3\u1820-\u1877\ua000-\ua4fd\ua980-\ua9c0]".regex, 
+  // this is a subset of code points allowed in hosts and far from exhaustive
+
+
+  'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded | 'unicode,
+  'queryPercentEncoded := "%20" | "%22" | "%23" | "%3c" | "%3e",
+  'specialQueryAllowed := 'pathAllowed | "?" | "{" | "}" | "`" ,
+  'specialQueryCodePoint := 'specialQueryAllowed |'queryPercentEncoded | 'unicode, //check if ' should be percent encoded
+  
+  //'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded | 'unicode,
   'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
-  'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|", 
-  'specialQueryAllowed := 'unreserved | "!" | "$" | "&" | "%"  | "(" | ")" | "*" | "+" | "," | "?" | "{" | "}" |"`" | "/" | ":" | ";" | "=" | "@" | "[" | "]" | "\\" | "^" | "|", 
+  //'userinfoPercentEncoded := "%2f" | "%3a" | "%3b" | "%3d" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c",
+
+  'pathCodePoint := 'pathAllowed | 'pathPercentEncoded | 'unicode,
+  'pathAllowed := 'userinfoAllowed | "/" | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|",
+  'pathPercentEncoded := 'queryPercentEncoded | "%3f" | "%60" | "%7b" | "%7d",
+
+  'firstPathCodePoint := 'userinfoAllowed |  ";" | "=" | "@" | "[" | "]" |  "^" | "|" | 'pathPercentEncoded | 'unicode, //check if / and : should be percent encoded 
+
+  'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded | 'unicode,
   'fragmentAllowed := 'pathAllowed | "?" | "{" | "}" | "#",
-  //'c0Allowed := 'fragmentAllowed | " " | "\"" | "<" | ">" | "`",
+  'fragmentPercentEncoded := "%20" | "%22" | "%3c" | "%3e" | "%60",
+ 
 )
 

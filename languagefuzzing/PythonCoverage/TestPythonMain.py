@@ -2,7 +2,7 @@ from urllib.parse import urlparse
 from urllib.parse import urljoin
 
 
-file=open("../urls/plainURLs","r")
+file=open("../urls/plainURLs","r", encoding='utf-8')
 
 lines=file.readlines()
 urls=[]
@@ -24,7 +24,7 @@ for url in urls:
     except Exception as e:
         exceptions+="\n{\"url\":\""+url+"\", \"exception\":\""+str(e)+"\"}"
 
-f=open('PythonExceptions.txt', 'w')
+f=open('PythonExceptions.txt', 'w', encoding='utf-8')
 f.write(exceptions)
 f.close()
     

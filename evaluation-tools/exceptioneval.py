@@ -72,7 +72,7 @@ if dir[-1:]!="/":dir+="/"
 
 for file in os.listdir(dir):   
 	if file.endswith('URLs'):
-		with open(dir +"/"+ file) as f:
+		with open(dir +"/"+ file, "r", encoding='utf-8') as f:
 			plainURLs=f.read()   
 		
 
@@ -86,8 +86,7 @@ parsers={}
 for exfile in os.listdir(dir):
 	if 'Exceptions' in exfile: 
 		parsername=exfile.replace("Exceptions","").replace(".txt","")
-		print(parsername)
-		with open(dir +"/"+ exfile) as f:
+		with open(dir +"/"+ exfile, "r", encoding='utf-8') as f:
 			data=f.read()
 
 		
@@ -171,7 +170,7 @@ if len(parsers)<= 2:
 errorranking={}
 for file in os.listdir(dir):
 	if 'Errors' in file:
-		with open(dir +"/"+ file) as f:
+		with open(dir +"/"+ file, "r", encoding='utf-8') as f:
 			errdata=f.read()   
 			name=file.replace("Errors.txt", "")
 			rawesplit=errdata.split("\n")
