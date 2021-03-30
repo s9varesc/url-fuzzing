@@ -22,7 +22,7 @@ prefix="\"use strict\";\
 #collect url data
 urlcontents=[]
 for filename in os.listdir(dir):
-	f=open(dir+"/"+filename, "r")
+	f=open(dir+"/"+filename, "r", encoding='utf-8')
 	urlcontents+=[f.read()]
 
 allinputs=""
