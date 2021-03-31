@@ -42,13 +42,13 @@ for filename in os.listdir(dir):
 	
 
 print(nr)
-f=open("url_parsing_unittest.cc","w")
+f=open("url_parsing_unittest.cc","w", encoding='utf-8')
 f.write(prefix+urldata[:-2]+"};\n"+suffix)
 f.close()
 
 
 allinputs=allinputs[:-1]
-f=open("allinputURLs", "w") 
+f=open("allinputURLs", "w", encoding='utf-8') 
 f.write(allinputs)
 f.close()
 

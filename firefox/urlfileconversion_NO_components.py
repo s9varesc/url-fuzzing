@@ -23,7 +23,7 @@ prefix="\"use strict\";\
 #collect url data
 urlcontents=[]
 for filename in os.listdir(dir):
-	f=open(dir+"/"+filename, "r")
+	f=open(dir+"/"+filename, "r", encoding='utf-8')
 	urlcontents+=[f.read()]
 
 
@@ -45,7 +45,7 @@ for chunk in testchunks:
 	urldata+="];"
 	testname="test_URIs_"+str(testid)+".js"
 	testnames+=[testname]
-	f=open("URLTestFiles/"+testname,"w")
+	f=open("URLTestFiles/"+testname,"w", encoding='utf-8')
 	f.write(prefix+"\n"+urldata+"\n"+suffix)
 	f.close()
 
@@ -54,14 +54,14 @@ xpcshellinicontent="[DEFAULT]\nhead = head_channels.js head_cache.js head_cache2
 for test in testnames:
 	xpcshellinicontent+="["+test+"]\n"
 
-f=open("URLTestFiles/xpcshell.ini","w")
+f=open("URLTestFiles/xpcshell.ini","w", encoding='utf-8')
 f.write(xpcshellinicontent)
 #print(xpcshellinicontent[:300])
 f.close()
 
 
 allinputs=allinputs[:-1]
-f=open("allinputURLs", "w")
+f=open("allinputURLs", "w", encoding='utf-8')
 f.write(allinputs)
 f.close()
 

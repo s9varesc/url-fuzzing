@@ -12,9 +12,9 @@ parser.add_argument("-dir")
 args = parser.parse_args()
 dir = args.dir
 
-f1=open("./url_parsing_prefix_NO_components.txt","r")
+f1=open("./url_parsing_prefix_NO_components.txt","r", encoding='utf-8')
 prefix=f1.read()
-f=open("./url_parsing_suffix_NO_components.txt","r")
+f=open("./url_parsing_suffix_NO_components.txt","r", encoding='utf-8')
 suffix=f.read()
 i=2
 
@@ -32,12 +32,12 @@ for filename in os.listdir(dir):
 	
 	urldata += url+",\n"
 
-f=open("url_parsing_unittest.cc","w")
+f=open("url_parsing_unittest.cc","w", encoding='utf-8')
 f.write(prefix+urldata[:-2]+"};\n"+suffix)
 f.close()
 
 allinputs=allinputs[:-1]
-f=open("allinputURLs", "w")
+f=open("allinputURLs", "w", encoding='utf-8')
 f.write(allinputs)
 f.close()
 
