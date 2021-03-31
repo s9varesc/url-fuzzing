@@ -54,7 +54,7 @@ for chunk in testchunks:
 	testname="test_URIs_"+str(testid)+".js"
 	testnames+=[testname]
 	f=open("URLTestFiles/"+testname,"w")
-	f.write(prefix+"\n"+urldata+"\n"+suffix)
+	f.write(prefix+"\n"+urldata.encode("utf-8")+"\n"+suffix)
 	f.close()
 
 #register tests	
