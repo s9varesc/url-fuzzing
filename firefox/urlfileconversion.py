@@ -68,7 +68,7 @@ f.write(xpcshellinicontent)
 f.close()
 
 allinputs=allinputs[:-1]
-f=open("allinputURLs", "w",, encoding='utf-8')
+f=open("allinputURLs", "w", encoding='utf-8')
 f.write(allinputs)
 f.close()
 
