@@ -54,7 +54,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
 
     if (aURI[aPropertyName] != expectedVal){ //needed to display custom format, adding assertion message spams output
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
-      dump("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}");
+      do_info("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}");
     }
 
     Assert.equal(aURI[aPropertyName], expectedVal);
@@ -70,7 +70,7 @@ function do_test_uri_basic(aTest) {
   } catch (e) {
     var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
     do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
-    dump("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
+    do_info("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
     if (aTest.fail) {
       Assert.equal(e.result, aTest.result);
       return;
