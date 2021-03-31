@@ -53,7 +53,7 @@ for chunk in testchunks:
 	urldata+="];"
 	testname="test_URIs_"+str(testid)+".js"
 	testnames+=[testname]
-	f=open("URLTestFiles/"+testname,"w")
+	f=open("URLTestFiles/"+testname,"w",, encoding='utf-8')
 	f.write(prefix+"\n"+urldata+"\n"+suffix)
 	f.close()
 
@@ -68,7 +68,7 @@ f.write(xpcshellinicontent)
 f.close()
 
 allinputs=allinputs[:-1]
-f=open("allinputURLs", "w")
+f=open("allinputURLs", "w",, encoding='utf-8')
 f.write(allinputs)
 f.close()
 
