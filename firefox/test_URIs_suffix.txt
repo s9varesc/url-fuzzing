@@ -39,6 +39,9 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     } catch(e) {
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
       dump("\n{\"url\":\""+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}"); //removed url for tests
+      console.log(url);
+      do_info(url);
+      dump(url);
       do_throw(e.result);
     }
     do_info(
