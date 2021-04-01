@@ -16,8 +16,9 @@ dir = args.dir
 f=open("./test_URIs_suffix.txt","r")
 suffix=f.read()
 
-prefix="\"use strict\";\
-	\n var gIoService = Cc[\"@mozilla.org/network/io-service;1\"].getService(Ci.nsIIOService);\n"
+prefix="var gIoService = Cc[\"@mozilla.org/network/io-service;1\"].getService(Ci.nsIIOService);\n"
+#prefix="\"use strict\";\
+#	\n var gIoService = Cc[\"@mozilla.org/network/io-service;1\"].getService(Ci.nsIIOService);\n"
 
 #collect url data
 urlcontents=[]
