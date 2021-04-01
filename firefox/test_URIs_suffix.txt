@@ -38,10 +38,10 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
       comp=aURI[aPropertyName];
     } catch(e) {
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
-      dump(escape("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}")); 
+      dump("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}"); 
       do_throw(e.result);
     }
-    do_info(escape(
+    do_info(
       "testing " +
         aPropertyName +
         " of " +
@@ -49,12 +49,12 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
         aTest.spec +
         "' is '" +
         expectedVal +
-        "' actually is '" + aURI[aPropertyName] + "'")
+        "' actually is '" + aURI[aPropertyName] + "'"
     );
 
     if (aURI[aPropertyName] != expectedVal){ //needed to display custom format, adding assertion message spams output
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
-      dump(escape("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}")); 
+      dump("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}"); //TODO try using esc
     }
 
     Assert.equal(aURI[aPropertyName], expectedVal);
@@ -69,8 +69,8 @@ function do_test_uri_basic(aTest) {
     URI = gIoService.newURI(aTest.spec);
   } catch (e) {
     var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
-    do_info(escape("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result));
-    dump(escape("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}"));
+    do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
+    dump("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
     if (aTest.fail) {
       Assert.equal(e.result, aTest.result);
       return;
@@ -93,22 +93,22 @@ function do_test_uri_basic(aTest) {
           e.result
       );
       var url=aTest.spec +"<"+aTest.relativeURI;
-      do_info(escape("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result));
-      dump(escape("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}"));
+      do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
+      dump("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
       if (aTest.relativeFail) {
         Assert.equal(e.result, aTest.relativeFail);
         return;
       }
       do_throw(e.result);
     }
-    do_info(escape(
+    do_info(
       "relURI.pathQueryRef = " +
         relURI.pathQueryRef +
         ", was " +
         URI.pathQueryRef
-    ));
+    );
     URI = relURI;
-    do_info(escape("URI.pathQueryRef now = " + URI.pathQueryRef));
+    do_info("URI.pathQueryRef now = " + URI.pathQueryRef);
   }
 
   
