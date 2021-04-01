@@ -70,7 +70,7 @@ function do_test_uri_basic(aTest) {
   } catch (e) {
     var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
     do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
-    console.log({\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
+    console.log("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
     if (aTest.fail) {
       Assert.equal(e.result, aTest.result);
       return;
@@ -94,7 +94,7 @@ function do_test_uri_basic(aTest) {
       );
       var url=aTest.spec +"<"+aTest.relativeURI;
       do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
-     console.log({\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
+     console.log("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
       if (aTest.relativeFail) {
         Assert.equal(e.result, aTest.relativeFail);
         return;
