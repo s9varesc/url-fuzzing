@@ -101,14 +101,6 @@ function do_test_uri_basic(aTest) {
       }
       do_throw(e.result);
     }
-    do_info(
-      "relURI.pathQueryRef = " +
-        relURI.pathQueryRef +
-        ", was " +
-        URI.pathQueryRef
-    );
-    URI = relURI;
-    do_info("URI.pathQueryRef now = " + URI.pathQueryRef);
   }
 
   
@@ -124,12 +116,6 @@ function do_test_uri_basic(aTest) {
   do_check_property(aTest, URI, "hasRef");
   do_check_property(aTest, URI, "prePath");
   do_check_property(aTest, URI, "pathQueryRef");
-
-  /*if ("hasRef" in aTest) { 
-    //do_info("testing hasref: " + aTest.hasRef + " vs " + URI.hasRef);
-
-    Assert.equal(aTest.hasRef, URI.hasRef,"\n{url:\""+ aTest.spec+"\", error:{component:\"hasRef\", expected:\""+aTest.hasRef +"\", actual:\""+URI.hasRef+"\"}}");
-  }*/
 }
 
 
@@ -143,5 +129,5 @@ function run_test() {
   gTests.forEach(function(aTest) {
     // Check basic URI functionality
     do_test_uri_basic(aTest);
-  };
+  });
 }
