@@ -55,7 +55,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     if (aURI[aPropertyName] != expectedVal){ //needed to display custom format, adding assertion message spams output
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
       dump(JSON.stringify("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}")); 
-
+    }
 
     Assert.equal(aURI[aPropertyName], expectedVal);
   }
