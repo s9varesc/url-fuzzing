@@ -54,7 +54,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
 
     if (aURI[aPropertyName] != expectedVal){ //needed to display custom format, adding assertion message spams output
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
-      console.log("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}"); 
+      dump("NOTJSON}\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}"); 
 
     }
 
@@ -71,7 +71,7 @@ function do_test_uri_basic(aTest) {
   } catch (e) {
     var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
     //do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
-    console.log("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
+    dump("NOTJSON}\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
     if (aTest.fail) {
       Assert.equal(e.result, aTest.result);
       return;
@@ -95,7 +95,7 @@ function do_test_uri_basic(aTest) {
       );
       var url=aTest.spec +"<"+aTest.relativeURI;
       //do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
-     console.log("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
+     dump("NOTJSON}\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
 
       if (aTest.relativeFail) {
         Assert.equal(e.result, aTest.relativeFail);
