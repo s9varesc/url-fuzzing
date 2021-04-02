@@ -28,7 +28,7 @@ for filename in os.listdir(dir):
 
 allinputs=""
 #create test files with ~n test cases per file
-n=60
+n=1
 testnames=[]
 testchunks=[urlcontents[i*n:(i+1)*n] for i in range((len(urlcontents)+n-1)//n)]
 testid=2
