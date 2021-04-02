@@ -7,7 +7,7 @@ function do_info(text, stack) {
     stack = Components.stack.caller;
   }
 
-  dump(JSON.stringify(
+  dump(
     "\n" +
       "TEST-INFO | " +
       stack.filename +
@@ -18,7 +18,7 @@ function do_info(text, stack) {
       "] " +
       text +
       "\n"
-  ));
+  );
 }
 
 
@@ -38,7 +38,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
       comp=aURI[aPropertyName];
     } catch(e) {
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
-      console.log("{\"url\":\""+url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}"); //removed url for tests
+      console.log(\n{\"url\":\+url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\+expectedVal +"\", \"actual\":\"+e.name+" " + e.result+"\"}}); 
       do_throw(e.result);
     }
     /*do_info(
@@ -54,7 +54,8 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
 
     if (aURI[aPropertyName] != expectedVal){ //needed to display custom format, adding assertion message spams output
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
-      console.log("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}"); 
+      console.log(\n{\"url\":\"+ url+\", \"error\":{\"component\":\"+aPropertyName+"\", \"expected\":\"+expectedVal +"\", \"actual\":\"+aURI[aPropertyName]+"\"}}); 
+
     }
 
     Assert.equal(aURI[aPropertyName], expectedVal);
@@ -70,7 +71,7 @@ function do_test_uri_basic(aTest) {
   } catch (e) {
     var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
     //do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
-    console.log("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
+    console.log(\n{\"url\":\+ url+"\", \"exception\":\"+e.name+" "+e.result+"\"});
     if (aTest.fail) {
       Assert.equal(e.result, aTest.result);
       return;
@@ -94,7 +95,7 @@ function do_test_uri_basic(aTest) {
       );
       var url=aTest.spec +"<"+aTest.relativeURI;
       //do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
-     console.log("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
+     console.log(\n{\"url\":\"+ url+"\", \"exception\":\"+e.name+" "+e.result+"\"});
 
       if (aTest.relativeFail) {
         Assert.equal(e.result, aTest.relativeFail);
