@@ -41,7 +41,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
       console.log("{\"url\":\""+url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}"); //removed url for tests
       do_throw(e.result);
     }
-    do_info(
+    /*do_info(
       "testing " +
         aPropertyName +
         " of " +
@@ -50,7 +50,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
         "' is '" +
         expectedVal +
         "' actually is '" + aURI[aPropertyName] + "'"
-    );
+    );*/
 
     if (aURI[aPropertyName] != expectedVal){ //needed to display custom format, adding assertion message spams output
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
@@ -69,7 +69,7 @@ function do_test_uri_basic(aTest) {
     URI = gIoService.newURI(aTest.spec);
   } catch (e) {
     var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
-    do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
+    //do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
     console.log("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
     if (aTest.fail) {
       Assert.equal(e.result, aTest.result);
@@ -93,8 +93,9 @@ function do_test_uri_basic(aTest) {
           e.result
       );
       var url=aTest.spec +"<"+aTest.relativeURI;
-      do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
+      //do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
      console.log("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
+
       if (aTest.relativeFail) {
         Assert.equal(e.result, aTest.relativeFail);
         return;
