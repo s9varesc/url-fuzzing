@@ -14,6 +14,6 @@ for filename in os.listdir(dir):
     if filename.endswith(".html"):
         s = s.replace('../../../../../../../style.css', './style.css')
     #print "replaced in " + filename
-    f=open(dir+"/"+filename, "w")
+    f=open(dir+"/"+filename, "w", encoding='utf-8')
     f.write(s)
     f.close()
