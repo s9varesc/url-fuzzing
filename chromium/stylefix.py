@@ -9,7 +9,7 @@ dir = args.dir
 
 for filename in os.listdir(dir):
     #print filename
-    f=open(dir+"/"+filename)
+    f=open(dir+"/"+filename,  "r", encoding='utf-8')
     s = f.read()
     if filename.endswith(".html"):
         s = s.replace('../../../../../../../style.css', './style.css')
