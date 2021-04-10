@@ -36,9 +36,9 @@ def extractAllinputURLs(compstr):
 	  tmp=tmp[:-1]
 	if tmp[-2]==",":
 	  tmp=tmp[:-2] 
-	if not tmp[-1]=="}":
+	if not tmp[-2:]=="\"}":
 		tmp+="}"
-	print(tmp)
+	
 	unescaped=json.loads(tmp, strict=False)
 	bas=unescaped["spec"]
 	rel=""
