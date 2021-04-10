@@ -57,7 +57,7 @@ for filename in os.listdir(dir):
 	#url.replace("\\\\", "\\\\\\")
 	#url.replace("\\\"", "\\\\\"")
 
-	
+	print("URL  "+url)
 	allinputs+=extractAllinputURLs(url)+"\n"
 
 	nr+=1
