@@ -38,7 +38,7 @@ def extractAllinputURLs(compstr):
 
 	rel=inp[cutindex+2:nextcut+1]
 	tmp=tmp0+bas+tmp1+rel+tmp2
-	print(tmp)
+
 	unescaped=json.loads(tmp, strict=False)
 	
 
@@ -57,14 +57,13 @@ for filename in os.listdir(dir):
 	#url.replace("\\\\", "\\\\\\")
 	#url.replace("\\\"", "\\\\\"")
 
-	print("URL  "+url)
 	allinputs+=extractAllinputURLs(url)+"\n"
 
 	nr+=1
 	urldata+=url+",\n"
 	
 
-print(nr)
+
 f=open("url_parsing_unittest.cc","w", encoding='utf-8')
 f.write(prefix+urldata[:-2]+"};\n"+suffix)
 f.close()
