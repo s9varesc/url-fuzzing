@@ -30,11 +30,11 @@ def extractAllinputURLs(compstr):
 	
 	inp=compstr[1:]
 
-	cutindex=inp.find("\", \"") 
+	cutindex=inp.find("\",\"") 
 
 	bas=inp[:cutindex+1] #=base
 
-	nextcut=inp.find("\", \"",cutindex+3 )
+	nextcut=inp.find("\",\"",cutindex+3 )
 
 	rel=inp[cutindex+2:nextcut+1]
 	tmp=tmp0+bas+tmp1+rel+tmp2
