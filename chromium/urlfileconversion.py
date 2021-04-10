@@ -38,7 +38,7 @@ def extractAllinputURLs(compstr):
 
 	rel=inp[cutindex+2:nextcut+1]
 	tmp=tmp0+bas+tmp1+rel+tmp2
-
+	print(tmp)
 	unescaped=json.loads(tmp, strict=False)
 	
 
