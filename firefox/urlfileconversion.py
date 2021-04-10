@@ -1,6 +1,7 @@
 import argparse
 import os
 import subprocess
+import json
 
 #
 # uses files containing the component representation of urls to create a firefox test file
@@ -20,6 +21,33 @@ prefix="var gIoService = Cc[\"@mozilla.org/network/io-service;1\"].getService(Ci
 #prefix="\"use strict\";\
 #	\n var gIoService = Cc[\"@mozilla.org/network/io-service;1\"].getService(Ci.nsIIOService);\n"
 
+
+def extractAllinputURLs(compstr):
+	# extracts the original url for evaluation purposes
+	tmp=""
+	compstr=compstr.replace("spec", "\"spec\"").replace("relativeURI", "\"relativeURI\"")
+	lines=compstr.split("\n")
+	for line in lines:
+		if "\"spec\":" in line or "\"relativeURI\":" in line:
+			tmp+=line
+	if not tmp[0]=="{":
+		tmp="{"+tmp
+	if tmp[-1]==",":
+	  tmp=tmp[:-1]
+	if tmp[-2]==",":
+	  tmp=tmp[:-2] 
+	if not tmp[-1]=="}":
+		tmp+="}"
+	print(tmp)
+	unescaped=json.loads(tmp, strict=False)
+	bas=unescaped["spec"]
+	rel=""
+	if "relativeURI" in unescaped:
+		rel="<" +unescaped["relativeURI"]	
+	return bas+rel
+	
+
+
 #collect url data
 urlcontents=[]
 for filename in os.listdir(dir):
@@ -37,18 +65,8 @@ for chunk in testchunks:
 	urldata="var gTests = ["
 	for url in chunk:
 		urldata+="\n" + url + ","
-		inp=url[7:]
-		cutindex=inp.find("\",\n")
-
-		bas=inp[:cutindex] #=base
-		relcut=inp.find("relativeURI" );
-		rel=""
-		if(relcut>=0):
-			nextcut=inp.find("\",\n", relcut)
-			rel=inp[relcut+13:nextcut]
-		if(rel != "" and bas != ""):
-			rel="<"+rel
-		allinputs+=bas+rel+"\n"
+		
+		allinputs+=prepAllinputURLs(url)+"\n" 
 				
 	urldata=urldata[:-1]
 	urldata+="];"

@@ -8,7 +8,7 @@ import markdown
 # links to the coverage reports
 covreps={}
 covreps["chromium"]="\n#### Chromium\n\n[Overview](./chromium/report.html)\n\n[Source File Report](./chromium/url_parse.cc.html)\n\n"
-covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n\n[Source File Report](./firefox/netwerk/base/nsURLParsers.cpp.gcov.html)\n\n"
+covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n\n[Source File Report](./firefox/netwerk/base/nsURLParsers.cpp.gcov.html)\n\n" #TODO match new location
 covreps["C"]="\n#### C\n\n[Overview](./C/index.html)\n\n[Source File Report](./C/src/UriParse.c.gcov.html)\n\n"
 covreps["Cpp"]="\n#### C\\+\\+\n\n[Overview](./Cpp/index.html)\n\n[Source File Report](./Cpp/src/URI.cpp.gcov.html)\n\n"
 covreps["Go"]="\n#### GO\n\n[Source File Report](./Go/index.html)\n\n"
@@ -89,7 +89,7 @@ ptableheader=" Exception Type | URLs \n --- | --- "
 parsertable=" Parsername | Number of Exceptions | Number of Different Exceptions \n --- | --- | --- \n"
 
 # create table representation of the parser results
-parserdata=json.loads(pranking)
+parserdata=json.loads(pranking, strict=False)
 
 for pname in parserdata:
 	edata=parserdata[pname]
@@ -117,7 +117,8 @@ for (pn, en, den) in sortedptuples:
 	pnames+=[pn]
 
 # create table representation of URLs
-urldata=json.loads(uranking)
+urldata=json.loads(uranking, strict=False)
+
 
 utable=" URL | Parsers \n --- | --- \n"
 
@@ -136,7 +137,7 @@ for url in urldata:
 		utable+=uline+"\n"
 
 # Browsers
-errdata=json.loads(eranking)
+errdata=json.loads(eranking, strict=False)
 ## create overview table: browser | nr fails | nr exceptions | nr errors
 otable=" Browser | Overall Failures | Parsing Exceptions | Verification Errors \n --- | --- | --- | --- \n"
 for bname in errdata:
@@ -285,7 +286,6 @@ for url in urldata:
 		if comp=="":
 			b[url]="STYLEP PASS"
 
-
 bsize=len(bres)
 
 
@@ -298,8 +298,9 @@ for i in range(0, bsize):
 bcomptable+=" \n"+bcomphelp+"\n"
 
 for url in urldata:
+	parsers=urldata[url]
 	uline=""
-	if "JavaScriptwhatwg-url" in urldata[url]:
+	if "JavaScriptwhatwg-url" in parsers:
 		uline="STYLEW "
 	uline += url_escape_md(url)
 	for i in range(0, bsize):
@@ -309,8 +310,6 @@ for url in urldata:
 	bcomptable+=uline
 
 
-
-print(nrurls)
 
 htmlresult=markdown.markdown(bcomptable, extensions=['extra'])
 

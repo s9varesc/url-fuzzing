@@ -5,8 +5,9 @@ import json
 
 # correct escaping 
 def escaping(data):
-	tmp=data.replace("\\", "\\\\")
-	tmp=tmp.replace("\"", "\\\"" )
+	tmp=data
+	tmp=tmp.replace('\\', '\\\\')
+	tmp=tmp.replace('\"', '\\\"' ) 
 	return tmp
 
 def fixdatapoint(datapoint): 
@@ -72,14 +73,17 @@ if dir[-1:]!="/":dir+="/"
 
 for file in os.listdir(dir):   
 	if file.endswith('URLs'):
+		#print("using    "+file)
 		with open(dir +"/"+ file, "r", encoding='utf-8') as f:
-			plainURLs=f.read()   
+			plainURLs=f.read()  
+		break 
 		
 
 # all urls that were tested
 
 urls=plainURLs.split("\n")
-print(len(urls))
+
+
 
 parsers={}
 # read the exceptions into dictionaries
@@ -155,9 +159,7 @@ for url in urls:
 			urlranking[url]+=[parser]
 	if url not in urlranking:
 		urlranking[url]=[]
-
-
-
+	
 
 
 # create error dictionaries:
@@ -175,8 +177,9 @@ for file in os.listdir(dir):
 			esplit=[x for x in rawesplit if x]
 			errorranking[name]=[]
 			for errd in esplit:
-				tmp=json.loads(fixerrordatapoint(errd))
+				tmp=json.loads(fixerrordatapoint(errd), strict=False)
 				errorranking[name]+=[tmp] 
+			
 
 
 
