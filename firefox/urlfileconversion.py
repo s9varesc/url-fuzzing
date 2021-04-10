@@ -66,7 +66,7 @@ for chunk in testchunks:
 	for url in chunk:
 		urldata+="\n" + url + ","
 		
-		allinputs+=prepAllinputURLs(url)+"\n" 
+		allinputs+=extractAllinputURLs(url)+"\n" 
 				
 	urldata=urldata[:-1]
 	urldata+="];"
