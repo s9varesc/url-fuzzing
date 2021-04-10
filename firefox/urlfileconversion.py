@@ -33,10 +33,6 @@ def extractAllinputURLs(compstr):
 	if not tmp[0]=="{":
 		tmp="{"+tmp
 	tmp=tmp+"}"
-	if tmp[-1]==",":
-	  tmp=tmp[:-1]
-	if tmp[-2]==",":
-	  tmp=tmp[:-2] 
 	tmp=tmp.replace("\",\n}", "\"}")
 	print(tmp)
 	unescaped=json.loads(tmp, strict=False)
