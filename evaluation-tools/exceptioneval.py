@@ -81,7 +81,7 @@ for file in os.listdir(dir):
 
 # all urls that were tested
 
-urls=plainURLs.split("\n")
+urls=plainURLs[:-1].split("\n") #remove last newline to avoid an empty url entry
 
 
 
