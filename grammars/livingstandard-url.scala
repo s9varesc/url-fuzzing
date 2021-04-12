@@ -102,7 +102,8 @@ Grammar(
   'opaqueHostPercentEncoded := "%00" | "%09" | "%20" | "%23" | "%25" | "%2f" | "%3a" | "%3c" | "%3e" | "%3f" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c" ,
   
 
-  'unicode := "[\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd]".regex , //this excludes surrogates and noncharacters
+  'unicode := "[\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd]".regex 
+                | "\ud800[\udc00-\udfff]".regex, 
              // | "[\u10000-\u1fffd]".regex, // correctly enumerating unicode above \uffff for java 
 
   'hostunicode := "[\u0100-\u0148\u0148-\u017f]".regex,
