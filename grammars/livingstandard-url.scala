@@ -32,7 +32,7 @@ Grammar(
   'otherRelativeURL := ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL) ~ ("?" ~ 'URLquery).? ~ ("#" ~ 'URLfragment).?,
 
   'schemeRelativeSpecialURL := "//" ~ ('domain | 'ipAddress) ~ (":" ~ 'URLport.?).? ~ 'pathAbsoluteURL.?, 
-  'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?, 
+  'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?,  //forcing pathAbsoluteURL would fix invalid relative URLs as "//#fg", but the standard says its optional 
   'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ),
   
   'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?) | "", 
@@ -42,7 +42,7 @@ Grammar(
   'pathAbsoluteURL := ("/"~'windowsDriveLetter.?).? ~ "/" ~ 'pathRelativeURLstart.?,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?, // not allowed to start with "/C:/" (windows drive letter)
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? , //not allowed to start with /, use pathRelativeURLstart to force this
-  'pathRelativeURLstart := ((('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ ("/" ~ 'pathRelativeURL).?).?,  
+  'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ ("/" ~ 'pathRelativeURL).?,  
   'pathRelativeSchemelessURL := 'pathRelativeURLstart, // not allowed to start with "scheme:"
 
 
