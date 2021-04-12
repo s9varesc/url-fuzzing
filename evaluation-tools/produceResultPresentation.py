@@ -8,7 +8,7 @@ import markdown
 # links to the coverage reports
 covreps={}
 covreps["chromium"]="\n#### Chromium\n\n[Overview](./chromium/report.html)\n\n[Source File Report](./chromium/url_parse.cc.html)\n\n"
-covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n\n[Source File Report](./firefox/netwerk/base/nsURLParsers.cpp.gcov.html)\n\n" #TODO match new location
+covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n\n[Source File Report](./firefox/nsURLParsers.cpp.gcov.html)\n\n" #TODO match new location
 covreps["C"]="\n#### C\n\n[Overview](./C/index.html)\n\n[Source File Report](./C/src/UriParse.c.gcov.html)\n\n"
 covreps["Cpp"]="\n#### C\\+\\+\n\n[Overview](./Cpp/index.html)\n\n[Source File Report](./Cpp/src/URI.cpp.gcov.html)\n\n"
 covreps["Go"]="\n#### GO\n\n[Source File Report](./Go/index.html)\n\n"
