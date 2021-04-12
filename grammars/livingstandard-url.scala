@@ -39,7 +39,7 @@ Grammar(
   'opaqueHost := ((('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | 'hostunicode) | ("[" ~ 'ipv6address ~ "]"), 
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   
-  'pathAbsoluteURL := ("/"~'windowsDriveLetter.?).? ~ (("/" ~ 'pathRelativeURLstart.?) | "/"),
+  'pathAbsoluteURL := ("/"~'windowsDriveLetter.?).? ~ "/" ~ 'pathRelativeURLstart.?,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?,
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? , //not allowed to start with /
   'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ ("/" ~ 'pathRelativeURL).?,  
@@ -93,12 +93,12 @@ Grammar(
   'hexdig := ("[a-f]".regex) | 'digit,
   
 
-  'hostAllowed := 'alphanum | 'hostnonAlphaNum,// | ".", TODO allow dot in host but not .host or host. or h..ost
-  'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" | "|" |  "-"  | "_" | "~",
+  'hostAllowed := 'alphanum | 'hostnonAlphaNum,
+  'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "-"  | "_" | "~",
 
   
   'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded ,
-  //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=" | "|",
+  //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=",
   'opaqueHostPercentEncoded := "%00" | "%09" | "%20" | "%23" | "%25" | "%2f" | "%3a" | "%3c" | "%3e" | "%3f" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c" ,
   
 
