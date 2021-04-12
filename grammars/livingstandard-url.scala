@@ -103,8 +103,8 @@ Grammar(
   
 
   'unicode := "[\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd]".regex 
-                | "\ud800[\udc00-\udfff]".regex, 
-             // | "[\u10000-\u1fffd]".regex, // correctly enumerating unicode above \uffff for java 
+                | "[\ud800-\udbff][\udc00-\udffd]".regex, //  "[\u10000-\u1fffd]".regex, java uses 16-bit code points, so use surrogate pairs
+              
 
   'hostunicode := "[\u0100-\u0148\u0148-\u017f]".regex,
     //"[\u024f-\u02af\u1050-\u1090\u10d0-\u10fa\u1200-\u1248\u1780-\u17b3\u1820-\u1877\ua000-\ua4fd\ua980-\ua9c0]".regex, 
