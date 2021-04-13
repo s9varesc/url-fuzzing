@@ -290,13 +290,21 @@ allcomp=0
 whatfail=0
 whatnr=0
 
+
 bcomptable="URLs "
 bcomphelp="--- "
 
+bcount=[]
+
 for i in range(0, bsize):
+	bcount+=[[]]
 	bcomptable+=" | "+ bres[i]["name"]
 	bcomphelp+="| ---"
+	bcount[i]=[0,0,0,0]
+
+
 bcomptable+=" \n"+bcomphelp+"\n"
+
 
 for url in urldata:
 	nrsucc=0
@@ -316,12 +324,18 @@ for url in urldata:
 		mess=br[url]
 		if mess[:6]=="STYLEP":
 			nrsucc+=1
+			bcount[i][0]+=1
 		if mess[:6]=="STYLEF":
 			nrfail+=1
+			bcount[i][1]+=1
+			if uline[:6]=="STYLEW":
+				bcount[i][2]+=1
 		if mess[:6]=="STYLEC":
 			nrcomp+=1
+			bcount[i][3]+=1
 
 	#save counted results
+	
 	if nrsucc==bsize:
 		eqsucc+=1
 	if nrfail==bsize:
@@ -338,22 +352,40 @@ for url in urldata:
 
 
 
+
+crbsucc="|"
+crbfail="|"
+crbwf="|"
+crbcf="|"
+crbhead="|   | equal results |"
+crbhhelp="\n|---|---|"
+for i in range(0, bsize):
+	crbhead+= bres[i]["name"]+ " | "
+	crbhhelp+="---|"
+	crbsucc+=" ("+str(bcount[i][0])+"/"+str(nrurls)+")|"
+	crbfail+=" ("+str(bcount[i][1])+"/"+str(nrurls)+")|"
+	crbwf+=" ("+str(bcount[i][2])+"/"+str(whatnr)+")|"
+	crbcf+=" ("+str(bcount[i][3])+"/"+str(nrurls)+")|"
 #use counted results
-crtable="|   | Nr of URLs|\n|---|---|\n"
-crtable+="| parsed successfully | ("+str(nrsucc)+"/"+str(nrurls)+")|\n"
-crtable+="| rejected | ("+str(nrfail)+"/"+str(nrurls)+")|\n"
-crtable+="| also rejected by whatwg | ("+str(whatfail)+"/"+str(whatnr)+")|\n"
-crtable+="| component errors | ("+str(allcomp)+"/"+str(nrurls)+")|\n\n"
+crtable=crbhead+crbhhelp+"\n"
+crtable+="| parsed successfully | ("+str(eqsucc)+"/"+str(nrurls)+")"+crbsucc+"\n"
+crtable+="| rejected | ("+str(eqfail)+"/"+str(nrurls)+")"+crbfail+"\n"
+crtable+="| also rejected by whatwg | ("+str(whatfail)+"/"+str(whatnr)+")"+crbwf+"\n"
+crtable+="| component errors | ("+str(allcomp)+"/"+str(nrurls)+")"+crbcf+"\n"
+eqres=allcomp+ eqsucc + eqfail
+crtable+="| overall equal results | ("+str(eqres)+"/"+str(nrurls)+")|\n"
+crtable+="| overall unequal results | ("+str(nrurls-eqres)+"/"+str(nrurls)+")|\n\n"
 
 
 bov="# Combined Results\n\n"+crtable
-bov+= "*note:*  due to different component names the table above does not consider which component caused the error, but the full comparison table contains this information\n\n"
-bov+="# Full Browser Comparison\n\n"+bcomptable
+bov+= "*note:*  due to different component names the table above does not consider which component caused the error, but the full comparison table below contains this information\n\n"
 
 
 
 
-htmlresult=markdown.markdown(bov, extensions=['extra'])
+
+htmlresult1=markdown.markdown(bov, extensions=['extra'])
+htmlresult2=markdown.markdown(bcomptable, extensions=['extra'])
 
 htmlhead="<!DOCTYPE html>\
 <html lang=\"en\">\
@@ -367,6 +399,15 @@ htmlhead="<!DOCTYPE html>\
 <body>\n"
 htmltail="</body>\
 </html>"
+
+pagestart="<h1>Full Browser Comparison</h1>\n"
+pagestart+="<table class=\"legendtable\"><thead><tr></tr></thead><tbody>"
+pagestart+="<tr><td> Legend:</td><td class=\"wgfail\">Parsing error in whatwg-url parser</td>"
+pagestart+="<td class=\"pfail\">Parsing error</td>"
+pagestart+="<td class=\"cfail\">Component is \"content\" != \"expected\"</td>"
+pagestart+="<td class=\"psucc\">Success</td></tr></tbody></table>\n"
+
+htmlresult=htmlresult1 + pagestart + htmlresult2
 htmlresult=htmlresult.replace("<table>", "<table class=\"simpletable\">")
 htmlresult=htmlresult.replace("<br-->", "<br>")
 htmlresult=htmlresult.replace("<--br>", "<br>")
@@ -378,15 +419,10 @@ htmlresult=htmlresult.replace("<td>STYLEW", "<td class=\"wgfail\">")
 
 
 	
-pagestart="<h1>Browser Results</h1>\n"
-pagestart+="<table class=\"legendtable\"><thead><tr></tr></thead><tbody>"
-pagestart+="<tr><td> Legend:</td><td class=\"wgfail\">Parsing error in whatwg-url parser</td>"
-pagestart+="<td class=\"pfail\">Parsing error</td>"
-pagestart+="<td class=\"cfail\">Component is \"content\" != \"expected\"</td>"
-pagestart+="<td class=\"psucc\">Success</td></tr></tbody></table>\n"
+
 
 htmlfile=open( datadir+"../browseroverview.html", "w", encoding='utf-8')
-htmlfile.write(htmlhead +pagestart+ htmlresult +htmltail)
+htmlfile.write(htmlhead + htmlresult +htmltail)
 htmlfile.close()
 
 
