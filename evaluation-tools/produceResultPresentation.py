@@ -8,7 +8,7 @@ import markdown
 # links to the coverage reports
 covreps={}
 covreps["chromium"]="\n#### Chromium\n\n[Overview](./chromium/report.html)\n\n[Source File Report](./chromium/url_parse.cc.html)\n\n"
-covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n\n[Source File Report](./firefox/nsURLParsers.cpp.gcov.html)\n\n" #TODO match new location
+covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n\n[Source File Report](./firefox/nsURLParsers.cpp.gcov.html)\n\n" 
 covreps["C"]="\n#### C\n\n[Overview](./C/index.html)\n\n[Source File Report](./C/src/UriParse.c.gcov.html)\n\n"
 covreps["Cpp"]="\n#### C\\+\\+\n\n[Overview](./Cpp/index.html)\n\n[Source File Report](./Cpp/src/URI.cpp.gcov.html)\n\n"
 covreps["Go"]="\n#### GO\n\n[Source File Report](./Go/index.html)\n\n"
@@ -20,7 +20,6 @@ covreps["Python"]="\n#### Python\n\n[Overview](./Python/index.html)\n\n[Source F
 covreps["Ruby"]="\n#### Ruby\n\n[Overview](./Ruby/index.html#_AllFiles)\n\n"
 
 
-#TODO explicitly state browsers -> could include others later on
 
 
 def escape_md(data):
@@ -184,7 +183,7 @@ for ptable in ptables:
 result +="## URL Comparison \n\n"
 result += utable+"\n"
 
-result +="## Browsers\n\n" # TODO include only if browsers present
+result +="## Browsers\n\n" 
 result+=otable+"\n"
 
 result += "[full browser comparison](./browseroverview.html)\n\n"
@@ -240,9 +239,7 @@ htmlfile.close()
 
 #url | firefox | chromium
 
-# green for pass, yellow for component, red for parsing 
-
-
+# green for pass, yellow for component, red for parsing, purple for whatwg fail
 
 # create mappings of url : result for each browser
 bres=[]
@@ -287,7 +284,11 @@ for url in urldata:
 			b[url]="STYLEP PASS"
 
 bsize=len(bres)
-
+eqsucc=0
+eqfail=0
+allcomp=0
+whatfail=0
+whatnr=0
 
 bcomptable="URLs "
 bcomphelp="--- "
@@ -298,20 +299,61 @@ for i in range(0, bsize):
 bcomptable+=" \n"+bcomphelp+"\n"
 
 for url in urldata:
+	nrsucc=0
+	nrfail=0
+	nrcomp=0
+
 	parsers=urldata[url]
 	uline=""
 	if "JavaScriptwhatwg-url" in parsers:
 		uline="STYLEW "
+		whatnr+=1
 	uline += url_escape_md(url)
-	for i in range(0, bsize):
+	for i in range(0, bsize): # calculate more statistics here
 		br=bres[i]
 		uline+= " | "+ br[url]
+		# count results for statistics
+		mess=br[url]
+		if mess[:6]=="STYLEP":
+			nrsucc+=1
+		if mess[:6]=="STYLEF":
+			nrfail+=1
+		if mess[:6]=="STYLEC":
+			nrcomp+=1
+
+	#save counted results
+	if nrsucc==bsize:
+		eqsucc+=1
+	if nrfail==bsize:
+		eqfail+=1
+		if uline[:6]=="STYLEW":
+			whatfail+=1
+	if nrcomp==bsize:
+		allcomp+=1
+
+
+
 	uline+="\n"
 	bcomptable+=uline
 
 
 
-htmlresult=markdown.markdown(bcomptable, extensions=['extra'])
+#use counted results
+crtable="|   | Nr of URLs|\n|---|---|\n"
+crtable+="| parsed successfully | ("+str(nrsucc)+"/"+str(nrurls)+")|\n"
+crtable+="| rejected | ("+str(nrfail)+"/"+str(nrurls)+")|\n"
+crtable+="| also rejected by whatwg | ("+str(whatfail)+"/"+str(whatnr)+")|\n"
+crtable+="| component errors | ("+str(allcomp)+"/"+str(nrurls)+")|\n\n"
+
+
+bov="# Combined Results\n\n"+crtable
+bov+= "*note:*  due to different component names the table above does not consider which component caused the error, but the full comparison table contains this information\n\n"
+bov+="# Full Browser Comparison\n\n"+bcomptable
+
+
+
+
+htmlresult=markdown.markdown(bov, extensions=['extra'])
 
 htmlhead="<!DOCTYPE html>\
 <html lang=\"en\">\
