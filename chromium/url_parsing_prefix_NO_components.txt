@@ -14,17 +14,8 @@ namespace {
 // describes the structure of inputs
 
 struct URLParseCase {
-  const char* baseurl;
+  
   const char* input;
-
-  const char* scheme;
-  const char* username;
-  const char* password;
-  const char* host;
-  int port;
-  const char* path;
-  const char* query;
-  const char* ref;
 };
 
 void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
