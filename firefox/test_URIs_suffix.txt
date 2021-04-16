@@ -103,6 +103,7 @@ function do_test_uri_basic(aTest) {
       }
       do_throw(e.result);
     }
+    URI=relURI;
   }
 
   
