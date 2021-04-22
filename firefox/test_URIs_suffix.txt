@@ -127,7 +127,8 @@ function do_test_uri_basic(aTest) {
 
 // TEST MAIN FUNCTION
 // ------------------
-function run_test() {
+//function run_test() {
+add_task(function mainTest())
 
   gTests.forEach(function(aTest) {
     // Check basic URI functionality
