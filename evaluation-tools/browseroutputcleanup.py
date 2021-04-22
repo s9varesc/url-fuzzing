@@ -7,6 +7,7 @@ import json
 # splits the output log created by a Browser into [Browser]Exceptions.txt and [Browser]Errors.txt for further evaluation
 
 # open the given directory and read the available log files
+print("browser output cleanup")
 parser = argparse.ArgumentParser()
 parser.add_argument("-dir")
 args = parser.parse_args()
