@@ -133,5 +133,6 @@ add_task(function mainTest(){
   gTests.forEach(function(aTest) {
     // Check basic URI functionality
     do_test_uri_basic(aTest);
-  });
-}
+  }
+  );
+});
