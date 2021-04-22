@@ -51,7 +51,7 @@ def url_escape_md(data):
 	res=res.replace("<", " < ")
 	return " "+escbt+" "+res+" "+escbt+" "
 
-
+print("start result pres")
 parser = argparse.ArgumentParser()
 parser.add_argument("-data")
 args = parser.parse_args()

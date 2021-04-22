@@ -70,7 +70,7 @@ args = parser.parse_args()
 dir = args.dir
 if dir[-1:]!="/":dir+="/"
 
-
+print("start eval")
 for file in os.listdir(dir):   
 	if file.endswith('URLs'):
 		#print("using    "+file)
