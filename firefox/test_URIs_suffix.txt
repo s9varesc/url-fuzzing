@@ -132,7 +132,12 @@ add_task(function mainTest(){
 
   gTests.forEach(function(aTest) {
     // Check basic URI functionality
-    do_test_uri_basic(aTest);
+    try {
+      do_test_uri_basic(aTest);
+    } catch (e) {
+      do_info("caught "+e+" in main");
+    }
+    
   }
   );
 });
