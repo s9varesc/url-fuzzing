@@ -1,10 +1,9 @@
-#include "url/third_party/mozilla/url_parse.h"
-
 #include <stddef.h>
 
 #include "base/stl_util.h"
 #include "testing/gtest/include/gtest/gtest.h"
-#include "url/third_party/mozilla/url_parse.h"
+//#include "url/third_party/mozilla/url_parse.h"
+#include "url/gurl.h"
 #include "url/url_util.h"
 
 
@@ -12,10 +11,9 @@ namespace url {
 namespace {
 
 // describes the structure of inputs
-// following url_parse_unittest.cc:47-58
-// single struct to ease generation
+
 struct URLParseCase {
-  //TODO might need to include inner_... fields (see url_parse_unittest.cc:81-86)
+  const char* baseurl;
   const char* input;
 
   const char* scheme;
@@ -28,96 +26,69 @@ struct URLParseCase {
   const char* ref;
 };
 
-// verification methods (url_parse_unittest.cc:92-117)
-bool ComponentMatches(const char* input,
-                      const char* reference,
-                      const Component& component) {
-  // If the component is nonexistent (length == -1), it should begin at 0.
-  EXPECT_TRUE(component.len >= 0 || component.len == -1);
-
-  // Begin should be valid.
-  EXPECT_LE(0, component.begin);
-
-  // A NULL reference means the component should be nonexistent.
-  if (!reference)
-    return component.len == -1;
-  if (component.len < 0)
-    return false;  // Reference is not NULL but we don't have anything
-
-  if (strlen(reference) != static_cast<size_t>(component.len))
-    return false;  // Lengths don't match
-
-  // Now check the actual characters.
-  return strncmp(reference, &input[component.begin], component.len) == 0;
+void CheckValidity(const URLParseCase& parse_case, const GURL& parsed_url) {
+  if(strcmp(parse_case.baseurl, "") != 0){
+    ASSERT_TRUE(parsed_url.is_valid()) << "{\"url\":\""<< parse_case.baseurl << "<" << parse_case.input<<"\", \"exception\":\"invalid URL\"}"; //if base is present, add base to output
+  }
+  else{
+    ASSERT_TRUE(parsed_url.is_valid()) << "{\"url\":\""<< parse_case.input<<"\", \"exception\":\"invalid URL\"}"; 
+  
+  }
+  return;
 }
 
-/*void ExpectInvalidComponent(const Component& component) {
-  EXPECT_EQ(0, component.begin);
-  EXPECT_EQ(-1, component.len);
-}*/
+void CheckComponents(const URLParseCase& parse_case, const GURL& parsed_url) { 
+  char url[1000]; //TODO make size dependent on content
+  if(strcmp(parse_case.baseurl, "") != 0){
+    strcpy(url, parse_case.baseurl);
+    strcat(url, "<");
+    strcat(url, parse_case.input);
+  }
+  else{
+    strcpy(url, parse_case.input);
+  }
+  ASSERT_EQ(parse_case.scheme, parsed_url.scheme()) << "{\"url\":\""<< url <<"\", \"error\":{\"component\":\"scheme\", \"expected\":\""<<parse_case.scheme <<"\", \"actual\":\""<<parsed_url.scheme()<<"\"}}";
+    ASSERT_EQ(parse_case.username, parsed_url.username())<< "{\"url\":\""<< url <<"\", \"error\":{\"component\":\"username\", \"expected\":\""<<parse_case.username <<"\", \"actual\":\""<<parsed_url.username()<<"\"}}";
+    ASSERT_EQ(parse_case.password, parsed_url.password())<< "{\"url\":\""<< url <<"\", \"error\":{\"component\":\"password\", \"expected\":\""<<parse_case.password <<"\", \"actual\":\""<<parsed_url.password()<<"\"}}";
+    ASSERT_EQ(parse_case.host, parsed_url.host())<< "{\"url\":\""<< url <<"\", \"error\":{\"component\":\"host\", \"expected\":\""<<parse_case.host <<"\", \"actual\":\""<<parsed_url.host()<<"\"}}";
+    ASSERT_EQ(parse_case.port, parsed_url.IntPort())<< "{\"url\":\""<< url <<"\", \"error\":{\"component\":\"port\", \"expected\":\""<<parse_case.port <<"\", \"actual\":\""<<parsed_url.IntPort()<<"\"}}";
+    ASSERT_EQ(parse_case.path, parsed_url.path())<< "{\"url\":\""<< url <<"\", \"error\":{\"component\":\"path\", \"expected\":\""<<parse_case.path <<"\", \"actual\":\""<<parsed_url.path()<<"\"}}";
+    ASSERT_EQ(parse_case.query, parsed_url.query())<< "{\"url\":\""<< url <<"\", \"error\":{\"component\":\"query\", \"expected\":\""<<parse_case.query <<"\", \"actual\":\""<<parsed_url.query()<<"\"}}";
+    ASSERT_EQ(parse_case.ref, parsed_url.ref())<< "{\"url\":\""<< url <<"\", \"error\":{\"component\":\"ref\", \"expected\":\""<<parse_case.ref <<"\", \"actual\":\""<<parsed_url.ref()<<"\"}}";
+  return;
+}
 
 
 //Test inputs
-//TODO
 static URLParseCase parse_cases[]={
-	{"http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
-    	{"http:foo.com",                        "http", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL},
-    	{"file://foo.com",                        "file", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL},
-    	{"x://foo.com",                        "x", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL},
-    	{"//foo.com",                        NULL, NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL},
+	{"", "http://user:pass@foo:21/bar;par?b#c", "http", "user", "pass",    "foo",       21, "/bar;par","b",          "c"},
+    	{"", "http:foo.com",                        "http", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL},
+    	{"", "file://foo.com",                        "file", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL},
+    	{"", "x://foo.com",                        "x", NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL},
+    	{"", "//foo.com",                        NULL, NULL,  NULL,      "foo.com",    -1, NULL,      NULL,        NULL},
 };
 
 
 //test execution
 TEST(URLParser, Parsing){
 	for (size_t i = 0; i < base::size(parse_cases); i++) {
-		Parsed parsed;
-		Component scheme;
-		int len =static_cast<int>(strlen(parse_cases[i].input));
-
-		if(!ExtractScheme(parse_cases[i].input, len, &scheme)){
-			//no scheme found
-			//TODO decide what to do
-			return;
-		} 
+		GURL parsed_url;
+		if(strcmp(parse_cases[i].baseurl, "") != 0){
+			GURL parsed_base(parse_cases[i].baseurl);
+			parsed_url=parsed_base.Resolve(parse_cases[i].input);
+		}
 		else{
-			std::string schemeString(parse_cases[i].input + scheme.begin, parse_cases[i].input+scheme.end());
-			if( IsStandard(parse_cases[i].input,scheme)){
-				if (schemeString==kFileScheme){
-					ParseFileURL(parse_cases[i].input,len, &parsed);
-				}
-				else {
-					if (schemeString==kFileSystemScheme){
-						ParseFileSystemURL(parse_cases[i].input, len, &parsed);
-					}
-					else{
-						//standard schemes, see url_util.cc
-						ParseStandardURL(parse_cases[i].input, len, &parsed);
-					}
-				}
-			}
-			else {
-				//non-standard scheme
-				ParsePathURL(parse_cases[i].input, len,false, &parsed);
-			}
+			parsed_url= GURL(parse_cases[i].input);
+		}
+						
+		CheckValidity(parse_cases[i], parsed_url);
+		if ( parsed_url.is_valid()) {
+			CheckComponents(parse_cases[i], parsed_url);
+
 		}
 
-		//verify components
-		//TODO might have to use specialized methods to correctly include inner_...
-		const char* url = parse_cases[i].input;
-		int port = ParsePort(url, parsed.port);
-
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].scheme, parsed.scheme));
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].username, parsed.username));
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].password, parsed.password));
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].host, parsed.host));
-	    EXPECT_EQ(parse_cases[i].port, port);
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].path, parsed.path));
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].query, parsed.query));
-	    EXPECT_TRUE(ComponentMatches(url, parse_cases[i].ref, parsed.ref));
 
 	}
-
 }
 
 }
