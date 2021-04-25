@@ -57,7 +57,7 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     result+="\""+"\","; //username
     result+="\""+"\","; //password
     result+="\""+host+"\",";
-    result+=port+","; //TODO strip leading 0s
+    result+=port+","; 
     result+="\""+path+"\",";
     result+="\""+query+"\",";
     result+="\""+fragment+"\"";
