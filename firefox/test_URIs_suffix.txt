@@ -45,11 +45,11 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     if (aURI[aPropertyName] != expectedVal){ //needed to display custom format, adding assertion message spams output
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
       dump("\n{\"url\":\""+ url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+aURI[aPropertyName]+"\"}}"); 
-
+      do_throw("componens do not match");
     }
 
     Assert.equal(aURI[aPropertyName], expectedVal);
-    do_throw("componens do not match");
+    
   }
 }
 
