@@ -42,6 +42,7 @@ def extractAllinputURLs(compstr):
 	try:
 		unescaped=json.loads(tmp, strict=False)
 	except:
+		print(compstr)
 		print(tmp)
 
 	base=unescaped["base"]
