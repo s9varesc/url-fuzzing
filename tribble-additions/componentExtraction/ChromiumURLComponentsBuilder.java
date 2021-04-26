@@ -51,15 +51,15 @@ public class ChromiumURLComponentsBuilder extends URLComponentsBuilder {
     String base=(univcomp.getComponentContents("base")!=null )? escapeContent(univcomp.getComponentContents("base")):"";
 
     String result="{";
-    result+="\""+base+"\",";
-    result+="\""+escapeContent(univcomp.getComponentContents("input"))+"\",";
-    result+="\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",";
-    result+="\""+"\","; //username
-    result+="\""+"\","; //password
-    result+="\""+host+"\",";
-    result+=port+","; 
-    result+="\""+path+"\",";
-    result+="\""+query+"\",";
+    result+="\""+base+"\" ,";
+    result+="\""+escapeContent(univcomp.getComponentContents("input"))+"\" ,";
+    result+="\""+escapeContent(univcomp.getComponentContents("scheme"))+"\" ,";
+    result+="\""+"\" ,"; //username
+    result+="\""+"\" ,"; //password
+    result+="\""+host+"\" ,";
+    result+=port+" ,"; 
+    result+="\""+path+"\" ,";
+    result+="\""+query+"\" ,";
     result+="\""+fragment+"\"";
     result+="}";
 
