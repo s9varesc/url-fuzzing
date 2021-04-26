@@ -101,7 +101,8 @@ function do_test_uri_basic(aTest) {
         Assert.equal(e.result, aTest.relativeFail);
         return;
       }
-      do_throw(e.result);
+      Assert.equal(e.result, "");
+      //do_throw(e.result);
     }
     URI=relURI;
   }
