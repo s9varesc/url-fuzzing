@@ -34,9 +34,9 @@ def extractAllinputURLs(compstr):
 
 	bas=inp[:cutindex+1] #= "base"
 
-	nextcut=inp.find("\" ,\"",cutindex+3 )
+	nextcut=inp.find("\" ,\"",cutindex+4 )
 
-	rel=inp[cutindex+2:nextcut+1] #= "relative"
+	rel=inp[cutindex+3:nextcut+1] #= "relative"
 	tmp=tmp0+bas+tmp1+rel+tmp2
 
 	try:
