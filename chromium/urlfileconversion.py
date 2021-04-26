@@ -25,18 +25,18 @@ nr=0
 
 def extractAllinputURLs(compstr):
 	tmp0="{\"base\":"
-	tmp1=", \"relative\":"
-	tmp2="}"
+	tmp1=" , \"relative\":"
+	tmp2=" }"
 	
 	inp=compstr[1:]
 
 	cutindex=inp.find("\",\"") 
 
-	bas=inp[:cutindex+1] #=base
+	bas=inp[:cutindex+1] #= "base"
 
 	nextcut=inp.find("\",\"",cutindex+3 )
 
-	rel=inp[cutindex+2:nextcut+1]
+	rel=inp[cutindex+2:nextcut+1] #= "relative"
 	tmp=tmp0+bas+tmp1+rel+tmp2
 
 	unescaped=json.loads(tmp, strict=False)
