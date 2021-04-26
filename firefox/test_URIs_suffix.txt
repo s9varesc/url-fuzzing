@@ -39,7 +39,8 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     } catch(e) {
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
       dump("\n{\"url\":\""+url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}"); 
-      do_throw(e.result);
+      //do_throw(e.result);
+      return;
     }
     /*do_info(
       "testing " +
@@ -70,13 +71,15 @@ function do_test_uri_basic(aTest) {
     URI = gIoService.newURI(aTest.spec);
   } catch (e) {
     var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
-    do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
+    //do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
     dump("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
     if (aTest.fail) {
       Assert.equal(e.result, aTest.result);
       return;
     }
-    do_throw(e.result);
+    Assert.equal(e.result, "");
+    //do_throw(e.result);
+    return;
   }
 
   if (aTest.relativeURI) {
@@ -85,16 +88,16 @@ function do_test_uri_basic(aTest) {
     try {
       relURI = gIoService.newURI(aTest.relativeURI, null, URI);
     } catch (e) {
-      do_info(
+      /*do_info(
         "Caught error on Relative parse of " +
           aTest.spec +
           " + " +
           aTest.relativeURI +
           " Error: " +
           e.result
-      );
+      );*/
       var url=aTest.spec +"<"+aTest.relativeURI;
-      do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
+      //do_info("Caught error on parse of" + aTest.spec + " Error: "+e.name+" " + e.result);
      dump("\n{\"url\":\""+ url+"\", \"exception\":\""+e.name+" "+e.result+"\"}");
 
       if (aTest.relativeFail) {
@@ -103,6 +106,7 @@ function do_test_uri_basic(aTest) {
       }
       Assert.equal(e.result, "");
       //do_throw(e.result);
+      return;
     }
     URI=relURI;
   }
