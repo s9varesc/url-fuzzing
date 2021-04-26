@@ -49,7 +49,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     }
 
     Assert.equal(aURI[aPropertyName], expectedVal);
-    
+
   }
 }
 
@@ -67,9 +67,8 @@ function do_test_uri_basic(aTest) {
       Assert.equal(e.result, aTest.result);
       return;
     }
-    Assert.equal(e.result, "");
-    //do_throw(e.result);
-    return;
+    do_throw(e.result);
+    
   }
 
   if (aTest.relativeURI) {
@@ -94,9 +93,9 @@ function do_test_uri_basic(aTest) {
         Assert.equal(e.result, aTest.relativeFail);
         return;
       }
-      Assert.equal(e.result, "");
-      //do_throw(e.result);
-      return;
+      
+      do_throw(e.result);
+      
     }
     URI=relURI;
   }
