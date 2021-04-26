@@ -39,19 +39,8 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     } catch(e) {
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
       dump("\n{\"url\":\""+url+"\", \"error\":{\"component\":\""+aPropertyName+"\", \"expected\":\""+expectedVal +"\", \"actual\":\""+e.name+" " + e.result+"\"}}"); 
-      //do_throw(e.result);
-      return;
+      do_throw(e.result);
     }
-    /*do_info(
-      "testing " +
-        aPropertyName +
-        " of " +
-        (aTestFunctor ? "modified '" : "'") +
-        aTest.spec +
-        "' is '" +
-        expectedVal +
-        "' actually is '" + aURI[aPropertyName] + "'"
-    );*/
 
     if (aURI[aPropertyName] != expectedVal){ //needed to display custom format, adding assertion message spams output
       var url=aTest.relativeURI ? (aTest.spec +"<"+aTest.relativeURI) : aTest.spec;
@@ -60,6 +49,7 @@ function do_check_property(aTest, aURI, aPropertyName, aTestFunctor) {
     }
 
     Assert.equal(aURI[aPropertyName], expectedVal);
+    do_throw("componens do not match");
   }
 }
 
@@ -112,18 +102,23 @@ function do_test_uri_basic(aTest) {
   }
 
   
-  // Check the various components
-  do_check_property(aTest, URI, "scheme");
-  do_check_property(aTest, URI, "query");
-  do_check_property(aTest, URI, "ref");
-  do_check_property(aTest, URI, "port");
-  do_check_property(aTest, URI, "username");
-  do_check_property(aTest, URI, "password");
-  do_check_property(aTest, URI, "host");
-  do_check_property(aTest, URI, "specIgnoringRef");
-  do_check_property(aTest, URI, "hasRef");
-  do_check_property(aTest, URI, "prePath");
-  do_check_property(aTest, URI, "pathQueryRef");
+  // Check the various components   TODO components after first fail are tested
+  try {
+      do_check_property(aTest, URI, "scheme");
+      do_check_property(aTest, URI, "query");
+      do_check_property(aTest, URI, "ref");
+      do_check_property(aTest, URI, "port");
+      do_check_property(aTest, URI, "username");
+      do_check_property(aTest, URI, "password");
+      do_check_property(aTest, URI, "host");
+      do_check_property(aTest, URI, "specIgnoringRef");
+      do_check_property(aTest, URI, "hasRef");
+      do_check_property(aTest, URI, "prePath");
+      do_check_property(aTest, URI, "pathQueryRef");
+  } catch (e) {
+    dump("caught exception from components");
+    return;
+  }
 }
 
 
