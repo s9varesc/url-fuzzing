@@ -1,5 +1,5 @@
-//package saarland.cispa.se.tribble.execution;
-package saarland.cispa.se.tribble.execution.componentExtraction;
+
+package de.cispa.se.tribble.componentExtraction;
 
   import saarland.cispa.se.tribble.model.DTree;
   import saarland.cispa.se.tribble.model.DerivationRule;

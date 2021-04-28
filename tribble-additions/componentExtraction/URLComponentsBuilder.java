@@ -1,4 +1,4 @@
-package saarland.cispa.se.tribble.execution.componentExtraction;
+package de.cispa.se.tribble.componentExtraction;
 
 import java.util.*;
 
