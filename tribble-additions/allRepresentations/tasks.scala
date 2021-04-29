@@ -19,8 +19,8 @@ trait Task {
 }
 
 final class GenerateTask extends Command("generate", "Generate sample inputs")
-  with Task with ForestGeneratorModule with OutputModule with RandomnessModule with GrammarModule with CacheModule with RegexModule with ReportingModule with HeuristicModule with CloseOffControlModule {
-  private[this] val logger = getLogger
+  with Task with ForestGeneratorModule with OutputModule with RandomnessModule with GrammarModule with CacheModule with RegexModule with ReportingModule with HeuristicModule with CloseOffControlModule with ConstraintModule {
+  private val logger = getLogger
 
   override def execute(): Unit = {
     logger.info(s"Using random seed $randomSeed")
