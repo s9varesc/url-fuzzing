@@ -2,7 +2,7 @@
 package de.cispa.se.tribble.componentExtraction;
 
   //import de.cispa.se.tribble._;
-  //import de.cispa.se.tribble.DTree;
+  import DTree;
   //import de.cispa.se.tribble.DerivationRule;
   //import de.cispa.se.tribble.Reference;
   
