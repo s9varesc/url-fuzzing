@@ -1,10 +1,10 @@
 
 package de.cispa.se.tribble.componentExtraction;
 
-  import de.cispa.se.tribble.generation.*;
-  import de.cispa.se.tribble.DTree;
-  import de.cispa.se.tribble.DerivationRule;
-  import de.cispa.se.tribble.Reference;
+  import de.cispa.se.tribble._;
+  //import de.cispa.se.tribble.DTree;
+  //import de.cispa.se.tribble.DerivationRule;
+  //import de.cispa.se.tribble.Reference;
   
   import scala.collection.JavaConverters;
   import java.util.ArrayList;
