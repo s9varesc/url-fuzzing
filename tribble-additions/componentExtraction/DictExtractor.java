@@ -1,7 +1,7 @@
 
 package de.cispa.se.tribble.componentExtraction;
 
-  import de.cispa.se.tribble.model.DTree;
+  import de.cispa.se.tribble.DTree;
   //import de.cispa.se.tribble.*;
   import de.cispa.se.tribble.model.DerivationRule;
   import de.cispa.se.tribble.model.Reference;
