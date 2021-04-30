@@ -12,7 +12,7 @@ import de.cispa.se.tribble.output.GrammarPrettyPrinter
 import org.backuity.clist.{Command, opt}
 import org.log4s.getLogger
 import de.cispa.se.tribble.componentExtraction._
-import collection.JavaConverters._
+import scala.collection.JavaConverters._
 
 trait Task {
   def execute(): Unit
