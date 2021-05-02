@@ -129,7 +129,7 @@ Grammar(
 
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded | 'unicode,
   'fragmentAllowed := 'pathAllowed | "?" | "{" | "}" | "#" | "/",
-  'fragmentPercentEncoded := "%20" | "%22" | "%3c" | "%3e" | "%60",
+  'fragmentPercentEncoded := "%20" | "%22" | "%3c" | "%3e" | "%60"
  
 )
 
