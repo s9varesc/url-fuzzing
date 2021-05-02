@@ -1,16 +1,17 @@
 # Adding Components Generation to tribble
 
-The following commands add the classes necessary for also generating the components to [tribble](https://github.com/havrikov/tribble/tree/7797acd8801e48cbedb86485032f577cee8ea94c):
+The following commands add the classes necessary for also generating the components to [tribble](https://github.com/havrikov/tribble/):
 
 '''
-cp -r /home/url-fuzzing/tribble-additions/componentExtraction /home/tribble/src/main/scala/saarland/cispa/se/tribble/execution/componentExtraction
-cp /home/url-fuzzing/tribble-additions/allRepresentations/* /home/tribble/src/main/scala/saarland/cispa/se/tribble/execution '''
+mkdir -p /home/tribble/tribble-tool/src/main/scala/de/cispa/se/tribble/componentExtraction
+cp -r /home/url-fuzzing/tribble-additions/componentExtraction/* /home/tribble/tribble-tool/src/main/scala/de/cispa/se/tribble/componentExtraction
+cp /home/url-fuzzing/tribble-additions/allRepresentations/* /home/tribble/tribble-tool/src/main/scala/de/cispa/se/tribble'''
 
 *note*: possible configurations: **allRepresentations** creates plain URLs as well as Firefox and Chromium component representations, **onlyChromiumComponents**: creates only Chromium component representations, **onlyFirefoxComponents**: creates only Firefox component representations, **onlyPlain**: creates only URLs without component representations
 '''
-cd /home/to/tribble
+cd /home/tribble
 ./gradlew build 
-mv ./build/libs/tribble-0.1.jar tribble.jar'''
+mv ./build/libs/tribble\*.jar tribble.jar'''
 
 Execution with a corresponding grammar:
 '''java -jar tribble.jar generate --mode=2-path-30 --suffix=.md --grammar-file=/path/to/url-fuzzing/grammars/livingstandard-url.scala --out-dir=/path/to/URLTestFilesRaw'''
