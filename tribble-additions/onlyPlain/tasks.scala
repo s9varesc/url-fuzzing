@@ -36,6 +36,7 @@ final class GenerateTask extends Command("generate", "Generate sample inputs")
       val path = Files.write(Files.createTempFile(outdir, f"file${i + 1}%06d_${tree.size()}%d_${tree.depth()}%d_", suffix), input.getBytes(StandardCharsets.UTF_8))
       logger.debug(s"Generated $path")
 
+    }
   }
 }
 
