@@ -1,4 +1,4 @@
-import saarland.cispa.se.tribble.dsl._
+import de.cispa.se.tribble.dsl._
 
 //following 4.3 URL writing at https://url.spec.whatwg.org/
 //including parts from https://tools.ietf.org/html/rfc3986#appendix-A and //https://tools.ietf.org/html/rfc6874

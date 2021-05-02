@@ -1,4 +1,4 @@
-import saarland.cispa.se.tribble.dsl._
+import de.cispa.se.tribble.dsl._
 
 // Translated from https://tools.ietf.org/html/rfc3986#appendix-A and //https://tools.ietf.org/html/rfc6874
 
