@@ -17,6 +17,7 @@ public class URLComponentsUtil {
 
 	/***
     * formats the original IPv6 address(given without brackets) by converting the IPv4 part to hex
+    * @param original the original address string
     * @return the given IPv6 address without IPv4 formatting
     */
     public String formatIPv6(String original){

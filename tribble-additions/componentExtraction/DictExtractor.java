@@ -1,11 +1,8 @@
 
 package de.cispa.se.tribble.componentExtraction;
 
-  //import de.cispa.se.tribble.model.DerivationRule;
   import de.cispa.se.tribble.*;
-  //import de.cispa.se.tribble.*;
-  
-  //import de.cispa.se.tribble.model.Reference;
+
   
   import scala.collection.JavaConverters;
   import java.util.ArrayList;
@@ -26,6 +23,7 @@ public class DictExtractor {
 
   /***
   * extracts all specified components from the tree representation and passes them to the specified component builders
+  * @param root the root of a derivation tree
   * @return a list containing the formats and component representations e.g [["firefox", "{spec:...}"], ["chromium", "{input:..."], ["plain", "http://..."]]
   */
   public List<List<String>> extract(DTree root) {
