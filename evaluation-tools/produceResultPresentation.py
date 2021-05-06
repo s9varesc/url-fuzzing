@@ -21,7 +21,7 @@ covreps["ruby"]="\n#### Ruby\n\n[Overview](./Ruby/index.html#_AllFiles)\n\n"
 
 source_reports={}
 source_reports["chromium"]="chromium/report.html"
-source_reports["firefox"]="firefox/nsURLsource_reports.cpp.gcov.html" 
+source_reports["firefox"]="firefox/nsURLParsers.cpp.gcov.html" 
 source_reports["c"]="C/src/UriParse.c.gcov.html"
 source_reports["cpp"]="Cpp/src/URI.cpp.gcov.html"
 source_reports["go"]="Go/index.html"
