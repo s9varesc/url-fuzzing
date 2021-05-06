@@ -10,7 +10,7 @@ cp /home/url-fuzzing/tribble-additions/allRepresentations/* /home/tribble/tribbl
 *note*: possible configurations: **allRepresentations** creates plain URLs as well as Firefox and Chromium component representations, **onlyChromiumComponents**: creates only Chromium component representations, **onlyFirefoxComponents**: creates only Firefox component representations, **onlyPlain**: creates only URLs without component representations
 '''
 cd /home/tribble
-./gradlew assemble
+./gradlew build
 mv ./build/libs/tribble\*.jar tribble.jar'''
 
 Execution with a corresponding grammar:
