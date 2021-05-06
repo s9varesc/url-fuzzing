@@ -3,22 +3,103 @@ import os
 import subprocess
 import json
 import markdown
-
+from bs4 import BeautifulSoup
 
 # links to the coverage reports
 covreps={}
 covreps["chromium"]="\n#### Chromium\n\n[Overview](./chromium/report.html)\n\n[Source File Report](./chromium/url_parse.cc.html)\n\n"
 covreps["firefox"]="\n#### Firefox\n\n[Overview](./firefox/index.html)\n\n[Source File Report](./firefox/nsURLParsers.cpp.gcov.html)\n\n" 
-covreps["C"]="\n#### C\n\n[Overview](./C/index.html)\n\n[Source File Report](./C/src/UriParse.c.gcov.html)\n\n"
-covreps["Cpp"]="\n#### C\\+\\+\n\n[Overview](./Cpp/index.html)\n\n[Source File Report](./Cpp/src/URI.cpp.gcov.html)\n\n"
-covreps["Go"]="\n#### GO\n\n[Source File Report](./Go/index.html)\n\n"
-covreps["Java"]="\n#### Java\n\n[Overview](./Java/index.html)\n\n[Source File Report](./Java/java/net/URL.html)\n\n" 
-covreps["JavaScripturijs"]="\n#### JavaScript urijs\n\n[Overview](./JavaScript/urijs/index.html)\n\n[Source File Report](./JavaScript/urijs/URI.js.html)\n\n"
-covreps["JavaScriptwhatwg-url"]="\n#### JavaScript whatwg\\-url\n\n[Overview](./JavaScript/whatwg-url/index.html)\n\n[Source File Report](./JavaScript/whatwg-url/whatwg-url/dist/url-state-machine.js.html)\n\n"
-covreps["PHP"]="\n#### PHP\n\n[Overview](./PHP/index.html)\n\n[Source File Report](./PHP/UriString.php.html)\n\n"
-covreps["Python"]="\n#### Python\n\n[Overview](./Python/index.html)\n\n[Source File Report](./Python/_usr_lib_python3_6_urllib_parse_py.html)\n\n"
-covreps["Ruby"]="\n#### Ruby\n\n[Overview](./Ruby/index.html#_AllFiles)\n\n"
+covreps["c"]="\n#### C\n\n[Overview](./C/index.html)\n\n[Source File Report](./C/src/UriParse.c.gcov.html)\n\n"
+covreps["cpp"]="\n#### C\\+\\+\n\n[Overview](./Cpp/index.html)\n\n[Source File Report](./Cpp/src/URI.cpp.gcov.html)\n\n"
+covreps["go"]="\n#### GO\n\n[Source File Report](./Go/index.html)\n\n"
+covreps["java"]="\n#### Java\n\n[Overview](./Java/index.html)\n\n[Source File Report](./Java/java/net/URL.html)\n\n" 
+covreps["javaScripturijs"]="\n#### JavaScript urijs\n\n[Overview](./JavaScript/urijs/index.html)\n\n[Source File Report](./JavaScript/urijs/URI.js.html)\n\n"
+covreps["javaScriptwhatwg-url"]="\n#### JavaScript whatwg\\-url\n\n[Overview](./JavaScript/whatwg-url/index.html)\n\n[Source File Report](./JavaScript/whatwg-url/whatwg-url/dist/url-state-machine.js.html)\n\n"
+covreps["php"]="\n#### PHP\n\n[Overview](./PHP/index.html)\n\n[Source File Report](./PHP/UriString.php.html)\n\n"
+covreps["python"]="\n#### Python\n\n[Overview](./Python/index.html)\n\n[Source File Report](./Python/_usr_lib_python3_6_urllib_parse_py.html)\n\n"
+covreps["ruby"]="\n#### Ruby\n\n[Overview](./Ruby/index.html#_AllFiles)\n\n"
 
+source_reports={}
+source_reports["chromium"]="chromium/report.html"
+source_reports["firefox"]="firefox/nsURLsource_reports.cpp.gcov.html" 
+source_reports["c"]="C/src/UriParse.c.gcov.html"
+source_reports["cpp"]="Cpp/src/URI.cpp.gcov.html"
+source_reports["go"]="Go/index.html"
+source_reports["java"]="Java/java/net/URL.html" 
+source_reports["javascripturijs"]="JavaScript/urijs/URI.js.html"
+source_reports["javascriptwhatwg-url"]="JavaScript/whatwg-url/whatwg-url/dist/url-state-machine.js.html"
+source_reports["php"]="PHP/index.html"
+source_reports["python"]="Python/_usr_lib_python3_6_urllib_parse_py.html"
+source_reports["ruby"]="Ruby/index.html"
+
+def extractCoverage(parser, parsed_report):
+	if parser=="firefox" or parser=="c" or parser=="cpp":
+		return extractLCOV(parsed_report)
+	elif parser=="chromium":
+		tbody=parsed_report.find("tbody").find("tr", attrs={"class", "light-row"})
+		td=tbody.find_all("td")
+		percent=td[1].find("pre")
+		cov=float((percent.text).split("%")[0])
+		return cov
+	elif parser=="go":
+		op=parsed_report.find("option")
+		cov=float(op.text.split("(")[1].split("%")[0])
+		return cov
+	elif parser=="java":
+		tds=parsed_report.find_all("td", attrs={"class", "reportValue"})
+		cov=float(tds[3].find("b").text)
+		return cov
+	elif parser=="javascripturijs" or parser=="javascriptwhatwg-url":
+		return extractNYC(parsed_report)
+	elif parser=="php":
+		tbody=parsed_report.find("tbody")
+		cov=float(tbody.find("div").find("span").text.split("%")[0])
+		return cov
+	elif parser=="python":
+		cov=float(parsed_report.find("title").text.split(":")[1][:-1])
+		return cov
+	elif parser=="ruby":
+		h=parsed_report.find("h2").find("span", attrs={"class", "covered_percent"})
+		span=h.find("span").text.split("%")[0]
+		cov=float(span)
+		return cov
+	else:
+		return 0
+
+def extractNYC(parsed_report):
+	maindiv=parsed_report.find("div", attrs={"class", "pad1"})
+	divs=maindiv.find_all("div")
+
+	for div in divs:
+		qspan=div.find("span",attrs={"class", "quiet"})
+		if qspan.text == "Lines":
+			cov=div.find("span",attrs={"class", "strong"})
+			return float(cov.text[:-2])
+
+def extractLCOV(parsed_report):
+	table=parsed_report.find("table")
+	table_data=table.find_all("tr")
+
+	for row in table_data:
+	#print(row)
+		if row.find("tr") is not None:
+		#print(row.find_all("tr"))
+			pass
+		else:
+			headers=row.find_all("td", attrs={"class", "headerItem"})
+			thisrow=False
+			for header in headers:
+				if header.text=="Lines:":
+					thisrow=True
+			if thisrow:
+				coverage=0.0
+				attr=["headerCovTableEntryHi", "headerCovTableEntryMed", "headerCovTableEntryLo"]
+				for att in attr:
+					content=row.find("td", attrs={"class",att })
+					if content is not None:
+						coverage+=float(content.text[:-1])
+				return coverage
+			
 
 
 
@@ -85,14 +166,27 @@ ptuples=[]
 ptables=[] #list of md tables with heading
 ptableheader=" Exception Type | URLs \n --- | --- "
 
-parsertable=" Parsername | Number of Exceptions | Number of Different Exceptions \n --- | --- | --- \n"
+parsertable=" Parsername | Number of Exceptions | Number of Different Exceptions | Code Coverage \n --- | --- | --- | ---\n"
+
+# extract coverages to put in table
+result_dir=datadir+"../"
+coverages={}
+for parsername in parserdata:
+	html=""
+	with open(result_dir+source_reports[parsername], encoding='utf-8') as f:
+			html=f.read()
+
+	parsed_report=BeautifulSoup(html, "lxml")
+	
+	cov=extractCoverage(parsername, parsed_report)
+	coverages[parsername]=cov
 
 # create table representation of the parser results
 parserdata=json.loads(pranking, strict=False)
 
 for pname in parserdata:
 	edata=parserdata[pname]
-	ptuple=(pname, edata["errorcount"], edata["nrerrtypes"])
+	ptuple=(pname, edata["errorcount"], edata["nrerrtypes"], coverages[pname]) 
 	ptuples+=[ptuple]
 	ptable="### "+pname+"\n\n"+ptableheader+"\n"
 	
@@ -109,10 +203,10 @@ for pname in parserdata:
 
 # sort ptubles and create overview table
 
-sortedptuples=sorted(ptuples, key=lambda ptuple: ptuple[1])
+sortedptuples=sorted(ptuples, key=lambda ptuple: ptuple[1]) 	
 pnames=[]
-for (pn, en, den) in sortedptuples:
-	parsertable+=pn +" | "+ str(en) +" | "+ str(den) +"\n"
+for (pn, en, den, cov) in sortedptuples:
+	parsertable+=pn +" | "+ str(en) +" | "+ str(den) + " | " +str(cov)+"% \n"
 	pnames+=[pn]
 
 # create table representation of URLs
@@ -359,6 +453,7 @@ crbwf="|"
 crbcf="|"
 crbhead="|   | equal results |"
 crbhhelp="\n|---|---|"
+crbcov=""
 for i in range(0, bsize):
 	crbhead+= bres[i]["name"]+ " | "
 	crbhhelp+="---|"
@@ -366,12 +461,14 @@ for i in range(0, bsize):
 	crbfail+=" ("+str(bcount[i][1])+"/"+str(nrurls)+")|"
 	crbwf+=" ("+str(bcount[i][2])+"/"+str(whatnr)+")|"
 	crbcf+=" ("+str(bcount[i][3])+"/"+str(nrurls)+")|"
+	crbcov+=" "+str(coverages[bres[i]["name"]])+"% |"	#TODO make sure names match		
 #use counted results
 crtable=crbhead+crbhhelp+"\n"
 crtable+="| parsed successfully | ("+str(eqsucc)+"/"+str(nrurls)+")"+crbsucc+"\n"
 crtable+="| rejected | ("+str(eqfail)+"/"+str(nrurls)+")"+crbfail+"\n"
 crtable+="| also rejected by whatwg | ("+str(whatfail)+"/"+str(whatnr)+")"+crbwf+"\n"
 crtable+="| component errors | ("+str(allcomp)+"/"+str(nrurls)+")"+crbcf+"\n"
+crtable+="| code coverage | "+crbcov+"\n"
 eqres=allcomp+ eqsucc + eqfail
 crtable+="| overall equal results | ("+str(eqres)+"/"+str(nrurls)+")|\n"
 crtable+="| overall unequal results | ("+str(nrurls-eqres)+"/"+str(nrurls)+")|\n\n"
