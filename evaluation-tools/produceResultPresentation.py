@@ -176,7 +176,7 @@ result_dir=datadir+"../"
 coverages={}
 for parsername in parserdata:
 	html=""
-	with open(result_dir+source_reports[lower(parsername)], encoding='utf-8') as f:
+	with open(result_dir+source_reports[parsername.lower()], encoding='utf-8') as f:
 			html=f.read()
 
 	parsed_report=BeautifulSoup(html, "lxml")
