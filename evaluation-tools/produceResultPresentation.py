@@ -168,6 +168,9 @@ ptableheader=" Exception Type | URLs \n --- | --- "
 
 parsertable=" Parsername | Number of Exceptions | Number of Different Exceptions | Code Coverage \n --- | --- | --- | ---\n"
 
+parserdata=json.loads(pranking, strict=False)
+
+
 # extract coverages to put in table
 result_dir=datadir+"../"
 coverages={}
@@ -181,9 +184,8 @@ for parsername in parserdata:
 	cov=extractCoverage(parsername, parsed_report)
 	coverages[parsername]=cov
 
-# create table representation of the parser results
-parserdata=json.loads(pranking, strict=False)
 
+# create table representation of the parser results
 for pname in parserdata:
 	edata=parserdata[pname]
 	ptuple=(pname, edata["errorcount"], edata["nrerrtypes"], coverages[pname]) 
