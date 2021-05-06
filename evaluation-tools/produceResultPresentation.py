@@ -181,7 +181,7 @@ for parsername in parserdata:
 
 	parsed_report=BeautifulSoup(html, "lxml")
 	
-	cov=extractCoverage(parsername, parsed_report)
+	cov=extractCoverage(parsername.lower(), parsed_report)
 	coverages[parsername]=cov
 
 
