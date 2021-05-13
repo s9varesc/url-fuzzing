@@ -171,9 +171,7 @@ print("errorranking")
 errorranking={}
 #if "firefox" in parsers or "chromium" in parsers:
 for file in os.listdir(dir):
-	print("checking "+file)
-	if 'Errors' in file:
-		print("opening "+file)
+	if 'Errors' in file
 		with open(dir +"/"+ file, "r", encoding='utf-8') as f:
 			errdata=f.read()   
 			name=file.replace("Errors.txt", "")
@@ -193,15 +191,17 @@ for file in os.listdir(dir):
 if not os.path.exists(dir+"../evaldata"):
 	os.mkdir(dir+"../evaldata")
 
+print("writing parsercomp")
 pfile=open( dir+"../evaldata/"+"parsercomp.json", "w") 
 pfile.write(json.dumps(parserranking))
 pfile.close()
 
+print("writing urlcomp")
 ufile=open( dir+"../evaldata/"+"urlcomp.json", "w")
 ufile.write(json.dumps(urlranking))
 ufile.close()
 
-
+print("writing errorcomp")
 efile=open( dir+"../evaldata/"+"errorcomp.json", "w")
 efile.write(json.dumps(errorranking))
 efile.close()
