@@ -139,9 +139,9 @@ args = parser.parse_args()
 datadir = args.data
 if datadir[-1:]!="/":datadir+="/"
 
-pranking=""
-uranking=""
-eranking="" 
+pranking="{}"
+uranking="{}"
+eranking="{}" 
 # read json file
 for file in os.listdir(datadir):
 	if "parser" in file:

@@ -83,7 +83,7 @@ for file in os.listdir(dir):
 
 urls=plainURLs[:-1].split("\n") #remove last newline to avoid an empty url entry
 
-
+#TODO: produce less detailed results when nr of urls becomes too big
 
 parsers={}
 # read the exceptions into dictionaries
@@ -129,6 +129,7 @@ parserranking={} # {parsername: { errorcount: , nrerrtypes: ,
 
 urlranking={} # {url: , parsers: []}
 # basic counting & parser ranking
+print("parserranking")
 for parser in parsers:
 	countresults={}
 	# overall nr of errors
@@ -149,7 +150,8 @@ for parser in parsers:
 	countresults["errtypes"]=errtypes
 	parserranking[parser]=countresults
 
-#url ranking
+#url ranking				#TODO improve runtime
+print("urlranking")
 for url in urls:
 	for parser in parsers:
 		#urlranking[url]=[]
@@ -165,7 +167,7 @@ for url in urls:
 # create error dictionaries:
 # { browser : [errordata, ... ]}
 # with errordata looking like {"url":"http://...", "error":{"component":"port", "expected":"20", "actual":"xxx"}}
-
+print("errorranking")
 errorranking={}
 for file in os.listdir(dir):
 	if 'Errors' in file:
