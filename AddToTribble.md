@@ -5,9 +5,11 @@ The following commands add the classes necessary for also generating the compone
 '''
 mkdir -p /home/tribble/tribble-tool/src/main/scala/de/cispa/se/tribble/componentExtraction
 cp -r /home/url-fuzzing/tribble-additions/componentExtraction/* /home/tribble/tribble-tool/src/main/scala/de/cispa/se/tribble/componentExtraction
-cp /home/url-fuzzing/tribble-additions/allRepresentations/* /home/tribble/tribble-tool/src/main/scala/de/cispa/se/tribble'''
+cp /home/url-fuzzing/tribble-additions/allRepresentations/* /home/tribble/tribble-tool/src/main/scala/de/cispa/se/tribble
+cp /home/url-fuzzing/tribble-additions/Main.scala /home/tribble/tribble-tool/src/main/scala/de/cispa/se/tribble'''
 
 *note*: possible configurations: **allRepresentations** creates plain URLs as well as Firefox and Chromium component representations, **onlyChromiumComponents**: creates only Chromium component representations, **onlyFirefoxComponents**: creates only Firefox component representations, **onlyPlain**: creates only URLs without component representations
+*note*: a minimal version of '''Main.scala''' is used to ease switching between different tribble versions, to use different tasks these need to be added in '''tasks.scala''' and one has to use a version of '''Main.scala''' that includes them
 '''
 cd /home/tribble
 ./gradlew build
