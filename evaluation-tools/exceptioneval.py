@@ -171,8 +171,9 @@ print("errorranking")
 errorranking={}
 #if "firefox" in parsers or "chromium" in parsers:
 for file in os.listdir(dir):
+	print("checking "+file)
 	if 'Errors' in file:
-		print("opening"+file)
+		print("opening "+file)
 		with open(dir +"/"+ file, "r", encoding='utf-8') as f:
 			errdata=f.read()   
 			name=file.replace("Errors.txt", "")
