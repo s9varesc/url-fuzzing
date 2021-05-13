@@ -7,7 +7,7 @@ import java.nio.file.Paths
 import java.util.Arrays
 
 import de.cispa.se.tribble.Internal._
-import de.cispa.se.tribble.input.{AlternativeExtraction, ObjectStreamGrammarCache, RuleInlining}
+//import de.cispa.se.tribble.input.{AlternativeExtraction, ObjectStreamGrammarCache, RuleInlining}
 import de.cispa.se.tribble.output.GrammarPrettyPrinter
 import org.backuity.clist.{Command, opt}
 import org.log4s.getLogger
