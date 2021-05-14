@@ -34,6 +34,9 @@ source_reports["php"]="PHP/index.html"
 source_reports["python"]="Python/_usr_lib_python3_6_urllib_parse_py.html"
 source_reports["ruby"]="Ruby/index.html"
 
+
+max_inputs_prettify=10000	#if the results contain more inputs, html files will not be styled as much
+
 def extractCoverage(parser, parsed_report):
 	if parser=="firefox" or parser=="c" or parser=="cpp":
 		return extractLCOV(parsed_report)
@@ -326,10 +329,12 @@ htmlhead="<!DOCTYPE html>\
 <body>\n"
 htmltail="</body>\
 </html>"
-htmlresult=htmlresult.replace("<table>", "<table class=\"simpletable\">")
-htmlresult=htmlresult.replace("<br-->", "<br>")
-htmlresult=htmlresult.replace("<--br>", "<br>")
-	
+if nrurls < max_inputs_prettify:
+	htmlresult=htmlresult.replace("<table>", "<table class=\"simpletable\">")
+	htmlresult=htmlresult.replace("<br-->", "<br>")
+	htmlresult=htmlresult.replace("<--br>", "<br>")
+else:
+	print("skip html prettify due to large nr of inputs ("+str(nrurls)+")")
 
 htmlfile=open( datadir+"../resultoverview.html", "w", encoding='utf-8')
 htmlfile.write(htmlhead + htmlresult +htmltail)
@@ -344,6 +349,9 @@ print("done writing resultoverview")
 # green for pass, yellow for component, red for parsing, purple for whatwg fail
 
 # create mappings of url : result for each browser
+
+
+
 bres=[]
 for bname in errdata:
 	elist=errdata[bname]
@@ -410,6 +418,10 @@ for i in range(0, bsize):
 bcomptable+=" \n"+bcomphelp+"\n"
 
 
+styleinfo=True
+if nrurls > max_inputs_prettify:
+	styleinfo=False
+
 for url in urldata:
 	nrsucc=0
 	nrfail=0
@@ -419,11 +431,15 @@ for url in urldata:
 	uline=""
 	if "JavaScriptwhatwg-url" in parsers:
 		uline="STYLEW "
+		
 		whatnr+=1
 	uline += url_escape_md(url)
 	for i in range(0, bsize): # calculate more statistics here
 		br=bres[i]
-		uline+= " | "+ br[url]
+		if styleinfo:
+			uline+= " | "+ br[url]
+		else:
+			uline+= " | "+ br[url][6:]
 		# count results for statistics
 		mess=br[url]
 		if mess[:6]=="STYLEP":
@@ -450,7 +466,9 @@ for url in urldata:
 		allcomp+=1
 
 
-
+	if not styleinfo:
+		if uline[:6]=="STYLEW":
+			uline=uline[6:]
 	uline+="\n"
 	bcomptable+=uline
 
@@ -492,6 +510,7 @@ bov+= "*note:*  due to different component names the table above does not consid
 
 
 htmlresult1=markdown.markdown(bov, extensions=['extra'])
+htmlresult1=htmlresult1.replace("<table>", "<table class=\"simpletable\">")
 htmlresult2=markdown.markdown(bcomptable, extensions=['extra'])
 
 htmlhead="<!DOCTYPE html>\
@@ -515,15 +534,18 @@ pagestart+="<td class=\"cfail\">Component is \"content\" != \"expected\"</td>"
 pagestart+="<td class=\"psucc\">Success</td></tr></tbody></table>\n"
 
 htmlresult=htmlresult1 + pagestart + htmlresult2
-htmlresult=htmlresult.replace("<table>", "<table class=\"simpletable\">")
-htmlresult=htmlresult.replace("<br-->", "<br>")
-htmlresult=htmlresult.replace("<--br>", "<br>")
 
-htmlresult=htmlresult.replace("<td>STYLEP", "<td class=\"psucc\">")
-htmlresult=htmlresult.replace("<td>STYLEF", "<td class=\"pfail\">")
-htmlresult=htmlresult.replace("<td>STYLEC", "<td class=\"cfail\">")
-htmlresult=htmlresult.replace("<td>STYLEW", "<td class=\"wgfail\">")
+if nrurls < max_inputs_prettify:
+	htmlresult=htmlresult.replace("<table>", "<table class=\"simpletable\">")
+	htmlresult=htmlresult.replace("<br-->", "<br>")
+	htmlresult=htmlresult.replace("<--br>", "<br>")
 
+	htmlresult=htmlresult.replace("<td>STYLEP", "<td class=\"psucc\">")
+	htmlresult=htmlresult.replace("<td>STYLEF", "<td class=\"pfail\">")
+	htmlresult=htmlresult.replace("<td>STYLEC", "<td class=\"cfail\">")
+	htmlresult=htmlresult.replace("<td>STYLEW", "<td class=\"wgfail\">")
+else :
+	print("skip prettify detailed results due to large nr of inputs("+str(nrurls)+")")
 
 	
 
