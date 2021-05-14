@@ -5,6 +5,8 @@ import json
 import markdown
 from bs4 import BeautifulSoup
 
+print("inside")
+
 # links to the coverage reports
 covreps={}
 covreps["chromium"]="\n#### Chromium\n\n[Overview](./chromium/report.html)\n\n[Source File Report](./chromium/url_parse.cc.html)\n\n"
