@@ -548,7 +548,7 @@ else :
 
 	
 
-
+print("writing browseroverview")
 htmlfile=open( datadir+"../browseroverview.html", "w", encoding='utf-8')
 htmlfile.write(htmlhead + htmlresult +htmltail)
 htmlfile.close()
