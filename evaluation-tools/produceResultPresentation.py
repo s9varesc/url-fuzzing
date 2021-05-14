@@ -5,7 +5,6 @@ import json
 import markdown
 from bs4 import BeautifulSoup
 
-print("inside")
 
 # links to the coverage reports
 covreps={}
@@ -137,7 +136,7 @@ def url_escape_md(data):
 	res=res.replace("<", " < ")
 	return " "+escbt+" "+res+" "+escbt+" "
 
-print("start result pres")
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-data")
 args = parser.parse_args()
@@ -159,7 +158,7 @@ for file in os.listdir(datadir):
 		with open(datadir+"/"+file, encoding='utf-8') as f:
 			eranking=f.read()
 
-print("done with file loading")
+
 # multiple rankings: focus on parsers: {parsername: { errorcount: , nrerrtypes: ,
 #						 							errtypes: {errtype:[url, url,...]} }}
 #					focus on urls: {url: [parsers]} 
@@ -174,7 +173,7 @@ ptableheader=" Exception Type | URLs \n --- | --- "
 parsertable=" Parsername | Number of Exceptions | Number of Different Exceptions | Code Coverage \n --- | --- | --- | ---\n"
 
 parserdata=json.loads(pranking, strict=False)
-print("done with parser json load")
+
 
 # extract coverages to put in table
 result_dir=datadir+"../"
@@ -189,7 +188,7 @@ for parsername in parserdata:
 	cov=extractCoverage(parsername.lower(), parsed_report)
 	coverages[parsername]=cov
 
-print("done with coverage extraction")
+
 # create table representation of the parser results
 for pname in parserdata:
 	edata=parserdata[pname]
@@ -216,10 +215,10 @@ for (pn, en, den, cov) in sortedptuples:
 	parsertable+=pn +" | "+ str(en) +" | "+ str(den) + " | " +str(cov)+"% \n"
 	pnames+=[pn]
 
-print("done with parserranking")
+
 # create table representation of URLs
 urldata=json.loads(uranking, strict=False)
-print("done loading url json")
+
 
 utable=" URL | Parsers \n --- | --- \n"
 
@@ -237,10 +236,10 @@ for url in urldata:
 			uline += p + " <br>"
 		utable+=uline+"\n"
 
-print("done with urltable")
+
 # Browsers
 errdata=json.loads(eranking, strict=False)
-print("done with error json load")
+
 ## create overview table: browser | nr fails | nr exceptions | nr errors
 otable=" Browser | Overall Failures | Parsing Exceptions | Verification Errors \n --- | --- | --- | --- \n"
 for bname in errdata:
@@ -264,8 +263,6 @@ for bname in errdata:
 		vtable+=u+ " | "+c+" | "+exp+" | "+ a+"\n"
 	vtables+=[vtable]
 
-
-print("done with small browser table")
 # Build the Document
 
 result="# Results \n\n"
@@ -309,11 +306,12 @@ if brep != "":
 if prep != "":
 	result+="### Stand-Alone Parsers\n\n"+prep
 
+if nrurls < max_inputs_prettify:
+	print("skip writing md file")
+	resfile=open( datadir+"../resultoverview.md", "w", encoding='utf-8')
+	resfile.write(result)
+	resfile.close()
 
-resfile=open( datadir+"../resultoverview.md", "w", encoding='utf-8')
-resfile.write(result)
-resfile.close()
-print("done writing md")
 
 htmlresult=markdown.markdown(result, extensions=['extra'])
 
@@ -393,7 +391,7 @@ for url in urldata:
 		if comp=="":
 			b[url]="STYLEP PASS"
 
-print("done collecting large browser table")
+
 
 bsize=len(bres)
 eqsucc=0
@@ -431,7 +429,6 @@ for url in urldata:
 	uline=""
 	if "JavaScriptwhatwg-url" in parsers:
 		uline="STYLEW "
-		
 		whatnr+=1
 	uline += url_escape_md(url)
 	for i in range(0, bsize): # calculate more statistics here
@@ -472,7 +469,7 @@ for url in urldata:
 	uline+="\n"
 	bcomptable+=uline
 
-print("done counting")
+
 
 
 crbsucc="|"
@@ -511,8 +508,8 @@ bov+= "*note:*  due to different component names the table above does not consid
 
 htmlresult1=markdown.markdown(bov, extensions=['extra'])
 htmlresult1=htmlresult1.replace("<table>", "<table class=\"simpletable\">")
-#htmlresult2=markdown.markdown(bcomptable, extensions=['extra'])
-htmlresult2= "<div class=\"simpletable\"></div> \n\n"+bcomptable
+htmlresult2=markdown.markdown(bcomptable, extensions=['extra'])
+
 
 htmlhead="<!DOCTYPE html>\
 <html lang=\"en\">\
@@ -555,7 +552,7 @@ htmlfile=open( datadir+"../browseroverview.html", "w", encoding='utf-8')
 htmlfile.write(htmlhead + htmlresult +htmltail)
 htmlfile.close()
 
-print("done")
+
 
 
 
