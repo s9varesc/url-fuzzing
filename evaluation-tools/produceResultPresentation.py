@@ -367,31 +367,32 @@ for bname in errdata:
 		blist[u]=message
 	bres+=[blist]
 
-for url in urldata: 
-	parsers=urldata[url]	
-	for b in bres:
-		name=b["name"]
-		if parsers:
-			if name in parsers:
-				#place parsing failure in results
-				m="STYLEF"
-				message=" "
-				#find error message in parserdata
-				pd=parserdata[name]["errtypes"]
-				for et in pd:
-					if url in pd[et]:
-						message+=et
-				b[url]=m+message
+if len(bres)>=1:
+	for url in urldata: 
+		parsers=urldata[url]	
+		for b in bres:
+			name=b["name"]
+			if parsers:
+				if name in parsers:
+					#place parsing failure in results
+					m="STYLEF"
+					message=" "
+					#find error message in parserdata
+					pd=parserdata[name]["errtypes"]
+					for et in pd:
+						if url in pd[et]:
+							message+=et
+					b[url]=m+message
 
 
 
-		#place parsing success in results if there is no entry for a failure
-		try:
-			comp=b[url]
-		except KeyError:
-			comp=""
-		if comp=="":
-			b[url]="STYLEP PASS"
+			#place parsing success in results if there is no entry for a failure
+			try:
+				comp=b[url]
+			except KeyError:
+				comp=""
+			if comp=="":
+				b[url]="STYLEP PASS"
 
 
 
