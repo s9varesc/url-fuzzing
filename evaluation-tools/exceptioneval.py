@@ -205,7 +205,7 @@ print("writing errorcomp")
 efile=open( dir+"../evaldata/"+"errorcomp.json", "w")
 efile.write(json.dumps(errorranking))
 efile.close()
-
+print("done")
 
 
 
