@@ -307,10 +307,11 @@ if prep != "":
 	result+="### Stand-Alone Parsers\n\n"+prep
 
 if nrurls < max_inputs_prettify:
-	print("skip writing md file")
 	resfile=open( datadir+"../resultoverview.md", "w", encoding='utf-8')
 	resfile.write(result)
 	resfile.close()
+else:
+	print("skip writing md file")
 
 
 htmlresult=markdown.markdown(result, extensions=['extra'])
