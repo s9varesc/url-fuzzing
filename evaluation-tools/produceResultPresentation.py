@@ -511,7 +511,9 @@ bov+= "*note:*  due to different component names the table above does not consid
 
 htmlresult1=markdown.markdown(bov, extensions=['extra'])
 htmlresult1=htmlresult1.replace("<table>", "<table class=\"simpletable\">")
-htmlresult2=markdown.markdown(bcomptable, extensions=['extra'])
+#htmlresult2=markdown.markdown(bcomptable, extensions=['extra'])
+htmlresult2="no table created"
+
 
 htmlhead="<!DOCTYPE html>\
 <html lang=\"en\">\
