@@ -310,7 +310,7 @@ if prep != "":
 resfile=open( datadir+"../resultoverview.md", "w", encoding='utf-8')
 resfile.write(result)
 resfile.close()
-
+print("done writing md")
 
 htmlresult=markdown.markdown(result, extensions=['extra'])
 
