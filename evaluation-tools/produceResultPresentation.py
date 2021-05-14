@@ -156,7 +156,7 @@ for file in os.listdir(datadir):
 		with open(datadir+"/"+file, encoding='utf-8') as f:
 			eranking=f.read()
 
-
+print("done with file loading")
 # multiple rankings: focus on parsers: {parsername: { errorcount: , nrerrtypes: ,
 #						 							errtypes: {errtype:[url, url,...]} }}
 #					focus on urls: {url: [parsers]} 
@@ -171,7 +171,7 @@ ptableheader=" Exception Type | URLs \n --- | --- "
 parsertable=" Parsername | Number of Exceptions | Number of Different Exceptions | Code Coverage \n --- | --- | --- | ---\n"
 
 parserdata=json.loads(pranking, strict=False)
-
+print("done with parser json load")
 
 # extract coverages to put in table
 result_dir=datadir+"../"
@@ -186,7 +186,7 @@ for parsername in parserdata:
 	cov=extractCoverage(parsername.lower(), parsed_report)
 	coverages[parsername]=cov
 
-
+print("done with coverage extraction")
 # create table representation of the parser results
 for pname in parserdata:
 	edata=parserdata[pname]
@@ -213,9 +213,10 @@ for (pn, en, den, cov) in sortedptuples:
 	parsertable+=pn +" | "+ str(en) +" | "+ str(den) + " | " +str(cov)+"% \n"
 	pnames+=[pn]
 
+print("done with parserranking")
 # create table representation of URLs
 urldata=json.loads(uranking, strict=False)
-
+print("done loading url json")
 
 utable=" URL | Parsers \n --- | --- \n"
 
@@ -233,8 +234,10 @@ for url in urldata:
 			uline += p + " <br>"
 		utable+=uline+"\n"
 
+print("done with urltable")
 # Browsers
 errdata=json.loads(eranking, strict=False)
+print("done with error json load")
 ## create overview table: browser | nr fails | nr exceptions | nr errors
 otable=" Browser | Overall Failures | Parsing Exceptions | Verification Errors \n --- | --- | --- | --- \n"
 for bname in errdata:
@@ -242,6 +245,7 @@ for bname in errdata:
 	nrer=len(errdata[bname])
 	allf=nrex+nrer
 	otable+=bname+" | "+ str(allf)+" | "+ str(nrex)+ " | "+str(nrer)+"\n"
+
 
 ## create specialized tables per browser: url | component | expected | actual
 vtables=[]
@@ -257,10 +261,8 @@ for bname in errdata:
 		vtable+=u+ " | "+c+" | "+exp+" | "+ a+"\n"
 	vtables+=[vtable]
 
-## maybe create url comparison with parsing/verification passes
 
-
-
+print("done with small browser table")
 # Build the Document
 
 result="# Results \n\n"
@@ -309,6 +311,7 @@ resfile=open( datadir+"../resultoverview.md", "w", encoding='utf-8')
 resfile.write(result)
 resfile.close()
 
+
 htmlresult=markdown.markdown(result, extensions=['extra'])
 
 htmlhead="<!DOCTYPE html>\
@@ -331,6 +334,7 @@ htmlresult=htmlresult.replace("<--br>", "<br>")
 htmlfile=open( datadir+"../resultoverview.html", "w", encoding='utf-8')
 htmlfile.write(htmlhead + htmlresult +htmltail)
 htmlfile.close()
+print("done writing resultoverview")
 
 
 # produce colorful browser table with all urls
@@ -380,6 +384,8 @@ for url in urldata:
 			comp=""
 		if comp=="":
 			b[url]="STYLEP PASS"
+
+print("done collecting large browser table")
 
 bsize=len(bres)
 eqsucc=0
@@ -448,7 +454,7 @@ for url in urldata:
 	uline+="\n"
 	bcomptable+=uline
 
-
+print("done counting")
 
 
 crbsucc="|"
@@ -526,7 +532,7 @@ htmlfile=open( datadir+"../browseroverview.html", "w", encoding='utf-8')
 htmlfile.write(htmlhead + htmlresult +htmltail)
 htmlfile.close()
 
-
+print("done")
 
 
 
