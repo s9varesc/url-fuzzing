@@ -424,6 +424,8 @@ if nrurls > max_inputs_prettify:
 	styleinfo=False
 
 for url in urldata:
+	if bsize <1:
+		break
 	nrsucc=0
 	nrfail=0
 	nrcomp=0
