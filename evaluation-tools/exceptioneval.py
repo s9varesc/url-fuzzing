@@ -70,7 +70,7 @@ args = parser.parse_args()
 dir = args.dir
 if dir[-1:]!="/":dir+="/"
 
-print("start eval")
+
 for file in os.listdir(dir):   
 	if file.endswith('URLs'):
 		#print("using    "+file)
@@ -129,7 +129,7 @@ parserranking={} # {parsername: { errorcount: , nrerrtypes: ,
 
 urlranking={} # {url: , parsers: []}
 # basic counting & parser ranking
-print("parserranking")
+
 for parser in parsers:
 	countresults={}
 	# overall nr of errors
@@ -150,8 +150,8 @@ for parser in parsers:
 	countresults["errtypes"]=errtypes
 	parserranking[parser]=countresults
 
-#url ranking				#TODO improve runtime
-print("urlranking")
+#url ranking				
+
 for url in urls:
 	for parser in parsers:
 		#urlranking[url]=[]
@@ -167,7 +167,7 @@ for url in urls:
 # create error dictionaries:
 # { browser : [errordata, ... ]}
 # with errordata looking like {"url":"http://...", "error":{"component":"port", "expected":"20", "actual":"xxx"}}
-print("errorranking")
+
 errorranking={}
 #if "firefox" in parsers or "chromium" in parsers:
 for file in os.listdir(dir):
@@ -191,21 +191,21 @@ for file in os.listdir(dir):
 if not os.path.exists(dir+"../evaldata"):
 	os.mkdir(dir+"../evaldata")
 
-print("writing parsercomp")
+
 pfile=open( dir+"../evaldata/"+"parsercomp.json", "w") 
 pfile.write(json.dumps(parserranking))
 pfile.close()
 
-print("writing urlcomp")
+
 ufile=open( dir+"../evaldata/"+"urlcomp.json", "w")
 ufile.write(json.dumps(urlranking))
 ufile.close()
 
-print("writing errorcomp")
+
 efile=open( dir+"../evaldata/"+"errorcomp.json", "w")
 efile.write(json.dumps(errorranking))
 efile.close()
-print("done")
+
 
 
 
