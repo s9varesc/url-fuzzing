@@ -335,10 +335,11 @@ if nrurls < max_inputs_prettify:
 else:
 	print("skip html prettify due to large nr of inputs ("+str(nrurls)+")")
 
+print("writing resultoverview")
 htmlfile=open( datadir+"../resultoverview.html", "w", encoding='utf-8')
 htmlfile.write(htmlhead + htmlresult +htmltail)
 htmlfile.close()
-print("done writing resultoverview")
+
 
 
 # produce colorful browser table with all urls
