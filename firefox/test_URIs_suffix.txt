@@ -101,7 +101,7 @@ function do_test_uri_basic(aTest) {
   }
 
   
-  // Check the various components   TODO components after first fail are tested
+  // Check the various components   
   try {
       do_check_property(aTest, URI, "scheme");
       do_check_property(aTest, URI, "query");
