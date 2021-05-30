@@ -63,17 +63,17 @@ Grammar(
 		| ("655" ~ ("0" | "1" | "2" ) ~ 'digit)
 		| ("6553" ~ ( "0"|"1" | "2" | "3" | "4"| "5")),
   //'URLunit := 'URLcodePoint | 'percentEncodedByte,
-  //'URLcodePoint := 'unreserved, //| 'unicode |'reserved ,
+  //'URLcodePoint := 'unreserved,| 'unicode |'reserved ,
   //'reserved := ":" | "/" | "?" | "#" | "[" | "]" | "@" | 'subdelims,
   //'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
-  //'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated
+  'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated TODO experiment with using host instead of domain -> still in parsing section
   'domain := 'internationalHost |  'basicHost,
   'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum) ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
   'internationalHost := (('alphanum | 'hostunicode).rep(1, 5) ~ ("."|"-").? ).rep(1) ~ ('alphanum | 'hostunicode).rep(1, 3) , //TODO check length allowed in idn
    
-  //'userinfo := 'userinfoCodePoint ~ 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint ~ 'userinfoCodePoint.rep).?, 
+  'userinfo := 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint.rep).?, //userinfo
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
     | ((('h16 ~ ":").rep(0, 1) ~ 'h16).? ~ "::" ~ ('h16 ~ ":").rep(2, 2) ~ 'ls32)
@@ -109,7 +109,7 @@ Grammar(
   'hostunicode := "[\u0100-\u0148\u0148-\u017f]".regex,
     //"[\u024f-\u02af\u1050-\u1090\u10d0-\u10fa\u1200-\u1248\u1780-\u17b3\u1820-\u1877\ua000-\ua4fd\ua980-\ua9c0]".regex, 
   // this is a subset of code points allowed in hosts and far from exhaustive
-  // including more code points here requires: handling rtl and bidi characters, excluding unassigned code points, representation of code points above \uffff
+  // including more code points here requires: handling rtl and bidi characters, excluding unassigned code points, using surrogate pairs for code points above \uffff
 
 
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded | 'unicode,
@@ -117,9 +117,9 @@ Grammar(
   'specialQueryAllowed := 'pathAllowed | "?" | "{" | "}" | "`" | "/",
   'specialQueryCodePoint := 'specialQueryAllowed |'queryPercentEncoded | 'unicode, //check if ' should be percent encoded
   
-  //'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded | 'unicode,
+  'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded | 'unicode, //userinfo
   'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
-  //'userinfoPercentEncoded := "%2f" | "%3a" | "%3b" | "%3d" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c",
+  'userinfoPercentEncoded := "%2f" | "%3a" | "%3b" | "%3d" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c", //userinfo
 
   'pathCodePoint := 'pathAllowed | 'pathPercentEncoded | 'unicode,
   'pathAllowed := 'userinfoAllowed | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|",
