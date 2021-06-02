@@ -60,7 +60,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+escapeContent(univcomp.getComponentContents("fragment")) : "";
         pqr+=(!frag.equals("#") ? frag :""); //avoid adding a # if the fragment is empty
 
-        result+="pathQueryRef:\""+pqr+"\",\n";
+        
         String prp="";
         prp+=escapeContent(univcomp.getComponentContents("scheme"));
         String input=escapeContent(univcomp.getComponentContents("input")); 
@@ -88,11 +88,12 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         prp+=(port!="") ? ":"+port.replaceFirst("^0+(?!$)", "") : "";
         
 
-        result+="prePath:\""+prp+"\",\n";
+        
         
         result+="username:\""+username+"\",\n"; 
         result+="password:\""+password+"\",\n";
-  
+        result+="prePath:\""+prp+"\",\n";
+        result+="pathQueryRef:\""+pqr+"\",\n";
         result+="}\n";
 
         
