@@ -77,7 +77,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         String at="";
         if(username != ""){
             prp+=username;
-            at="@"
+            at="@";
         }
         if(password!=""){
             prp+=":"+password;
