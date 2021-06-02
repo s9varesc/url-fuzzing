@@ -479,7 +479,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         // make sure this is the full host and not a substring of it
         for(String ending: Arrays.asList("/", ":", "?", "#")){
-            if(parent.contains("//"uinfo+host+ending) || parent.contains("//"+uinfo+originalip+ending)){
+            if(parent.contains("//"+uinfo+host+ending) || parent.contains("//"+uinfo+originalip+ending)){
                 return host;
             }
         }
