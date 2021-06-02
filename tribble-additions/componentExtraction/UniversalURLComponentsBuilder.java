@@ -86,7 +86,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * creates a dictonary of basic component names and component contents which can be accessed by
     * more specialized component builders
     */
-    public void prepareComponents(){ //TODO prepare userinfo!
+    public void prepareComponents(){ 
 /    	//determine which method to use
         if(dict.get("baseAndRelativeURL")!=null){
             // there are base and relative URLs present

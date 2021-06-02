@@ -79,7 +79,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
             if(password!=""){
                 prp+=":"+password;
             }
-            prp+="@"
+            prp+="@";
         }
         prp+=fullhost;
         prp+=(port!="") ? ":"+port.replaceFirst("^0+(?!$)", "") : "";
