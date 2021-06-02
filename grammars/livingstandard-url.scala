@@ -39,10 +39,11 @@ Grammar(
   'opaqueHost := ((('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | 'hostunicode) | ("[" ~ 'ipv6address ~ "]"), 
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   
-  'pathAbsoluteURL := ("/"~'windowsDriveLetter.?).? ~ "/" ~ 'pathRelativeURLstart.?,
+  //TODO figure out which path rule breaks some relative urls
+  'pathAbsoluteURL := ("/"~('windowsDriveLetter | ("/" ~ "NWDL")).? ~ "/" ~ 'pathRelativeURLstart.?,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?, // not allowed to start with "/C:/" (windows drive letter)
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? , //not allowed to start with /, use pathRelativeURLstart to force this
-  'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment | "PATHREL") ~ ("/" ~ 'pathRelativeURL).?,  
+  'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment ) ~ ("/" ~ 'pathRelativeURL).?,  
   'pathRelativeSchemelessURL := 'pathRelativeURLstart, // not allowed to start with "scheme:"
 
 
@@ -72,7 +73,7 @@ Grammar(
   'domain := 'internationalHost |  'basicHost,
   'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum) ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
   'internationalHost := (('alphanum | 'hostunicode).rep(1, 5) ~ ("."|"-").? ).rep(1) ~ ('alphanum | 'hostunicode).rep(1, 3) , 
-  //max 63 chars per label, max 255 chars overall, important: count after punycode conversion TODO: make rule/explanation more precise
+  //max 63 chars per label, max 255 chars overall, counted after punycode conversion TODO: make rule/explanation more precise
    
   'userinfo := 'username ~ (":" ~ 'password).? ~ "@", 
   'username := 'userinfoCodePoint.rep,
@@ -101,7 +102,7 @@ Grammar(
   'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "-"  | "_" | "~",
 
   
-  'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded ,
+  'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded , //TODO check encoding
   //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=",
   'opaqueHostPercentEncoded := "%00" | "%09" | "%20" | "%23" | "%25" | "%2f" | "%3a" | "%3c" | "%3e" | "%3f" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c" ,
   
