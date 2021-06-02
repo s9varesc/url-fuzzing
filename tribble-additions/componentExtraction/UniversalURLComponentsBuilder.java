@@ -87,7 +87,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * more specialized component builders
     */
     public void prepareComponents(){ 
-/    	//determine which method to use
+    	//determine which method to use
         if(dict.get("baseAndRelativeURL")!=null){
             // there are base and relative URLs present
             prepareBaseComponents();
