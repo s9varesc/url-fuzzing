@@ -271,8 +271,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
             
         }
-        // prepare userinfo
-        prepareUserinfo(rel, "relative_");
+        
         // prepare host and port
         String rhost=prepareHost(rel);
         if(rhost != null){
@@ -284,6 +283,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 }
                 
             }
+            // prepare userinfo
+            prepareUserinfo(components.get("relative"), "relative_");
         }
         //prepare path
         String rpath=preparePath(rel); 
