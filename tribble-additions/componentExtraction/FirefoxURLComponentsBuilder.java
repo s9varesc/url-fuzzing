@@ -75,11 +75,11 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
             prp+=":"; 
         }
         String at="";
-        if(username != ""){
+        if(username.length()>=1){
             prp+=username;
             at="@";
         }
-        if(password!=""){
+        if(password.length()>=1){
             prp+=":"+password;
             at="@";
         }

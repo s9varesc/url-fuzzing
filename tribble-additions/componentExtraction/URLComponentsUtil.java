@@ -12,7 +12,7 @@ public class URLComponentsUtil {
 	public String[] QUERY_PERCENT_ENCODE={" ", "\"", ">", "<", "#"};
 	public String[] SPECIAL_QUERY_PERCENT_ENCODE={" ", "\"", ">", "<", "#","\'"};
 	public String[] PATH_PERCENT_ENCODE={ " ", "\"", ">", "<", "#","?", "`", "{", "}"};
-	public String[] USERINFO_PERCENT_ENCODE={ " ", "\"", ">", "<", "#","?", "`", "{", "}","/", ":", "=", "@", "[", "\\", "]", "^", "|"};
+	public String[] USERINFO_PERCENT_ENCODE={ " ", "\"", ">", "<", "#","?", "`", "{", "}","/", ":", ";", "=", "@", "[", "\\", "]", "^", "|"};
 	
 
 	/***
