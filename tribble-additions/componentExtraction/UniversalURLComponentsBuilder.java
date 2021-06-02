@@ -416,6 +416,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             //relative does contain a scheme: use all of relative
             components.put("host", components.get("relative_host"));
             components.put("port", components.get("relative_port"));
+            prepareUserinfo(components.get("relative"), "relative_");
             String path=components.get("relative_path");
             String scheme=components.get("scheme");
             if(isSpecialScheme(scheme)){
