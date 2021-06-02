@@ -31,9 +31,9 @@ Grammar(
   'fileRelativeURL := ('schemeRelativeFileURL | 'pathAbsoluteURL | 'pathAbsoluteNonWindowsFileURL | 'pathRelativeSchemelessURL) ~ ("?" ~ 'URLSpecialquery).? ~ ("#" ~ 'URLfragment).?,
   'otherRelativeURL := ('schemeRelativeURL | 'pathAbsoluteURL | 'pathRelativeSchemelessURL) ~ ("?" ~ 'URLquery).? ~ ("#" ~ 'URLfragment).?,
 
-  'schemeRelativeSpecialURL := "//" ~ ('host | 'ipAddress) ~ (":" ~ 'URLport.?).? ~ 'pathAbsoluteURL.?, //using host instead of domain
+  'schemeRelativeSpecialURL := "//" ~ ('host | 'ipAddress) ~ (":" ~ 'URLport.?).? ~ 'pathAbsoluteURL.?, 
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?,  //forcing pathAbsoluteURL would fix invalid relative URLs as "//#fg", but the standard says its optional 
-  'schemeRelativeFileURL := "//" ~ ((('host | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ), //using host instead of domain
+  'schemeRelativeFileURL := "//" ~ ((('host | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ), 
   
   'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?) | "", 
   'opaqueHost := ((('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | 'hostunicode) | ("[" ~ 'ipv6address ~ "]"), 
@@ -68,12 +68,16 @@ Grammar(
   //'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
-  'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is deprecated TODO experiment with using host instead of domain -> still in parsing section
+  'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is not mentioned in URL writing, but it is mentioned in URL parsing
   'domain := 'internationalHost |  'basicHost,
   'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum) ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
-  'internationalHost := (('alphanum | 'hostunicode).rep(1, 5) ~ ("."|"-").? ).rep(1) ~ ('alphanum | 'hostunicode).rep(1, 3) , //TODO check length allowed in idn
+  'internationalHost := (('alphanum | 'hostunicode).rep(1, 5) ~ ("."|"-").? ).rep(1) ~ ('alphanum | 'hostunicode).rep(1, 3) , 
+  //max 63 chars per label, max 255 chars overall, important: count after punycode conversion TODO: make rule/explanation more precise
    
-  'userinfo := 'userinfoCodePoint.rep ~ (":" ~ 'userinfoCodePoint.rep).?, //userinfo
+  'userinfo := 'username ~ (":" ~ 'password).?, 
+  'username := 'userinfoCodePoint.rep,
+  'password := 'userinfoCodePoint.rep,
+  
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
     | ((('h16 ~ ":").rep(0, 1) ~ 'h16).? ~ "::" ~ ('h16 ~ ":").rep(2, 2) ~ 'ls32)

@@ -86,10 +86,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * creates a dictonary of basic component names and component contents which can be accessed by
     * more specialized component builders
     */
-    public void prepareComponents(){ 
-    	//determine which method to use
+    public void prepareComponents(){ //TODO prepare userinfo!
+/    	//determine which method to use
         if(dict.get("baseAndRelativeURL")!=null){
-            // there are base and/or relative URLs present
+            // there are base and relative URLs present
             prepareBaseComponents();
             prepareRelativeComponents();
             combineBaseAndRelativeComponents();
@@ -113,7 +113,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
     * @param containedIn a string which contains the desired content (returned content is a substring of containedIn)
     * @return the instantiation of the specified rule
     */
-    public String getSpecialComponentContent(String grammarrule, String containedIn){  //TODO
+    public String getSpecialComponentContent(String grammarrule, String containedIn){  
         ArrayList<String> candidatekeys=getAllCandidates(grammarrule);
         if(containedIn != null && !(containedIn.equals(""))){
             //collect all candidate contents and compare them to containedIn 
@@ -190,6 +190,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
         }
         components.put("base_scheme", bscheme.toLowerCase());
+        prepareUserinfo(base, "base_");
         String bhost=prepareHost(base);
         if(bhost != null){
             components.put("base_host", util.encodeHost(bhost.toLowerCase()));
@@ -270,10 +271,12 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             }
             
         }
+        // prepare userinfo
+        prepareUserinfo(rel, "relative_");
         // prepare host and port
         String rhost=prepareHost(rel);
         if(rhost != null){
-            components.put("relative_host", util.encodeHost(rhost.toLowerCase())); //TODO use for base host and basic host too
+            components.put("relative_host", util.encodeHost(rhost.toLowerCase())); 
             String rp=getSpecialComponentContent("URLport", rel); 
             if(rp!=null){
                 if(rel.contains(":"+rp)){ //avoid adding a port if the digit appears in the ip address
@@ -339,12 +342,16 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             if(host != null){
                 components.put("host", host);
                 components.put("port", components.get("relative_port"));
+                components.put("username", components.get("relative_username")); // use relative userinfo when using relative host
+                components.put("password", components.get("relative_password"));
             }
             else{
                 if(! relative.startsWith("//") ){
                     //only use base host if relative starts with path (i.e. max one /)
                     components.put("host", components.get("base_host"));
                     components.put("port", components.get("base_port"));
+                    components.put("username", components.get("base_username")); // use base userinfo when using base host
+                    components.put("password", components.get("base_password"));
                 }
 
             }
@@ -421,7 +428,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 path=util.normalizePath(path, dl);
                 
             }
-            components.put("path", path); //TODO lower case?
+            components.put("path", path); 
             components.put("query", components.get("relative_query"));
             components.put("fragment", components.get("relative_fragment"));
         }
@@ -477,7 +484,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         return null;
     }
 
-    private String preparePath(String parent){ //TODO check if these are enough
+    private String preparePath(String parent){ 
         String path=null;
         String pa=getSpecialComponentContent("pathAbsoluteURL", parent);
         String panW=getSpecialComponentContent("pathAbsoluteNonWindowsFileURL", parent);
@@ -488,10 +495,26 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
                 path=p;
             }
         }
-
         return path;
-
     }
+
+    /***
+    * @param parent a String that contains the userinfo component, important in case base and relative contain userinfo
+    * @param prefix a String that is added to the front of the component names, expected values: base, relative, (empty)
+    *   extract and percent encode userinfo components
+    */
+    private void prepareUserinfo(String parent, String prefix){
+
+        String uname=getSpecialComponentContent("username", parent);
+        String pw=getSpecialComponentContent("password", parent);
+        if(uname != null){
+            components.put(prefix+"username", util.escapeUnicodeChars(uname, util.USERINFO_PERCENT_ENCODE));
+        }
+        if(pw != null){
+            components.put(prefix+"password", util.escapeUnicodeChars(pw, util.USERINFO_PERCENT_ENCODE));
+        }
+    }
+
 
 
     /***
@@ -517,6 +540,9 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
             components.put("scheme", content.toLowerCase());
           }
         }
+        // prepare userinfo
+        prepareUserinfo(components.get("input"), "");
+
 
         // prepare host
         String reshost=prepareHost(components.get("input"));

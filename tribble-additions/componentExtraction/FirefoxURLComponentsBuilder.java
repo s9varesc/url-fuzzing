@@ -42,7 +42,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="scheme:\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",\n";
         String host=(univcomp.getComponentContents("host")!=null) ? escapeContent(univcomp.getComponentContents("host")) : "";
         String fullhost=host; //needed for prePath
-        if(univcomp.getSpecialComponentContent("ipv6address")!=null){ //TODO might not work for relative
+        if(univcomp.getSpecialComponentContent("ipv6address")!=null){ 
             host=host.replaceAll("\\[", "");
             host=host.replaceAll("\\]", "");
         }
@@ -64,21 +64,31 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         String prp="";
         prp+=escapeContent(univcomp.getComponentContents("scheme"));
         String input=escapeContent(univcomp.getComponentContents("input")); 
+        String username=(univcomp.getComponentContents("username")!=null) ? escapeContent(univcomp.getComponentContents("username")): "";
+        String password=(univcomp.getComponentContents("password")!=null) ? escapeContent(univcomp.getComponentContents("password")): "";
+        
         spec=(spec!=null)?spec:"";
         if(input.startsWith(prp+"://")||spec.startsWith(prp+"://")){
             prp+="://";
         }
         else{
-            prp+=":"; //TODO check if :/ is also possible
+            prp+=":"; 
+        }
+        if(username != ""){
+            prp+=username;
+            if(password!=""){
+                prp+=":"+password;
+            }
+            prp+="@"
         }
         prp+=fullhost;
         prp+=(port!="") ? ":"+port.replaceFirst("^0+(?!$)", "") : "";
         
 
         result+="prePath:\""+prp+"\",\n";
-
-        result+="username:\"\",\n";
-        result+="password:\"\",\n";
+        
+        result+="username:\"\""+username+",\n"; 
+        result+="password:\"\""+password+",\n";
   
         result+="}\n";
 
@@ -88,7 +98,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
 
     /**
     * escapes all chars that could cause problems when using this representation 
-    * @return the string with all "dangerous" chars escaped
+    * @return the string with all problematic chars escaped
     */
     private String escapeContent(String input){
         if(input != null){
