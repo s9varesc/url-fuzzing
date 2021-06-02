@@ -33,7 +33,7 @@ Grammar(
 
   'schemeRelativeSpecialURL := "//" ~ ('host | 'ipAddress) ~ (":" ~ 'URLport.?).? ~ 'pathAbsoluteURL.?, 
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?,  //forcing pathAbsoluteURL would fix invalid relative URLs as "//#fg", but the standard says its optional 
-  'schemeRelativeFileURL := "//" ~ ((('host | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ), 
+  'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ), 
   
   'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?) | "", 
   'opaqueHost := ((('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | 'hostunicode) | ("[" ~ 'ipv6address ~ "]"), 
