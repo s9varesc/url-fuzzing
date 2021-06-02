@@ -42,7 +42,7 @@ Grammar(
   'pathAbsoluteURL := ("/"~'windowsDriveLetter.?).? ~ "/" ~ 'pathRelativeURLstart.?,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?, // not allowed to start with "/C:/" (windows drive letter)
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? , //not allowed to start with /, use pathRelativeURLstart to force this
-  'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment) ~ ("/" ~ 'pathRelativeURL).?,  
+  'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment | "PATHREL") ~ ("/" ~ 'pathRelativeURL).?,  
   'pathRelativeSchemelessURL := 'pathRelativeURLstart, // not allowed to start with "scheme:"
 
 
@@ -121,16 +121,16 @@ Grammar(
   'specialQueryAllowed := 'pathAllowed | "?" | "{" | "}" | "`" | "/",
   'specialQueryCodePoint := 'specialQueryAllowed |'queryPercentEncoded | 'unicode, //check if ' should be percent encoded
   
-  'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded | 'unicode, //userinfo
-  'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," ,
-  'userinfoPercentEncoded := "%2f" | "%3a" | "%3b" | "%3d" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c", //userinfo
+  'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded | 'unicode, 
+  'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," , //check encoding
+  'userinfoPercentEncoded := "%2f" | "%3a" | "%3b" | "%3d" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c", 
 
   'pathCodePoint := 'pathAllowed | 'pathPercentEncoded | 'unicode,
   'pathAllowed := 'userinfoAllowed | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|",
   'pathPercentEncoded := 'queryPercentEncoded | "%3f" | "%60" | "%7b" | "%7d",
 
   'firstPathCodePoint := 'userinfoAllowed |  ";" | "=" | "@" | "[" | "]" |  "^" | "|" | 'pathPercentEncoded | 'unicode, //check if / and : should be percent encoded 
-
+    //TODO check which chars need to be encoded
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded | 'unicode,
   'fragmentAllowed := 'pathAllowed | "?" | "{" | "}" | "#" | "/",
   'fragmentPercentEncoded := "%20" | "%22" | "%3c" | "%3e" | "%60"
