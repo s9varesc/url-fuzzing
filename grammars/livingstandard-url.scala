@@ -68,16 +68,16 @@ Grammar(
   //'subdelims := "!" | "$" | "&" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=",
   'unreserved := 'alphanum | "-" | "." | "_" | "~",
   
-  'host := ('userinfo ~ "@").? ~ 'domain,  //userinfo is not mentioned in URL writing, but it is mentioned in URL parsing
+  'host := 'userinfo.? ~ 'domain,  //userinfo is not mentioned in URL writing, but it is mentioned in URL parsing
   'domain := 'internationalHost |  'basicHost,
   'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum) ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
   'internationalHost := (('alphanum | 'hostunicode).rep(1, 5) ~ ("."|"-").? ).rep(1) ~ ('alphanum | 'hostunicode).rep(1, 3) , 
   //max 63 chars per label, max 255 chars overall, important: count after punycode conversion TODO: make rule/explanation more precise
    
-  'userinfo := 'username ~ (":" ~ 'password).?, 
+  'userinfo := 'username ~ (":" ~ 'password).? ~ "@", 
   'username := 'userinfoCodePoint.rep,
   'password := 'userinfoCodePoint.rep,
-  
+
   'ipv4address := 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet ~ "." ~ 'decoctet,
   'ipv6address := (('h16 ~ ":").rep(6, 6) ~ 'ls32)
     | ((('h16 ~ ":").rep(0, 1) ~ 'h16).? ~ "::" ~ ('h16 ~ ":").rep(2, 2) ~ 'ls32)

@@ -456,6 +456,10 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String d=getSpecialComponentContent("domain", parent); 
         String ipv4=getSpecialComponentContent("ipv4address", parent);
         String ip=getSpecialComponentContent("ipv6address", parent);
+        String uinfo=getSpecialComponentContent("userinfo", parent);
+        if(uinfo.length()<1){
+            uinfo="";
+        }
         String originalip="["+ip+"]";
         if(ip != null){
             ip="["+util.formatIPv6(ip)+"]";
@@ -465,7 +469,7 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
 
         for(String h: Arrays.asList(ophost, d, ipv4, originalip)){
             if(h != null){
-                if(parent.contains("//"+h)){
+                if(parent.contains("//"+uinfo+h)){ //TODO userinfo is in between
                     host=h;
                     if(h.equals(originalip)){
                         host=ip;
@@ -475,14 +479,13 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         }
         // make sure this is the full host and not a substring of it
         for(String ending: Arrays.asList("/", ":", "?", "#")){
-            if(parent.contains("//"+host+ending) || parent.contains("//"+originalip+ending)){
+            if(parent.contains("//"uinfo+host+ending) || parent.contains("//"+uinfo+originalip+ending)){
                 return host;
             }
         }
-        if(parent.endsWith("//"+host) || parent.endsWith("//"+originalip)){
+        if(parent.endsWith("//"+uinfo+host) || parent.endsWith("//"+uinfo+originalip)){
             return host;
         }
-
         return null;
     }
 
