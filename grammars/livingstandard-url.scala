@@ -40,7 +40,7 @@ Grammar(
   'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
   
   //TODO figure out which path rule breaks some relative urls
-  'pathAbsoluteURL := ("/"~('windowsDriveLetter | ("/" ~ "NWDL")).? ~ "/" ~ 'pathRelativeURLstart.?,
+  'pathAbsoluteURL := ("/"~('windowsDriveLetter | ("/" ~ "NWDL"))).? ~ "/" ~ 'pathRelativeURLstart.?,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?, // not allowed to start with "/C:/" (windows drive letter)
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? , //not allowed to start with /, use pathRelativeURLstart to force this
   'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment ) ~ ("/" ~ 'pathRelativeURL).?,  
