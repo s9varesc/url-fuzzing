@@ -456,7 +456,8 @@ public class UniversalURLComponentsBuilder extends UniversalComponentsBuilder {
         String d=getSpecialComponentContent("domain", parent); 
         String ipv4=getSpecialComponentContent("ipv4address", parent);
         String ip=getSpecialComponentContent("ipv6address", parent);
-        String uinfo=getSpecialComponentContent("userinfo", parent);
+        String ui=getSpecialComponentContent("userinfo", parent);
+        String uinfo= (ui!=null) ? ui :"";
         if(uinfo.length()<1){
             uinfo="";
         }
