@@ -101,13 +101,14 @@ Grammar(
   'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "-"  | "_" | "~",
 
   
-  'opaqueHostCodePoint := 'hostAllowed | 'opaqueHostPercentEncoded , //TODO check encoding
+  'opaqueHostCodePoint := 'hostAllowed | 'unicode | ("%" ~ 'hexdig.rep(2,2)) , //TODO check encoding, might need to improve percent rule
   //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=",
   'opaqueHostPercentEncoded := "%00" | "%09" | "%20" | "%23" | "%25" | "%2f" | "%3a" | "%3c" | "%3e" | "%3f" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c" ,
-  
+  // forbidden host code points: u+0000, u+0009, u+000a, u+00d, u+0020, u+0023, u+0025, u+002f, u+003a, u+003c, u+003e, u+003f, 
+  //                              u+0040, u+005b, u+005c, u+005d, u+005e, u+007c
 
   'unicode := "[\u00a0-\ud7ff\ue000-\ufdcf\ufdf0-\ufffd]".regex 
-                | "[\ud800-\udbff][\udc00-\udffd]".regex, //  "[\u10000-\u1fffd]".regex, java uses 16-bit code points, so use surrogate pairs
+                | "[\ud800-\udbff][\udc00-\udffd]".regex, //  "[\u10000-\u1fffd]".regex, java uses 16-bit code points: use surrogate pairs
               
 
   'hostunicode := "[\u0100-\u0148\u0148-\u017f]".regex,
