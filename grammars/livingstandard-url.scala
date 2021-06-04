@@ -35,10 +35,6 @@ Grammar(
   'schemeRelativeURL := "//" ~ 'opaqueHostAndPort ~ 'pathAbsoluteURL.?,  //forcing pathAbsoluteURL would fix invalid relative URLs as "//#fg", but the standard says its optional 
   'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ), 
   
-  'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?) | "", 
-  'opaqueHost := ((('basicHost | 'opaqueHostPercentEncoded) ~ 'opaqueHostCodePoint.rep) | 'hostunicode) | ("[" ~ 'ipv6address ~ "]"), 
-  'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
-  
   'pathAbsoluteURL := "/"~ ('windowsDriveLetter ~"/").? ~ 'pathRelativeURLstart.?,
   'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?, // not allowed to start with "/C:/" (windows drive letter)
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? , //not allowed to start with /, use pathRelativeURLstart to force this
@@ -73,6 +69,10 @@ Grammar(
   'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum) ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
   'internationalHost := (('alphanum | 'hostunicode).rep(1, 5) ~ ("."|"-").? ).rep(1) ~ ('alphanum | 'hostunicode).rep(1, 3) , 
   //max 63 chars per label, max 255 chars overall, counted after punycode conversion TODO: make rule/explanation more precise
+
+  'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?) | "", 
+  'opaqueHost := 'basicHost | ('opaqueHostCodePoint.rep(1)) | ("[" ~ 'ipv6address ~ "]"), 
+  'ipAddress:= 'ipv4address | ("[" ~ 'ipv6address ~ "]"),
    
   'userinfo := 'username ~ (":" ~ 'password).? ~ "@", 
   'username := 'userinfoCodePoint.rep,
@@ -101,9 +101,9 @@ Grammar(
   'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "-"  | "_" | "~",
 
   
-  'opaqueHostCodePoint := 'hostAllowed | 'hostunicode | ("%" ~ 'hexdig.rep(2,2)) , //TODO check encoding, might need to improve percent rule; hostunicode excludes forbidden host code points
+  'opaqueHostCodePoint := 'hostAllowed | ("%" ~ 'hexdig.rep(2,2)) , //TODO check encoding, might need to improve percent rule
   //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=",
-  'opaqueHostPercentEncoded := "%00" | "%09" | "%20" | "%23" | "%25" | "%2f" | "%3a" | "%3c" | "%3e" | "%3f" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c" ,
+  //'opaqueHostPercentEncoded := "%00" | "%09" | "%20" | "%23" | "%25" | "%2f" | "%3a" | "%3c" | "%3e" | "%3f" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c" ,
   // forbidden host code points: u+0000, u+0009, u+000a, u+00d, u+0020, u+0023, u+0025, u+002f, u+003a, u+003c, u+003e, u+003f, 
   //                              u+0040, u+005b, u+005c, u+005d, u+005e, u+007c
 
@@ -120,18 +120,18 @@ Grammar(
   'queryCodePoint := 'specialQueryAllowed | "'" | 'queryPercentEncoded | 'unicode,
   'queryPercentEncoded := "%20" | "%22" | "%23" | "%3c" | "%3e",
   'specialQueryAllowed := 'pathAllowed | "?" | "{" | "}" | "`" | "/",
-  'specialQueryCodePoint := 'specialQueryAllowed |'queryPercentEncoded | 'unicode, //check if ' should be percent encoded
+  'specialQueryCodePoint := 'specialQueryAllowed |'queryPercentEncoded | 'unicode, 
   
   'userinfoCodePoint := 'userinfoAllowed | 'userinfoPercentEncoded | 'unicode, 
-  'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," , //check encoding
+  'userinfoAllowed := 'unreserved | "!" | "$" | "&" | "%" | "'" | "(" | ")" | "*" | "+" | "," , 
   'userinfoPercentEncoded := "%2f" | "%3a" | "%3b" | "%3d" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c", 
 
   'pathCodePoint := 'pathAllowed | 'pathPercentEncoded | 'unicode,
-  'pathAllowed := 'userinfoAllowed | ":" | ";" | "=" | "@" | "[" | "]" |  "^" | "|",
+  'pathAllowed := 'userinfoAllowed | ":" | 'pathAllowedPart ,
+  'pathAllowedPart := ";" | "=" | "@" | "[" | "]" |  "^" | "|",
   'pathPercentEncoded := 'queryPercentEncoded | "%3f" | "%60" | "%7b" | "%7d",
-
-  'firstPathCodePoint := 'userinfoAllowed |  ";" | "=" | "@" | "[" | "]" |  "^" | "|" | 'pathPercentEncoded | 'unicode, //check if / and : should be percent encoded 
-    //TODO check which chars need to be encoded
+  'firstPathCodePoint := 'userinfoAllowed |  'pathAllowedPart | 'pathPercentEncoded | 'unicode, 
+  
   'fragmentCodePoint := 'fragmentAllowed | 'fragmentPercentEncoded | 'unicode,
   'fragmentAllowed := 'pathAllowed | "?" | "{" | "}" | "#" | "/",
   'fragmentPercentEncoded := "%20" | "%22" | "%3c" | "%3e" | "%60"

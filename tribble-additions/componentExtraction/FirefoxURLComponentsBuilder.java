@@ -41,6 +41,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
        
         result+="scheme:\""+escapeContent(univcomp.getComponentContents("scheme"))+"\",\n";
         String host=(univcomp.getComponentContents("host")!=null) ? escapeContent(univcomp.getComponentContents("host")) : "";
+        
         String fullhost=host; //needed for prePath
         if(univcomp.getSpecialComponentContent("ipv6address")!=null){ 
             host=host.replaceAll("\\[", "");
