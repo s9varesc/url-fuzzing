@@ -561,7 +561,9 @@ htmlfile.close()
 
 
 
-
+f=open("./used_seed", "r")
+seed=f.read()
+print("used seed: "+seed)
 				
 			
 
