@@ -87,11 +87,12 @@ f.write(allinputs)
 f.close()
 
 for filename in os.listdir(dir+"/.."):
-	print(filename)
+	if "seed" in filename:
+		f=open(dir+"/../"+filename, "r", encoding='utf-8')
+		seed=f.read()
+		print("used seed: "+seed)
 
-f=open(dir+"/../seed*.md", "r", encoding='utf-8')
-seed=f.read()
-print("used seed: "+seed)
+
 
 #TODO copy seed to a better accessible place
 	
