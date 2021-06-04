@@ -89,9 +89,9 @@ f.close()
 for filename in os.listdir(dir+"/.."):
 	print(filename)
 
-#f=open(dir+"/../seed.md", "r", encoding='utf-8')
-#seed=f.read()
-#print("used seed: "+seed)
+f=open(dir+"/../seed*.md", "r", encoding='utf-8')
+seed=f.read()
+print("used seed: "+seed)
 
 #TODO copy seed to a better accessible place
 	

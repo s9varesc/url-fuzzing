@@ -26,7 +26,7 @@ final class GenerateTask extends Command("generate", "Generate sample inputs")
     logger.info(s"Using random seed $randomSeed")
     logger.info(s"Writing generated files to $outputDir")
     val usedSeed = s"$randomSeed"
-    val seedPath = Files.write(Files.createTempFile(outputDir, f"seed", ".md"), usedSeed.getBytes(StandardCharsets.UTF_8))
+    val seedPath = Files.write(Files.createTempFile(outputDir, f"seed", suffix), usedSeed.getBytes(StandardCharsets.UTF_8))
 
     val trees = forestGenerator.generateForest()
 
