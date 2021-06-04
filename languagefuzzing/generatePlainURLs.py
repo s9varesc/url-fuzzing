@@ -25,7 +25,7 @@ f.close()
 
 for filename in os.listdir(dir+"/.."):
 	if "seed" in filename:
-		f=open(dir+"/../"+filename, "r", encoding='utf-8')
+		f=open(dir+"/../"+filename, "r")
 		seed=f.read()
 		f.close()
 		f=open("./../evaluation-tools/used_seed", "w")
