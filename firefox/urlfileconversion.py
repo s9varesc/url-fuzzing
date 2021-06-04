@@ -86,6 +86,11 @@ f=open("allinputURLs", "w", encoding='utf-8')
 f.write(allinputs)
 f.close()
 
+f=open(dir+"/../seed.md", "r", encoding='utf-8')
+seed=f.read()
+print("used seed: "+seed)
+
+#TODO copy seed to a better accessible place
 	
 
 

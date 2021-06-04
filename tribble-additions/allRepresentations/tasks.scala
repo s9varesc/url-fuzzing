@@ -25,6 +25,9 @@ final class GenerateTask extends Command("generate", "Generate sample inputs")
   override def execute(): Unit = {
     logger.info(s"Using random seed $randomSeed")
     logger.info(s"Writing generated files to $outputDir")
+    val usedSeed = s"$randomSeed"
+    val seedPath = Files.write(Files.createTempFile(outputDir, f"seed", suffix), usedSeed.getBytes(StandardCharsets.UTF_8))
+      logger.debug(s"Generated $path")
 
     val trees = forestGenerator.generateForest()
 
