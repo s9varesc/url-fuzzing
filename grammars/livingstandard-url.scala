@@ -36,14 +36,15 @@ Grammar(
   'schemeRelativeFileURL := "//" ~ ((('domain | 'ipAddress) ~ 'pathAbsoluteNonWindowsFileURL.?) | 'pathAbsoluteURL ), 
   
   'pathAbsoluteURL := "/"~ ('windowsDriveLetter ~"/").? ~ 'pathRelativeURLstart.?,
-  'pathAbsoluteNonWindowsFileURL := "/" ~ 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).?, // not allowed to start with "/C:/" (windows drive letter)
+  'pathAbsoluteNonWindowsFileURL := "/" ~ ('pathCodePoint.rep(1) | 'singleDotPathSegment | 'doubleDotPathSegment )~ ("/" ~ 'pathRelativeURL).?, // not allowed to start with windows drive letter,
+                                          //can't use URLpathSegment as first path element, can lead to "//%3c" as relative URL where %3c is interpreted as invalid host
   'pathRelativeURL := 'URLpathSegment ~ ("/" ~ 'pathRelativeURL).? , //not allowed to start with /, use pathRelativeURLstart to force this
   'pathRelativeURLstart := (('firstPathCodePoint ~ 'pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment ) ~ ("/" ~ 'pathRelativeURL).?,  
   'pathRelativeSchemelessURL := 'pathRelativeURLstart, // not allowed to start with "scheme:"
 
 
   'windowsDriveLetter := 'alpha ~ ":", //only normalized drive letters are valid
-  'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,
+  'URLpathSegment := ('pathCodePoint.rep) | 'singleDotPathSegment | 'doubleDotPathSegment,  
   'singleDotPathSegment := "." | "%2e",
   'doubleDotPathSegment := ".." | ".%2e" | "%2e." | "%2e%2e", 
   
