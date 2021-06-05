@@ -98,7 +98,7 @@ public class URLComponentsUtil {
 			tmp=tmp.replaceAll("/%2e/", "/./");
 			tmp=tmp.replaceAll("/%2E/", "/./");
 			while(tmp.contains("/./")){
-				tmp=tmp.replaceAll("/./", "/");
+				tmp=tmp.replaceFirst("/./", "/");
 			}
 			
 
