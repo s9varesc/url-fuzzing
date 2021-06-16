@@ -14,6 +14,8 @@ parser.add_argument("-dir")
 args = parser.parse_args()
 dir = args.dir
 
+print("creating test files without components")
+
 f=open("./test_URIs_suffix_NO_components.txt","r")
 suffix=f.read()
 
@@ -26,8 +28,7 @@ for filename in os.listdir(dir):
 	f=open(dir+"/"+filename, "r", encoding='utf-8')
 	urlcontents+=[f.read()]
 
-print(dir)
-print(urlcontents)
+
 
 
 allinputs=""
