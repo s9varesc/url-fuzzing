@@ -14,7 +14,7 @@ parser.add_argument("-dir")
 args = parser.parse_args()
 dir = args.dir
 
-print("creating test files without components")
+#print("creating test files without components")
 
 f=open("./test_URIs_suffix_NO_components.txt","r")
 suffix=f.read()
