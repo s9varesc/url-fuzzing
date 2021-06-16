@@ -26,7 +26,8 @@ for filename in os.listdir(dir):
 	f=open(dir+"/"+filename, "r", encoding='utf-8')
 	urlcontents+=[f.read()]
 
-
+print(dir)
+print(urlcontents)
 
 
 allinputs=""
@@ -39,7 +40,7 @@ for chunk in testchunks:
 	testid+=1
 	urldata="var gTests = ["
 	for url in chunk:
-		urldata+="\n {spec: \"" + url + "\"},"  #TODO: check for escaping
+		urldata+="\n {spec: \"" + url + "\"},"  
 		allinputs+=url+"\n"
 	urldata=urldata[:-1]
 	urldata+="];"
