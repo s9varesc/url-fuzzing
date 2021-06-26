@@ -3,6 +3,7 @@ import os
 import subprocess
 import json
 import markdown
+import csv
 from bs4 import BeautifulSoup
 
 
@@ -136,6 +137,29 @@ def url_escape_md(data):
 	res=res.replace("<", " < ")
 	return " "+escbt+" "+res+" "+escbt+" "
 
+componentMap={} #used to check if the browsers fail on the same components, only list differently named components
+componentMap["filePath"]="path"
+componentMap["ref"]="fragment"
+
+
+def equalComponentFail(components):
+	newcomps=[]
+	for c in components:
+		cc1=c
+		try:
+			cc1=componentMap[c]
+		except:
+			pass #can use original component name for comparison
+
+		newcomps+=[cc1]
+
+	c=newcomps[0]
+	for cc in newcomps:
+		if c != cc:
+			return False
+	return True
+
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-data")
@@ -173,6 +197,11 @@ ptableheader=" Exception Type | URLs \n --- | --- "
 parsertable=" Parsername | Number of Exceptions | Number of Different Exceptions | Code Coverage \n --- | --- | --- | ---\n"
 
 parserdata=json.loads(pranking, strict=False)
+urldata=json.loads(uranking, strict=False)
+
+#prepare csv
+maincsvheader=["nr-inputs"]
+maincsvcontent=[len(urldata)]
 
 
 # extract coverages to put in table
@@ -187,11 +216,15 @@ for parsername in parserdata:
 	
 	cov=extractCoverage(parsername.lower(), parsed_report)
 	coverages[parsername]=cov
+	maincsvheader+=[parsername+"-cov"]
+	maincsvcontent+=[cov]
 
 
 # create table representation of the parser results
 for pname in parserdata:
 	edata=parserdata[pname]
+	maincsvheader+=[pname+"-exceptions"]
+	maincsvcontent+=[edata["errorcount"]]
 	ptuple=(pname, edata["errorcount"], edata["nrerrtypes"], coverages[pname]) 
 	ptuples+=[ptuple]
 	ptable="### "+pname+"\n\n"+ptableheader+"\n"
@@ -217,15 +250,16 @@ for (pn, en, den, cov) in sortedptuples:
 
 
 # create table representation of URLs
-urldata=json.loads(uranking, strict=False)
+
 
 
 utable=" URL | Parsers \n --- | --- \n"
 
 # keep track of urls that didnt cause parsing exceptions
 succURLs=[]
+allfail=0
 nrurls=0
-for url in urldata: 
+for url in urldata: 		# TODO use this data for csv file
 	parsers=urldata[url]	
 	nrurls+=1
 	if not parsers:
@@ -234,7 +268,17 @@ for url in urldata:
 		uline=url_escape_md(url)+" | "
 		for p in parsers:
 			uline += p + " <br>"
+		if len(parsers)==len(covreps):
+			allfail+=1
 		utable+=uline+"\n"
+
+maincsvheader+=["eq-success-result"]
+maincsvcontent+=[len(succURLs)]
+maincsvheader+=["eq-fail-result"]
+maincsvcontent+=[allfail]
+maincsvheader+=["neq-result"]
+maincsvcontent+=[nrurls-len(succURLs)-allfail]
+
 
 
 # Browsers
@@ -353,10 +397,13 @@ htmlfile.close()
 
 
 bres=[]
+cbres=[]
 for bname in errdata:
 	elist=errdata[bname]
 	blist={}
 	blist["name"]=bname
+	clist={}
+	clist["name"]=bname
 	for erdata in elist:   
 		u=erdata["url"]
 		c=escape_md(erdata["error"]["component"])
@@ -365,9 +412,11 @@ for bname in errdata:
 		message="STYLEC "+c+ " is \""+a[1:-1]+ "\" != \""+ exp[1:-1]+"\""
 
 		blist[u]=message
+		clist[u]=c
 	bres+=[blist]
+	cbres+=[clist]
 
-if len(bres)>=1:
+if len(bres)>=1:		#TODO use this loop to check for equal component failures
 	for url in urldata: 
 		parsers=urldata[url]	
 		for b in bres:
@@ -383,9 +432,6 @@ if len(bres)>=1:
 						if url in pd[et]:
 							message+=et
 					b[url]=m+message
-
-
-
 			#place parsing success in results if there is no entry for a failure
 			try:
 				comp=b[url]
@@ -396,10 +442,17 @@ if len(bres)>=1:
 
 
 
+
+b_eq_succ=0
+b_eq_fail=0 
+b_eq_comp=0 
+b_neq_comp=0 
+b_neq=0
+
+
+
 bsize=len(bres)
-eqsucc=0
-eqfail=0
-allcomp=0
+
 whatfail=0
 whatnr=0
 
@@ -436,6 +489,7 @@ for url in urldata:
 		uline="STYLEW "
 		whatnr+=1
 	uline += url_escape_md(url)
+	compfails=[]
 	for i in range(0, bsize): # calculate more statistics here
 		br=bres[i]
 		if styleinfo:
@@ -455,17 +509,25 @@ for url in urldata:
 		if mess[:6]=="STYLEC":
 			nrcomp+=1
 			bcount[i][3]+=1
+			compfails+=[cbres[i][url]] # save which component failed
 
 	#save counted results
+
 	
 	if nrsucc==bsize:
-		eqsucc+=1
-	if nrfail==bsize:
-		eqfail+=1
+		b_eq_succ+=1
+	elif nrfail==bsize:
+		b_eq_fail+=1
 		if uline[:6]=="STYLEW":
 			whatfail+=1
-	if nrcomp==bsize:
-		allcomp+=1
+	elif len(compfails)==len(bres):
+		if equalComponentFail(compfails):
+			b_eq_comp+=1	# all browsers fail on the same component
+		else:
+			b_neq_comp+=1	# browsers fail on different components
+	else:
+		b_neq+=1	# results differ i.e. success vs fail, component error vs fail, success vs component error,... 
+	
 
 
 	if not styleinfo:
@@ -473,6 +535,7 @@ for url in urldata:
 			uline=uline[6:]
 	uline+="\n"
 	bcomptable+=uline
+
 
 
 
@@ -491,25 +554,38 @@ for i in range(0, bsize):
 	crbfail+=" ("+str(bcount[i][1])+"/"+str(nrurls)+")|"
 	crbwf+=" ("+str(bcount[i][2])+"/"+str(whatnr)+")|"
 	crbcf+=" ("+str(bcount[i][3])+"/"+str(nrurls)+")|"
-	crbcov+=" "+str(coverages[bres[i]["name"]])+"% |"	#TODO make sure names match		
+	crbcov+=" "+str(coverages[bres[i]["name"]])+"% |"		
 #use counted results
 crtable=crbhead+crbhhelp+"\n"
-crtable+="| parsed successfully | ("+str(eqsucc)+"/"+str(nrurls)+")"+crbsucc+"\n"
-crtable+="| rejected | ("+str(eqfail)+"/"+str(nrurls)+")"+crbfail+"\n"
+crtable+="| parsed successfully | ("+str(b_eq_succ)+"/"+str(nrurls)+")"+crbsucc+"\n"
+crtable+="| rejected | ("+str(b_eq_fail)+"/"+str(nrurls)+")"+crbfail+"\n"
 crtable+="| also rejected by whatwg | ("+str(whatfail)+"/"+str(whatnr)+")"+crbwf+"\n"
-crtable+="| component errors | ("+str(allcomp)+"/"+str(nrurls)+")"+crbcf+"\n"
+crtable+="| component errors | "+crbcf+"\n"
+crtable+="| equal component errors | ("+str(b_eq_comp)+"/"+str(nrurls)+")|\n"
+crtable+="| unequal component errors | ("+str(b_neq_comp)+"/"+str(nrurls)+")|\n"
 crtable+="| code coverage |   | "+crbcov+"\n"
-eqres=allcomp+ eqsucc + eqfail
+eqres= b_eq_succ + b_eq_fail + b_eq_comp
 crtable+="| overall equal results | ("+str(eqres)+"/"+str(nrurls)+")|\n"
 crtable+="| overall unequal results | ("+str(nrurls-eqres)+"/"+str(nrurls)+")|\n\n"
 
 
+
+maincsvheader+=["b-eq-success-result"]
+maincsvcontent+=[b_eq_succ]
+maincsvheader+=["b-eq-fail-result"]
+maincsvcontent+=[b_eq_fail]
+maincsvheader+=["b-eq-component-fail-result"]
+maincsvcontent+=[b_neq_comp]
+maincsvheader+=["b-neq-result"]
+maincsvcontent+=[b_neq]
+
+with open(datadir+"../mainresults.csv", "w", encoding='utf-8', newline='') as f:
+	writer=csv.writer(f)
+	writer.writerow(maincsvheader)
+	writer.writerow(maincsvcontent)
+
+
 bov="# Combined Results\n\n"+crtable
-bov+= "*note:*  due to different component names the table above does not consider which component caused the error, but the full comparison table below contains this information\n\n"
-
-
-
-
 
 htmlresult1=markdown.markdown(bov, extensions=['extra'])
 htmlresult1=htmlresult1.replace("<table>", "<table class=\"simpletable\">")
