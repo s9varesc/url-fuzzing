@@ -216,7 +216,7 @@ for parsername in parserdata:
 	
 	cov=extractCoverage(parsername.lower(), parsed_report)
 	coverages[parsername]=cov
-	maincsvheader+=[parsername+"-cov"]
+	maincsvheader+=[parsername.lower()+"-cov"]
 	maincsvcontent+=[cov]
 
 
