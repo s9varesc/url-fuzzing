@@ -55,7 +55,8 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="ref:\""+ref+"\",\n"; 
         
         String pqr="";
-        pqr+=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "/";
+        String path=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "/";
+        pqr+=path
         String query=(univcomp.getComponentContents("query")!=null) ? "?"+escapeContent(univcomp.getComponentContents("query")) : "";
         pqr+=(!query.equals("?") ? query : "");//avoid adding a ? if the query is empty
         String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+escapeContent(univcomp.getComponentContents("fragment")) : "";
@@ -93,8 +94,10 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         
         result+="username:\""+username+"\",\n"; 
         result+="password:\""+password+"\",\n";
-        result+="prePath:\""+prp+"\",\n";
-        result+="pathQueryRef:\""+pqr+"\",\n";
+        result+="filePath:\""+path+"\",\n";
+        result+="query:\""+query+"\",\n";
+        //result+="prePath:\""+prp+"\",\n";
+        //result+="pathQueryRef:\""+pqr+"\",\n";
         result+="}\n";
 
         
