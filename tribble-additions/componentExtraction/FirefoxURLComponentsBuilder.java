@@ -56,12 +56,13 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         
         String path=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "/";
         String query=(univcomp.getComponentContents("query")!=null) ? "?"+escapeContent(univcomp.getComponentContents("query")) : "";
-        String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+escapeContent(univcomp.getComponentContents("fragment")) : "";
+        
 
         // pathQueryRef
         /*String pqr="";
         pqr+=path
-        pqr+=(!query.equals("?") ? query : "");//avoid adding a ? if the query is empt
+        pqr+=(!query.equals("?") ? query : "");//avoid adding a ? if the query is empty
+        String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+escapeContent(univcomp.getComponentContents("fragment")) : "";
         pqr+=(!frag.equals("#") ? frag :""); //avoid adding a # if the fragment is empty
         */
 
