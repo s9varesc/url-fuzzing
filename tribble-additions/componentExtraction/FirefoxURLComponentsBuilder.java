@@ -54,20 +54,27 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         String ref=(univcomp.getComponentContents("fragment")!=null) ? escapeContent(univcomp.getComponentContents("fragment")) : "";
         result+="ref:\""+ref+"\",\n"; 
         
-        String pqr="";
         String path=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "/";
-        pqr+=path
         String query=(univcomp.getComponentContents("query")!=null) ? "?"+escapeContent(univcomp.getComponentContents("query")) : "";
-        pqr+=(!query.equals("?") ? query : "");//avoid adding a ? if the query is empty
         String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+escapeContent(univcomp.getComponentContents("fragment")) : "";
+
+        // pathQueryRef
+        /*String pqr="";
+        pqr+=path
+        pqr+=(!query.equals("?") ? query : "");//avoid adding a ? if the query is empt
         pqr+=(!frag.equals("#") ? frag :""); //avoid adding a # if the fragment is empty
+        */
 
         
-        String prp="";
-        prp+=escapeContent(univcomp.getComponentContents("scheme"));
         String input=escapeContent(univcomp.getComponentContents("input")); 
         String username=(univcomp.getComponentContents("username")!=null) ? escapeContent(univcomp.getComponentContents("username")): "";
         String password=(univcomp.getComponentContents("password")!=null) ? escapeContent(univcomp.getComponentContents("password")): "";
+
+
+        // prePath 
+        /*String prp="";
+        prp+=escapeContent(univcomp.getComponentContents("scheme"));
+        
         
         spec=(spec!=null)?spec:"";
         if(input.startsWith(prp+"://")||spec.startsWith(prp+"://")){
@@ -87,7 +94,7 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         }
         prp+=at;
         prp+=fullhost;
-        prp+=(port!="") ? ":"+port.replaceFirst("^0+(?!$)", "") : "";
+        prp+=(port!="") ? ":"+port.replaceFirst("^0+(?!$)", "") : "";*/
         
 
         
