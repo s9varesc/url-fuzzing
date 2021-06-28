@@ -476,6 +476,8 @@ styleinfo=True
 if nrurls > max_inputs_prettify:
 	styleinfo=False
 
+result_dict={} #save result combinations here
+
 for url in urldata:
 	if bsize <1:
 		break
@@ -490,6 +492,7 @@ for url in urldata:
 		whatnr+=1
 	uline += url_escape_md(url)
 	compfails=[]
+	result_names=[]
 	for i in range(0, bsize): # calculate more statistics here
 		br=bres[i]
 		if styleinfo:
@@ -501,15 +504,18 @@ for url in urldata:
 		if mess[:6]=="STYLEP":
 			nrsucc+=1
 			bcount[i][0]+=1
+			result_names+=[br["name"]+"_success-"]
 		if mess[:6]=="STYLEF":
 			nrfail+=1
 			bcount[i][1]+=1
+			result_names+=[br["name"]+"_reject-"]
 			if uline[:6]=="STYLEW":
 				bcount[i][2]+=1
 		if mess[:6]=="STYLEC":
 			nrcomp+=1
 			bcount[i][3]+=1
 			compfails+=[cbres[i][url]] # save which component failed
+			result_names+=[br["name"]+"_"+cbres[i][url]+"-"]
 
 	#save counted results
 
@@ -527,8 +533,17 @@ for url in urldata:
 			b_neq_comp+=1	# browsers fail on different components
 	else:
 		b_neq+=1	# results differ i.e. success vs fail, component error vs fail, success vs component error,... 
-	
 
+	result_name=""
+	result_names.sort() #result parts ordered alphabetically
+	for part in result_names:
+		result_name+=part
+	
+	try:
+		result_dict[result_name[:-1]]+=1
+	except KeyError:
+		result_dict[result_name[:-1]]=1
+		
 
 	if not styleinfo:
 		if uline[:6]=="STYLEW":
@@ -537,7 +552,14 @@ for url in urldata:
 	bcomptable+=uline
 
 
+fieldnames=[]
 
+for key in result_dict:
+	fieldnames+=[key]
+with open(datadir+"../component_results.csv", "w", encoding='utf-8', newline='') as f:
+	writer=csv.DictWriter(f, fieldnames=fieldnames)
+	writer.writeheader()
+	writer.writerow(result_dict)
 
 
 crbsucc="|"
