@@ -54,19 +54,28 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         String ref=(univcomp.getComponentContents("fragment")!=null) ? escapeContent(univcomp.getComponentContents("fragment")) : "";
         result+="ref:\""+ref+"\",\n"; 
         
-        String pqr="";
-        pqr+=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "/";
+        String path=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "/";
         String query=(univcomp.getComponentContents("query")!=null) ? "?"+escapeContent(univcomp.getComponentContents("query")) : "";
+        
+
+        // pathQueryRef
+        /*String pqr="";
+        pqr+=path
         pqr+=(!query.equals("?") ? query : "");//avoid adding a ? if the query is empty
         String frag=(univcomp.getComponentContents("fragment")!=null) ? "#"+escapeContent(univcomp.getComponentContents("fragment")) : "";
         pqr+=(!frag.equals("#") ? frag :""); //avoid adding a # if the fragment is empty
+        */
 
         
-        String prp="";
-        prp+=escapeContent(univcomp.getComponentContents("scheme"));
         String input=escapeContent(univcomp.getComponentContents("input")); 
         String username=(univcomp.getComponentContents("username")!=null) ? escapeContent(univcomp.getComponentContents("username")): "";
         String password=(univcomp.getComponentContents("password")!=null) ? escapeContent(univcomp.getComponentContents("password")): "";
+
+
+        // prePath 
+        /*String prp="";
+        prp+=escapeContent(univcomp.getComponentContents("scheme"));
+        
         
         spec=(spec!=null)?spec:"";
         if(input.startsWith(prp+"://")||spec.startsWith(prp+"://")){
@@ -86,15 +95,17 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         }
         prp+=at;
         prp+=fullhost;
-        prp+=(port!="") ? ":"+port.replaceFirst("^0+(?!$)", "") : "";
+        prp+=(port!="") ? ":"+port.replaceFirst("^0+(?!$)", "") : "";*/
         
 
         
         
         result+="username:\""+username+"\",\n"; 
         result+="password:\""+password+"\",\n";
-        result+="prePath:\""+prp+"\",\n";
-        result+="pathQueryRef:\""+pqr+"\",\n";
+        result+="filePath:\""+path+"\",\n";
+        result+="query:\""+query+"\",\n";
+        //result+="prePath:\""+prp+"\",\n";
+        //result+="pathQueryRef:\""+pqr+"\",\n";
         result+="}\n";
 
         

@@ -104,16 +104,14 @@ function do_test_uri_basic(aTest) {
   // Check the various components   
   try {
       do_check_property(aTest, URI, "scheme");
-      do_check_property(aTest, URI, "query");
-      do_check_property(aTest, URI, "ref");
-      do_check_property(aTest, URI, "port");
       do_check_property(aTest, URI, "username");
       do_check_property(aTest, URI, "password");
       do_check_property(aTest, URI, "host");
-      do_check_property(aTest, URI, "specIgnoringRef");
-      do_check_property(aTest, URI, "hasRef");
-      do_check_property(aTest, URI, "prePath");
-      do_check_property(aTest, URI, "pathQueryRef");
+      do_check_property(aTest, URI, "port");
+      do_check_property(aTest, URI, "filePath")
+      do_check_property(aTest, URI, "query");
+      do_check_property(aTest, URI, "ref");
+      
   } catch (e) {
     dump("caught exception from components");
     return;
