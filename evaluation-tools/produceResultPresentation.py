@@ -537,7 +537,7 @@ for url in urldata:
 	result_name=""
 	result_names.sort() #result parts ordered alphabetically
 	for part in result_names:
-		result_name+=part
+		result_name+=part.replace("filePath", "path").replace("ref", "fragment")
 	
 	try:
 		result_dict[result_name[:-1]]+=1
@@ -597,6 +597,8 @@ maincsvcontent+=[b_eq_succ]
 maincsvheader+=["b-eq-fail-result"]
 maincsvcontent+=[b_eq_fail]
 maincsvheader+=["b-eq-component-fail-result"]
+maincsvcontent+=[b_eq_comp]
+maincsvheader+=["b-neq-component-fail-result"]
 maincsvcontent+=[b_neq_comp]
 maincsvheader+=["b-neq-result"]
 maincsvcontent+=[b_neq]
