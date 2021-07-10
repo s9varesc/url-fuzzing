@@ -537,7 +537,7 @@ for url in urldata:
 	result_name=""
 	result_names.sort() #result parts ordered alphabetically
 	for part in result_names:
-		result_name+=part.replace("filePath", "path").replace("ref", "fragment")
+		result_name+=part.replace("filePath", "path").replace("_ref", "_fragment")
 	
 	try:
 		result_dict[result_name[:-1]]+=1
