@@ -55,8 +55,10 @@ public class FirefoxURLComponentsBuilder extends URLComponentsBuilder {
         result+="ref:\""+ref+"\",\n"; 
         
         String path=(univcomp.getComponentContents("path")!=null ) ? escapeContent(univcomp.getComponentContents("path")) : "/";
-        String query=(univcomp.getComponentContents("query")!=null) ? "?"+escapeContent(univcomp.getComponentContents("query")) : "";
-        
+        String query=(univcomp.getComponentContents("query")!=null) ? escapeContent(univcomp.getComponentContents("query")) : "";
+        // "?" should not be included here:
+        // String query=(univcomp.getComponentContents("query")!=null) ? "?"+escapeContent(univcomp.getComponentContents("query")) : ""
+        // adding "?" was neccessary for the pathQueryRef component
 
         // pathQueryRef
         /*String pqr="";
