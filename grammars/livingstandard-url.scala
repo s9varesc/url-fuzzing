@@ -69,7 +69,7 @@ Grammar(
   'domain := 'internationalHost |  'basicHost,
   'basicHost := ('alpha ~ 'hostAllowed.rep) | (('hostnonAlphaNum) ~ 'hostAllowed.rep) | (('digit.rep(1) ~ ".".?).rep ~ ('alpha | 'hostnonAlphaNum) ~ 'hostAllowed.rep),
   'internationalHost := (('alphanum | 'hostunicode).rep(1, 5) ~ ("."|"-").? ).rep(1) ~ ('alphanum | 'hostunicode).rep(1, 3) , 
-  //max 63 chars per label, max 255 chars overall, counted after punycode conversion TODO: make rule/explanation more precise
+  //max 63 chars per label, max 255 chars overall, counted after punycode conversion 
 
   'opaqueHostAndPort := ('opaqueHost ~ (":" ~ 'URLport).?) | "", 
   'opaqueHost := 'basicHost | ('opaqueHostCodePoint.rep(1)) | ("[" ~ 'ipv6address ~ "]"), 
@@ -102,7 +102,7 @@ Grammar(
   'hostnonAlphaNum := "!" | "\"" | "$" | "&"  |"'" | "(" | ")" | "*" | "+" | "," |  "{" | "}" |"`"  |  ";" | "=" |  "-"  | "_" | "~",
 
   
-  'opaqueHostCodePoint := 'hostAllowed | ("%" ~ 'hexdig.rep(2,2)) , //TODO check encoding, might need to improve percent rule
+  'opaqueHostCodePoint := 'hostAllowed | ("%" ~ 'hexdig.rep(2,2)) , 
   //'inthostAllowed := 'unreserved | "!" | "$" | "&"  | "(" | ")" | "*" | "+" | "," |  "{" | "}" |  ";" | "=",
   //'opaqueHostPercentEncoded := "%00" | "%09" | "%20" | "%23" | "%25" | "%2f" | "%3a" | "%3c" | "%3e" | "%3f" | "%40" | "%5b" | "%5c" | "%5d" | "%5e" | "%7c" ,
   // forbidden host code points: u+0000, u+0009, u+000a, u+00d, u+0020, u+0023, u+0025, u+002f, u+003a, u+003c, u+003e, u+003f, 
